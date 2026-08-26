@@ -652,19 +652,27 @@ function aturTampilanBerdasarkanRole() {
 // FUNGSI KONVERTER JAM EXCEL (DESIMAL KE "HH:MM")
 // ==========================================
 function excelTimeToString(serial) {
-    if (!serial) return "";
-    if (typeof serial === 'string' && serial.includes(":")) return serial;
+    if (serial === null || serial === undefined || serial === "") return "";
+    
+    // Jika sudah berbentuk string jam (misal "08:45"), langsung kembalikan
+    let str = String(serial).trim();
+    if (str.includes(":")) return str;
+
     const num = Number(serial);
-    if (isNaN(num)) return String(serial);
+    // Jika bukan angka (misal teks biasa), kembalikan aslinya
+    if (isNaN(num)) return str;
 
-    const totalSeconds = Math.round(num * 86400);
-    const hours = Math.floor(totalSeconds / 3600) % 24;
-    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    // Jika berupa angka desimal jam excel (antara 0 dan 1)
+    if (num >= 0 && num < 1) {
+        const totalSeconds = Math.round(num * 86400);
+        const hours = Math.floor(totalSeconds / 3600) % 24;
+        const minutes = Math.floor((totalSeconds % 3600) / 60);
+        const pad = (n) => String(n).padStart(2, '0');
+        return `${pad(hours)}:${pad(minutes)}`;
+    }
 
-    const pad = (n) => String(n).padStart(2, '0');
-    return `${pad(hours)}:${pad(minutes)}`;
+    return str;
 }
-
 // ==========================================
 // FUNGSI LOGIN DARI FIREBASE FIRESTORE
 // ==========================================
