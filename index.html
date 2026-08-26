@@ -1013,91 +1013,133 @@ async function muatSemuaDataLatarBelakang(namaTarget) {
         });
         cacheData.absensi = { data: hasilAbsen, terlambat: jumlahTerlambat };
 
-        // 2. Ambil ID Sales / Nama Sales dari master_sales
-        let listPencarian = [namaTarget.toUpperCase()];
+        // 2. Ambil ID Sales dari Master Sales
+        let namaSalesMaster = "";
         try {
             const masterSnap = await window.getDocs(window.collection(window.db, "master_sales"));
             masterSnap.forEach(docSnap => {
                 const md = docSnap.data();
                 const dbNamaAbsen = String(md.nama || md.NamaAbsen || "").trim().toUpperCase();
                 if (dbNamaAbsen === namaTarget.toUpperCase()) {
-                    Object.values(md).forEach(val => {
-                        const strVal = String(val).trim().toUpperCase();
-                        if (strVal && !listPencarian.includes(strVal)) {
-                            listPencarian.push(strVal);
-                        }
-                    });
+                    namaSalesMaster = String(md.idSales || md.id || "").trim().toUpperCase();
                 }
             });
         } catch(e) { console.log("Gagal ambil master sales:", e); }
 
-        console.log("🎯 Kata kunci pencarian omzet untuk", namaTarget, ":", listPencarian);
+        // 3. Tentukan Rentang Tanggal Periode UC (Sesuai GAS Lama: Tanggal 25 s.d 24)
+        const sekarang = new Date();
+        let tglAwalObj, tglAkhirObj;
+        if (sekarang.getDate() >= 25) {
+            tglAwalObj = new Date(sekarang.getFullYear(), sekarang.getMonth(), 25);
+            tglAkhirObj = new Date(sekarang.getFullYear(), sekarang.getMonth() + 1, 24);
+        } else {
+            tglAwalObj = new Date(sekarang.getFullYear(), sekarang.getMonth() - 1, 25);
+            tglAkhirObj = new Date(sekarang.getFullYear(), sekarang.getMonth(), 24);
+        }
 
-        // 3. Ambil laporan penjualan dari koleksi berbaris di Firebase
-        let detailJual = [];
+        const formatTglStr = (d) => `${String(d.getDate()).padStart(2, '0')}/${String(d.getMonth() + 1).padStart(2, '0')}/${d.getFullYear()}`;
+        const strTanggalPertamaUC = formatTglStr(tglAwalObj);
+        const strTanggalTerakhirUC = formatTglStr(tglAkhirObj);
+
+        // 4. Ambil seluruh data penjualan dari koleksi Firebase
+        let detailJualPenjualan = [];
+        let detailJualUC = [];
+        let tanggalTerakhirGlobal = "-";
+
         try {
             const jualSnapshot = await window.getDocs(window.collection(window.db, "laporan_penjualan"));
-            console.log("📦 Total dokumen penjualan di Firebase:", jualSnapshot.size);
-
+            
             jualSnapshot.forEach(docSnap => {
                 const dataDoc = docSnap.data();
                 const r = dataDoc.row || {};
                 
-                let barisText = Object.values(r).join(" | ").toUpperCase();
+                let salesExcel = "";
+                let kategoriExcel = "";
+                let qtyVal = 0;
+                let omzetVal = 0;
+                let tglVal = "-";
+                let produkVal = "-";
 
-                let cocok = false;
-                listPencarian.forEach(keyword => {
-                    if (keyword.length > 2 && barisText.includes(keyword)) {
-                        cocok = true;
+                Object.keys(r).forEach(k => {
+                    const kUp = k.toUpperCase();
+                    const v = String(r[k] || "").trim();
+
+                    if (kUp.includes("SALES") || kUp.includes("NAMA SALES") || kUp.includes("ID")) {
+                        if (v && !salesExcel) salesExcel = v.toUpperCase();
+                    }
+                    if (kUp.includes("KATEGORI") || kUp.includes("CATEGORY")) {
+                        if (v) kategoriExcel = v.toUpperCase();
+                    }
+                    if (kUp.includes("QTY") || kUp.includes("QUANTITY") || kUp.includes("JUMLAH")) {
+                        qtyVal = Number(v) || 0;
+                    }
+                    if (kUp.includes("OMZET") || kUp.includes("TOTAL") || kUp.includes("HARGA") || kUp.includes("RUPIAH")) {
+                        omzetVal = Number(v.replace(/[^0-9.-]+/g, "")) || 0;
+                    }
+                    if (kUp.includes("TGL") || kUp.includes("TANGGAL") || kUp.includes("DATE")) {
+                        if (v) { tglVal = v; tanggalTerakhirGlobal = v; }
+                    }
+                    if (kUp.includes("PRODUK") || kUp.includes("ITEM") || kUp.includes("NAMA BARANG")) {
+                        if (v) produkVal = v;
                     }
                 });
 
-                if (cocok) {
-                    let qtyVal = 1;
-                    let omzetVal = 0;
-                    let tglVal = "-";
-                    let produkVal = "-";
+                // Cek kecocokan Sales
+                let isSalesMatch = false;
+                if (namaSalesMaster && salesExcel === namaSalesMaster) isSalesMatch = true;
+                if (salesExcel === namaTarget.toUpperCase()) isSalesMatch = true;
+                if (salesExcel.includes(namaSalesMaster) || salesExcel.includes(namaTarget.toUpperCase())) isSalesMatch = true;
 
-                    Object.keys(r).forEach(k => {
-                        const kUp = k.toUpperCase();
-                        const v = String(r[k] || "").trim();
+                if (!isSalesMatch) return;
 
-                        if (kUp.includes("QTY") || kUp.includes("QUANTITY") || kUp.includes("JUMLAH")) {
-                            qtyVal = Number(v) || 1;
-                        }
-                        if (kUp.includes("OMZET") || kUp.includes("TOTAL") || kUp.includes("HARGA") || kUp.includes("RUPIAH")) {
-                            omzetVal = Number(v.replace(/[^0-9.-]+/g, "")) || 0;
-                        }
-                        if (kUp.includes("TGL") || kUp.includes("TANGGAL") || kUp.includes("DATE")) {
-                            if (v) tglVal = v;
-                        }
-                        if (kUp.includes("PRODUK") || kUp.includes("ITEM") || kUp.includes("NAMA BARANG")) {
-                            if (v) produkVal = v;
-                        }
-                    });
-
-                    detailJual.push({
+                // A. UNTUK MENU PENJUALAN: Abaikan Garansi & Ongkos
+                if (kategoriExcel !== "GARANSI" && kategoriExcel !== "ONGKOS") {
+                    detailJualPenjualan.push({
                         tanggal: tglVal,
                         produk: produkVal,
                         qty: qtyVal,
                         omzet: omzetVal
                     });
                 }
+
+                // B. UNTUK MENU UC: Hanya ambil kategori GARANSI sesuai rentang tanggal periode
+                if (kategoriExcel === "GARANSI") {
+                    // Konversi tanggal string "DD/MM/YYYY" ke objek Date untuk perbandingan
+                    const parts = tglVal.split("/");
+                    if (parts.length === 3) {
+                        const tglItem = new Date(Number(parts[2]), Number(parts[1]) - 1, Number(parts[0]));
+                        if (tglItem >= tglAwalObj && tglItem <= tglAkhirObj) {
+                            detailJualUC.push({
+                                tanggal: tglVal,
+                                produk: produkVal,
+                                qty: qtyVal,
+                                omzet: omzetVal
+                            });
+                        }
+                    }
+                }
             });
         } catch(e) {
             console.log("Gagal membaca koleksi penjualan:", e);
         }
 
-        let totalU = detailJual.reduce((acc, cur) => acc + cur.qty, 0);
-        let totalO = detailJual.reduce((acc, cur) => acc + cur.omzet, 0);
+        // Kalkulasi Total Penjualan
+        let totalU = detailJualPenjualan.reduce((acc, cur) => acc + cur.qty, 0);
+        let totalO = detailJualPenjualan.reduce((acc, cur) => acc + cur.omzet, 0);
         
         cacheData.penjualan = {
-            nama: namaTarget, tanggalPertama: "01/08/2026", tanggalTerakhir: "31/08/2026",
-            totalUnit: totalU, totalOmzet: totalO, detail: detailJual
+            nama: namaTarget, tanggalPertama: "01/08/2026", tanggalTerakhir: tanggalTerakhirGlobal,
+            totalUnit: totalU, totalOmzet: totalO, detail: detailJualPenjualan
         };
 
-        cacheData.uc = { nama: namaTarget, totalUC: totalU, tanggalPertama: "25/07/2026", tanggalTerakhir: "24/08/2026", detail: detailJual };
-        cacheData.perolehan = { list: [{ nama: namaTarget, omzet: totalO, uc: totalU }] };
+        // Kalkulasi Total UC (Garansi)
+        let totalUC = detailJualUC.reduce((acc, cur) => acc + cur.qty, 0);
+        cacheData.uc = { 
+            nama: namaTarget, totalUC: totalUC, totalUnit: totalUC, totalOmzet: 0,
+            tanggalPertama: strTanggalPertamaUC, tanggalTerakhir: strTanggalTerakhirUC, detail: detailJualUC 
+        };
+
+        cacheData.perolehan = { list: [{ nama: namaTarget, omzet: totalO, uc: totalUC }] };
         cacheData.promo = { data: [{ judul: "Promo Kemerdekaan UFO", periode: "Agustus 2026", detail: "Diskon spesial produk elektronik." }] };
         cacheData.rules = { data: [{ poin: "SOP Disiplin Toko", desc: "Datang tepat waktu dan seragam rapi." }] };
         cacheData.punishment = { data: [{ judul: "Keterlambatan", level: "Peringatan", detail: "Potongan denda Rp 10.000." }] };
