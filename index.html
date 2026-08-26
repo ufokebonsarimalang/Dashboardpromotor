@@ -19,24 +19,15 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getFirestore, collection, getDocs, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        // Konfigurasi Firebase Anda (Ganti dengan kredensial project Firebase Anda)
+        // Konfigurasi Firebase Project ufokebonsariapps Anda
         const firebaseConfig = {
-
-  apiKey: "AIzaSyBMokA92YiB87vwuqBREwNhHkkU_bXo8cI",
-
-  authDomain: "ufokebonsariapps.firebaseapp.com",
-
-  projectId: "ufokebonsariapps",
-
-  storageBucket: "ufokebonsariapps.firebasestorage.app",
-
-  messagingSenderId: "663266923207",
-
-  appId: "1:663266923207:web:94b7d55af67dc45f3724e2"
-
-};
-
-
+            apiKey: "AIzaSyBMokA92YiB87vwuqBREwNhHkkU_bXo8cI",
+            authDomain: "ufokebonsariapps.firebaseapp.com",
+            projectId: "ufokebonsariapps",
+            storageBucket: "ufokebonsariapps.firebasestorage.app",
+            messagingSenderId: "663266923207",
+            appId: "1:663266923207:web:94b7d55af67dc45f3724e2"
+        };
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
@@ -482,10 +473,10 @@
             <p style="font-size: 11px; color: #9ca3af; margin-bottom: 8px;">Upload data promotor ke Firebase.</p>
             <input type="file" id="fileMasterSales" accept=".xlsx, .xls, .csv" onchange="importMasterSalesKeFirebase(event)" style="color: #fff; font-size: 11px;">
         </div>
-        <!-- Upload Absen Raw -->
+        <!-- Upload Absen Finger -->
         <div class="card" style="border-left: 4px solid #d4af37; background: #111827;">
-            <h3 style="color: #d4af37; font-size: 13px; margin-bottom: 4px;">📥 Upload Absensi RAW</h3>
-            <p style="font-size: 11px; color: #9ca3af; margin-bottom: 8px;">Proses file mesin absensi.</p>
+            <h3 style="color: #d4af37; font-size: 13px; margin-bottom: 4px;">📥 Upload Absen Finger</h3>
+            <p style="font-size: 11px; color: #9ca3af; margin-bottom: 8px;">Proses sheet ABSENFINGER.</p>
             <input type="file" id="fileAbsen" accept=".xlsx, .xls, .csv" onchange="prosesUploadAbsensi(event)" style="color: #fff; font-size: 11px;">
         </div>
         <!-- Upload Penjualan -->
@@ -507,7 +498,7 @@
         <button class="btn-logout-main" onclick="logout()">🚪 Keluar</button>
     </div>
 
-    <!-- TAMPILAN 1: HALAMAN UTAMA KARTU MENU -->
+    <!-- TAMPILAN 1: KARTU MENU -->
     <div id="menuGridContainer">
         <div class="menu-card-item" onclick="pindahMenu('Absensi')">
             <span class="admin-badge" data-badge="menu">Pribadi</span>
@@ -658,6 +649,23 @@ function aturTampilanBerdasarkanRole() {
 }
 
 // ==========================================
+// FUNGSI KONVERTER JAM EXCEL (DESIMAL KE "HH:MM")
+// ==========================================
+function excelTimeToString(serial) {
+    if (!serial) return "";
+    if (typeof serial === 'string' && serial.includes(":")) return serial;
+    const num = Number(serial);
+    if (isNaN(num)) return String(serial);
+
+    const totalSeconds = Math.round(num * 86400);
+    const hours = Math.floor(totalSeconds / 3600) % 24;
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+
+    const pad = (n) => String(n).padStart(2, '0');
+    return `${pad(hours)}:${pad(minutes)}`;
+}
+
+// ==========================================
 // FUNGSI LOGIN DARI FIREBASE FIRESTORE
 // ==========================================
 async function login() {
@@ -727,6 +735,8 @@ async function login() {
 }
 
 // ==========================================
+// FUNGSI IMPORT MASTER SALES (OTOMATIS CARI SHEET)
+// ==========================================
 async function importMasterSalesKeFirebase(event) {
     const file = event.target.files[0];
     if (!file) return;
@@ -739,8 +749,7 @@ async function importMasterSalesKeFirebase(event) {
             const data = new Uint8Array(e.target.result);
             const workbook = XLSX.read(data, { type: 'array' });
             
-            // Cari sheet yang namanya mengandung kata "MASTER" atau "SALES"
-            let targetSheetName = workbook.SheetNames[0]; // Default sheet pertama
+            let targetSheetName = workbook.SheetNames[0];
             workbook.SheetNames.forEach(name => {
                 const nUpper = name.toUpperCase();
                 if (nUpper.includes("MASTER SALES") || nUpper.includes("MASTER_SALES") || nUpper.includes("SALES")) {
@@ -748,12 +757,11 @@ async function importMasterSalesKeFirebase(event) {
                 }
             });
 
-            console.log("Sheet yang dipilih untuk Master Sales:", targetSheetName);
             const worksheet = workbook.Sheets[targetSheetName];
             const jsonRows = XLSX.utils.sheet_to_json(worksheet, { defval: "" });
 
             if (jsonRows.length === 0) {
-                tutupPopup; // Sembunyikan popup
+                tutupPopup();
                 showPopup(`Sheet "${targetSheetName}" kosong atau tidak ada data.`);
                 return;
             }
@@ -763,12 +771,7 @@ async function importMasterSalesKeFirebase(event) {
                 const row = jsonRows[i];
                 const keys = Object.keys(row);
                 
-                let namaVal = "";
-                let pinVal = "1234";
-                let roleVal = "USER";
-                let aktifVal = "YA";
-                let idSalesVal = "";
-                let brandVal = "";
+                let namaVal = "", pinVal = "1234", roleVal = "USER", aktifVal = "YA", idSalesVal = "", brandVal = "";
 
                 keys.forEach(k => {
                     const kUpper = k.toUpperCase();
@@ -815,9 +818,7 @@ async function importMasterSalesKeFirebase(event) {
             tutupPopup();
             if (jumlahMasuk > 0) {
                 showPopup(`Berhasil! ${jumlahMasuk} data Master Sales dari sheet "${targetSheetName}" sukses diimpor.`);
-                if (typeof loadNamaAdminFirebase === 'function') {
-                    loadNamaAdminFirebase();
-                }
+                loadNamaAdminFirebase();
             } else {
                 showPopup(`Sheet "${targetSheetName}" ditemukan, tetapi kolom nama promotor tidak terdeteksi.`);
             }
@@ -829,6 +830,9 @@ async function importMasterSalesKeFirebase(event) {
     reader.readAsArrayBuffer(file);
 }
 
+// ==========================================
+// FUNGSI UPLOAD ABSEN FINGER (OTOMATIS JAM BERSIH)
+// ==========================================
 async function prosesUploadAbsensi(event) {
     const file = event.target.files[0];
     if (!file) return;
@@ -841,7 +845,6 @@ async function prosesUploadAbsensi(event) {
             const data = new Uint8Array(e.target.result);
             const workbook = XLSX.read(data, { type: 'array' });
             
-            // Cari sheet yang namanya mengandung "ABSENFINGER" atau "ABSEN"
             let targetSheetName = workbook.SheetNames[0];
             workbook.SheetNames.forEach(name => {
                 const nUpper = name.toUpperCase();
@@ -850,10 +853,7 @@ async function prosesUploadAbsensi(event) {
                 }
             });
 
-            console.log("Sheet Absensi yang dipilih:", targetSheetName);
             const worksheet = workbook.Sheets[targetSheetName];
-            
-            // Ubah sheet ABSENFINGER ke format JSON baris
             const jsonRows = XLSX.utils.sheet_to_json(worksheet, { defval: "" });
 
             if (jsonRows.length === 0) {
@@ -862,7 +862,6 @@ async function prosesUploadAbsensi(event) {
                 return;
             }
 
-            // Ambil data yang sudah ada di Firebase untuk cek duplikat
             const existingSnapshot = await window.getDocs(window.collection(window.db, "absensi_finger"));
             const setDuplikat = new Set();
             existingSnapshot.forEach(docSnap => {
@@ -871,20 +870,10 @@ async function prosesUploadAbsensi(event) {
             });
 
             let countBaru = 0;
-
             for (let i = 0; i < jsonRows.length; i++) {
                 const row = jsonRows[i];
                 
-                // Cari key kolom secara fleksibel
-                let namaVal = "";
-                let tanggalVal = "";
-                let masukVal = "";
-                let ist1Val = "";
-                let kem1Val = "";
-                let ist2Val = "";
-                let kem2Val = "";
-                let pulangVal = "";
-                let terlambatVal = "";
+                let namaVal = "", tanggalVal = "", masukVal = "", ist1Val = "", kem1Val = "", ist2Val = "", kem2Val = "", pulangVal = "", terlambatVal = "";
 
                 Object.keys(row).forEach(k => {
                     const kUp = k.toUpperCase();
@@ -892,22 +881,22 @@ async function prosesUploadAbsensi(event) {
 
                     if (kUp.includes("NAMA") || kUp.includes("PROMOTOR")) namaVal = val;
                     else if (kUp.includes("TGL") || kUp.includes("TANGGAL") || kUp.includes("HARI")) tanggalVal = val;
-                    else if (kUp.includes("MASUK")) masukVal = val;
-                    else if (kUp.includes("ISTIRAHAT 1") || kUp.includes("IST1")) ist1Val = val;
-                    else if (kUp.includes("KEMBALI 1") || kUp.includes("KEM1")) kem1Val = val;
-                    else if (kUp.includes("ISTIRAHAT 2") || kUp.includes("IST2")) ist2Val = val;
-                    else if (kUp.includes("KEMBALI 2") || kUp.includes("KEM2")) kem2Val = val;
-                    else if (kUp.includes("PULANG")) pulangVal = val;
+                    else if (kUp.includes("MASUK")) masukVal = excelTimeToString(val);
+                    else if (kUp.includes("ISTIRAHAT 1") || kUp.includes("IST1")) ist1Val = excelTimeToString(val);
+                    else if (kUp.includes("KEMBALI 1") || kUp.includes("KEM1")) kem1Val = excelTimeToString(val);
+                    else if (kUp.includes("ISTIRAHAT 2") || kUp.includes("IST2")) ist2Val = excelTimeToString(val);
+                    else if (kUp.includes("KEMBALI 2") || kUp.includes("KEM2")) kem2Val = excelTimeToString(val);
+                    else if (kUp.includes("PULANG")) pulangVal = excelTimeToString(val);
                     else if (kUp.includes("TERLAMBAT") || kUp.includes("LATE")) terlambatVal = val;
                 });
 
                 if (!namaVal || !tanggalVal) continue;
+                if (namaVal.toUpperCase() === "NAMA" || namaVal.toUpperCase() === "PROMOTOR") continue;
 
                 const namaClean = namaVal.toUpperCase();
                 const tglClean = tanggalVal;
                 const uniqueKey = namaClean + "|" + tglClean;
 
-                // Tentukan status terlambat (otomatis "YA" jika masuk > 08:00 atau dari kolom sheet)
                 let isLate = terlambatVal.toUpperCase();
                 if (!isLate && masukVal) {
                     isLate = (masukVal > "08:00") ? "YA" : "TIDAK";
@@ -934,7 +923,7 @@ async function prosesUploadAbsensi(event) {
             }
 
             tutupPopup();
-            showPopup(`Sukses! ${countBaru} data absensi dari sheet "${targetSheetName}" berhasil disimpan ke Firebase secara instan.`);
+            showPopup(`Sukses! ${countBaru} data absensi dari sheet "${targetSheetName}" berhasil disimpan.`);
         } catch (err) {
             tutupPopup();
             showPopup("Gagal memproses file absensi: " + err.message);
@@ -943,6 +932,9 @@ async function prosesUploadAbsensi(event) {
     reader.readAsArrayBuffer(file);
 }
 
+// ==========================================
+// FUNGSI UPLOAD PENJUALAN
+// ==========================================
 async function prosesUploadPenjualan(event) {
     const file = event.target.files[0];
     if (!file) return;
