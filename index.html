@@ -928,22 +928,46 @@ async function prosesUploadAbsensi(event) {
 async function prosesUploadPenjualan(event) {
     const file = event.target.files[0];
     if (!file) return;
-    showPopup("Memproses laporan penjualan ke Firebase...");
+    
+    showPopup("Mencari sheet PENJUALAN & membaca ribuan data omzet...");
+
     const reader = new FileReader();
     reader.onload = async function(e) {
         try {
             const data = new Uint8Array(e.target.result);
             const workbook = XLSX.read(data, { type: 'array' });
-            const worksheet = workbook.Sheets[workbook.SheetNames[0]];
-            const jsonRows = XLSX.utils.sheet_to_json(worksheet);
+            
+            // Cari sheet yang namanya mengandung kata "PENJUALAN" atau "JUAL"
+            let targetSheetName = workbook.SheetNames[0];
+            workbook.SheetNames.forEach(name => {
+                const nUpper = name.toUpperCase();
+                if (nUpper.includes("PENJUALAN") || nUpper.includes("JUAL") || nUpper.includes("OMZET")) {
+                    targetSheetName = name;
+                }
+            });
 
+            console.log("Sheet Penjualan yang dipilih:", targetSheetName);
+            const worksheet = workbook.Sheets[targetSheetName];
+            
+            // Ubah seluruh sheet ke JSON dengan membaca sampai baris paling akhir
+            const jsonRows = XLSX.utils.sheet_to_json(worksheet, { defval: "" });
+
+            if (jsonRows.length === 0) {
+                tutupPopup();
+                showPopup(`Sheet "${targetSheetName}" kosong atau tidak terbaca.`);
+                return;
+            }
+
+            // Simpan ke Firebase Firestore dalam 1 dokumen besar
             await window.setDoc(window.doc(window.db, "nexabsent_data", "laporan_penjualan"), {
-                rows: jsonRows, totalBaris: jsonRows.length,
-                updatedAt: new Date().toISOString(), fileName: file.name
+                rows: jsonRows, 
+                totalBaris: jsonRows.length,
+                updatedAt: new Date().toISOString(), 
+                fileName: file.name
             }, { merge: true });
 
             tutupPopup();
-            showPopup(`Sukses! ${jsonRows.length} baris data penjualan tersinkron ke Firebase.`);
+            showPopup(`Sukses! ${jsonRows.length} baris data penjualan dari sheet "${targetSheetName}" berhasil tersinkron penuh ke Firebase.`);
         } catch (err) {
             tutupPopup();
             showPopup("Gagal memproses file penjualan: " + err.message);
