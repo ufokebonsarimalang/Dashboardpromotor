@@ -1007,6 +1007,7 @@ async function muatSemuaDataLatarBelakang(namaTarget) {
     if(loadEl) loadEl.style.display = "block";
 
     try {
+        // 1. Ambil data absensi berdasarkan Nama Absen
         const absenSnap = await window.getDocs(window.collection(window.db, "absensi_finger"));
         let hasilAbsen = [];
         let jumlahTerlambat = 0;
@@ -1019,13 +1020,30 @@ async function muatSemuaDataLatarBelakang(namaTarget) {
         });
         cacheData.absensi = { data: hasilAbsen, terlambat: jumlahTerlambat };
 
+        // 2. Ambil "Nama Sales / ID Sales" yang cocok dengan Nama Absen ini dari koleksi master_sales
+        let namaSalesTarget = "";
+        try {
+            const masterSnap = await window.getDocs(window.collection(window.db, "master_sales"));
+            masterSnap.forEach(docSnap => {
+                const md = docSnap.data();
+                const dbNamaAbsen = (md.nama || md.NamaAbsen || "").trim().toUpperCase();
+                if (dbNamaAbsen === namaTarget.trim().toUpperCase()) {
+                    // Ambil nilai dari kolom Nama Sales / ID Sales
+                    namaSalesTarget = (md.idSales || md.NamaSales || md.id || "").trim().toUpperCase();
+                }
+            });
+        } catch(err) { console.log("Gagal ambil master sales", err); }
+
+        // 3. Ambil laporan penjualan dan cocokan menggunakan Nama Sales / ID Sales tersebut
         const jualDoc = await window.getDoc(window.doc(window.db, "nexabsent_data", "laporan_penjualan"));
         let detailJual = [];
         if (jualDoc.exists()) {
             const rows = jualDoc.data().rows || [];
             rows.forEach(r => {
-                const sales = (r['Sales'] || r['NAMA'] || "").toString().trim().toUpperCase();
-                if (sales === namaTarget.toUpperCase()) {
+                const salesCol = (r['Sales'] || r['NAMA SALES'] || r['NAMA'] || r['ID'] || "").toString().trim().toUpperCase();
+                
+                // Cocokkan baris penjualan dengan Nama Sales / ID Sales ATAU Nama Absen cadangan
+                if ((namaSalesTarget && salesCol === namaSalesTarget) || salesCol === namaTarget.toUpperCase()) {
                     detailJual.push({
                         tanggal: r['Tanggal'] || r['TGL'] || '-',
                         produk: r['Produk'] || r['PRODUK'] || '-',
@@ -1038,6 +1056,7 @@ async function muatSemuaDataLatarBelakang(namaTarget) {
 
         let totalU = detailJual.reduce((acc, cur) => acc + cur.qty, 0);
         let totalO = detailJual.reduce((acc, cur) => acc + cur.omzet, 0);
+        
         cacheData.penjualan = {
             nama: namaTarget, tanggalPertama: "01/08/2026", tanggalTerakhir: "31/08/2026",
             totalUnit: totalU, totalOmzet: totalO, detail: detailJual
@@ -1058,7 +1077,6 @@ async function muatSemuaDataLatarBelakang(namaTarget) {
         if(loadEl) loadEl.style.display = "none";
     }
 }
-
 async function gantiNamaAdmin() {
     let namaTerpilih = document.getElementById("nama").value.trim();
     if(!namaTerpilih) return;
