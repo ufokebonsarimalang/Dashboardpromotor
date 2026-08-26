@@ -829,71 +829,112 @@ async function importMasterSalesKeFirebase(event) {
     reader.readAsArrayBuffer(file);
 }
 
-// ==========================================
-// FUNGSI UPLOAD ABSEN RAW & PENJUALAN KE FIREBASE
-// ==========================================
 async function prosesUploadAbsensi(event) {
     const file = event.target.files[0];
     if (!file) return;
-    showPopup("Memproses file absensi & menyaring data ke Firebase...");
+
+    showPopup("Membaca sheet ABSENFINGER & menyinkronkan ke Firebase...");
+
     const reader = new FileReader();
     reader.onload = async function(e) {
         try {
             const data = new Uint8Array(e.target.result);
             const workbook = XLSX.read(data, { type: 'array' });
-            const worksheet = workbook.Sheets[workbook.SheetNames[0]];
-            const rawData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+            
+            // Cari sheet yang namanya mengandung "ABSENFINGER" atau "ABSEN"
+            let targetSheetName = workbook.SheetNames[0];
+            workbook.SheetNames.forEach(name => {
+                const nUpper = name.toUpperCase();
+                if (nUpper.includes("ABSENFINGER") || nUpper.includes("ABSEN")) {
+                    targetSheetName = name;
+                }
+            });
 
+            console.log("Sheet Absensi yang dipilih:", targetSheetName);
+            const worksheet = workbook.Sheets[targetSheetName];
+            
+            // Ubah sheet ABSENFINGER ke format JSON baris
+            const jsonRows = XLSX.utils.sheet_to_json(worksheet, { defval: "" });
+
+            if (jsonRows.length === 0) {
+                tutupPopup();
+                showPopup(`Sheet "${targetSheetName}" kosong atau tidak terbaca.`);
+                return;
+            }
+
+            // Ambil data yang sudah ada di Firebase untuk cek duplikat
             const existingSnapshot = await window.getDocs(window.collection(window.db, "absensi_finger"));
             const setDuplikat = new Set();
             existingSnapshot.forEach(docSnap => {
                 const d = docSnap.data();
-                setDuplikat.add(d.nama + "|" + d.tanggal);
+                setDuplikat.add((d.nama || "").trim().toUpperCase() + "|" + (d.tanggal || "").trim());
             });
 
             let countBaru = 0;
-            for (let r = 0; r < rawData.length - 2; r++) {
-                const rowText = (rawData[r] || []).join(" ");
-                if (!rowText.includes("Nama:")) continue;
-                const matchNama = rowText.match(/Nama:(.*?)(Dept:|Shift:|$)/i);
-                const nama = matchNama ? matchNama[1].trim().toUpperCase() : "";
 
-                const tanggalRow = rawData[r + 1] || [];
-                const jamRow = rawData[r + 2] || [];
+            for (let i = 0; i < jsonRows.length; i++) {
+                const row = jsonRows[i];
+                
+                // Cari key kolom secara fleksibel
+                let namaVal = "";
+                let tanggalVal = "";
+                let masukVal = "";
+                let ist1Val = "";
+                let kem1Val = "";
+                let ist2Val = "";
+                let kem2Val = "";
+                let pulangVal = "";
+                let terlambatVal = "";
 
-                for (let c = 0; c < Math.max(tanggalRow.length, jamRow.length); c++) {
-                    const tgl = String(tanggalRow[c] || "").trim();
-                    const isiJam = String(jamRow[c] || "").trim();
-                    if (!tgl || !isiJam) continue;
+                Object.keys(row).forEach(k => {
+                    const kUp = k.toUpperCase();
+                    const val = String(row[k] || "").trim();
 
-                    const j = isiJam.split(/\s+/);
-                    let masuk = "", ist1 = "", kem1 = "", ist2 = "", kem2 = "", pulang = "";
-                    switch (j.length) {
-                        case 2: masuk = j[0]; pulang = j[1]; break;
-                        case 3: masuk = j[0]; ist1 = j[1]; pulang = j[2]; break;
-                        case 4: masuk = j[0]; ist1 = j[1]; kem1 = j[2]; pulang = j[3]; break;
-                        case 5: masuk = j[0]; ist1 = j[1]; kem1 = j[2]; ist2 = j[3]; pulang = j[4]; break;
-                        default:
-                            masuk = j[0] || ""; ist1 = j[1] || ""; kem1 = j[2] || "";
-                            ist2 = j[3] || ""; kem2 = j[4] || ""; pulang = j[5] || "";
-                    }
+                    if (kUp.includes("NAMA") || kUp.includes("PROMOTOR")) namaVal = val;
+                    else if (kUp.includes("TGL") || kUp.includes("TANGGAL") || kUp.includes("HARI")) tanggalVal = val;
+                    else if (kUp.includes("MASUK")) masukVal = val;
+                    else if (kUp.includes("ISTIRAHAT 1") || kUp.includes("IST1")) ist1Val = val;
+                    else if (kUp.includes("KEMBALI 1") || kUp.includes("KEM1")) kem1Val = val;
+                    else if (kUp.includes("ISTIRAHAT 2") || kUp.includes("IST2")) ist2Val = val;
+                    else if (kUp.includes("KEMBALI 2") || kUp.includes("KEM2")) kem2Val = val;
+                    else if (kUp.includes("PULANG")) pulangVal = val;
+                    else if (kUp.includes("TERLAMBAT") || kUp.includes("LATE")) terlambatVal = val;
+                });
 
-                    const uniqueKey = nama + "|" + tgl;
-                    if (!setDuplikat.has(uniqueKey) && nama) {
-                        const docId = `${nama}_${tgl.replace(/\//g, "-")}`;
-                        await window.setDoc(window.doc(window.db, "absensi_finger", docId), {
-                            nama, tanggal: tgl, masuk, istirahat1: ist1, kembali1: kem1,
-                            istirahat2: ist2, kembali2: kem2, pulang,
-                            terlambat: (masuk > "08:00") ? "YA" : "TIDAK",
-                            updatedAt: new Date().toISOString()
-                        });
-                        setDuplikat.add(uniqueKey);
-                        countBaru++;
-                    }
+                if (!namaVal || !tanggalVal) continue;
+
+                const namaClean = namaVal.toUpperCase();
+                const tglClean = tanggalVal;
+                const uniqueKey = namaClean + "|" + tglClean;
+
+                // Tentukan status terlambat (otomatis "YA" jika masuk > 08:00 atau dari kolom sheet)
+                let isLate = terlambatVal.toUpperCase();
+                if (!isLate && masukVal) {
+                    isLate = (masukVal > "08:00") ? "YA" : "TIDAK";
+                }
+
+                if (!setDuplikat.has(uniqueKey)) {
+                    const docId = `${namaClean}_${tglClean.replace(/\//g, "-")}`;
+                    await window.setDoc(window.doc(window.db, "absensi_finger", docId), {
+                        nama: namaClean,
+                        tanggal: tglClean,
+                        masuk: masukVal,
+                        istirahat1: ist1Val,
+                        kembali1: kem1Val,
+                        istirahat2: ist2Val,
+                        kembali2: kem2Val,
+                        pulang: pulangVal,
+                        terlambat: isLate || "TIDAK",
+                        updatedAt: new Date().toISOString()
+                    });
+
+                    setDuplikat.add(uniqueKey);
+                    countBaru++;
                 }
             }
+
             tutupPopup();
-            showPopup(`Sukses! ${countBaru} data absensi baru berhasil disimpan ke Firebase.`);
+            showPopup(`Sukses! ${countBaru} data absensi dari sheet "${targetSheetName}" berhasil disimpan ke Firebase secara instan.`);
         } catch (err) {
             tutupPopup();
             showPopup("Gagal memproses file absensi: " + err.message);
