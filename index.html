@@ -727,39 +727,85 @@ async function login() {
 }
 
 // ==========================================
-// FUNGSI IMPORT MASTER SALES KE FIREBASE
-// ==========================================
 async function importMasterSalesKeFirebase(event) {
     const file = event.target.files[0];
     if (!file) return;
 
-    showPopup("Sedang mengimpor data Master Sales ke Firebase...");
+    showPopup("Mencari sheet Master Sales di dalam file...");
 
     const reader = new FileReader();
     reader.onload = async function(e) {
         try {
             const data = new Uint8Array(e.target.result);
             const workbook = XLSX.read(data, { type: 'array' });
-            const firstSheetName = workbook.SheetNames[0];
-            const worksheet = workbook.Sheets[firstSheetName];
-            const jsonRows = XLSX.utils.sheet_to_json(worksheet);
+            
+            // Cari sheet yang namanya mengandung kata "MASTER" atau "SALES"
+            let targetSheetName = workbook.SheetNames[0]; // Default sheet pertama
+            workbook.SheetNames.forEach(name => {
+                const nUpper = name.toUpperCase();
+                if (nUpper.includes("MASTER SALES") || nUpper.includes("MASTER_SALES") || nUpper.includes("SALES")) {
+                    targetSheetName = name;
+                }
+            });
+
+            console.log("Sheet yang dipilih untuk Master Sales:", targetSheetName);
+            const worksheet = workbook.Sheets[targetSheetName];
+            const jsonRows = XLSX.utils.sheet_to_json(worksheet, { defval: "" });
+
+            if (jsonRows.length === 0) {
+                tutupPopup; // Sembunyikan popup
+                showPopup(`Sheet "${targetSheetName}" kosong atau tidak ada data.`);
+                return;
+            }
 
             let jumlahMasuk = 0;
             for (let i = 0; i < jsonRows.length; i++) {
                 const row = jsonRows[i];
-                const nama = String(row['Nama'] || row['NAMA'] || row['Nama Absen'] || "").trim().toUpperCase();
-                const idSales = String(row['ID Sales'] || row['ID'] || row['Id Sales'] || "").trim().toUpperCase();
-                const aktif = String(row['Aktif'] || row['AKTIF'] || "YA").trim().toUpperCase();
-                const pin = String(row['Pin'] || row['PIN'] || row['Password'] || "1234").trim();
-                const role = String(row['Role'] || row['ROLE'] || "USER").trim().toUpperCase();
-                const brand = String(row['Brand'] || row['BRAND'] || "").trim().toUpperCase();
-                const targetUC = Number(row['Target UC'] || row['TARGET UC'] || 16);
+                const keys = Object.keys(row);
+                
+                let namaVal = "";
+                let pinVal = "1234";
+                let roleVal = "USER";
+                let aktifVal = "YA";
+                let idSalesVal = "";
+                let brandVal = "";
 
-                if (!nama) continue;
+                keys.forEach(k => {
+                    const kUpper = k.toUpperCase();
+                    const val = String(row[k] || "").trim();
 
-                const docId = nama.replace(/\s+/g, '_');
+                    if (kUpper.includes("NAMA") || kUpper.includes("PROMOTOR") || kUpper.includes("SALES")) {
+                        if (!namaVal && val && val.toUpperCase() !== "NAMA") namaVal = val;
+                    }
+                    if (kUpper.includes("PIN") || kUpper.includes("PASS") || kUpper.includes("SANDI")) {
+                        if (val) pinVal = val;
+                    }
+                    if (kUpper.includes("ROLE") || kUpper.includes("AKSES") || kUpper.includes("LEVEL")) {
+                        if (val) roleVal = val;
+                    }
+                    if (kUpper.includes("AKTIF") || kUpper.includes("STATUS")) {
+                        if (val) aktifVal = val;
+                    }
+                    if (kUpper.includes("ID") || kUpper.includes("KODE")) {
+                        if (!idSalesVal) idSalesVal = val;
+                    }
+                    if (kUpper.includes("BRAND") || kUpper.includes("MERK")) {
+                        if (!brandVal) brandVal = val;
+                    }
+                });
+
+                if (!namaVal) continue;
+                const namaFinal = namaVal.toUpperCase();
+                if (namaFinal === "NAMA" || namaFinal === "PROMOTOR") continue;
+
+                const docId = namaFinal.replace(/\s+/g, '_');
                 await window.setDoc(window.doc(window.db, "master_sales", docId), {
-                    nama, idSales, aktif, pin, role, brand, targetUC,
+                    nama: namaFinal,
+                    idSales: idSalesVal.toUpperCase(),
+                    aktif: aktifVal.toUpperCase() || "YA",
+                    pin: String(pinVal),
+                    role: roleVal.toUpperCase() || "USER",
+                    brand: brandVal.toUpperCase(),
                     updatedAt: new Date().toISOString()
                 }, { merge: true });
 
@@ -767,11 +813,17 @@ async function importMasterSalesKeFirebase(event) {
             }
 
             tutupPopup();
-            showPopup(`Berhasil! ${jumlahMasuk} data Master Sales sukses diimpor ke Cloud Firebase.`);
-            loadNamaAdminFirebase();
+            if (jumlahMasuk > 0) {
+                showPopup(`Berhasil! ${jumlahMasuk} data Master Sales dari sheet "${targetSheetName}" sukses diimpor.`);
+                if (typeof loadNamaAdminFirebase === 'function') {
+                    loadNamaAdminFirebase();
+                }
+            } else {
+                showPopup(`Sheet "${targetSheetName}" ditemukan, tetapi kolom nama promotor tidak terdeteksi.`);
+            }
         } catch (err) {
             tutupPopup();
-            showPopup("Gagal mengimpor Master Sales: " + err.message);
+            showPopup("Gagal mengimpor: " + err.message);
         }
     };
     reader.readAsArrayBuffer(file);
