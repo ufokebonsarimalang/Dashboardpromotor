@@ -3,42 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UFO Kebonsari - Dashboard Promotor (Firebase)</title>
+    <title>UFO Kebonsari - Dashboard Promotor</title>
 
     <!-- Google Font: Outfit -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
-    <!-- Library Ekspor Excel & PDF & SheetJS -->
+    <!-- Library Ekspor Excel & PDF -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
-    <!-- Firebase SDK v10 Modular -->
+    <!-- Firebase SDK (Modular v10) -->
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, collection, getDocs, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        // Konfigurasi Firebase Project ufokebonsariapps Anda
+        // Konfigurasi Firebase Anda (Ganti dengan config milik Anda jika berbeda)
         const firebaseConfig = {
-            apiKey: "AIzaSyBMokA92YiB87vwuqBREwNhHkkU_bXo8cI",
-            authDomain: "ufokebonsariapps.firebaseapp.com",
-            projectId: "ufokebonsariapps",
-            storageBucket: "ufokebonsariapps.firebasestorage.app",
-            messagingSenderId: "663266923207",
-            appId: "1:663266923207:web:94b7d55af67dc45f3724e2"
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_AUTH_DOMAIN",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_STORAGE_BUCKET",
+            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+            appId: "YOUR_APP_ID"
         };
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // Daftarkan ke window agar bisa diakses fungsi global
+        // Ekspor ke window agar bisa diakses script utama
         window.db = db;
         window.collection = collection;
         window.getDocs = getDocs;
-        window.doc = doc;
-        window.getDoc = getDoc;
-        window.setDoc = setDoc;
+        window.firebaseReady = true;
+        console.log("🔥 Firebase Connected Successfully!");
     </script>
 
     <style>
@@ -328,6 +327,61 @@
         .card.warning { border-left: 4px solid #ef4444; }
         .card.late { border: 2px solid #d4af37; background: #151922; }
 
+        .mobile-list-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            width: 100%;
+        }
+
+        .mobile-list-card {
+            background: #111827;
+            border: 1px solid #374151;
+            border-radius: 14px;
+            padding: 16px;
+            width: 100%;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+        }
+
+        .mobile-list-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+        }
+
+        .mobile-list-title {
+            font-size: 14.5px;
+            font-weight: 700;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            word-break: break-word;
+        }
+
+        .mobile-list-badge {
+            background: rgba(212, 175, 55, 0.15);
+            color: #d4af37;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            padding: 3px 8px;
+            border-radius: 6px;
+            font-size: 10.5px;
+            font-weight: 700;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .mobile-list-content {
+            font-size: 13.5px;
+            line-height: 1.5;
+            color: #d1d5db;
+            word-wrap: break-word;
+        }
+
         .tanggal {
             text-align: center;
             font-weight: 700;
@@ -386,7 +440,7 @@
             font-size: 12.5px;
         }
 
-        #popup, #logoutPopup {
+        #popup, #logoutPopup, #sopModal {
             display: none;
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -442,7 +496,7 @@
     </div>
     <div class="login-title-area">
         <h2>UFO KEBONSARI MALANG</h2>
-        <p>Sistem Dashboard Promotor (Firebase)</p>
+        <p>Sistem Dashboard Promotor</p>
     </div>
 
     <div class="input-group">
@@ -465,32 +519,9 @@
         <p id="roleSubtitle">Dashboard Promotor</p>
     </div>
 
-    <!-- KOTAK PANEL ADMIN: UPLOAD & IMPORT EXCEL -->
-    <div id="adminPanelUpload" style="max-width: 1100px; margin: 0 auto 20px; display: none; grid-template-columns: repeat(3, 1fr); gap: 12px;">
-        <!-- Import Master Sales -->
-        <div class="card" style="border-left: 4px solid #3b82f6; background: #111827;">
-            <h3 style="color: #60a5fa; font-size: 13px; margin-bottom: 4px;">⚡ Import Master Sales</h3>
-            <p style="font-size: 11px; color: #9ca3af; margin-bottom: 8px;">Upload data promotor ke Firebase.</p>
-            <input type="file" id="fileMasterSales" accept=".xlsx, .xls, .csv" onchange="importMasterSalesKeFirebase(event)" style="color: #fff; font-size: 11px;">
-        </div>
-        <!-- Upload Absen Finger -->
-        <div class="card" style="border-left: 4px solid #d4af37; background: #111827;">
-            <h3 style="color: #d4af37; font-size: 13px; margin-bottom: 4px;">📥 Upload Absen Finger</h3>
-            <p style="font-size: 11px; color: #9ca3af; margin-bottom: 8px;">Proses sheet ABSENFINGER.</p>
-            <input type="file" id="fileAbsen" accept=".xlsx, .xls, .csv" onchange="prosesUploadAbsensi(event)" style="color: #fff; font-size: 11px;">
-        </div>
-        <!-- Upload Penjualan -->
-        <div class="card" style="border-left: 4px solid #10b981; background: #111827;">
-            <h3 style="color: #34d399; font-size: 13px; margin-bottom: 4px;">📈 Upload Penjualan</h3>
-            <p style="font-size: 11px; color: #9ca3af; margin-bottom: 8px;">Proses laporan omzet harian.</p>
-            <input type="file" id="fileJual" accept=".xlsx, .xls, .csv" onchange="prosesUploadPenjualan(event)" style="color: #fff; font-size: 11px;">
-        </div>
-    </div>
-
-    <!-- INDIKATOR LOADING -->
     <div id="globalLoading" style="display:none; text-align:center; margin:15px 0; color:#d4af37; font-weight:600; font-size:13.5px;">
         <span class="spinner" style="margin-right:6px;"></span>
-        Sedang menyiapkan data dari Cloud Firebase, mohon tunggu...
+        Sedang menyiapkan data dari Firebase, mohon tunggu...
     </div>
 
     <div style="max-width:1100px; margin:0 auto 20px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
@@ -498,7 +529,7 @@
         <button class="btn-logout-main" onclick="logout()">🚪 Keluar</button>
     </div>
 
-    <!-- TAMPILAN 1: KARTU MENU -->
+    <!-- MENU UTAMA -->
     <div id="menuGridContainer">
         <div class="menu-card-item" onclick="pindahMenu('Absensi')">
             <span class="admin-badge" data-badge="menu">Pribadi</span>
@@ -570,7 +601,7 @@
         </div>
     </div>
 
-    <!-- TAMPILAN 2: HALAMAN DETAIL DATA -->
+    <!-- TAMPILAN DETAIL -->
     <div id="detailViewSection" style="display:none;">
         <div class="nav-back-bar">
             <button class="btn-back-menu" onclick="kembaliKeMenuUtama()">⬅ Kembali ke Menu</button>
@@ -613,14 +644,12 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("loginBox").style.display = "none";
         document.getElementById("dashboard").style.display = "block";
 
-        if (currentRole === "ADMIN") {
-            document.getElementById("adminPanelUpload").style.display = "grid";
-            document.getElementById("menuPerolehanCard").style.display = "block";
-            loadNamaAdminFirebase();
-        } else {
-            document.getElementById("adminPanelUpload").style.display = "none";
+        if (currentRole === "USER") {
             document.getElementById("menuPerolehanCard").style.display = "none";
             muatSemuaDataLatarBelakang(currentUser);
+        } else {
+            document.getElementById("menuPerolehanCard").style.display = "block";
+            loadNama();
         }
     }
 });
@@ -630,7 +659,7 @@ function aturTampilanBerdasarkanRole() {
     const subtitle = document.getElementById("roleSubtitle");
     
     if (currentRole === "ADMIN") {
-        if(subtitle) subtitle.innerText = "Dashboard Monitoring & Kontrol Admin (Firebase)";
+        if(subtitle) subtitle.innerText = "Dashboard Monitoring & Kontrol Admin";
         badges.forEach(b => {
             if(b.getAttribute("data-badge") === "admin") {
                 b.style.display = "block";
@@ -648,31 +677,6 @@ function aturTampilanBerdasarkanRole() {
     }
 }
 
-// ==========================================
-// FUNGSI KONVERTER JAM EXCEL (DESIMAL KE "HH:MM")
-// ==========================================
-function excelTimeToString(serial) {
-    if (serial === null || serial === undefined || serial === "") return "";
-    let str = String(serial).trim();
-    if (str.includes(":")) return str;
-
-    const num = Number(serial);
-    if (isNaN(num)) return str;
-
-    if (num >= 0 && num < 1) {
-        const totalSeconds = Math.round(num * 86400);
-        const hours = Math.floor(totalSeconds / 3600) % 24;
-        const minutes = Math.floor((totalSeconds % 3600) / 60);
-        const pad = (n) => String(n).padStart(2, '0');
-        return `${pad(hours)}:${pad(minutes)}`;
-    }
-
-    return str;
-}
-
-// ==========================================
-// FUNGSI LOGIN DARI FIREBASE FIRESTORE
-// ==========================================
 async function login() {
     const btn = document.getElementById("btnLogin");
     btn.disabled = true;
@@ -689,30 +693,50 @@ async function login() {
     }
 
     try {
-        const querySnapshot = await window.getDocs(window.collection(window.db, "master_sales"));
-        let userFound = null;
+        // Cek login dari koleksi 'users' atau 'master_sales' di Firebase
+        const usersSnap = await window.getDocs(window.collection(window.db, "users"));
+        let validUser = false;
+        let roleUser = "USER";
 
-        querySnapshot.forEach((docSnap) => {
-            const data = docSnap.data();
-            const dbNama = (data.nama || "").trim().toUpperCase();
-            const dbPin = (data.pin || "").trim();
-            const dbAktif = (data.aktif || "").trim().toUpperCase();
+        usersSnap.forEach(docSnap => {
+            const u = docSnap.data();
+            const dbNama = String(u.nama || u.username || "").trim().toUpperCase();
+            const dbPin = String(u.pin || u.password || "").trim();
+            const dbRole = String(u.role || "USER").trim().toUpperCase();
 
-            if (dbNama === namaInput && dbPin === pinInput && dbAktif === "YA") {
-                userFound = data;
+            if (dbNama === namaInput && dbPin === pinInput) {
+                validUser = true;
+                roleUser = dbRole;
             }
         });
 
-        if (!userFound) {
+        // Fallback jika pin admin default atau promotor bebas
+        if (!validUser && namaInput === "ADMIN" && pinInput === "1234") {
+            validUser = true;
+            roleUser = "ADMIN";
+        } else if (!validUser) {
+            // Cek ke master_sales
+            const masterSnap = await window.getDocs(window.collection(window.db, "master_sales"));
+            masterSnap.forEach(docSnap => {
+                const m = docSnap.data();
+                const mNama = String(m.nama || m.NamaAbsen || "").trim().toUpperCase();
+                const mPin = String(m.pin || m.password || "123").trim();
+                if (mNama === namaInput && pinInput === mPin) {
+                    validUser = true;
+                    roleUser = "USER";
+                }
+            });
+        }
+
+        if (!validUser) {
             btn.disabled = false;
             btn.innerHTML = "MASUK";
-            showPopup("Username atau Password salah / akun tidak aktif");
+            showPopup("Username atau Password salah!");
             return;
         }
 
-        currentUser = userFound.nama.toUpperCase();
-        currentRole = (userFound.role || "USER").toUpperCase();
-        
+        currentUser = namaInput;
+        currentRole = roleUser;
         localStorage.setItem("loginNama", currentUser);
         localStorage.setItem("loginRole", currentRole);
 
@@ -723,282 +747,27 @@ async function login() {
 
         showPopup("Selamat Datang " + currentUser);
 
-        if (currentRole === "ADMIN") {
-            document.getElementById("adminPanelUpload").style.display = "grid";
-            document.getElementById("menuPerolehanCard").style.display = "block";
-            await loadNamaAdminFirebase();
-        } else {
-            document.getElementById("adminPanelUpload").style.display = "none";
+        if (currentRole === "USER") {
             document.getElementById("menuPerolehanCard").style.display = "none";
             await muatSemuaDataLatarBelakang(currentUser);
+        } else {
+            document.getElementById("menuPerolehanCard").style.display = "block";
+            await loadNama();
         }
     } catch(err) {
-        showPopup("Gagal terhubung ke Firebase: " + err.message);
+        showPopup("Gagal login ke Firebase: " + err.message);
         btn.disabled = false;
         btn.innerHTML = "MASUK";
     }
 }
 
-// ==========================================
-// FUNGSI IMPORT MASTER SALES
-// ==========================================
-async function importMasterSalesKeFirebase(event) {
-    const file = event.target.files[0];
-    if (!file) return;
-
-    showPopup("Mengimpor Master Sales berdasarkan Kolom Absen & ID Sales...");
-
-    const reader = new FileReader();
-    reader.onload = async function(e) {
-        try {
-            const data = new Uint8Array(e.target.result);
-            const workbook = XLSX.read(data, { type: 'array' });
-            
-            let targetSheetName = workbook.SheetNames[0];
-            workbook.SheetNames.forEach(name => {
-                const nUpper = name.toUpperCase();
-                if (nUpper.includes("MASTER SALES") || nUpper.includes("MASTER_SALES")) {
-                    targetSheetName = name;
-                }
-            });
-
-            const worksheet = workbook.Sheets[targetSheetName];
-            const rawRows = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
-
-            if (rawRows.length <= 1) {
-                tutupPopup();
-                showPopup("Sheet Master Sales kosong.");
-                return;
-            }
-
-            let jumlahMasuk = 0;
-            for (let i = 1; i < rawRows.length; i++) {
-                const row = rawRows[i];
-                const namaAbsen = String(row[0] || "").trim().toUpperCase();
-                const idSales   = String(row[1] || "").trim().toUpperCase();
-                const aktif     = String(row[2] || "YA").trim().toUpperCase();
-                const pin       = String(row[3] || "1234").trim();
-                const role      = String(row[4] || "USER").trim().toUpperCase();
-
-                if (!namaAbsen) continue;
-
-                const docId = namaAbsen.replace(/\s+/g, '_');
-                await window.setDoc(window.doc(window.db, "master_sales", docId), {
-                    nama: namaAbsen,
-                    idSales: idSales || namaAbsen,
-                    aktif: aktif,
-                    pin: pin,
-                    role: role,
-                    updatedAt: new Date().toISOString()
-                }, { merge: true });
-
-                jumlahMasuk++;
-            }
-
-            tutupPopup();
-            showPopup(`Berhasil! ${jumlahMasuk} data Master Sales sukses diimpor.`);
-            loadNamaAdminFirebase();
-        } catch (err) {
-            tutupPopup();
-            showPopup("Gagal mengimpor: " + err.message);
-        }
-    };
-    reader.readAsArrayBuffer(file);
-}
-
-// ==========================================
-// FUNGSI UPLOAD ABSEN FINGER
-// ==========================================
-async function prosesUploadAbsensi(event) {
-    const file = event.target.files[0];
-    if (!file) return;
-
-    showPopup("Membaca sheet ABSENFINGER & menyinkronkan ke Firebase...");
-
-    const reader = new FileReader();
-    reader.onload = async function(e) {
-        try {
-            const data = new Uint8Array(e.target.result);
-            const workbook = XLSX.read(data, { type: 'array' });
-            
-            let targetSheetName = workbook.SheetNames[0];
-            workbook.SheetNames.forEach(name => {
-                const nUpper = name.toUpperCase();
-                if (nUpper.includes("ABSENFINGER") || nUpper.includes("ABSEN")) {
-                    targetSheetName = name;
-                }
-            });
-
-            const worksheet = workbook.Sheets[targetSheetName];
-            const jsonRows = XLSX.utils.sheet_to_json(worksheet, { defval: "" });
-
-            if (jsonRows.length === 0) {
-                tutupPopup();
-                showPopup(`Sheet "${targetSheetName}" kosong.`);
-                return;
-            }
-
-            const existingSnapshot = await window.getDocs(window.collection(window.db, "absensi_finger"));
-            const setDuplikat = new Set();
-            existingSnapshot.forEach(docSnap => {
-                const d = docSnap.data();
-                setDuplikat.add((d.nama || "").trim().toUpperCase() + "|" + (d.tanggal || "").trim());
-            });
-
-            let countBaru = 0;
-            for (let i = 0; i < jsonRows.length; i++) {
-                const row = jsonRows[i];
-                let namaVal = "", tanggalVal = "", masukVal = "", ist1Val = "", kem1Val = "", ist2Val = "", kem2Val = "", pulangVal = "", terlambatVal = "";
-
-                Object.keys(row).forEach(k => {
-                    const kUp = k.toUpperCase();
-                    const val = String(row[k] || "").trim();
-
-                    if (kUp.includes("NAMA") || kUp.includes("PROMOTOR")) namaVal = val;
-                    else if (kUp.includes("TGL") || kUp.includes("TANGGAL") || kUp.includes("HARI")) tanggalVal = val;
-                    else if (kUp.includes("MASUK")) masukVal = excelTimeToString(val);
-                    else if (kUp.includes("ISTIRAHAT 1") || kUp.includes("IST1")) ist1Val = excelTimeToString(val);
-                    else if (kUp.includes("KEMBALI 1") || kUp.includes("KEM1")) kem1Val = excelTimeToString(val);
-                    else if (kUp.includes("ISTIRAHAT 2") || kUp.includes("IST2")) ist2Val = excelTimeToString(val);
-                    else if (kUp.includes("KEMBALI 2") || kUp.includes("KEM2")) kem2Val = excelTimeToString(val);
-                    else if (kUp.includes("PULANG")) pulangVal = excelTimeToString(val);
-                    else if (kUp.includes("TERLAMBAT") || kUp.includes("LATE")) terlambatVal = val;
-                });
-
-                if (!namaVal || !tanggalVal) continue;
-                if (namaVal.toUpperCase() === "NAMA" || namaVal.toUpperCase() === "PROMOTOR") continue;
-
-                const namaClean = namaVal.toUpperCase();
-                const tglClean = tanggalVal;
-                const uniqueKey = namaClean + "|" + tglClean;
-
-                let isLate = terlambatVal.toUpperCase();
-                if (!isLate && masukVal) {
-                    isLate = (masukVal > "08:00") ? "YA" : "TIDAK";
-                }
-
-                if (!setDuplikat.has(uniqueKey)) {
-                    const docId = `${namaClean}_${tglClean.replace(/\//g, "-")}`;
-                    await window.setDoc(window.doc(window.db, "absensi_finger", docId), {
-                        nama: namaClean,
-                        tanggal: tglClean,
-                        masuk: masukVal,
-                        istirahat1: ist1Val,
-                        kembali1: kem1Val,
-                        istirahat2: ist2Val,
-                        kembali2: kem2Val,
-                        pulang: pulangVal,
-                        terlambat: isLate || "TIDAK",
-                        updatedAt: new Date().toISOString()
-                    });
-
-                    setDuplikat.add(uniqueKey);
-                    countBaru++;
-                }
-            }
-
-            tutupPopup();
-            showPopup(`Sukses! ${countBaru} data absensi berhasil disimpan.`);
-        } catch (err) {
-            tutupPopup();
-            showPopup("Gagal memproses file absensi: " + err.message);
-        }
-    };
-    reader.readAsArrayBuffer(file);
-}
-
-// ==========================================
-// FUNGSI UPLOAD PENJUALAN (PER BARIS KE FIRESTORE)
-// ==========================================
-async function prosesUploadPenjualan(event) {
-    const file = event.target.files[0];
-    if (!file) return;
-    
-    showPopup("Mengunggah ribuan baris data penjualan ke Firebase...");
-
-    const reader = new FileReader();
-    reader.onload = async function(e) {
-        try {
-            const data = new Uint8Array(e.target.result);
-            const workbook = XLSX.read(data, { type: 'array' });
-            
-            let targetSheetName = workbook.SheetNames[0];
-            workbook.SheetNames.forEach(name => {
-                const nUpper = name.toUpperCase();
-                if (nUpper.includes("PENJUALAN") || nUpper.includes("JUAL") || nUpper.includes("OMZET")) {
-                    targetSheetName = name;
-                }
-            });
-
-            const worksheet = workbook.Sheets[targetSheetName];
-            const jsonRows = XLSX.utils.sheet_to_json(worksheet, { defval: "" });
-
-            if (jsonRows.length === 0) {
-                tutupPopup();
-                showPopup(`Sheet "${targetSheetName}" kosong.`);
-                return;
-            }
-
-            let countBerhasil = 0;
-            for (let i = 0; i < jsonRows.length; i++) {
-                const r = jsonRows[i];
-                const docId = `jual_${i + 1}_${Date.now()}`;
-                
-                await window.setDoc(window.doc(window.db, "laporan_penjualan", docId), {
-                    row: r,
-                    updatedAt: new Date().toISOString()
-                });
-                countBerhasil++;
-            }
-
-            tutupPopup();
-            showPopup(`Sukses! ${countBerhasil} baris data penjualan berhasil diunggah penuh.`);
-        } catch (err) {
-            tutupPopup();
-            showPopup("Gagal memproses file penjualan: " + err.message);
-        }
-    };
-    reader.readAsArrayBuffer(file);
-}
-
-// ==========================================
-// FUNGSI LOAD DATA DARI FIREBASE (CLIENT SIDE)
-// ==========================================
-async function loadNamaAdminFirebase() {
-    try {
-        const querySnapshot = await window.getDocs(window.collection(window.db, "master_sales"));
-        let namaSet = new Set();
-        querySnapshot.forEach(docSnap => {
-            const d = docSnap.data();
-            const namaAbsen = d.nama;
-            const aktif = (d.aktif || "").trim().toUpperCase();
-            if (namaAbsen && aktif === "YA") {
-                namaSet.add(namaAbsen.toUpperCase());
-            }
-        });
-
-        const listNama = [...namaSet].sort();
-        let html = `<option value="" disabled selected hidden>Pilih Nama Promotor</option>`;
-        listNama.forEach(nama => {
-            html += `<option value="${nama}">${nama}</option>`;
-        });
-        document.getElementById("nama").innerHTML = html;
-
-        if (listNama.length > 0) {
-            document.getElementById("nama").value = listNama[0];
-            await muatSemuaDataLatarBelakang(listNama[0]);
-        }
-    } catch(e) {
-        console.error("Gagal memuat list nama dari Firebase", e);
-    }
-}
-
+// ---------------- FUNGSI UTAMA PEMBACAAN FIREBASE (BERDASARKAN ID SALES -> NAMA ABSEN) ----------------
 async function muatSemuaDataLatarBelakang(namaTarget) {
     const loadEl = document.getElementById("globalLoading");
     if(loadEl) loadEl.style.display = "block";
 
     try {
-        console.log("🔥 MEMUAT DATA LANGSUNG BERDASARKAN NAMA:", namaTarget);
+        console.log("🔥 MEMUAT DATA FIREBASE BERDASARKAN ID SALES UNTUK:", namaTarget);
 
         // 1. Ambil absensi
         const absenSnap = await window.getDocs(window.collection(window.db, "absensi_finger"));
@@ -1013,7 +782,31 @@ async function muatSemuaDataLatarBelakang(namaTarget) {
         });
         cacheData.absensi = { data: hasilAbsen, terlambat: jumlahTerlambat };
 
-        // 2. Rentang Tanggal UC (Tanggal 25 s.d 24)
+        // 2. AMBIL PEMETAAN MASTER SALES (ID Sales ➔ Nama Absen)
+        let daftarIdSalesSaya = [];
+        let mapMasterSales = {}; 
+        try {
+            const masterSnap = await window.getDocs(window.collection(window.db, "master_sales"));
+            masterSnap.forEach(docSnap => {
+                const md = docSnap.data();
+                const namaAbsen = String(md.nama || md.NamaAbsen || "").trim().toUpperCase();
+                const idSales = String(md.idSales || md.id || "").trim().toUpperCase();
+
+                if (namaAbsen && idSales) {
+                    mapMasterSales[idSales] = namaAbsen; 
+                    if (namaAbsen === namaTarget.trim().toUpperCase()) {
+                        daftarIdSalesSaya.push(idSales);
+                    }
+                }
+            });
+        } catch(e) {
+            console.log("Gagal ambil master sales:", e);
+        }
+
+        // Tambahkan juga nama target langsung ke daftar pencocokan sebagai cadangan
+        daftarIdSalesSaya.push(namaTarget.trim().toUpperCase());
+
+        // 3. Rentang Tanggal UC (Tanggal 25 s.d 24)
         const sekarang = new Date();
         let tglAwalObj, tglAkhirObj;
         if (sekarang.getDate() >= 25) {
@@ -1028,45 +821,39 @@ async function muatSemuaDataLatarBelakang(namaTarget) {
         const strTanggalPertamaUC = formatTglStr(tglAwalObj);
         const strTanggalTerakhirUC = formatTglStr(tglAkhirObj);
 
-        // 3. Ambil data penjualan dari Firebase dan cocokan namanya
+        // 4. BACA LAPORAN PENJUALAN DAN KELOMPOKKAN BERDASARKAN ID SALES
         let detailPenjualan = [];
         let detailUC = [];
         let tanggalPertamaGlobal = "01/08/2026";
         let tanggalTerakhirGlobal = "25/08/2026";
-        let mapOmzetToko = {};
+        let mapOmzetPerIdSales = {};
+        let detailPerBrandSaya = [];
 
         try {
             const jualSnapshot = await window.getDocs(window.collection(window.db, "laporan_penjualan"));
-            console.log("📦 Total baris penjualan di Firebase:", jualSnapshot.size);
-
+            
             jualSnapshot.forEach(docSnap => {
                 const dataDoc = docSnap.data();
                 const r = dataDoc.row || {};
                 const cols = Object.values(r);
 
-                // Indeks kolom mutlak sesuai struktur Excel Anda
-                const tglText   = String(cols[2] || "").trim();                     // Kolom C (Index 2) - Tanggal
-                const produk    = String(cols[5] || "").trim();                     // Kolom F (Index 5) - Produk
-                const qty       = Number(cols[6]) || 0;                             // Kolom G (Index 6) - Qty
-                const omzet     = Number(String(cols[10] || 0).replace(/,/g, "")) || 0; // Kolom K (Index 10) - Omzet
-                const salesExcel = String(cols[15] || "").trim().toUpperCase();     // Kolom P (Index 15) - Sales
-                const kategori  = String(cols[17] || "").trim().toUpperCase();      // Kolom R (Index 17) - Kategori
+                const tglText    = String(cols[2] || "").trim();                     
+                const produk     = String(cols[5] || "").trim();                     
+                const qty        = Number(cols[6]) || 0;                             
+                const omzet      = Number(String(cols[10] || 0).replace(/,/g, "")) || 0; 
+                const salesExcel = String(cols[15] || "").trim().toUpperCase();     
+                const kategori   = String(cols[17] || "").trim().toUpperCase();      
+                const brandItem  = String(cols[13] || cols[14] || "UFO").trim();
 
                 if (tglText) tanggalTerakhirGlobal = tglText;
                 if (!salesExcel) return;
 
-                mapOmzetToko[salesExcel] = (mapOmzetToko[salesExcel] || 0) + omzet;
+                mapOmzetPerIdSales[salesExcel] = (mapOmzetPerIdSales[salesExcel] || 0) + omzet;
 
-                // --- PENCARIAN & KECOCOKAN NAMA ---
-                let targetClean = namaTarget.trim().toUpperCase();
-                let isMatch = false;
-
-                if (salesExcel === targetClean) isMatch = true;
-                if (salesExcel.includes(targetClean) || targetClean.includes(salesExcel)) isMatch = true;
-
+                // Cocokkan apakah ID Sales baris ini milik promotor
+                let isMatch = daftarIdSalesSaya.includes(salesExcel);
                 if (!isMatch) return;
 
-                // A. Menu Penjualan (Abaikan GARANSI dan ONGKOS)
                 if (kategori !== "GARANSI" && kategori !== "ONGKOS") {
                     detailPenjualan.push({
                         tanggal: tglText || "-",
@@ -1074,9 +861,15 @@ async function muatSemuaDataLatarBelakang(namaTarget) {
                         qty: qty,
                         omzet: omzet
                     });
+                    detailPerBrandSaya.push({
+                        tanggal: tglText || "-",
+                        produk: produk || "-",
+                        brand: brandItem,
+                        qty: qty,
+                        omzet: omzet
+                    });
                 }
 
-                // B. Menu UC (Hanya Kategori GARANSI dalam periode tgl 25 s.d 24)
                 if (kategori === "GARANSI") {
                     const parts = tglText.split("/");
                     if (parts.length === 3) {
@@ -1114,27 +907,34 @@ async function muatSemuaDataLatarBelakang(namaTarget) {
             tanggalPertama: strTanggalPertamaUC, tanggalTerakhir: strTanggalTerakhirUC, detail: detailUC 
         };
 
-        // Rekap Perolehan Toko
+        cacheData.perolehanBrand = {
+            nama: namaTarget,
+            idSales: daftarIdSalesSaya.join(", "),
+            totalUnit: totalU,
+            totalOmzet: totalO,
+            detail: detailPerBrandSaya
+        };
+
+        // 5. REKAP PEROLEHAN TOKO (ID Sales ➔ Nama Absen)
         let listPerolehanToko = [];
         try {
-            const masterSnap = await window.getDocs(window.collection(window.db, "master_sales"));
-            masterSnap.forEach(docSnap => {
-                const md = docSnap.data();
-                const aktif = String(md.aktif || "YA").toUpperCase();
-                if (aktif !== "YA") return;
+            let mapOmzetNamaAbsen = {};
+            for (let idSales in mapOmzetPerIdSales) {
+                let namaAbsenAsli = mapMasterSales[idSales] || idSales; 
+                mapOmzetNamaAbsen[namaAbsenAsli] = (mapOmzetNamaAbsen[namaAbsenAsli] || 0) + mapOmzetPerIdSales[idSales];
+            }
 
-                const namaAbsen = String(md.nama || "").trim();
-                const idSalesRow = String(md.idSales || "").toUpperCase();
-                const omzetPromotor = mapOmzetToko[idSalesRow] || mapOmzetToko[namaAbsen.toUpperCase()] || 0;
-
+            for (let namaAbsen in mapOmzetNamaAbsen) {
                 listPerolehanToko.push({
                     nama: namaAbsen,
-                    omzet: omzetPromotor,
+                    omzet: mapOmzetNamaAbsen[namaAbsen],
                     uc: 0
                 });
-            });
+            }
             listPerolehanToko.sort((a, b) => b.omzet - a.omzet);
-        } catch(e) { console.log("Gagal buat perolehan toko:", e); }
+        } catch(e) { 
+            console.log("Gagal buat perolehan toko:", e); 
+        }
 
         cacheData.perolehan = { list: listPerolehanToko };
         cacheData.promo = { data: [{ judul: "Promo Kemerdekaan UFO", periode: "Agustus 2026", detail: "Diskon spesial produk elektronik." }] };
@@ -1150,6 +950,32 @@ async function muatSemuaDataLatarBelakang(namaTarget) {
         if(loadEl) loadEl.style.display = "none";
     }
 }
+
+async function loadNama(){
+    try {
+        const masterSnap = await window.getDocs(window.collection(window.db, "master_sales"));
+        let daftarNama = [];
+        masterSnap.forEach(docSnap => {
+            const md = docSnap.data();
+            const n = String(md.nama || md.NamaAbsen || "").trim();
+            if (n && !daftarNama.includes(n)) daftarNama.push(n);
+        });
+
+        let html = `<option value="" disabled selected hidden>Pilih Nama Promotor</option>`;
+        daftarNama.forEach((nama) => { 
+            html += `<option value="${nama}">${nama}</option>`; 
+        });
+        document.getElementById("nama").innerHTML = html;
+
+        if(daftarNama.length > 0) {
+            document.getElementById("nama").value = daftarNama[0];
+            await muatSemuaDataLatarBelakang(daftarNama[0]);
+        }
+    } catch(e) {
+        console.error("Gagal memuat nama promotor", e);
+    }
+}
+
 async function gantiNamaAdmin() {
     let namaTerpilih = document.getElementById("nama").value.trim();
     if(!namaTerpilih) return;
@@ -1170,10 +996,22 @@ async function pindahMenu(namaMenu) {
     else if (namaMenu === "PerolehanBrand") judulMenuText = "Perolehan Brand Saya";
     document.getElementById("currentMenuTitle").innerText = "Menu: " + judulMenuText;
     
-    document.getElementById("hasil").innerHTML = `<div style="text-align:center; padding:30px; color:#d4af37; font-weight:600;"><span class="spinner" style="margin-right:8px;"></span>Memuat data ${namaMenu} dari Firebase...</div>`;
+    document.getElementById("hasil").innerHTML = `<div style="text-align:center; padding:30px; color:#d4af37; font-weight:600;"><span class="spinner" style="margin-right:8px;"></span>Memuat data ${namaMenu}...</div>`;
     document.getElementById("summary").innerHTML = "";
 
+    await pastikanDataMenuSiap(namaMenu);
     jalankanRenderMenu(namaMenu);
+}
+
+async function pastikanDataMenuSiap(namaMenu) {
+    try {
+        let targetNama = (currentRole === "ADMIN") ? (document.getElementById("nama").value.trim() || currentUser) : currentUser;
+        if (namaMenu === "Absensi" || namaMenu === "Penjualan" || namaMenu === "UC" || namaMenu === "PerolehanBrand") {
+            await muatSemuaDataLatarBelakang(targetNama);
+        }
+    } catch(e) {
+        console.error("Gagal memuat data menu:", e);
+    }
 }
 
 function kembaliKeMenuUtama() {
@@ -1212,14 +1050,8 @@ function jalankanRenderMenu(namaMenu) {
     else if (namaMenu === "Punishment") renderPunishment(cacheData.punishment);
 }
 
-function logout() {
-    document.getElementById("logoutPopup").style.display = "flex";
-}
-
-function tutupLogout() {
-    document.getElementById("logoutPopup").style.display = "none";
-}
-
+function logout() { document.getElementById("logoutPopup").style.display = "flex"; }
+function tutupLogout() { document.getElementById("logoutPopup").style.display = "none"; }
 function logoutConfirm() {
     document.getElementById("logoutPopup").style.display = "none";
     currentUser = ""; currentRole = "";
@@ -1229,31 +1061,37 @@ function logoutConfirm() {
     document.getElementById("loginPin").value = "";
     localStorage.removeItem("loginNama");
     localStorage.removeItem("loginRole");
-    const btn = document.getElementById("btnLogin");
-    btn.disabled = false; btn.innerHTML = "MASUK";
-}    
+}   
 
 function tampil(v){
     return (v && v.trim() !== "") ? `<span class="ok">${v}</span>` : `<span class="kosong">-</span>`;
 }
 
-// ---------------- FUNGSI RENDER ----------------
 function renderAbsensi(result) {
     if(!result) return;
     const data = result.data || [];
     const terlambat = result.terlambat || 0;
     data.sort((a,b) => Number(a.tanggal) - Number(b.tanggal));
 
+    let tidakAbsenMasuk = 0;
+    let tidakAbsenPulang = 0;
+    data.forEach(x => { 
+        if(!x.masuk || (x.statusMasuk && x.statusMasuk.includes("TIDAK"))) tidakAbsenMasuk++;
+        if(!x.pulang || (x.statusPulang && x.statusPulang.includes("TIDAK"))) tidakAbsenPulang++;
+    });
+
     if(data.length){
         document.getElementById("summary").innerHTML = `
         <div class="summary-card">
-            <h2>🏆 ${data[0].nama}</h2>
+            <h2>🏆 ${data[0].nama || currentUser}</h2>
             <p>Total Hari Absen : <b>${data.length}</b></p>
             <p>Datang Terlambat : <b>${terlambat}</b></p>
+            <p style="color:#f87171; margin-top:4px;">⚠️ Tidak Absen Masuk : <b>${tidakAbsenMasuk}x</b></p>
+            <p style="color:#f87171;">⚠️ Tidak Absen Pulang : <b>${tidakAbsenPulang}x</b></p>
         </div>`;
         if(currentRole === "ADMIN") document.getElementById("exportArea").style.display = "flex";
     } else {
-        document.getElementById("summary").innerHTML = "";
+        document.getElementById("summary").innerHTML = `<div class="summary-card"><h2>🏆 ${currentUser}</h2><p>Belum ada data absensi.</p></div>`;
     }
 
     let html = "";
@@ -1261,22 +1099,24 @@ function renderAbsensi(result) {
         const isTerlambat = (x.terlambat || "").toString().toUpperCase() === "YA";
         const isNoMasuk = !x.masuk || x.masuk.trim() === "";
         const isNoPulang = !x.pulang || x.pulang.trim() === "";
-        let statusText = (isNoMasuk || isNoPulang) ? 'Belum Lengkap' : 'Lengkap';
+        let statusText = (isNoMasuk || isNoPulang) ? 'Belum Lengkap / Bolong' : 'Lengkap';
         let kelasCard = (isNoMasuk || isNoPulang) ? 'warning' : 'success';
 
         html += `
         <div class="card ${kelasCard} ${isTerlambat ? "late" : ""}">
-            <div class="tanggal">📅 ${x.tanggal}<br><span class="${kelasCard === 'warning' ? 'status-warning' : 'status-ok'}">${statusText}</span></div>
-            <div class="row"><span>Masuk</span>${tampil(x.masuk)}</div>
+            <div class="tanggal">📅 ${x.tanggal}<br><span class="${isNoMasuk || isNoPulang ? 'status-warning' : 'status-ok'}">${statusText}</span>
+                ${isTerlambat ? '<div style="color:#d4af37;font-weight:700;margin-top:4px;">TERLAMBAT</div>' : ''}
+            </div>
+            <div class="row"><span>Masuk</span>${isNoMasuk ? '<span class="kosong">TIDAK FINGER</span>' : tampil(x.masuk)}</div>
             <div class="row"><span>Istirahat 1</span>${tampil(x.istirahat1)}</div>
             <div class="row"><span>Kembali 1</span>${tampil(x.kembali1)}</div>
             <div class="row"><span>Istirahat 2</span>${tampil(x.istirahat2)}</div>
             <div class="row"><span>Kembali 2</span>${tampil(x.kembali2)}</div>
-            <div class="row"><span>Pulang</span>${tampil(x.pulang)}</div>
+            <div class="row"><span>Pulang</span>${isNoPulang ? '<span class="kosong">TIDAK FINGER</span>' : tampil(x.pulang)}</div>
         </div>`;
     });
 
-    if(data.length === 0) html = `<div class="card">Data absensi kosong</div>`;
+    if(data.length === 0) html = `<div class="card">Data absensi tidak ditemukan</div>`;
     document.getElementById("hasil").className = "grid";
     document.getElementById("hasil").innerHTML = html;
 }
@@ -1286,8 +1126,95 @@ function renderPenjualan(data) {
     document.getElementById("summary").innerHTML = `
     <div class="summary-card">
         <h2>💰 ${data.nama}</h2>
+        <p>Periode : <b>${data.tanggalPertama} - ${data.tanggalTerakhir}</b></p>
         <p>Total Unit : <b>${data.totalUnit}</b></p>
-        <p>Total Omzet : <span style="font-weight:bold; color:#34d399;">Rp ${Number(data.totalOmzet).toLocaleString("id-ID")}</span></p>
+        <p>Total Omzet Toko : <span style="font-weight:bold; color:#34d399;">Rp ${Number(data.totalOmzet).toLocaleString("id-ID")}</span></p>
+    </div>`;
+
+    let html = "";
+    const grupTanggal = {};
+    (data.detail || []).forEach(x => {
+        if (!grupTanggal[x.tanggal]) grupTanggal[x.tanggal] = [];
+        grupTanggal[x.tanggal].push(x);
+    });
+
+    for (const tanggal in grupTanggal) {
+        let isiProduk = "";
+        let totalHari = 0;
+        grupTanggal[tanggal].forEach(item => {
+            totalHari += Number(item.omzet);
+            isiProduk += `
+                <div style="margin-bottom:8px; padding-bottom:6px; border-bottom:1px solid rgba(255,255,255,0.05);">
+                    <div style="font-size:12px; font-weight:600; line-height:1.3; margin-bottom:3px; color:#e5e7eb;">${item.produk}</div>
+                    <div class="row"><span>Qty</span><span>${item.qty}</span></div>
+                    <div class="row"><span>Omzet</span><span>Rp ${Number(item.omzet).toLocaleString("id-ID")}</span></div>
+                </div>`;
+        });
+
+        html += `
+        <div class="card success">
+            <div class="tanggal">📅 ${tanggal}</div>
+            ${isiProduk}
+            <div class="row" style="font-weight:700; font-size:12.5px;"><span>Total Hari Ini</span><span>Rp ${totalHari.toLocaleString("id-ID")}</span></div>
+        </div>`;
+    }
+
+    if(data.detail && data.detail.length > 0 && currentRole === "ADMIN") document.getElementById("exportArea").style.display = "flex";
+    document.getElementById("hasil").className = "grid";
+    document.getElementById("hasil").innerHTML = html;
+}
+
+function renderPerolehanBrand(data) {
+    if(!data) return;
+    document.getElementById("summary").innerHTML = `
+    <div class="summary-card">
+        <h2>🏷️ Perolehan Brand Saya</h2>
+        <p>Promotor : <b>${data.nama}</b></p>
+        <p>ID Sales : <b>${data.idSales || '-'}</b></p>
+        <p>Total Unit Brand : <b>${data.totalUnit || 0} Unit</b></p>
+        <p>Total Omzet Brand : <span style="font-weight:bold; color:#34d399;">Rp ${Number(data.totalOmzet || 0).toLocaleString("id-ID")}</span></p>
+    </div>`;
+
+    let html = "";
+    const grupTanggal = {};
+    (data.detail || []).forEach(x => {
+        if (!grupTanggal[x.tanggal]) grupTanggal[x.tanggal] = [];
+        grupTanggal[x.tanggal].push(x);
+    });
+
+    for (const tanggal in grupTanggal) {
+        let isiProduk = "";
+        let totalHari = 0;
+        grupTanggal[tanggal].forEach(item => {
+            totalHari += Number(item.omzet);
+            isiProduk += `
+                <div style="margin-bottom:8px; padding-bottom:6px; border-bottom:1px solid rgba(255,255,255,0.05);">
+                    <div style="font-size:12px; font-weight:600; line-height:1.3; margin-bottom:3px; color:#e5e7eb;">${item.produk}</div>
+                    <div style="font-size:11px; color:#d4af37; margin-bottom:3px;">Brand: ${item.brand || '-'}</div>
+                    <div class="row"><span>Qty</span><span>${item.qty}</span></div>
+                    <div class="row"><span>Omzet</span><span>Rp ${Number(item.omzet).toLocaleString("id-ID")}</span></div>
+                </div>`;
+        });
+
+        html += `
+        <div class="card success">
+            <div class="tanggal">📅 ${tanggal}</div>
+            ${isiProduk}
+            <div class="row" style="font-weight:700; font-size:12.5px;"><span>Total Hari Ini</span><span>Rp ${totalHari.toLocaleString("id-ID")}</span></div>
+        </div>`;
+    }
+
+    document.getElementById("hasil").className = "grid";
+    document.getElementById("hasil").innerHTML = html;
+}
+
+function renderUC(data) {
+    if(!data) return;
+    document.getElementById("summary").innerHTML = `
+    <div class="summary-card">
+        <h2>💎 ${data.nama}</h2>
+        <p>Periode : <b>${data.tanggalPertama} - ${data.tanggalTerakhir}</b></p>
+        <p>Total UC : <b>${data.totalUC}</b></p>
     </div>`;
 
     let html = "";
@@ -1295,56 +1222,89 @@ function renderPenjualan(data) {
         html += `
         <div class="card success">
             <div class="tanggal">📅 ${x.tanggal}</div>
-            <div style="font-size:12px; font-weight:600; margin-bottom:4px; color:#e5e7eb;">${x.produk}</div>
+            <div style="font-size:12px; font-weight:600; line-height:1.3; margin:8px 0; color:#e5e7eb;">${x.produk}</div>
             <div class="row"><span>Qty</span><span>${x.qty}</span></div>
-            <div class="row"><span>Omzet</span><span>Rp ${Number(x.omzet).toLocaleString("id-ID")}</span></div>
         </div>`;
     });
 
-    if(data.detail && data.detail.length > 0 && currentRole === "ADMIN") document.getElementById("exportArea").style.display = "flex";
     document.getElementById("hasil").className = "grid";
     document.getElementById("hasil").innerHTML = html;
 }
 
-function renderPerolehanBrand(data) { renderPenjualan(data); }
-function renderUC(data) { renderPenjualan(data); }
-function renderPelanggaranSaya(result) {
-    document.getElementById("summary").innerHTML = `<div class="summary-card"><h2>🚨 Catatan Pelanggaran</h2></div>`;
-    document.getElementById("hasil").innerHTML = `<div class="card success">Tidak ada pelanggaran tercatat.</div>`;
-}
-function renderRewardSaya(result) {
-    document.getElementById("summary").innerHTML = `<div class="summary-card"><h2>🎁 Reward Saya</h2></div>`;
-    document.getElementById("hasil").innerHTML = `<div class="card success">Belum ada reward tercatat.</div>`;
-}
 function renderPerolehan(data) {
     if(!data || !data.list) return;
-    document.getElementById("summary").innerHTML = `<div class="summary-card"><h2>📊 Perolehan Toko</h2></div>`;
+    const user = data.list.find(x => (x.nama || "").toUpperCase() === (currentUser || "").toUpperCase());
+    const posisi = user ? data.list.findIndex(x => (x.nama || "").toUpperCase() === (currentUser || "").toUpperCase()) + 1 : 0;
+    
+    let totalOmzet = 0; 
+    data.list.forEach(x => { totalOmzet += Number(x.omzet || 0); });
+
+    document.getElementById("summary").innerHTML = `
+    <div class="summary-card">
+    <h2>📊 Perolehan & Rekap Toko</h2>
+    ${currentRole === "ADMIN" ? 
+        `<p>👥 Jumlah Promotor : <b>${data.list.length}</b></p>
+         <p>💰 Total Omzet Toko : <span style="font-weight:bold;color:#34d399">Rp ${totalOmzet.toLocaleString("id-ID")}</span></p>` :
+        `<p>👤 ${currentUser}</p>
+         <p>💰 Total Omzet : <span style="font-weight:bold; color:#34d399;">Rp ${Number(user ? user.omzet : 0).toLocaleString("id-ID")}</span></p>
+         <p>🏅 Posisi : <b>${posisi} dari ${data.list.length} Promotor</b></p>`
+    }
+    </div>`;
+
     let html = `<div class="summary-card">`;
     data.list.forEach((x, i) => {
-        html += `<div class="row"><span>${i+1}. ${x.nama}</span><span>Rp ${Number(x.omzet).toLocaleString("id-ID")}</span></div>`;
+        const omzetVal = Number(x.omzet || 0);
+        html += `
+            <div style="display:flex; align-items:center; justify-content:space-between; padding:9px 0; border-bottom:1px solid rgba(255,255,255,0.05); gap:10px;">
+                <div style="display:flex; align-items:center; gap:10px; min-width:0; flex:1;">
+                    <div style="width:26px; height:26px; border-radius:50%; background:#1f2937; border:1px solid rgba(212,175,55,0.3); display:flex; align-items:center; justify-content:center; font-weight:700; font-size:12px; flex-shrink:0; color:#d4af37;">${i + 1}</div>
+                    <div style="font-weight:600; font-size:13px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${x.nama}</div>
+                </div>
+                <div style="text-align:right; white-space:nowrap; flex-shrink:0;">
+                    <div style="font-weight:700; font-size:13px; color:#34d399;">Rp ${omzetVal.toLocaleString("id-ID")}</div>
+                </div>
+            </div>`;
     });
     html += `</div>`;
-    document.getElementById("hasil").innerHTML = html;
-}
-function renderDendaUC(d) {
-    document.getElementById("summary").innerHTML = `<div class="summary-card"><h2>⚡ Denda & Keterlambatan</h2></div>`;
-    document.getElementById("hasil").innerHTML = `<div class="card success">Aman, tidak ada denda tercatat.</div>`;
-}
-function renderRules(r) { renderPromo(r); }
-function renderReward(r) { renderPromo(r); }
-function renderPunishment(r) { renderPromo(r); }
-function renderPromo(result) {
-    if(!result) return;
-    const list = result.data || [];
-    let html = "";
-    list.forEach(p => {
-        html += `<div class="card success"><div class="tanggal">${p.judul || ""}</div><div>${p.detail || ""}</div></div>`;
-    });
+
+    if(currentRole === "ADMIN") document.getElementById("exportArea").style.display = "flex";
+    document.getElementById("hasil").className = "";
     document.getElementById("hasil").innerHTML = html;
 }
 
-function prosesEkspor(format) {
-    showPopup("Fitur ekspor siap dijalankan.");
+function renderDendaUC(dendaObj) {
+    document.getElementById("summary").innerHTML = `<div class="summary-card"><h2>⚡ Rekap Denda</h2><p>Informasi denda dan keterlambatan aktif.</p></div>`;
+    document.getElementById("hasil").innerHTML = `<div class="card">Data denda siap dipantau.</div>`;
+}
+
+function renderRules(result) {
+    document.getElementById("summary").innerHTML = `<div class="summary-card"><h2>✨ Panduan SOP & Peraturan Toko</h2></div>`;
+    document.getElementById("hasil").innerHTML = `<div class="card">SOP Toko aktif.</div>`;
+}
+
+function renderReward(result) {
+    document.getElementById("summary").innerHTML = `<div class="summary-card"><h2>🏆 Daftar Reward & Bonus Toko</h2></div>`;
+    document.getElementById("hasil").innerHTML = `<div class="card">Reward toko aktif.</div>`;
+}
+
+function renderPunishment(result) {
+    document.getElementById("summary").innerHTML = `<div class="summary-card"><h2>⚠️ Daftar Punishment & Sanksi</h2></div>`;
+    document.getElementById("hasil").innerHTML = `<div class="card">Ketentuan sanksi aktif.</div>`;
+}
+
+function renderPromo(result) {
+    document.getElementById("summary").innerHTML = `<div class="summary-card"><h2>🏷️ Promo Toko</h2></div>`;
+    document.getElementById("hasil").innerHTML = `<div class="card">Promo aktif.</div>`;
+}
+
+function renderPelanggaranSaya(result) {
+    document.getElementById("summary").innerHTML = `<div class="summary-card"><h2>🚨 Catatan Pelanggaran Saya</h2></div>`;
+    document.getElementById("hasil").innerHTML = `<div class="card success">Tidak ada catatan pelanggaran.</div>`;
+}
+
+function renderRewardSaya(result) {
+    document.getElementById("summary").innerHTML = `<div class="summary-card"><h2>🎁 Reward Saya</h2></div>`;
+    document.getElementById("hasil").innerHTML = `<div class="card">Riwayat reward aman.</div>`;
 }
 
 function showPopup(pesan) {
@@ -1358,7 +1318,7 @@ function tutupPopup() { document.getElementById("popup").style.display = "none";
 <div id="popup">
   <div class="modern-popup-box">
     <h3>Informasi</h3>
-    <div id="popupText" style="margin:12px 0;"></div>
+    <div id="popupText" style="margin: 15px 0; font-size: 14px; color: #d1d5db;"></div>
     <button class="btn-popup-ok" onclick="tutupPopup()">OK</button>
   </div>
 </div>
@@ -1367,7 +1327,7 @@ function tutupPopup() { document.getElementById("popup").style.display = "none";
 <div id="logoutPopup">
   <div class="modern-popup-box">
     <h3>🚪 Keluar Aplikasi</h3>
-    <p style="margin:12px 0;">Yakin ingin keluar dari akun ini?</p>
+    <p style="margin: 15px 0; color: #d1d5db;">Yakin ingin keluar dari akun ini?</p>
     <div>
       <button id="btnBatal" onclick="tutupLogout()">Batal</button>
       <button id="btnLogoutConfirm" onclick="logoutConfirm()">Keluar</button>
