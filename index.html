@@ -929,7 +929,7 @@ async function prosesUploadPenjualan(event) {
     const file = event.target.files[0];
     if (!file) return;
     
-    showPopup("Mencari sheet PENJUALAN & membaca ribuan data omzet...");
+    showPopup("Mengunggah ribuan data penjualan per baris ke Firebase...");
 
     const reader = new FileReader();
     reader.onload = async function(e) {
@@ -937,7 +937,6 @@ async function prosesUploadPenjualan(event) {
             const data = new Uint8Array(e.target.result);
             const workbook = XLSX.read(data, { type: 'array' });
             
-            // Cari sheet yang namanya mengandung kata "PENJUALAN" atau "JUAL"
             let targetSheetName = workbook.SheetNames[0];
             workbook.SheetNames.forEach(name => {
                 const nUpper = name.toUpperCase();
@@ -946,28 +945,30 @@ async function prosesUploadPenjualan(event) {
                 }
             });
 
-            console.log("Sheet Penjualan yang dipilih:", targetSheetName);
             const worksheet = workbook.Sheets[targetSheetName];
-            
-            // Ubah seluruh sheet ke JSON dengan membaca sampai baris paling akhir
             const jsonRows = XLSX.utils.sheet_to_json(worksheet, { defval: "" });
 
             if (jsonRows.length === 0) {
                 tutupPopup();
-                showPopup(`Sheet "${targetSheetName}" kosong atau tidak terbaca.`);
+                showPopup(`Sheet "${targetSheetName}" kosong.`);
                 return;
             }
 
-            // Simpan ke Firebase Firestore dalam 1 dokumen besar
-            await window.setDoc(window.doc(window.db, "nexabsent_data", "laporan_penjualan"), {
-                rows: jsonRows, 
-                totalBaris: jsonRows.length,
-                updatedAt: new Date().toISOString(), 
-                fileName: file.name
-            }, { merge: true });
+            let countBerhasil = 0;
+            // Loop dan simpan setiap baris penjualan sebagai dokumen terpisah agar tidak tembus limit 1MB
+            for (let i = 0; i < jsonRows.length; i++) {
+                const r = jsonRows[i];
+                const docId = `jual_${i + 1}_${Date.now()}`;
+                
+                await window.setDoc(window.doc(window.db, "laporan_penjualan", docId), {
+                    row: r,
+                    updatedAt: new Date().toISOString()
+                });
+                countBerhasil++;
+            }
 
             tutupPopup();
-            showPopup(`Sukses! ${jsonRows.length} baris data penjualan dari sheet "${targetSheetName}" berhasil tersinkron penuh ke Firebase.`);
+            showPopup(`Sukses! ${countBerhasil} baris data penjualan berhasil diunggah penuh ke Firebase.`);
         } catch (err) {
             tutupPopup();
             showPopup("Gagal memproses file penjualan: " + err.message);
