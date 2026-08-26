@@ -1007,7 +1007,9 @@ async function muatSemuaDataLatarBelakang(namaTarget) {
     if(loadEl) loadEl.style.display = "block";
 
     try {
-        // 1. Ambil data absensi berdasarkan Nama Absen
+        console.log("🔥 MEMUAT DATA UNTUK:", namaTarget);
+
+        // 1. Ambil data absensi
         const absenSnap = await window.getDocs(window.collection(window.db, "absensi_finger"));
         let hasilAbsen = [];
         let jumlahTerlambat = 0;
@@ -1020,39 +1022,58 @@ async function muatSemuaDataLatarBelakang(namaTarget) {
         });
         cacheData.absensi = { data: hasilAbsen, terlambat: jumlahTerlambat };
 
-        // 2. Ambil "Nama Sales / ID Sales" yang cocok dengan Nama Absen ini dari koleksi master_sales
-        let namaSalesTarget = "";
+        // 2. Cari Nama Sales / ID Sales dari master_sales
+        let cariSales = [namaTarget.toUpperCase()];
         try {
             const masterSnap = await window.getDocs(window.collection(window.db, "master_sales"));
             masterSnap.forEach(docSnap => {
                 const md = docSnap.data();
-                const dbNamaAbsen = (md.nama || md.NamaAbsen || "").trim().toUpperCase();
-                if (dbNamaAbsen === namaTarget.trim().toUpperCase()) {
-                    // Ambil nilai dari kolom Nama Sales / ID Sales
-                    namaSalesTarget = (md.idSales || md.NamaSales || md.id || "").trim().toUpperCase();
+                const namaAbsenDb = String(md.nama || md.NamaAbsen || "").trim().toUpperCase();
+                if (namaAbsenDb === namaTarget.toUpperCase()) {
+                    // Ambil nilai dari berbagai kemungkinan kolom ID / Nama Sales
+                    for (let key in md) {
+                        const val = String(md[key] || "").trim().toUpperCase();
+                        if (val && val !== namaAbsenDb && !cariSales.includes(val)) {
+                            cariSales.push(val);
+                        }
+                    }
                 }
             });
-        } catch(err) { console.log("Gagal ambil master sales", err); }
+        } catch(e) { console.log("Error master sales:", e); }
 
-        // 3. Ambil laporan penjualan dan cocokan menggunakan Nama Sales / ID Sales tersebut
+        console.log("🔑 Kata kunci pencocokan sales:", cariSales);
+
+        // 3. Ambil laporan penjualan dan cocokan
         const jualDoc = await window.getDoc(window.doc(window.db, "nexabsent_data", "laporan_penjualan"));
         let detailJual = [];
         if (jualDoc.exists()) {
             const rows = jualDoc.data().rows || [];
+            console.log("📦 Total baris laporan penjualan di Firebase:", rows.length);
+
             rows.forEach(r => {
-                const salesCol = (r['Sales'] || r['NAMA SALES'] || r['NAMA'] || r['ID'] || "").toString().trim().toUpperCase();
-                
-                // Cocokkan baris penjualan dengan Nama Sales / ID Sales ATAU Nama Absen cadangan
-                if ((namaSalesTarget && salesCol === namaSalesTarget) || salesCol === namaTarget.toUpperCase()) {
+                let barisSales = "";
+                // Gabungkan semua nilai kolom di baris tersebut untuk dicari kata kuncinya
+                let barisFullText = Object.values(r).join(" ").toUpperCase();
+
+                let isCocok = false;
+                cariSales.forEach(kw => {
+                    if (barisFullText.includes(kw)) isCocok = true;
+                });
+
+                if (isCocok) {
                     detailJual.push({
                         tanggal: r['Tanggal'] || r['TGL'] || '-',
                         produk: r['Produk'] || r['PRODUK'] || '-',
                         qty: Number(r['Qty'] || r['QTY'] || 1),
-                        omzet: Number(String(r['Omzet'] || r['OMZET'] || 0).replace(/,/g, ""))
+                        omzet: Number(String(r['Omzet'] || r['OMZET'] || 0).replace(/[^0-9.-]+/g, ""))
                     });
                 }
             });
+        } else {
+            console.log("⚠️ Dokumen laporan_penjualan kosong di Firebase!");
         }
+
+        console.log("✨ Hasil penjualan yang cocok:", detailJual);
 
         let totalU = detailJual.reduce((acc, cur) => acc + cur.qty, 0);
         let totalO = detailJual.reduce((acc, cur) => acc + cur.omzet, 0);
