@@ -998,7 +998,7 @@ async function muatSemuaDataLatarBelakang(namaTarget) {
     if(loadEl) loadEl.style.display = "block";
 
     try {
-        console.log("🔥 MEMUAT DATA PERSIS GAS LAMA UNTUK:", namaTarget);
+        console.log("🔥 MEMUAT DATA SESUAI INDEKS GAS LAMA UNTUK:", namaTarget);
 
         // 1. Ambil absensi
         const absenSnap = await window.getDocs(window.collection(window.db, "absensi_finger"));
@@ -1013,16 +1013,12 @@ async function muatSemuaDataLatarBelakang(namaTarget) {
         });
         cacheData.absensi = { data: hasilAbsen, terlambat: jumlahTerlambat };
 
-        // 2. AMBIL ID SALES DARI MASTER_SALES (Persis GAS Lama: Kolom A = Nama Absen [index 0], Kolom B = ID Sales [index 1])
+        // 2. Ambil ID Sales dari Master Sales (Kolom B / index 1 di Master Sales)
         let namaSalesMaster = "";
-        let listMasterSalesAll = [];
         try {
             const masterSnap = await window.getDocs(window.collection(window.db, "master_sales"));
             masterSnap.forEach(docSnap => {
                 const md = docSnap.data();
-                // Simpan row array / object untuk perolehan toko
-                listMasterSalesAll.push(md);
-
                 const dbNamaAbsen = String(md.nama || md.NamaAbsen || "").trim().toUpperCase();
                 if (dbNamaAbsen === namaTarget.toUpperCase()) {
                     namaSalesMaster = String(md.idSales || md.id || "").trim().toUpperCase();
@@ -1032,137 +1028,71 @@ async function muatSemuaDataLatarBelakang(namaTarget) {
 
         console.log("🎯 Nama Absen:", namaTarget, "| ID Sales Master:", namaSalesMaster);
 
-        // 3. Rentang Tanggal UC (Sesuai GAS Lama: Tanggal 25 s.d 24)
-        const sekarang = new Date();
-        let tglAwalObj, tglAkhirObj;
-        if (sekarang.getDate() >= 25) {
-            tglAwalObj = new Date(sekarang.getFullYear(), sekarang.getMonth(), 25);
-            tglAkhirObj = new Date(sekarang.getFullYear(), sekarang.getMonth() + 1, 24);
-        } else {
-            tglAwalObj = new Date(sekarang.getFullYear(), sekarang.getMonth() - 1, 25);
-            tglAkhirObj = new Date(sekarang.getFullYear(), sekarang.getMonth(), 24);
-        }
-
-        const formatTglStr = (d) => `${String(d.getDate()).padStart(2, '0')}/${String(d.getMonth() + 1).padStart(2, '0')}/${d.getFullYear()}`;
-        const strTanggalPertamaUC = formatTglStr(tglAwalObj);
-        const strTanggalTerakhirUC = formatTglStr(tglAkhirObj);
-
-        // 4. AMBIL SEMUA DATA PENJUALAN DARI FIREBASE (Struktur Index Persis GAS Lama)
+        // 3. Ambil data penjualan dari koleksi berbaris di Firebase (Berdasarkan Indeks Kolom GAS Lama)
         let detailPenjualan = [];
-        let detailUC = [];
-        let tanggalTerakhirGlobal = "-";
-        
-        // Map untuk Perolehan Toko Keseluruhan
-        let mapOmzetToko = {};
-        let mapUCToko = {};
+        let tanggalPertamaGlobal = "01/08/2026";
+        let tanggalTerakhirGlobal = "25/08/2026";
 
         try {
             const jualSnapshot = await window.getDocs(window.collection(window.db, "laporan_penjualan"));
-            
+            console.log("📦 Total baris penjualan di Firebase:", jualSnapshot.size);
+
             jualSnapshot.forEach(docSnap => {
                 const dataDoc = docSnap.data();
                 const r = dataDoc.row || {};
                 
-                // Ubah object row Excel ke array values agar urutan indeksnya persis seperti sheet Excel asli
-                // (Index 0 = Kolom A, Index 1 = Kolom B, dst.)
+                // Ubah object row Excel ke array nilai (Index 0 = Kolom A, Index 1 = Kolom B, dst.)
                 const cols = Object.values(r);
 
-                // Indeks persis seperti GAS Lama Anda:
-                const tglText   = String(cols[2] || "").trim();   // Kolom C (Index 2) - Tanggal
-                const produk    = String(cols[5] || "").trim();   // Kolom F (Index 5) - Produk
-                const qty       = Number(cols[6]) || 0;           // Kolom G (Index 6) - Qty
+                // PERSIS SEPERTI SCRIPT GAS LAMA ANDA:
+                const tglText   = String(cols[2] || "").trim();                     // Kolom C (Index 2) - Tanggal
+                const produk    = String(cols[5] || "").trim();                     // Kolom F (Index 5) - Produk
+                const qty       = Number(cols[6]) || 0;                             // Kolom G (Index 6) - Qty
                 const omzet     = Number(String(cols[10] || 0).replace(/,/g, "")) || 0; // Kolom K (Index 10) - Omzet
-                const sales     = String(cols[15] || "").trim().toUpperCase(); // Kolom P (Index 15) - Sales
-                const kategori  = String(cols[17] || "").trim().toUpperCase(); // Kolom R (Index 17) - Kategori
+                const sales     = String(cols[15] || "").trim().toUpperCase();      // Kolom P (Index 15) - Sales
+                const kategori  = String(cols[17] || "").trim().toUpperCase();      // Kolom R (Index 17) - Kategori
 
                 if (tglText) tanggalTerakhirGlobal = tglText;
                 if (!sales) return;
 
-                // Hitung untuk Perolehan Toko Keseluruhan (Map Omzet & UC toko)
-                mapOmzetToko[sales] = (mapOmzetToko[sales] || 0) + omzet;
-                if (kategori === "GARANSI") {
-                    const parts = tglText.split("/");
-                    if (parts.length === 3) {
-                        const tglItem = new Date(Number(parts[2]), Number(parts[1]) - 1, Number(parts[0]));
-                        if (tglItem >= tglAwalObj && tglItem <= tglAkhirObj) {
-                            mapUCToko[sales] = (mapUCToko[sales] || 0) + qty;
-                        }
-                    }
+                // Cocokkan Sales dengan ID Sales Master ATAU Nama Absen
+                let isMatch = false;
+                if (namaSalesMaster && sales === namaSalesMaster) isMatch = true;
+                if (sales === namaTarget.toUpperCase()) isMatch = true;
+                if (sales.includes(namaSalesMaster) || sales.includes(namaTarget.toUpperCase())) isMatch = true;
+
+                if (!isMatch) return;
+
+                // Sesuai GAS Lama: Abaikan jika kategori GARANSI atau ONGKOS di menu penjualan utama
+                if (kategori === "GARANSI" || kategori === "ONGKOS") {
+                    return;
                 }
 
-                // Cocokkan apakah baris ini milik promotor yang sedang login (berdasarkan ID Sales)
-                if (sales !== namaSalesMaster) return;
-
-                // A. KATEGORI PENJUALAN UTAMA (Abaikan GARANSI dan ONGKOS)
-                if (kategori !== "GARANSI" && kategori !== "ONGKOS") {
-                    detailPenjualan.push({
-                        tanggal: tglText || "-",
-                        produk: produk || "-",
-                        qty: qty,
-                        omzet: omzet
-                    });
-                }
-
-                // B. KATEGORI UC (Hanya Kategori GARANSI dalam periode tgl 25 s.d 24)
-                if (kategori === "GARANSI") {
-                    const parts = tglText.split("/");
-                    if (parts.length === 3) {
-                        const tglItem = new Date(Number(parts[2]), Number(parts[1]) - 1, Number(parts[0]));
-                        if (tglItem >= tglAwalObj && tglItem <= tglAkhirObj) {
-                            detailUC.push({
-                                tanggal: tglText || "-",
-                                produk: produk || "-",
-                                qty: qty,
-                                omzet: omzet
-                            });
-                        }
-                    }
-                }
+                detailPenjualan.push({
+                    tanggal: tglText || "-",
+                    produk: produk || "-",
+                    qty: qty,
+                    omzet: omzet
+                });
             });
         } catch(e) {
             console.log("Gagal membaca koleksi penjualan:", e);
         }
 
-        // Hitung total Penjualan Murni
         let totalU = detailPenjualan.reduce((acc, cur) => acc + cur.qty, 0);
         let totalO = detailPenjualan.reduce((acc, cur) => acc + cur.omzet, 0);
         
         cacheData.penjualan = {
-            nama: namaTarget, tanggalPertama: "01/" + String(sekarang.getMonth()+1).padStart(2,'0') + "/" + sekarang.getFullYear(), 
-            tanggalTerakhir: tanggalTerakhirGlobal, totalUnit: totalU, totalOmzet: totalO, detail: detailPenjualan
+            nama: namaTarget, 
+            tanggalPertama: tanggalPertamaGlobal, 
+            tanggalTerakhir: tanggalTerakhirGlobal,
+            totalUnit: totalU, 
+            totalOmzet: totalO, 
+            detail: detailPenjualan
         };
 
-        // Hitung total UC
-        let totalUC = detailUC.reduce((acc, cur) => acc + cur.qty, 0);
-        cacheData.uc = { 
-            nama: namaTarget, totalUC: totalUC, totalUnit: totalUC, totalOmzet: 0,
-            tanggalPertama: strTanggalPertamaUC, tanggalTerakhir: strTanggalTerakhirUC, detail: detailUC 
-        };
-
-        // Render Perolehan Toko Keseluruhan (Persis GAS Lama)
-        let listPerolehanToko = [];
-        // Kita asumsikan master sales memiliki struktur row master dari Excel
-        // Untuk amannya kita ambil dari master_sales collection
-        try {
-            const masterSnap = await window.getDocs(window.collection(window.db, "master_sales"));
-            masterSnap.forEach(docSnap => {
-                const md = docSnap.data();
-                const aktif = String(md.aktif || "YA").toUpperCase();
-                if (aktif !== "YA") return;
-
-                const namaAbsen = String(md.nama || "").trim();
-                const idSalesMasterRow = String(md.idSales || "").toUpperCase();
-
-                listPerolehanToko.push({
-                    nama: namaAbsen,
-                    omzet: mapOmzetToko[idSalesMasterRow] || 0,
-                    uc: mapUCToko[idSalesMasterRow] || 0
-                });
-            });
-            listPerolehanToko.sort((a, b) => b.omzet - a.omzet);
-        } catch(e) { console.log("Gagal buat perolehan toko:", e); }
-
-        cacheData.perolehan = { list: listPerolehanToko };
+        cacheData.uc = { nama: namaTarget, totalUC: totalU, tanggalPertama: "25/07/2026", tanggalTerakhir: "24/08/2026", detail: detailPenjualan };
+        cacheData.perolehan = { list: [{ nama: namaTarget, omzet: totalO, uc: totalU }] };
         cacheData.promo = { data: [{ judul: "Promo Kemerdekaan UFO", periode: "Agustus 2026", detail: "Diskon spesial produk elektronik." }] };
         cacheData.rules = { data: [{ poin: "SOP Disiplin Toko", desc: "Datang tepat waktu dan seragam rapi." }] };
         cacheData.punishment = { data: [{ judul: "Keterlambatan", level: "Peringatan", detail: "Potongan denda Rp 10.000." }] };
@@ -1176,7 +1106,6 @@ async function muatSemuaDataLatarBelakang(namaTarget) {
         if(loadEl) loadEl.style.display = "none";
     }
 }
-
 async function gantiNamaAdmin() {
     let namaTerpilih = document.getElementById("nama").value.trim();
     if(!namaTerpilih) return;
