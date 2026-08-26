@@ -1052,16 +1052,19 @@ async function muatSemuaDataLatarBelakang(namaTarget) {
 
         // 3. Ambil laporan penjualan dari Firebase
         const jualDoc = await window.getDoc(window.doc(window.db, "nexabsent_data", "laporan_penjualan"));
+       // 3. Ambil laporan penjualan dari koleksi berbaris di Firebase
         let detailJual = [];
-        if (jualDoc.exists()) {
-            const rows = jualDoc.data().rows || [];
-            console.log("📦 Total baris laporan penjualan di Firebase:", rows.length);
+        try {
+            const jualSnapshot = await window.getDocs(window.collection(window.db, "laporan_penjualan"));
+            console.log("📦 Total dokumen penjualan di Firebase:", jualSnapshot.size);
 
-            rows.forEach(r => {
-                // Gabungkan SEMUA kolom pada baris tersebut menjadi satu teks besar
+            jualSnapshot.forEach(docSnap => {
+                const dataDoc = docSnap.data();
+                const r = dataDoc.row || {};
+                
+                // Gabungkan teks baris untuk dicocokkan dengan keyword sales / ID sales
                 let barisText = Object.values(r).join(" | ").toUpperCase();
 
-                // Cek apakah ada salah satu kata kunci (Nama atau ID Sales) yang nyangkut di baris ini
                 let cocok = false;
                 listPencarian.forEach(keyword => {
                     if (keyword.length > 2 && barisText.includes(keyword)) {
@@ -1070,7 +1073,6 @@ async function muatSemuaDataLatarBelakang(namaTarget) {
                 });
 
                 if (cocok) {
-                    // Cari nilai Qty dan Omzet secara fleksibel dari kolom manapun
                     let qtyVal = 1;
                     let omzetVal = 0;
                     let tglVal = "-";
@@ -1102,35 +1104,9 @@ async function muatSemuaDataLatarBelakang(namaTarget) {
                     });
                 }
             });
-        } else {
-            console.log("⚠️ Dokumen laporan_penjualan belum ada di Firebase!");
+        } catch(e) {
+            console.log("Gagal membaca koleksi penjualan:", e);
         }
-
-        console.log("✨ Hasil penjualan yang cocok:", detailJual);
-
-        let totalU = detailJual.reduce((acc, cur) => acc + cur.qty, 0);
-        let totalO = detailJual.reduce((acc, cur) => acc + cur.omzet, 0);
-        
-        cacheData.penjualan = {
-            nama: namaTarget, tanggalPertama: "01/08/2026", tanggalTerakhir: "31/08/2026",
-            totalUnit: totalU, totalOmzet: totalO, detail: detailJual
-        };
-
-        cacheData.uc = { nama: namaTarget, totalUC: totalU, tanggalPertama: "25/07/2026", tanggalTerakhir: "24/08/2026", detail: detailJual };
-        cacheData.perolehan = { list: [{ nama: namaTarget, omzet: totalO, uc: totalU }] };
-        cacheData.promo = { data: [{ judul: "Promo Kemerdekaan UFO", periode: "Agustus 2026", detail: "Diskon spesial produk elektronik." }] };
-        cacheData.rules = { data: [{ poin: "SOP Disiplin Toko", desc: "Datang tepat waktu dan seragam rapi." }] };
-        cacheData.punishment = { data: [{ judul: "Keterlambatan", level: "Peringatan", detail: "Potongan denda Rp 10.000." }] };
-        cacheData.reward = { data: [{ judul: "Bonus Target Bulanan", periode: "Agustus", detail: "Pencapaian omzet terbaik." }] };
-        cacheData.pelanggaranSaya = { data: [] };
-        cacheData.rewardSaya = { data: [] };
-
-    } catch(e) {
-        console.error("Gagal load cache dari Firebase", e);
-    } finally {
-        if(loadEl) loadEl.style.display = "none";
-    }
-}
 
 // Helper kecil pencocokan sales
 function salesColMatch(salesExcel, idSalesMaster, namaAbsen) {
