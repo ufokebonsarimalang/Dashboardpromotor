@@ -998,7 +998,7 @@ async function muatSemuaDataLatarBelakang(namaTarget) {
     if(loadEl) loadEl.style.display = "block";
 
     try {
-        console.log("🔥 MEMUAT DATA SESUAI INDEKS GAS LAMA UNTUK:", namaTarget);
+        console.log("🔥 MEMUAT DATA DENGAN PEMETAAN KOLOM DINAMIS UNTUK:", namaTarget);
 
         // 1. Ambil absensi
         const absenSnap = await window.getDocs(window.collection(window.db, "absensi_finger"));
@@ -1013,7 +1013,7 @@ async function muatSemuaDataLatarBelakang(namaTarget) {
         });
         cacheData.absensi = { data: hasilAbsen, terlambat: jumlahTerlambat };
 
-        // 2. Ambil ID Sales dari Master Sales (Kolom B / index 1 di Master Sales)
+        // 2. Ambil ID Sales dari Master Sales
         let namaSalesMaster = "";
         try {
             const masterSnap = await window.getDocs(window.collection(window.db, "master_sales"));
@@ -1028,7 +1028,7 @@ async function muatSemuaDataLatarBelakang(namaTarget) {
 
         console.log("🎯 Nama Absen:", namaTarget, "| ID Sales Master:", namaSalesMaster);
 
-        // 3. Ambil data penjualan dari koleksi berbaris di Firebase (Berdasarkan Indeks Kolom GAS Lama)
+        // 3. Ambil data penjualan dari koleksi berbaris di Firebase
         let detailPenjualan = [];
         let tanggalPertamaGlobal = "01/08/2026";
         let tanggalTerakhirGlobal = "25/08/2026";
@@ -1041,38 +1041,67 @@ async function muatSemuaDataLatarBelakang(namaTarget) {
                 const dataDoc = docSnap.data();
                 const r = dataDoc.row || {};
                 
-                // Ubah object row Excel ke array nilai (Index 0 = Kolom A, Index 1 = Kolom B, dst.)
-                const cols = Object.values(r);
+                let valSales = "";
+                let valKategori = "";
+                let valQty = 0;
+                let valOmzet = 0;
+                let valTgl = "";
+                let valProduk = "";
 
-                // PERSIS SEPERTI SCRIPT GAS LAMA ANDA:
-                const tglText   = String(cols[2] || "").trim();                     // Kolom C (Index 2) - Tanggal
-                const produk    = String(cols[5] || "").trim();                     // Kolom F (Index 5) - Produk
-                const qty       = Number(cols[6]) || 0;                             // Kolom G (Index 6) - Qty
-                const omzet     = Number(String(cols[10] || 0).replace(/,/g, "")) || 0; // Kolom K (Index 10) - Omzet
-                const sales     = String(cols[15] || "").trim().toUpperCase();      // Kolom P (Index 15) - Sales
-                const kategori  = String(cols[17] || "").trim().toUpperCase();      // Kolom R (Index 17) - Kategori
+                // Deteksi kolom secara cerdas berdasarkan nama header Excel
+                Object.keys(r).forEach(k => {
+                    const kUp = k.toUpperCase();
+                    const v = String(r[k] || "").trim();
 
-                if (tglText) tanggalTerakhirGlobal = tglText;
-                if (!sales) return;
+                    if (kUp.includes("SALES") || kUp.includes("NAMA SALES") || kUp.includes("ID SALES")) {
+                        if (v && !valSales) valSales = v.toUpperCase();
+                    }
+                    else if (kUp.includes("KATEGORI") || kUp.includes("CATEGORY")) {
+                        if (v && !valKategori) valKategori = v.toUpperCase();
+                    }
+                    else if (kUp === "QTY" || kUp === "QUANTITY" || kUp.includes("QTY")) {
+                        valQty = Number(v) || 0;
+                    }
+                    else if (kUp === "OMZET" || kUp === "TOTAL" || kUp.includes("OMZET") || kUp.includes("HARGA")) {
+                        valOmzet = Number(v.replace(/[^0-9.-]+/g, "")) || 0;
+                    }
+                    else if (kUp.includes("TGL") || kUp.includes("TANGGAL") || kUp.includes("DATE")) {
+                        if (v) {
+                            // Jika tanggal berupa angka serial Excel (misal 46030), ubah ke format tanggal normal
+                            if (!isNaN(v) && Number(v) > 30000) {
+                                const excelDate = new Date((Number(v) - (25567 + 2)) * 86400 * 1000);
+                                valTgl = `${String(excelDate.getDate()).padStart(2,'0')}/${String(excelDate.getMonth()+1).padStart(2,'0')}/${excelDate.getFullYear()}`;
+                            } else {
+                                valTgl = v;
+                            }
+                            tanggalTerakhirGlobal = valTgl;
+                        }
+                    }
+                    else if (kUp.includes("PRODUK") || kUp.includes("ITEM") || kUp.includes("NAMA BARANG")) {
+                        if (v) valProduk = v;
+                    }
+                });
 
-                // Cocokkan Sales dengan ID Sales Master ATAU Nama Absen
+                if (!valSales) return;
+
+                // Cocokkan Sales
                 let isMatch = false;
-                if (namaSalesMaster && sales === namaSalesMaster) isMatch = true;
-                if (sales === namaTarget.toUpperCase()) isMatch = true;
-                if (sales.includes(namaSalesMaster) || sales.includes(namaTarget.toUpperCase())) isMatch = true;
+                if (namaSalesMaster && valSales === namaSalesMaster) isMatch = true;
+                if (valSales === namaTarget.toUpperCase()) isMatch = true;
+                if (valSales.includes(namaSalesMaster) || valSales.includes(namaTarget.toUpperCase())) isMatch = true;
 
                 if (!isMatch) return;
 
-                // Sesuai GAS Lama: Abaikan jika kategori GARANSI atau ONGKOS di menu penjualan utama
-                if (kategori === "GARANSI" || kategori === "ONGKOS") {
+                // Abaikan Kategori Garansi dan Ongkos di Penjualan Utama
+                if (valKategori === "GARANSI" || valKategori === "ONGKOS") {
                     return;
                 }
 
                 detailPenjualan.push({
-                    tanggal: tglText || "-",
-                    produk: produk || "-",
-                    qty: qty,
-                    omzet: omzet
+                    tanggal: valTgl || "-",
+                    produk: valProduk || "-",
+                    qty: valQty,
+                    omzet: valOmzet
                 });
             });
         } catch(e) {
