@@ -653,16 +653,12 @@ function aturTampilanBerdasarkanRole() {
 // ==========================================
 function excelTimeToString(serial) {
     if (serial === null || serial === undefined || serial === "") return "";
-    
-    // Jika sudah berbentuk string jam (misal "08:45"), langsung kembalikan
     let str = String(serial).trim();
     if (str.includes(":")) return str;
 
     const num = Number(serial);
-    // Jika bukan angka (misal teks biasa), kembalikan aslinya
     if (isNaN(num)) return str;
 
-    // Jika berupa angka desimal jam excel (antara 0 dan 1)
     if (num >= 0 && num < 1) {
         const totalSeconds = Math.round(num * 86400);
         const hours = Math.floor(totalSeconds / 3600) % 24;
@@ -673,6 +669,7 @@ function excelTimeToString(serial) {
 
     return str;
 }
+
 // ==========================================
 // FUNGSI LOGIN DARI FIREBASE FIRESTORE
 // ==========================================
@@ -743,7 +740,7 @@ async function login() {
 }
 
 // ==========================================
-// FUNGSI IMPORT MASTER SALES (OTOMATIS CARI SHEET)
+// FUNGSI IMPORT MASTER SALES
 // ==========================================
 async function importMasterSalesKeFirebase(event) {
     const file = event.target.files[0];
@@ -757,7 +754,6 @@ async function importMasterSalesKeFirebase(event) {
             const data = new Uint8Array(e.target.result);
             const workbook = XLSX.read(data, { type: 'array' });
             
-            // Cari sheet MASTER_SALES atau sheet pertama
             let targetSheetName = workbook.SheetNames[0];
             workbook.SheetNames.forEach(name => {
                 const nUpper = name.toUpperCase();
@@ -767,7 +763,6 @@ async function importMasterSalesKeFirebase(event) {
             });
 
             const worksheet = workbook.Sheets[targetSheetName];
-            // Baca sheet dalam bentuk array of arrays (baris & kolom) agar urutannya pasti
             const rawRows = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
 
             if (rawRows.length <= 1) {
@@ -777,17 +772,8 @@ async function importMasterSalesKeFirebase(event) {
             }
 
             let jumlahMasuk = 0;
-            // Mulai dari baris index 1 (lewati header baris ke-0)
             for (let i = 1; i < rawRows.length; i++) {
                 const row = rawRows[i];
-                
-                // Sesuai GAS Lama Anda:
-                // Kolom A (Index 0) = Nama Absen (Tampil di web)
-                // Kolom B (Index 1) = ID Sales / Nama Sales (Pencocokan omzet)
-                // Kolom C (Index 2) = Aktif (YA/TIDAK)
-                // Kolom D (Index 3) = PIN / Password
-                // Kolom E (Index 4) = Role (ADMIN/USER)
-
                 const namaAbsen = String(row[0] || "").trim().toUpperCase();
                 const idSales   = String(row[1] || "").trim().toUpperCase();
                 const aktif     = String(row[2] || "YA").trim().toUpperCase();
@@ -799,7 +785,7 @@ async function importMasterSalesKeFirebase(event) {
                 const docId = namaAbsen.replace(/\s+/g, '_');
                 await window.setDoc(window.doc(window.db, "master_sales", docId), {
                     nama: namaAbsen,
-                    idSales: idSales || namaAbsen, // Jika kolom B kosong, gunakan nama absen
+                    idSales: idSales || namaAbsen,
                     aktif: aktif,
                     pin: pin,
                     role: role,
@@ -810,7 +796,7 @@ async function importMasterSalesKeFirebase(event) {
             }
 
             tutupPopup();
-            showPopup(`Berhasil! ${jumlahMasuk} data Master Sales sukses diimpor dengan pemetaan ID Sales yang akurat.`);
+            showPopup(`Berhasil! ${jumlahMasuk} data Master Sales sukses diimpor.`);
             loadNamaAdminFirebase();
         } catch (err) {
             tutupPopup();
@@ -821,7 +807,7 @@ async function importMasterSalesKeFirebase(event) {
 }
 
 // ==========================================
-// FUNGSI UPLOAD ABSEN FINGER (OTOMATIS JAM BERSIH)
+// FUNGSI UPLOAD ABSEN FINGER
 // ==========================================
 async function prosesUploadAbsensi(event) {
     const file = event.target.files[0];
@@ -848,7 +834,7 @@ async function prosesUploadAbsensi(event) {
 
             if (jsonRows.length === 0) {
                 tutupPopup();
-                showPopup(`Sheet "${targetSheetName}" kosong atau tidak terbaca.`);
+                showPopup(`Sheet "${targetSheetName}" kosong.`);
                 return;
             }
 
@@ -862,7 +848,6 @@ async function prosesUploadAbsensi(event) {
             let countBaru = 0;
             for (let i = 0; i < jsonRows.length; i++) {
                 const row = jsonRows[i];
-                
                 let namaVal = "", tanggalVal = "", masukVal = "", ist1Val = "", kem1Val = "", ist2Val = "", kem2Val = "", pulangVal = "", terlambatVal = "";
 
                 Object.keys(row).forEach(k => {
@@ -913,7 +898,7 @@ async function prosesUploadAbsensi(event) {
             }
 
             tutupPopup();
-            showPopup(`Sukses! ${countBaru} data absensi dari sheet "${targetSheetName}" berhasil disimpan.`);
+            showPopup(`Sukses! ${countBaru} data absensi berhasil disimpan.`);
         } catch (err) {
             tutupPopup();
             showPopup("Gagal memproses file absensi: " + err.message);
@@ -923,13 +908,13 @@ async function prosesUploadAbsensi(event) {
 }
 
 // ==========================================
-// FUNGSI UPLOAD PENJUALAN
+// FUNGSI UPLOAD PENJUALAN (PER BARIS KE FIRESTORE)
 // ==========================================
 async function prosesUploadPenjualan(event) {
     const file = event.target.files[0];
     if (!file) return;
     
-    showPopup("Mengunggah ribuan data penjualan per baris ke Firebase...");
+    showPopup("Mengunggah ribuan baris data penjualan ke Firebase...");
 
     const reader = new FileReader();
     reader.onload = async function(e) {
@@ -955,7 +940,6 @@ async function prosesUploadPenjualan(event) {
             }
 
             let countBerhasil = 0;
-            // Loop dan simpan setiap baris penjualan sebagai dokumen terpisah agar tidak tembus limit 1MB
             for (let i = 0; i < jsonRows.length; i++) {
                 const r = jsonRows[i];
                 const docId = `jual_${i + 1}_${Date.now()}`;
@@ -968,7 +952,7 @@ async function prosesUploadPenjualan(event) {
             }
 
             tutupPopup();
-            showPopup(`Sukses! ${countBerhasil} baris data penjualan berhasil diunggah penuh ke Firebase.`);
+            showPopup(`Sukses! ${countBerhasil} baris data penjualan berhasil diunggah penuh.`);
         } catch (err) {
             tutupPopup();
             showPopup("Gagal memproses file penjualan: " + err.message);
@@ -1037,7 +1021,6 @@ async function muatSemuaDataLatarBelakang(namaTarget) {
                 const md = docSnap.data();
                 const dbNamaAbsen = String(md.nama || md.NamaAbsen || "").trim().toUpperCase();
                 if (dbNamaAbsen === namaTarget.toUpperCase()) {
-                    // Masukkan semua field teks yang ada di master sales ke daftar pencarian
                     Object.values(md).forEach(val => {
                         const strVal = String(val).trim().toUpperCase();
                         if (strVal && !listPencarian.includes(strVal)) {
@@ -1050,9 +1033,7 @@ async function muatSemuaDataLatarBelakang(namaTarget) {
 
         console.log("🎯 Kata kunci pencarian omzet untuk", namaTarget, ":", listPencarian);
 
-        // 3. Ambil laporan penjualan dari Firebase
-        const jualDoc = await window.getDoc(window.doc(window.db, "nexabsent_data", "laporan_penjualan"));
-       // 3. Ambil laporan penjualan dari koleksi berbaris di Firebase
+        // 3. Ambil laporan penjualan dari koleksi berbaris di Firebase
         let detailJual = [];
         try {
             const jualSnapshot = await window.getDocs(window.collection(window.db, "laporan_penjualan"));
@@ -1062,7 +1043,6 @@ async function muatSemuaDataLatarBelakang(namaTarget) {
                 const dataDoc = docSnap.data();
                 const r = dataDoc.row || {};
                 
-                // Gabungkan teks baris untuk dicocokkan dengan keyword sales / ID sales
                 let barisText = Object.values(r).join(" | ").toUpperCase();
 
                 let cocok = false;
@@ -1108,14 +1088,30 @@ async function muatSemuaDataLatarBelakang(namaTarget) {
             console.log("Gagal membaca koleksi penjualan:", e);
         }
 
-// Helper kecil pencocokan sales
-function salesColMatch(salesExcel, idSalesMaster, namaAbsen) {
-    if (!salesExcel) return false;
-    if (idSalesMaster && salesExcel === idSalesMaster) return true;
-    if (salesExcel === namaAbsen.toUpperCase()) return true;
-    if (salesExcel.includes(idSalesMaster) || idSalesMaster.includes(salesExcel)) return true;
-    return false;
+        let totalU = detailJual.reduce((acc, cur) => acc + cur.qty, 0);
+        let totalO = detailJual.reduce((acc, cur) => acc + cur.omzet, 0);
+        
+        cacheData.penjualan = {
+            nama: namaTarget, tanggalPertama: "01/08/2026", tanggalTerakhir: "31/08/2026",
+            totalUnit: totalU, totalOmzet: totalO, detail: detailJual
+        };
+
+        cacheData.uc = { nama: namaTarget, totalUC: totalU, tanggalPertama: "25/07/2026", tanggalTerakhir: "24/08/2026", detail: detailJual };
+        cacheData.perolehan = { list: [{ nama: namaTarget, omzet: totalO, uc: totalU }] };
+        cacheData.promo = { data: [{ judul: "Promo Kemerdekaan UFO", periode: "Agustus 2026", detail: "Diskon spesial produk elektronik." }] };
+        cacheData.rules = { data: [{ poin: "SOP Disiplin Toko", desc: "Datang tepat waktu dan seragam rapi." }] };
+        cacheData.punishment = { data: [{ judul: "Keterlambatan", level: "Peringatan", detail: "Potongan denda Rp 10.000." }] };
+        cacheData.reward = { data: [{ judul: "Bonus Target Bulanan", periode: "Agustus", detail: "Pencapaian omzet terbaik." }] };
+        cacheData.pelanggaranSaya = { data: [] };
+        cacheData.rewardSaya = { data: [] };
+
+    } catch(e) {
+        console.error("Gagal load cache dari Firebase", e);
+    } finally {
+        if(loadEl) loadEl.style.display = "none";
+    }
 }
+
 async function gantiNamaAdmin() {
     let namaTerpilih = document.getElementById("nama").value.trim();
     if(!namaTerpilih) return;
