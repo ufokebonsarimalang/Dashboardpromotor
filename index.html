@@ -10,7 +10,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
-    <!-- Library Ekspor Excel & PDF & SheetJS (untuk baca Excel) -->
+    <!-- Library Ekspor Excel & PDF & SheetJS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
@@ -328,61 +328,6 @@
         .card.warning { border-left: 4px solid #ef4444; }
         .card.late { border: 2px solid #d4af37; background: #151922; }
 
-        .mobile-list-container {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            width: 100%;
-        }
-
-        .mobile-list-card {
-            background: #111827;
-            border: 1px solid #374151;
-            border-radius: 14px;
-            padding: 16px;
-            width: 100%;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.25);
-        }
-
-        .mobile-list-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 8px;
-            padding-bottom: 8px;
-            border-bottom: 1px solid rgba(255,255,255,0.06);
-        }
-
-        .mobile-list-title {
-            font-size: 14.5px;
-            font-weight: 700;
-            color: #ffffff;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            word-break: break-word;
-        }
-
-        .mobile-list-badge {
-            background: rgba(212, 175, 55, 0.15);
-            color: #d4af37;
-            border: 1px solid rgba(212, 175, 55, 0.3);
-            padding: 3px 8px;
-            border-radius: 6px;
-            font-size: 10.5px;
-            font-weight: 700;
-            white-space: nowrap;
-            flex-shrink: 0;
-        }
-
-        .mobile-list-content {
-            font-size: 13.5px;
-            line-height: 1.5;
-            color: #d1d5db;
-            word-wrap: break-word;
-        }
-
         .tanggal {
             text-align: center;
             font-weight: 700;
@@ -441,7 +386,7 @@
             font-size: 12.5px;
         }
 
-        #popup, #logoutPopup, #sopModal {
+        #popup, #logoutPopup {
             display: none;
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -520,17 +465,25 @@
         <p id="roleSubtitle">Dashboard Promotor</p>
     </div>
 
-    <!-- KOTAK PANEL ADMIN: UPLOAD FILE EXCEL / RAW (PENGGANTI GAS) -->
-    <div id="adminPanelUpload" style="max-width: 1100px; margin: 0 auto 20px; display: none; grid-template-columns: repeat(2, 1fr); gap: 15px;">
-        <div class="card" style="border-left: 4px solid #d4af37; background: #111827;">
-            <h3 style="color: #d4af37; font-size: 14px; margin-bottom: 6px;">📥 Upload Absensi RAW (Mesin)</h3>
-            <p style="font-size: 12px; color: #9ca3af; margin-bottom: 12px;">Pilih file absensi mentah untuk diproses otomatis ke Firebase.</p>
-            <input type="file" id="fileAbsen" accept=".xlsx, .xls, .csv" onchange="prosesUploadAbsensi(event)" style="color: #fff; font-size: 11.5px;">
+    <!-- KOTAK PANEL ADMIN: UPLOAD & IMPORT EXCEL -->
+    <div id="adminPanelUpload" style="max-width: 1100px; margin: 0 auto 20px; display: none; grid-template-columns: repeat(3, 1fr); gap: 12px;">
+        <!-- Import Master Sales -->
+        <div class="card" style="border-left: 4px solid #3b82f6; background: #111827;">
+            <h3 style="color: #60a5fa; font-size: 13px; margin-bottom: 4px;">⚡ Import Master Sales</h3>
+            <p style="font-size: 11px; color: #9ca3af; margin-bottom: 8px;">Upload data promotor ke Firebase.</p>
+            <input type="file" id="fileMasterSales" accept=".xlsx, .xls, .csv" onchange="importMasterSalesKeFirebase(event)" style="color: #fff; font-size: 11px;">
         </div>
+        <!-- Upload Absen Raw -->
+        <div class="card" style="border-left: 4px solid #d4af37; background: #111827;">
+            <h3 style="color: #d4af37; font-size: 13px; margin-bottom: 4px;">📥 Upload Absensi RAW</h3>
+            <p style="font-size: 11px; color: #9ca3af; margin-bottom: 8px;">Proses file mesin absensi.</p>
+            <input type="file" id="fileAbsen" accept=".xlsx, .xls, .csv" onchange="prosesUploadAbsensi(event)" style="color: #fff; font-size: 11px;">
+        </div>
+        <!-- Upload Penjualan -->
         <div class="card" style="border-left: 4px solid #10b981; background: #111827;">
-            <h3 style="color: #34d399; font-size: 14px; margin-bottom: 6px;">📈 Upload Laporan Penjualan</h3>
-            <p style="font-size: 12px; color: #9ca3af; margin-bottom: 12px;">Pilih file Excel penjualan harian promotor ke Firebase.</p>
-            <input type="file" id="fileJual" accept=".xlsx, .xls, .csv" onchange="prosesUploadPenjualan(event)" style="color: #fff; font-size: 11.5px;">
+            <h3 style="color: #34d399; font-size: 13px; margin-bottom: 4px;">📈 Upload Penjualan</h3>
+            <p style="font-size: 11px; color: #9ca3af; margin-bottom: 8px;">Proses laporan omzet harian.</p>
+            <input type="file" id="fileJual" accept=".xlsx, .xls, .csv" onchange="prosesUploadPenjualan(event)" style="color: #fff; font-size: 11px;">
         </div>
     </div>
 
@@ -765,6 +718,57 @@ async function login() {
 }
 
 // ==========================================
+// FUNGSI IMPORT MASTER SALES KE FIREBASE
+// ==========================================
+async function importMasterSalesKeFirebase(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    showPopup("Sedang mengimpor data Master Sales ke Firebase...");
+
+    const reader = new FileReader();
+    reader.onload = async function(e) {
+        try {
+            const data = new Uint8Array(e.target.result);
+            const workbook = XLSX.read(data, { type: 'array' });
+            const firstSheetName = workbook.SheetNames[0];
+            const worksheet = workbook.Sheets[firstSheetName];
+            const jsonRows = XLSX.utils.sheet_to_json(worksheet);
+
+            let jumlahMasuk = 0;
+            for (let i = 0; i < jsonRows.length; i++) {
+                const row = jsonRows[i];
+                const nama = String(row['Nama'] || row['NAMA'] || row['Nama Absen'] || "").trim().toUpperCase();
+                const idSales = String(row['ID Sales'] || row['ID'] || row['Id Sales'] || "").trim().toUpperCase();
+                const aktif = String(row['Aktif'] || row['AKTIF'] || "YA").trim().toUpperCase();
+                const pin = String(row['Pin'] || row['PIN'] || row['Password'] || "1234").trim();
+                const role = String(row['Role'] || row['ROLE'] || "USER").trim().toUpperCase();
+                const brand = String(row['Brand'] || row['BRAND'] || "").trim().toUpperCase();
+                const targetUC = Number(row['Target UC'] || row['TARGET UC'] || 16);
+
+                if (!nama) continue;
+
+                const docId = nama.replace(/\s+/g, '_');
+                await window.setDoc(window.doc(window.db, "master_sales", docId), {
+                    nama, idSales, aktif, pin, role, brand, targetUC,
+                    updatedAt: new Date().toISOString()
+                }, { merge: true });
+
+                jumlahMasuk++;
+            }
+
+            tutupPopup();
+            showPopup(`Berhasil! ${jumlahMasuk} data Master Sales sukses diimpor ke Cloud Firebase.`);
+            loadNamaAdminFirebase();
+        } catch (err) {
+            tutupPopup();
+            showPopup("Gagal mengimpor Master Sales: " + err.message);
+        }
+    };
+    reader.readAsArrayBuffer(file);
+}
+
+// ==========================================
 // FUNGSI UPLOAD ABSEN RAW & PENJUALAN KE FIREBASE
 // ==========================================
 async function prosesUploadAbsensi(event) {
@@ -817,7 +821,7 @@ async function prosesUploadAbsensi(event) {
                     if (!setDuplikat.has(uniqueKey) && nama) {
                         const docId = `${nama}_${tgl.replace(/\//g, "-")}`;
                         await window.setDoc(window.doc(window.db, "absensi_finger", docId), {
-                            nama: nama, tanggal: tgl, masuk, istirahat1: ist1, kembali1: kem1,
+                            nama, tanggal: tgl, masuk, istirahat1: ist1, kembali1: kem1,
                             istirahat2: ist2, kembali2: kem2, pulang,
                             terlambat: (masuk > "08:00") ? "YA" : "TIDAK",
                             updatedAt: new Date().toISOString()
@@ -901,7 +905,6 @@ async function muatSemuaDataLatarBelakang(namaTarget) {
     if(loadEl) loadEl.style.display = "block";
 
     try {
-        // Ambil data dari koleksi Firebase Firestore lokal
         const absenSnap = await window.getDocs(window.collection(window.db, "absensi_finger"));
         let hasilAbsen = [];
         let jumlahTerlambat = 0;
@@ -912,16 +915,13 @@ async function muatSemuaDataLatarBelakang(namaTarget) {
                 hasilAbsen.push(data);
             }
         });
-
         cacheData.absensi = { data: hasilAbsen, terlambat: jumlahTerlambat };
 
-        // Simulasi pembacaan data penjualan & master dari Firebase
         const jualDoc = await window.getDoc(window.doc(window.db, "nexabsent_data", "laporan_penjualan"));
         let detailJual = [];
         if (jualDoc.exists()) {
             const rows = jualDoc.data().rows || [];
             rows.forEach(r => {
-                // Sesuaikan struktur kolom spreadsheet Anda
                 const sales = (r['Sales'] || r['NAMA'] || "").toString().trim().toUpperCase();
                 if (sales === namaTarget.toUpperCase()) {
                     detailJual.push({
@@ -1044,19 +1044,12 @@ function tampil(v){
     return (v && v.trim() !== "") ? `<span class="ok">${v}</span>` : `<span class="kosong">-</span>`;
 }
 
-// ---------------- FUNGSI RENDER (TETAP SAMA SEPERTI SEMULA) ----------------
+// ---------------- FUNGSI RENDER ----------------
 function renderAbsensi(result) {
     if(!result) return;
     const data = result.data || [];
     const terlambat = result.terlambat || 0;
     data.sort((a,b) => Number(a.tanggal) - Number(b.tanggal));
-
-    let tidakAbsenMasuk = 0;
-    let tidakAbsenPulang = 0;
-    data.forEach(x => { 
-        if(!x.masuk) tidakAbsenMasuk++;
-        if(!x.pulang) tidakAbsenPulang++;
-    });
 
     if(data.length){
         document.getElementById("summary").innerHTML = `
