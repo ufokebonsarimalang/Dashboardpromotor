@@ -1009,7 +1009,7 @@ async function muatSemuaDataLatarBelakang(namaTarget) {
     try {
         console.log("🔥 MEMUAT DATA UNTUK:", namaTarget);
 
-        // 1. Ambil data absensi
+        // 1. Ambil data absensi berdasarkan Nama Absen
         const absenSnap = await window.getDocs(window.collection(window.db, "absensi_finger"));
         let hasilAbsen = [];
         let jumlahTerlambat = 0;
@@ -1022,55 +1022,51 @@ async function muatSemuaDataLatarBelakang(namaTarget) {
         });
         cacheData.absensi = { data: hasilAbsen, terlambat: jumlahTerlambat };
 
-        // 2. Cari Nama Sales / ID Sales dari master_sales
-        let cariSales = [namaTarget.toUpperCase()];
+        // 2. AMBIL ID SALES DARI MASTER_SALES (Sesuai Logika GAS Lama Anda)
+        // Kolom A = Nama Absen, Kolom B = ID Sales
+        let idSalesTarget = "";
         try {
             const masterSnap = await window.getDocs(window.collection(window.db, "master_sales"));
             masterSnap.forEach(docSnap => {
                 const md = docSnap.data();
-                const namaAbsenDb = String(md.nama || md.NamaAbsen || "").trim().toUpperCase();
-                if (namaAbsenDb === namaTarget.toUpperCase()) {
-                    // Ambil nilai dari berbagai kemungkinan kolom ID / Nama Sales
-                    for (let key in md) {
-                        const val = String(md[key] || "").trim().toUpperCase();
-                        if (val && val !== namaAbsenDb && !cariSales.includes(val)) {
-                            cariSales.push(val);
-                        }
-                    }
+                const dbNamaAbsen = String(md.nama || md.NamaAbsen || "").trim().toUpperCase();
+                if (dbNamaAbsen === namaTarget.trim().toUpperCase()) {
+                    // Ambil ID Sales (Kolom B / idSales)
+                    idSalesTarget = String(md.idSales || md.id || md.NamaSales || "").trim().toUpperCase();
                 }
             });
-        } catch(e) { console.log("Error master sales:", e); }
+        } catch(err) { console.log("Gagal ambil master sales", err); }
 
-        console.log("🔑 Kata kunci pencocokan sales:", cariSales);
+        console.log("🔑 Nama Absen:", namaTarget, "=> ID Sales di Master:", idSalesTarget);
 
-        // 3. Ambil laporan penjualan dan cocokan
+        // 3. Ambil laporan penjualan dari Firebase dan cocokan menggunakan ID Sales / Nama
         const jualDoc = await window.getDoc(window.doc(window.db, "nexabsent_data", "laporan_penjualan"));
         let detailJual = [];
         if (jualDoc.exists()) {
             const rows = jualDoc.data().rows || [];
-            console.log("📦 Total baris laporan penjualan di Firebase:", rows.length);
+            console.log("📦 Total baris laporan penjualan:", rows.length);
 
             rows.forEach(r => {
-                let barisSales = "";
-                // Gabungkan semua nilai kolom di baris tersebut untuk dicari kata kuncinya
-                let barisFullText = Object.values(r).join(" ").toUpperCase();
+                // Ambil kolom Sales dari data penjualan Excel
+                const salesDiPenjualan = String(r['Sales'] || r['NAMA SALES'] || r['NAMA'] || r['ID'] || "").trim().toUpperCase();
+                const kategori = String(r['Kategori'] || r['KATEGORI'] || "").trim().toUpperCase();
 
-                let isCocok = false;
-                cariSales.forEach(kw => {
-                    if (barisFullText.includes(kw)) isCocok = true;
-                });
+                // Sesuai GAS lama: Abaikan jika kategori GARANSI atau ONGKOS (tergantung kebutuhan, atau sesuaikan)
+                // Kita cocokan apakah salesDiPenjualan sama dengan idSalesTarget ATAU namaTarget
+                if (salesColMatch(salesDiPenjualan, idSalesTarget, namaTarget)) {
+                    const qty = Number(r['Qty'] || r['QTY'] || 1);
+                    const omzet = Number(String(r['Omzet'] || r['OMZET'] || 0).replace(/[^0-9.-]+/g, "")) || 0;
 
-                if (isCocok) {
                     detailJual.push({
                         tanggal: r['Tanggal'] || r['TGL'] || '-',
                         produk: r['Produk'] || r['PRODUK'] || '-',
-                        qty: Number(r['Qty'] || r['QTY'] || 1),
-                        omzet: Number(String(r['Omzet'] || r['OMZET'] || 0).replace(/[^0-9.-]+/g, ""))
+                        qty: qty,
+                        omzet: omzet
                     });
                 }
             });
         } else {
-            console.log("⚠️ Dokumen laporan_penjualan kosong di Firebase!");
+            console.log("⚠️ Dokumen laporan_penjualan belum ada di Firebase!");
         }
 
         console.log("✨ Hasil penjualan yang cocok:", detailJual);
@@ -1097,6 +1093,15 @@ async function muatSemuaDataLatarBelakang(namaTarget) {
     } finally {
         if(loadEl) loadEl.style.display = "none";
     }
+}
+
+// Helper kecil pencocokan sales
+function salesColMatch(salesExcel, idSalesMaster, namaAbsen) {
+    if (!salesExcel) return false;
+    if (idSalesMaster && salesExcel === idSalesMaster) return true;
+    if (salesExcel === namaAbsen.toUpperCase()) return true;
+    if (salesExcel.includes(idSalesMaster) || idSalesMaster.includes(salesExcel)) return true;
+    return false;
 }
 async function gantiNamaAdmin() {
     let namaTerpilih = document.getElementById("nama").value.trim();
