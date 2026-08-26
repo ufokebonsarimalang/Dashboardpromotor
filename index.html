@@ -998,7 +998,7 @@ async function muatSemuaDataLatarBelakang(namaTarget) {
     if(loadEl) loadEl.style.display = "block";
 
     try {
-        console.log("🔥 MEMUAT DATA DENGAN PEMETAAN KOLOM DINAMIS UNTUK:", namaTarget);
+        console.log("🔥 MEMUAT DATA LANGSUNG BERDASARKAN NAMA:", namaTarget);
 
         // 1. Ambil absensi
         const absenSnap = await window.getDocs(window.collection(window.db, "absensi_finger"));
@@ -1013,25 +1013,27 @@ async function muatSemuaDataLatarBelakang(namaTarget) {
         });
         cacheData.absensi = { data: hasilAbsen, terlambat: jumlahTerlambat };
 
-        // 2. Ambil ID Sales dari Master Sales
-        let namaSalesMaster = "";
-        try {
-            const masterSnap = await window.getDocs(window.collection(window.db, "master_sales"));
-            masterSnap.forEach(docSnap => {
-                const md = docSnap.data();
-                const dbNamaAbsen = String(md.nama || md.NamaAbsen || "").trim().toUpperCase();
-                if (dbNamaAbsen === namaTarget.toUpperCase()) {
-                    namaSalesMaster = String(md.idSales || md.id || "").trim().toUpperCase();
-                }
-            });
-        } catch(e) { console.log("Gagal ambil master sales:", e); }
+        // 2. Rentang Tanggal UC (Tanggal 25 s.d 24)
+        const sekarang = new Date();
+        let tglAwalObj, tglAkhirObj;
+        if (sekarang.getDate() >= 25) {
+            tglAwalObj = new Date(sekarang.getFullYear(), sekarang.getMonth(), 25);
+            tglAkhirObj = new Date(sekarang.getFullYear(), sekarang.getMonth() + 1, 24);
+        } else {
+            tglAwalObj = new Date(sekarang.getFullYear(), sekarang.getMonth() - 1, 25);
+            tglAkhirObj = new Date(sekarang.getFullYear(), sekarang.getMonth(), 24);
+        }
 
-        console.log("🎯 Nama Absen:", namaTarget, "| ID Sales Master:", namaSalesMaster);
+        const formatTglStr = (d) => `${String(d.getDate()).padStart(2, '0')}/${String(d.getMonth() + 1).padStart(2, '0')}/${d.getFullYear()}`;
+        const strTanggalPertamaUC = formatTglStr(tglAwalObj);
+        const strTanggalTerakhirUC = formatTglStr(tglAkhirObj);
 
-        // 3. Ambil data penjualan dari koleksi berbaris di Firebase
+        // 3. Ambil data penjualan dari Firebase dan cocokan namanya
         let detailPenjualan = [];
+        let detailUC = [];
         let tanggalPertamaGlobal = "01/08/2026";
         let tanggalTerakhirGlobal = "25/08/2026";
+        let mapOmzetToko = {};
 
         try {
             const jualSnapshot = await window.getDocs(window.collection(window.db, "laporan_penjualan"));
@@ -1040,69 +1042,55 @@ async function muatSemuaDataLatarBelakang(namaTarget) {
             jualSnapshot.forEach(docSnap => {
                 const dataDoc = docSnap.data();
                 const r = dataDoc.row || {};
-                
-                let valSales = "";
-                let valKategori = "";
-                let valQty = 0;
-                let valOmzet = 0;
-                let valTgl = "";
-                let valProduk = "";
+                const cols = Object.values(r);
 
-                // Deteksi kolom secara cerdas berdasarkan nama header Excel
-                Object.keys(r).forEach(k => {
-                    const kUp = k.toUpperCase();
-                    const v = String(r[k] || "").trim();
+                // Indeks kolom mutlak sesuai struktur Excel Anda
+                const tglText   = String(cols[2] || "").trim();                     // Kolom C (Index 2) - Tanggal
+                const produk    = String(cols[5] || "").trim();                     // Kolom F (Index 5) - Produk
+                const qty       = Number(cols[6]) || 0;                             // Kolom G (Index 6) - Qty
+                const omzet     = Number(String(cols[10] || 0).replace(/,/g, "")) || 0; // Kolom K (Index 10) - Omzet
+                const salesExcel = String(cols[15] || "").trim().toUpperCase();     // Kolom P (Index 15) - Sales
+                const kategori  = String(cols[17] || "").trim().toUpperCase();      // Kolom R (Index 17) - Kategori
 
-                    if (kUp.includes("SALES") || kUp.includes("NAMA SALES") || kUp.includes("ID SALES")) {
-                        if (v && !valSales) valSales = v.toUpperCase();
-                    }
-                    else if (kUp.includes("KATEGORI") || kUp.includes("CATEGORY")) {
-                        if (v && !valKategori) valKategori = v.toUpperCase();
-                    }
-                    else if (kUp === "QTY" || kUp === "QUANTITY" || kUp.includes("QTY")) {
-                        valQty = Number(v) || 0;
-                    }
-                    else if (kUp === "OMZET" || kUp === "TOTAL" || kUp.includes("OMZET") || kUp.includes("HARGA")) {
-                        valOmzet = Number(v.replace(/[^0-9.-]+/g, "")) || 0;
-                    }
-                    else if (kUp.includes("TGL") || kUp.includes("TANGGAL") || kUp.includes("DATE")) {
-                        if (v) {
-                            // Jika tanggal berupa angka serial Excel (misal 46030), ubah ke format tanggal normal
-                            if (!isNaN(v) && Number(v) > 30000) {
-                                const excelDate = new Date((Number(v) - (25567 + 2)) * 86400 * 1000);
-                                valTgl = `${String(excelDate.getDate()).padStart(2,'0')}/${String(excelDate.getMonth()+1).padStart(2,'0')}/${excelDate.getFullYear()}`;
-                            } else {
-                                valTgl = v;
-                            }
-                            tanggalTerakhirGlobal = valTgl;
-                        }
-                    }
-                    else if (kUp.includes("PRODUK") || kUp.includes("ITEM") || kUp.includes("NAMA BARANG")) {
-                        if (v) valProduk = v;
-                    }
-                });
+                if (tglText) tanggalTerakhirGlobal = tglText;
+                if (!salesExcel) return;
 
-                if (!valSales) return;
+                mapOmzetToko[salesExcel] = (mapOmzetToko[salesExcel] || 0) + omzet;
 
-                // Cocokkan Sales
+                // --- PENCARIAN & KECOCOKAN NAMA ---
+                let targetClean = namaTarget.trim().toUpperCase();
                 let isMatch = false;
-                if (namaSalesMaster && valSales === namaSalesMaster) isMatch = true;
-                if (valSales === namaTarget.toUpperCase()) isMatch = true;
-                if (valSales.includes(namaSalesMaster) || valSales.includes(namaTarget.toUpperCase())) isMatch = true;
+
+                if (salesExcel === targetClean) isMatch = true;
+                if (salesExcel.includes(targetClean) || targetClean.includes(salesExcel)) isMatch = true;
 
                 if (!isMatch) return;
 
-                // Abaikan Kategori Garansi dan Ongkos di Penjualan Utama
-                if (valKategori === "GARANSI" || valKategori === "ONGKOS") {
-                    return;
+                // A. Menu Penjualan (Abaikan GARANSI dan ONGKOS)
+                if (kategori !== "GARANSI" && kategori !== "ONGKOS") {
+                    detailPenjualan.push({
+                        tanggal: tglText || "-",
+                        produk: produk || "-",
+                        qty: qty,
+                        omzet: omzet
+                    });
                 }
 
-                detailPenjualan.push({
-                    tanggal: valTgl || "-",
-                    produk: valProduk || "-",
-                    qty: valQty,
-                    omzet: valOmzet
-                });
+                // B. Menu UC (Hanya Kategori GARANSI dalam periode tgl 25 s.d 24)
+                if (kategori === "GARANSI") {
+                    const parts = tglText.split("/");
+                    if (parts.length === 3) {
+                        const tglItem = new Date(Number(parts[2]), Number(parts[1]) - 1, Number(parts[0]));
+                        if (tglItem >= tglAwalObj && tglItem <= tglAkhirObj) {
+                            detailUC.push({
+                                tanggal: tglText || "-",
+                                produk: produk || "-",
+                                qty: qty,
+                                omzet: omzet
+                            });
+                        }
+                    }
+                }
             });
         } catch(e) {
             console.log("Gagal membaca koleksi penjualan:", e);
@@ -1120,8 +1108,35 @@ async function muatSemuaDataLatarBelakang(namaTarget) {
             detail: detailPenjualan
         };
 
-        cacheData.uc = { nama: namaTarget, totalUC: totalU, tanggalPertama: "25/07/2026", tanggalTerakhir: "24/08/2026", detail: detailPenjualan };
-        cacheData.perolehan = { list: [{ nama: namaTarget, omzet: totalO, uc: totalU }] };
+        let totalUC = detailUC.reduce((acc, cur) => acc + cur.qty, 0);
+        cacheData.uc = { 
+            nama: namaTarget, totalUC: totalUC, totalUnit: totalUC, totalOmzet: 0,
+            tanggalPertama: strTanggalPertamaUC, tanggalTerakhir: strTanggalTerakhirUC, detail: detailUC 
+        };
+
+        // Rekap Perolehan Toko
+        let listPerolehanToko = [];
+        try {
+            const masterSnap = await window.getDocs(window.collection(window.db, "master_sales"));
+            masterSnap.forEach(docSnap => {
+                const md = docSnap.data();
+                const aktif = String(md.aktif || "YA").toUpperCase();
+                if (aktif !== "YA") return;
+
+                const namaAbsen = String(md.nama || "").trim();
+                const idSalesRow = String(md.idSales || "").toUpperCase();
+                const omzetPromotor = mapOmzetToko[idSalesRow] || mapOmzetToko[namaAbsen.toUpperCase()] || 0;
+
+                listPerolehanToko.push({
+                    nama: namaAbsen,
+                    omzet: omzetPromotor,
+                    uc: 0
+                });
+            });
+            listPerolehanToko.sort((a, b) => b.omzet - a.omzet);
+        } catch(e) { console.log("Gagal buat perolehan toko:", e); }
+
+        cacheData.perolehan = { list: listPerolehanToko };
         cacheData.promo = { data: [{ judul: "Promo Kemerdekaan UFO", periode: "Agustus 2026", detail: "Diskon spesial produk elektronik." }] };
         cacheData.rules = { data: [{ poin: "SOP Disiplin Toko", desc: "Datang tepat waktu dan seragam rapi." }] };
         cacheData.punishment = { data: [{ judul: "Keterlambatan", level: "Peringatan", detail: "Potongan denda Rp 10.000." }] };
