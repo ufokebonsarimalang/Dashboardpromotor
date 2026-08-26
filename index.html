@@ -749,7 +749,7 @@ async function importMasterSalesKeFirebase(event) {
     const file = event.target.files[0];
     if (!file) return;
 
-    showPopup("Mencari sheet Master Sales di dalam file...");
+    showPopup("Mengimpor Master Sales berdasarkan Kolom Absen & ID Sales...");
 
     const reader = new FileReader();
     reader.onload = async function(e) {
@@ -757,66 +757,52 @@ async function importMasterSalesKeFirebase(event) {
             const data = new Uint8Array(e.target.result);
             const workbook = XLSX.read(data, { type: 'array' });
             
+            // Cari sheet MASTER_SALES atau sheet pertama
             let targetSheetName = workbook.SheetNames[0];
             workbook.SheetNames.forEach(name => {
                 const nUpper = name.toUpperCase();
-                if (nUpper.includes("MASTER SALES") || nUpper.includes("MASTER_SALES") || nUpper.includes("SALES")) {
+                if (nUpper.includes("MASTER SALES") || nUpper.includes("MASTER_SALES")) {
                     targetSheetName = name;
                 }
             });
 
             const worksheet = workbook.Sheets[targetSheetName];
-            const jsonRows = XLSX.utils.sheet_to_json(worksheet, { defval: "" });
+            // Baca sheet dalam bentuk array of arrays (baris & kolom) agar urutannya pasti
+            const rawRows = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
 
-            if (jsonRows.length === 0) {
+            if (rawRows.length <= 1) {
                 tutupPopup();
-                showPopup(`Sheet "${targetSheetName}" kosong atau tidak ada data.`);
+                showPopup("Sheet Master Sales kosong.");
                 return;
             }
 
             let jumlahMasuk = 0;
-            for (let i = 0; i < jsonRows.length; i++) {
-                const row = jsonRows[i];
-                const keys = Object.keys(row);
+            // Mulai dari baris index 1 (lewati header baris ke-0)
+            for (let i = 1; i < rawRows.length; i++) {
+                const row = rawRows[i];
                 
-                let namaVal = "", pinVal = "1234", roleVal = "USER", aktifVal = "YA", idSalesVal = "", brandVal = "";
+                // Sesuai GAS Lama Anda:
+                // Kolom A (Index 0) = Nama Absen (Tampil di web)
+                // Kolom B (Index 1) = ID Sales / Nama Sales (Pencocokan omzet)
+                // Kolom C (Index 2) = Aktif (YA/TIDAK)
+                // Kolom D (Index 3) = PIN / Password
+                // Kolom E (Index 4) = Role (ADMIN/USER)
 
-                keys.forEach(k => {
-                    const kUpper = k.toUpperCase();
-                    const val = String(row[k] || "").trim();
+                const namaAbsen = String(row[0] || "").trim().toUpperCase();
+                const idSales   = String(row[1] || "").trim().toUpperCase();
+                const aktif     = String(row[2] || "YA").trim().toUpperCase();
+                const pin       = String(row[3] || "1234").trim();
+                const role      = String(row[4] || "USER").trim().toUpperCase();
 
-                    if (kUpper.includes("NAMA") || kUpper.includes("PROMOTOR") || kUpper.includes("SALES")) {
-                        if (!namaVal && val && val.toUpperCase() !== "NAMA") namaVal = val;
-                    }
-                    if (kUpper.includes("PIN") || kUpper.includes("PASS") || kUpper.includes("SANDI")) {
-                        if (val) pinVal = val;
-                    }
-                    if (kUpper.includes("ROLE") || kUpper.includes("AKSES") || kUpper.includes("LEVEL")) {
-                        if (val) roleVal = val;
-                    }
-                    if (kUpper.includes("AKTIF") || kUpper.includes("STATUS")) {
-                        if (val) aktifVal = val;
-                    }
-                    if (kUpper.includes("ID") || kUpper.includes("KODE")) {
-                        if (!idSalesVal) idSalesVal = val;
-                    }
-                    if (kUpper.includes("BRAND") || kUpper.includes("MERK")) {
-                        if (!brandVal) brandVal = val;
-                    }
-                });
+                if (!namaAbsen) continue;
 
-                if (!namaVal) continue;
-                const namaFinal = namaVal.toUpperCase();
-                if (namaFinal === "NAMA" || namaFinal === "PROMOTOR") continue;
-
-                const docId = namaFinal.replace(/\s+/g, '_');
+                const docId = namaAbsen.replace(/\s+/g, '_');
                 await window.setDoc(window.doc(window.db, "master_sales", docId), {
-                    nama: namaFinal,
-                    idSales: idSalesVal.toUpperCase(),
-                    aktif: aktifVal.toUpperCase() || "YA",
-                    pin: String(pinVal),
-                    role: roleVal.toUpperCase() || "USER",
-                    brand: brandVal.toUpperCase(),
+                    nama: namaAbsen,
+                    idSales: idSales || namaAbsen, // Jika kolom B kosong, gunakan nama absen
+                    aktif: aktif,
+                    pin: pin,
+                    role: role,
                     updatedAt: new Date().toISOString()
                 }, { merge: true });
 
@@ -824,12 +810,8 @@ async function importMasterSalesKeFirebase(event) {
             }
 
             tutupPopup();
-            if (jumlahMasuk > 0) {
-                showPopup(`Berhasil! ${jumlahMasuk} data Master Sales dari sheet "${targetSheetName}" sukses diimpor.`);
-                loadNamaAdminFirebase();
-            } else {
-                showPopup(`Sheet "${targetSheetName}" ditemukan, tetapi kolom nama promotor tidak terdeteksi.`);
-            }
+            showPopup(`Berhasil! ${jumlahMasuk} data Master Sales sukses diimpor dengan pemetaan ID Sales yang akurat.`);
+            loadNamaAdminFirebase();
         } catch (err) {
             tutupPopup();
             showPopup("Gagal mengimpor: " + err.message);
@@ -1009,7 +991,7 @@ async function muatSemuaDataLatarBelakang(namaTarget) {
     try {
         console.log("🔥 MEMUAT DATA UNTUK:", namaTarget);
 
-        // 1. Ambil data absensi berdasarkan Nama Absen
+        // 1. Ambil absensi
         const absenSnap = await window.getDocs(window.collection(window.db, "absensi_finger"));
         let hasilAbsen = [];
         let jumlahTerlambat = 0;
@@ -1022,24 +1004,21 @@ async function muatSemuaDataLatarBelakang(namaTarget) {
         });
         cacheData.absensi = { data: hasilAbsen, terlambat: jumlahTerlambat };
 
-        // 2. AMBIL ID SALES DARI MASTER_SALES (Sesuai Logika GAS Lama Anda)
-        // Kolom A = Nama Absen, Kolom B = ID Sales
+        // 2. Ambil ID Sales dari master_sales (Kolom B yang baru di-import)
         let idSalesTarget = "";
         try {
             const masterSnap = await window.getDocs(window.collection(window.db, "master_sales"));
             masterSnap.forEach(docSnap => {
                 const md = docSnap.data();
-                const dbNamaAbsen = String(md.nama || md.NamaAbsen || "").trim().toUpperCase();
-                if (dbNamaAbsen === namaTarget.trim().toUpperCase()) {
-                    // Ambil ID Sales (Kolom B / idSales)
-                    idSalesTarget = String(md.idSales || md.id || md.NamaSales || "").trim().toUpperCase();
+                if ((md.nama || "").trim().toUpperCase() === namaTarget.trim().toUpperCase()) {
+                    idSalesTarget = String(md.idSales || "").trim().toUpperCase();
                 }
             });
         } catch(err) { console.log("Gagal ambil master sales", err); }
 
-        console.log("🔑 Nama Absen:", namaTarget, "=> ID Sales di Master:", idSalesTarget);
+        console.log("🔑 Nama Absen:", namaTarget, "| ID Sales Tercatat di DB:", idSalesTarget);
 
-        // 3. Ambil laporan penjualan dari Firebase dan cocokan menggunakan ID Sales / Nama
+        // 3. Ambil laporan penjualan dan cocokan
         const jualDoc = await window.getDoc(window.doc(window.db, "nexabsent_data", "laporan_penjualan"));
         let detailJual = [];
         if (jualDoc.exists()) {
@@ -1047,15 +1026,17 @@ async function muatSemuaDataLatarBelakang(namaTarget) {
             console.log("📦 Total baris laporan penjualan:", rows.length);
 
             rows.forEach(r => {
-                // Ambil kolom Sales dari data penjualan Excel
-                const salesDiPenjualan = String(r['Sales'] || r['NAMA SALES'] || r['NAMA'] || r['ID'] || "").trim().toUpperCase();
-                const kategori = String(r['Kategori'] || r['KATEGORI'] || "").trim().toUpperCase();
+                // Ambil nilai dari semua kolom yang ada di baris Excel penjualan untuk dicari ID Sales-nya
+                let barisFullText = Object.values(r).join(" | ").toUpperCase();
 
-                // Sesuai GAS lama: Abaikan jika kategori GARANSI atau ONGKOS (tergantung kebutuhan, atau sesuaikan)
-                // Kita cocokan apakah salesDiPenjualan sama dengan idSalesTarget ATAU namaTarget
-                if (salesColMatch(salesDiPenjualan, idSalesTarget, namaTarget)) {
-                    const qty = Number(r['Qty'] || r['QTY'] || 1);
-                    const omzet = Number(String(r['Omzet'] || r['OMZET'] || 0).replace(/[^0-9.-]+/g, "")) || 0;
+                // Cek apakah ID Sales target atau Nama Absen promotor ada di baris omzet tersebut
+                let isCocok = false;
+                if (idSalesTarget && barisFullText.includes(idSalesTarget)) isCocok = true;
+                if (barisFullText.includes(namaTarget.toUpperCase())) isCocok = true;
+
+                if (isCocok) {
+                    const qty = Number(r['Qty'] || r['QTY'] || r['qty'] || 1);
+                    const omzet = Number(String(r['Omzet'] || r['OMZET'] || r['omzet'] || 0).replace(/[^0-9.-]+/g, "")) || 0;
 
                     detailJual.push({
                         tanggal: r['Tanggal'] || r['TGL'] || '-',
@@ -1065,8 +1046,6 @@ async function muatSemuaDataLatarBelakang(namaTarget) {
                     });
                 }
             });
-        } else {
-            console.log("⚠️ Dokumen laporan_penjualan belum ada di Firebase!");
         }
 
         console.log("✨ Hasil penjualan yang cocok:", detailJual);
