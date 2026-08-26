@@ -1004,48 +1004,81 @@ async function muatSemuaDataLatarBelakang(namaTarget) {
         });
         cacheData.absensi = { data: hasilAbsen, terlambat: jumlahTerlambat };
 
-        // 2. Ambil ID Sales dari master_sales (Kolom B yang baru di-import)
-        let idSalesTarget = "";
+        // 2. Ambil ID Sales / Nama Sales dari master_sales
+        let listPencarian = [namaTarget.toUpperCase()];
         try {
             const masterSnap = await window.getDocs(window.collection(window.db, "master_sales"));
             masterSnap.forEach(docSnap => {
                 const md = docSnap.data();
-                if ((md.nama || "").trim().toUpperCase() === namaTarget.trim().toUpperCase()) {
-                    idSalesTarget = String(md.idSales || "").trim().toUpperCase();
+                const dbNamaAbsen = String(md.nama || md.NamaAbsen || "").trim().toUpperCase();
+                if (dbNamaAbsen === namaTarget.toUpperCase()) {
+                    // Masukkan semua field teks yang ada di master sales ke daftar pencarian
+                    Object.values(md).forEach(val => {
+                        const strVal = String(val).trim().toUpperCase();
+                        if (strVal && !listPencarian.includes(strVal)) {
+                            listPencarian.push(strVal);
+                        }
+                    });
                 }
             });
-        } catch(err) { console.log("Gagal ambil master sales", err); }
+        } catch(e) { console.log("Gagal ambil master sales:", e); }
 
-        console.log("🔑 Nama Absen:", namaTarget, "| ID Sales Tercatat di DB:", idSalesTarget);
+        console.log("🎯 Kata kunci pencarian omzet untuk", namaTarget, ":", listPencarian);
 
-        // 3. Ambil laporan penjualan dan cocokan
+        // 3. Ambil laporan penjualan dari Firebase
         const jualDoc = await window.getDoc(window.doc(window.db, "nexabsent_data", "laporan_penjualan"));
         let detailJual = [];
         if (jualDoc.exists()) {
             const rows = jualDoc.data().rows || [];
-            console.log("📦 Total baris laporan penjualan:", rows.length);
+            console.log("📦 Total baris laporan penjualan di Firebase:", rows.length);
 
             rows.forEach(r => {
-                // Ambil nilai dari semua kolom yang ada di baris Excel penjualan untuk dicari ID Sales-nya
-                let barisFullText = Object.values(r).join(" | ").toUpperCase();
+                // Gabungkan SEMUA kolom pada baris tersebut menjadi satu teks besar
+                let barisText = Object.values(r).join(" | ").toUpperCase();
 
-                // Cek apakah ID Sales target atau Nama Absen promotor ada di baris omzet tersebut
-                let isCocok = false;
-                if (idSalesTarget && barisFullText.includes(idSalesTarget)) isCocok = true;
-                if (barisFullText.includes(namaTarget.toUpperCase())) isCocok = true;
+                // Cek apakah ada salah satu kata kunci (Nama atau ID Sales) yang nyangkut di baris ini
+                let cocok = false;
+                listPencarian.forEach(keyword => {
+                    if (keyword.length > 2 && barisText.includes(keyword)) {
+                        cocok = true;
+                    }
+                });
 
-                if (isCocok) {
-                    const qty = Number(r['Qty'] || r['QTY'] || r['qty'] || 1);
-                    const omzet = Number(String(r['Omzet'] || r['OMZET'] || r['omzet'] || 0).replace(/[^0-9.-]+/g, "")) || 0;
+                if (cocok) {
+                    // Cari nilai Qty dan Omzet secara fleksibel dari kolom manapun
+                    let qtyVal = 1;
+                    let omzetVal = 0;
+                    let tglVal = "-";
+                    let produkVal = "-";
+
+                    Object.keys(r).forEach(k => {
+                        const kUp = k.toUpperCase();
+                        const v = String(r[k] || "").trim();
+
+                        if (kUp.includes("QTY") || kUp.includes("QUANTITY") || kUp.includes("JUMLAH")) {
+                            qtyVal = Number(v) || 1;
+                        }
+                        if (kUp.includes("OMZET") || kUp.includes("TOTAL") || kUp.includes("HARGA") || kUp.includes("RUPIAH")) {
+                            omzetVal = Number(v.replace(/[^0-9.-]+/g, "")) || 0;
+                        }
+                        if (kUp.includes("TGL") || kUp.includes("TANGGAL") || kUp.includes("DATE")) {
+                            if (v) tglVal = v;
+                        }
+                        if (kUp.includes("PRODUK") || kUp.includes("ITEM") || kUp.includes("NAMA BARANG")) {
+                            if (v) produkVal = v;
+                        }
+                    });
 
                     detailJual.push({
-                        tanggal: r['Tanggal'] || r['TGL'] || '-',
-                        produk: r['Produk'] || r['PRODUK'] || '-',
-                        qty: qty,
-                        omzet: omzet
+                        tanggal: tglVal,
+                        produk: produkVal,
+                        qty: qtyVal,
+                        omzet: omzetVal
                     });
                 }
             });
+        } else {
+            console.log("⚠️ Dokumen laporan_penjualan belum ada di Firebase!");
         }
 
         console.log("✨ Hasil penjualan yang cocok:", detailJual);
