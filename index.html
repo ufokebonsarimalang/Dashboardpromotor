@@ -21,32 +21,28 @@
             --primary-dark: #5A52D5;
             --primary-light: #8B83FF;
             --primary-gradient: linear-gradient(135deg, #6C63FF 0%, #3F3D9E 100%);
+            --primary-glow: 0 8px 32px rgba(108, 99, 255, 0.35);
             
+            --secondary: #FF6B6B;
             --success: #00D2D3;
-            --warning: #F59E0B;
-            --danger: #EF4444;
+            --warning: #FECA57;
             
             --bg-body: #0A0A1A;
             --bg-card: rgba(255, 255, 255, 0.04);
             --bg-card-hover: rgba(255, 255, 255, 0.07);
-            --border-color: rgba(255, 255, 255, 0.06);
-            --border-hover: rgba(255, 255, 255, 0.12);
+            --glass-border: rgba(255, 255, 255, 0.08);
             
             --text-primary: #FFFFFF;
             --text-secondary: rgba(255, 255, 255, 0.7);
             --text-muted: rgba(255, 255, 255, 0.4);
             
-            --shadow-soft: 0 20px 60px rgba(0, 0, 0, 0.3);
             --radius-xl: 28px;
             --radius-lg: 20px;
             --radius-md: 16px;
             --radius-sm: 12px;
             
+            --shadow-soft: 0 20px 60px rgba(0, 0, 0, 0.3);
             --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            
-            /* GPS Status Colors */
-            --gps-on: #00D2D3;
-            --gps-off: #EF4444;
         }
 
         /* ========================================
@@ -56,14 +52,22 @@
             --bg-body: #F1F5F9;
             --bg-card: rgba(255, 255, 255, 0.7);
             --bg-card-hover: rgba(255, 255, 255, 0.9);
-            --border-color: rgba(0, 0, 0, 0.06);
-            --border-hover: rgba(0, 0, 0, 0.12);
+            --glass-border: rgba(0, 0, 0, 0.08);
             
             --text-primary: #0F172A;
             --text-secondary: rgba(15, 23, 42, 0.7);
             --text-muted: rgba(15, 23, 42, 0.4);
             
             --shadow-soft: 0 20px 60px rgba(0, 0, 0, 0.06);
+        }
+
+        [data-theme="light"] body {
+            background: #F1F5F9;
+        }
+
+        [data-theme="light"] .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            border: 1px solid rgba(0, 0, 0, 0.06);
         }
 
         /* ========================================
@@ -87,7 +91,6 @@
             position: relative;
         }
 
-        /* Background Grid */
         body::before {
             content: '';
             position: fixed;
@@ -117,7 +120,7 @@
             background: var(--bg-card);
             backdrop-filter: blur(24px) saturate(1.4);
             -webkit-backdrop-filter: blur(24px) saturate(1.4);
-            border: 1px solid var(--border-color);
+            border: 1px solid var(--glass-border);
             border-radius: var(--radius-xl);
             box-shadow: var(--shadow-soft);
             position: relative;
@@ -126,7 +129,11 @@
         }
 
         .glass-card:hover {
-            border-color: var(--border-hover);
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        [data-theme="light"] .glass-card:hover {
+            border-color: rgba(0, 0, 0, 0.12);
         }
 
         /* ========================================
@@ -140,11 +147,6 @@
             z-index: 1;
         }
 
-        .box-admin {
-            max-width: 1200px !important;
-            padding: 32px 28px;
-        }
-
         /* ========================================
            THEME TOGGLE
         ======================================== */
@@ -156,18 +158,12 @@
 
         .theme-toggle {
             background: var(--bg-card);
-            border: 1px solid var(--border-color);
+            border: 1px solid var(--glass-border);
             border-radius: 40px;
             padding: 6px 8px;
             display: flex;
             gap: 4px;
-            cursor: pointer;
             transition: var(--transition);
-            position: relative;
-        }
-
-        .theme-toggle:hover {
-            border-color: var(--border-hover);
         }
 
         .theme-toggle .toggle-btn {
@@ -185,7 +181,7 @@
         .theme-toggle .toggle-btn.active {
             background: var(--primary-gradient);
             color: white;
-            box-shadow: 0 4px 16px rgba(108, 99, 255, 0.3);
+            box-shadow: var(--primary-glow);
         }
 
         .theme-toggle .toggle-btn i {
@@ -207,7 +203,7 @@
             border-radius: 50%;
             padding: 5px;
             background: var(--primary-gradient);
-            box-shadow: 0 8px 32px rgba(108, 99, 255, 0.25);
+            box-shadow: var(--primary-glow);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -222,7 +218,7 @@
 
         .logo-container:hover {
             transform: scale(1.05) rotate(-2deg);
-            box-shadow: 0 0 60px rgba(108, 99, 255, 0.35);
+            box-shadow: 0 0 60px rgba(108, 99, 255, 0.4);
         }
 
         .logo-toko {
@@ -268,12 +264,11 @@
         ======================================== */
         .time-wrapper {
             background: var(--bg-card);
-            border: 1px solid var(--border-color);
+            border: 1px solid var(--glass-border);
             border-radius: var(--radius-md);
             padding: 16px 14px;
             margin-bottom: 16px;
             text-align: center;
-            backdrop-filter: blur(8px);
         }
 
         .jam-digital {
@@ -308,7 +303,7 @@
 
         .stat-item {
             background: var(--bg-card);
-            border: 1px solid var(--border-color);
+            border: 1px solid var(--glass-border);
             border-radius: var(--radius-sm);
             padding: 12px 14px;
             display: flex;
@@ -319,7 +314,6 @@
 
         .stat-item:hover {
             background: var(--bg-card-hover);
-            border-color: var(--border-hover);
         }
 
         .stat-item .label {
@@ -342,7 +336,7 @@
         }
 
         .stat-item .value.success { color: var(--success); }
-        .stat-item .value.danger { color: var(--danger); }
+        .stat-item .value.danger { color: var(--secondary); }
         .stat-item .value.warning { color: var(--warning); }
 
         /* ========================================
@@ -352,7 +346,7 @@
             font-size: 12px !important;
             color: var(--text-secondary) !important;
             background: var(--bg-card) !important;
-            border: 1px solid var(--border-color) !important;
+            border: 1px solid var(--glass-border) !important;
             border-radius: var(--radius-sm) !important;
             padding: 14px !important;
             margin-bottom: 14px !important;
@@ -366,14 +360,14 @@
         }
 
         /* ========================================
-           GPS SECTION - MODERN
+           GPS SECTION
         ======================================== */
         .gps-section {
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 12px;
-            margin-bottom: 16px;
+            gap: 10px;
+            margin-bottom: 14px;
             flex-wrap: wrap;
         }
 
@@ -386,7 +380,7 @@
             font-size: 12px;
             font-weight: 700;
             background: var(--bg-card);
-            border: 1px solid var(--border-color);
+            border: 1px solid var(--glass-border);
             color: var(--text-secondary);
             transition: var(--transition);
         }
@@ -400,18 +394,18 @@
         }
 
         .gps-status-badge .dot.on {
-            background: var(--gps-on);
+            background: var(--success);
             box-shadow: 0 0 12px rgba(0, 210, 211, 0.4);
         }
 
         .gps-status-badge .dot.off {
-            background: var(--gps-off);
-            box-shadow: 0 0 12px rgba(239, 68, 68, 0.4);
+            background: var(--secondary);
+            box-shadow: 0 0 12px rgba(255, 107, 107, 0.4);
         }
 
         .gps-status-badge .dot.loading {
             background: var(--warning);
-            box-shadow: 0 0 12px rgba(245, 158, 11, 0.4);
+            box-shadow: 0 0 12px rgba(254, 202, 87, 0.4);
             animation: pulse-loading 0.8s ease-in-out infinite;
         }
 
@@ -426,12 +420,12 @@
         }
 
         #btn-refresh-gps {
-            padding: 8px 18px;
-            font-size: 12px;
+            padding: 6px 16px;
+            font-size: 11px;
             font-weight: 700;
             background: var(--bg-card);
             color: var(--text-secondary);
-            border: 1px solid var(--border-color);
+            border: 1px solid var(--glass-border);
             border-radius: 40px;
             cursor: pointer;
             transition: var(--transition);
@@ -442,7 +436,6 @@
 
         #btn-refresh-gps:hover {
             background: var(--bg-card-hover);
-            border-color: var(--border-hover);
             color: var(--text-primary);
         }
 
@@ -452,31 +445,31 @@
         }
 
         /* ========================================
-           TOMBOL ABSEN - TATA LETAK RAPI
+           TOMBOL ABSEN
         ======================================== */
         .btn-grid {
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 10px;
             margin-bottom: 14px;
         }
 
         .absen-row {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 12px;
+            gap: 10px;
         }
 
         .absen-card {
             border-radius: var(--radius-md);
-            padding: 18px 12px;
+            padding: 16px 12px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             gap: 6px;
             cursor: pointer;
-            transition: var(--transition);
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
             width: 100%;
             border: none;
             position: relative;
@@ -502,11 +495,20 @@
             justify-content: center;
             flex-shrink: 0;
             font-size: 18px;
+            background: rgba(255, 255, 255, 0.15);
+            color: #FFFFFF;
+            transition: var(--transition);
+        }
+
+        .absen-card:hover .absen-icon {
+            transform: scale(1.1);
+            background: rgba(255, 255, 255, 0.25);
         }
 
         .absen-title {
             font-size: 13px;
             font-weight: 700;
+            color: #FFFFFF;
             letter-spacing: 0.3px;
         }
 
@@ -518,47 +520,62 @@
             text-align: center;
             padding: 2px 12px;
             border-radius: 20px;
+            color: rgba(255, 255, 255, 0.8);
+            background: rgba(255, 255, 255, 0.1);
         }
 
-        /* Check In - Biru/Ungu */
+        /* Check In */
         .card-in {
             background: linear-gradient(145deg, #6C63FF 0%, #4F46E5 50%, #3B32A8 100%) !important;
             box-shadow: 0 6px 24px rgba(108, 99, 255, 0.35);
         }
-        .card-in .absen-icon { background: rgba(255, 255, 255, 0.15); color: #FFFFFF; }
-        .card-in .absen-title { color: #FFFFFF; }
-        .card-in .info-jam-absen { color: #C4B5FD; background: rgba(255,255,255,0.1); }
 
-        /* Check Out - Orange */
+        .card-in:hover {
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 12px 40px rgba(108, 99, 255, 0.5);
+        }
+
+        /* Check Out */
         .card-out {
             background: linear-gradient(145deg, #FF6B6B 0%, #EE5A24 50%, #C0392B 100%) !important;
             box-shadow: 0 6px 24px rgba(255, 107, 107, 0.35);
         }
-        .card-out .absen-icon { background: rgba(255, 255, 255, 0.15); color: #FFFFFF; }
-        .card-out .absen-title { color: #FFFFFF; }
-        .card-out .info-jam-absen { color: #FED7AA; background: rgba(255,255,255,0.1); }
 
-        /* OFF - Merah (Tengah Bawah) */
+        .card-out:hover {
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 12px 40px rgba(255, 107, 107, 0.5);
+        }
+
+        /* OFF */
         .card-off-wrapper {
             display: flex;
             justify-content: center;
         }
+
         .card-off {
             background: linear-gradient(145deg, #EF4444 0%, #DC2626 50%, #B91C1C 100%) !important;
             box-shadow: 0 6px 24px rgba(239, 68, 68, 0.35);
             flex-direction: row !important;
             gap: 10px !important;
             padding: 12px 24px !important;
-            min-width: 180px !important;
+            min-width: 200px !important;
             width: auto !important;
         }
-        .card-off .absen-icon { background: rgba(255, 255, 255, 0.15); color: #FFFFFF; width: 36px; height: 36px; font-size: 16px; }
-        .card-off .absen-title { color: #FFFFFF; }
-        .card-off .info-jam-absen { color: #FCA5A5; background: rgba(255,255,255,0.1); }
 
-        /* Hover effect semua tombol */
-        .absen-card:hover {
-            transform: translateY(-4px) scale(1.02);
+        .card-off:hover {
+            transform: translateY(-4px) scale(1.03);
+            box-shadow: 0 12px 40px rgba(239, 68, 68, 0.5);
+        }
+
+        .card-off .absen-icon {
+            width: 36px;
+            height: 36px;
+            font-size: 16px;
+        }
+
+        .card-off .info-jam-absen {
+            color: #FCA5A5;
+            background: rgba(255, 255, 255, 0.1);
         }
 
         /* Disabled */
@@ -570,8 +587,12 @@
             transform: scale(0.98) !important;
         }
 
+        .btn-disabled::after {
+            display: none !important;
+        }
+
         /* ========================================
-           LOGIN INPUT
+           INPUT
         ======================================== */
         .input-group {
             text-align: left;
@@ -597,7 +618,7 @@
             width: 100%;
             padding: 12px 16px;
             border-radius: var(--radius-sm);
-            border: 1px solid var(--border-color);
+            border: 1px solid var(--glass-border);
             background: var(--bg-card);
             font-size: 14px;
             font-weight: 500;
@@ -634,7 +655,7 @@
             justify-content: center;
             align-items: center;
             gap: 8px;
-            box-shadow: 0 4px 20px rgba(108, 99, 255, 0.3);
+            box-shadow: var(--primary-glow);
         }
 
         .btn-primary:hover {
@@ -664,59 +685,6 @@
         .btn-logout:hover {
             transform: translateY(-2px);
             box-shadow: 0 8px 32px rgba(0, 184, 148, 0.4);
-        }
-
-        /* ========================================
-           ADMIN TABLE
-        ======================================== */
-        .table-container {
-            width: 100%;
-            overflow-x: auto;
-            border-radius: var(--radius-md);
-            border: 1px solid var(--border-color);
-            margin-top: 14px;
-            background: var(--bg-card);
-        }
-
-        table { width: 100%; border-collapse: collapse; text-align: left; }
-        th, td { padding: 12px 14px; font-size: 12px; color: var(--text-secondary); }
-        th { 
-            background: var(--bg-card);
-            color: var(--text-muted);
-            font-weight: 700;
-            text-transform: uppercase;
-            font-size: 10px;
-            letter-spacing: 0.5px;
-            border-bottom: 1px solid var(--border-color);
-        }
-        td { border-bottom: 1px solid var(--border-color); }
-        tr:last-child td { border-bottom: none; }
-        tr:hover td { background: var(--bg-card-hover); }
-
-        .badge {
-            display: inline-block;
-            padding: 3px 12px;
-            border-radius: 20px;
-            font-size: 10px;
-            font-weight: 700;
-        }
-        .badge-in { background: rgba(0, 210, 211, 0.15); color: #00D2D3; }
-        .badge-out { background: rgba(245, 158, 11, 0.15); color: #F59E0B; }
-        .badge-off { background: rgba(239, 68, 68, 0.15); color: #EF4444; }
-
-        .btn-lihat {
-            display: inline-block;
-            background: rgba(108, 99, 255, 0.15);
-            color: var(--primary-light);
-            padding: 4px 12px;
-            border-radius: 6px;
-            font-size: 10px;
-            font-weight: 700;
-            text-decoration: none;
-        }
-
-        .btn-lihat:hover {
-            background: rgba(108, 99, 255, 0.25);
         }
 
         /* ========================================
@@ -760,7 +728,7 @@
         .modal-box {
             background: var(--bg-card);
             backdrop-filter: blur(24px);
-            border: 1px solid var(--border-color);
+            border: 1px solid var(--glass-border);
             padding: 28px 24px;
             border-radius: var(--radius-lg);
             width: 100%;
@@ -806,6 +774,26 @@
         }
 
         /* ========================================
+           PERIODE TEXT
+        ======================================== */
+        #periode-karyawan-text {
+            background: var(--bg-card);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-sm);
+            padding: 12px;
+            margin-bottom: 14px;
+            text-align: center;
+            display: none;
+        }
+
+        #periode-karyawan-text strong {
+            color: var(--primary-light);
+            font-size: 13px;
+            font-weight: 800;
+            display: block;
+        }
+
+        /* ========================================
            RESPONSIVE
         ======================================== */
         @media (max-width: 480px) {
@@ -818,7 +806,7 @@
             .stat-item .value { font-size: 14px; }
             .absen-card { padding: 14px 10px; }
             .absen-icon { width: 38px; height: 38px; font-size: 16px; }
-            .card-off { min-width: 150px; padding: 10px 18px !important; }
+            .card-off { min-width: 160px; padding: 10px 18px !important; }
             .gps-section { gap: 8px; }
             .theme-toggle .toggle-btn { padding: 4px 10px; font-size: 10px; }
         }
@@ -895,9 +883,9 @@
         <div class="tanggal-digital" id="live-tanggal">Mencari Tanggal...</div>
     </div>
 
-    <div id="periode-karyawan-text" style="display:none; background:var(--bg-card); border:1px solid var(--border-color); border-radius:var(--radius-sm); padding:12px; margin-bottom:14px; text-align:center; font-size:12px; color:var(--text-secondary);">
+    <div id="periode-karyawan-text">
         <span style="color:var(--text-muted); font-size:10px; text-transform:uppercase; letter-spacing:0.5px; display:block; margin-bottom:2px;"><i class="fas fa-calendar"></i> Periode Absensi</span>
-        <strong style="color:var(--primary-light); font-size:13px; font-weight:800; display:block;" id="periodeText">-</strong>
+        <strong id="periodeText">-</strong>
     </div>
 
     <div class="stat-box">
@@ -906,7 +894,7 @@
             <span class="value success" id="total-masuk">0 hari</span>
         </div>
         <div class="stat-item">
-            <span class="label"><i class="fas fa-calendar-xmark" style="color:var(--danger);"></i> OFF</span>
+            <span class="label"><i class="fas fa-calendar-xmark" style="color:var(--secondary);"></i> OFF</span>
             <span class="value danger" id="total-off">0 hari</span>
         </div>
         <div class="stat-item">
@@ -914,13 +902,12 @@
             <span class="value warning" id="total-ps">0 hari</span>
         </div>
         <div class="stat-item">
-            <span class="label"><i class="fas fa-triangle-exclamation" style="color:var(--danger);"></i> Terlambat</span>
+            <span class="label"><i class="fas fa-triangle-exclamation" style="color:var(--secondary);"></i> Terlambat</span>
             <span class="value danger" id="total-terlambat">0 hari</span>
         </div>
     </div>
 
-    <div id
-<div id="status-log">
+    <div id="status-log">
         <i class="fas fa-info-circle"></i> Siap melakukan absensi...
     </div>
 
@@ -931,7 +918,7 @@
             <span id="gps-text">Mengambil lokasi...</span>
         </span>
         <button id="btn-refresh-gps" onclick="refreshGPS()">
-            <i class="fas fa-satellite-dish"></i> Refresh GPS
+            <i class="fas fa-satellite-dish"></i> Refresh
         </button>
     </div>
 
@@ -952,50 +939,16 @@
         <div class="card-off-wrapper">
             <button class="absen-card card-off" id="btn-off" onclick="absenOff()">
                 <div class="absen-icon"><i class="fas fa-power-off"></i></div>
-                <span class="absen-title">OFF</span>
+                <span class="absen-title">AMBIL OFF</span>
                 <span class="info-jam-absen" id="jam-off">-</span>
             </button>
         </div>
     </div>
 
-    <!-- Tombol Admin & Logout -->
-    <button class="btn-primary" id="btn-admin" onclick="toggleAdmin()" style="margin-bottom:8px; background:linear-gradient(135deg, #8B5CF6 0%, #6D28D9 100%);">
-        <i class="fas fa-user-shield"></i> <span id="admin-text">Admin Panel</span>
-    </button>
-
+    <!-- Tombol Logout -->
     <button class="btn-logout" onclick="logout()">
-        <i class="fas fa-right-from-bracket"></i> Logout
+        <i class="fas fa-right-from-bracket"></i> KELUAR
     </button>
-
-    <!-- Admin Panel -->
-    <div id="admin-panel" style="display:none; margin-top:16px;">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-            <h4 style="color:var(--text-primary); font-size:14px; font-weight:700;">
-                <i class="fas fa-database" style="color:var(--primary-light);"></i> Data Absensi
-            </h4>
-            <button onclick="refreshAdmin()" style="background:var(--bg-card); border:1px solid var(--border-color); border-radius:8px; padding:4px 12px; color:var(--text-secondary); font-size:11px; cursor:pointer;">
-                <i class="fas fa-rotate"></i> Refresh
-            </button>
-        </div>
-        <div class="table-container">
-            <table>
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Nama</th>
-                        <th>Tanggal</th>
-                        <th>Masuk</th>
-                        <th>Keluar</th>
-                        <th>Status</th>
-                        <th>Lokasi</th>
-                    </tr>
-                </thead>
-                <tbody id="admin-table-body">
-                    <tr><td colspan="7" style="text-align:center; color:var(--text-muted);">Memuat data...</td></tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
 </div>
 
 <!-- ========================================================== -->
@@ -1026,7 +979,6 @@
         localStorage.setItem('theme', theme);
     }
 
-    // Load saved theme
     const savedTheme = localStorage.getItem('theme') || 'dark';
     setTheme(savedTheme);
 
@@ -1036,7 +988,6 @@
     let currentUser = null;
     let currentLocation = null;
     let absenData = [];
-    let isAdminOpen = false;
 
     // ========================================
     // CLOCK
@@ -1055,6 +1006,34 @@
     updateClock();
 
     // ========================================
+    // PERIODE
+    // ========================================
+    function updatePeriode() {
+        const now = new Date();
+        const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+        
+        let bulanMulai, tahunMulai, bulanSelesai, tahunSelesai;
+        
+        if (now.getDate() >= 26) {
+            bulanMulai = months[now.getMonth()];
+            tahunMulai = now.getFullYear();
+            let next = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+            bulanSelesai = months[next.getMonth()];
+            tahunSelesai = next.getFullYear();
+        } else {
+            let prev = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+            bulanMulai = months[prev.getMonth()];
+            tahunMulai = prev.getFullYear();
+            bulanSelesai = months[now.getMonth()];
+            tahunSelesai = now.getFullYear();
+        }
+        
+        document.getElementById('periodeText').textContent = `26 ${bulanMulai} ${tahunMulai} - 25 ${bulanSelesai} ${tahunSelesai}`;
+        document.getElementById('periode-karyawan-text').style.display = 'block';
+    }
+    updatePeriode();
+
+    // ========================================
     // GPS
     // ========================================
     function getLocation() {
@@ -1065,12 +1044,11 @@
             }
             navigator.geolocation.getCurrentPosition(
                 (pos) => {
-                    const loc = {
+                    resolve({
                         lat: pos.coords.latitude,
                         lng: pos.coords.longitude,
                         accuracy: pos.coords.accuracy
-                    };
-                    resolve(loc);
+                    });
                 },
                 (err) => {
                     reject(`Gagal ambil lokasi: ${err.message}`);
@@ -1091,11 +1069,9 @@
         if (status === 'on') {
             dot.classList.add('on');
             badge.textContent = text || 'GPS Aktif ✓';
-            document.getElementById('gps-badge').style.color = 'var(--gps-on)';
         } else if (status === 'off') {
             dot.classList.add('off');
             badge.textContent = text || 'GPS Tidak Aktif ✗';
-            document.getElementById('gps-badge').style.color = 'var(--gps-off)';
         } else {
             dot.classList.add('loading');
             badge.textContent = text || 'Mengambil lokasi...';
@@ -1110,19 +1086,18 @@
 
         try {
             currentLocation = await getLocation();
-            updateGPSStatus('on', `GPS Aktif (${currentLocation.lat.toFixed(6)}, ${currentLocation.lng.toFixed(6)})`);
-            document.getElementById('status-log').innerHTML = `<i class="fas fa-check-circle" style="color:var(--gps-on);"></i> Lokasi berhasil diambil.`;
+            updateGPSStatus('on', `GPS Aktif ✓`);
+            document.getElementById('status-log').innerHTML = `<i class="fas fa-check-circle" style="color:var(--success);"></i> Lokasi berhasil diambil.`;
         } catch (err) {
             currentLocation = null;
             updateGPSStatus('off', 'GPS Error');
-            document.getElementById('status-log').innerHTML = `<i class="fas fa-exclamation-triangle" style="color:var(--danger);"></i> ${err}`;
+            document.getElementById('status-log').innerHTML = `<i class="fas fa-exclamation-triangle" style="color:var(--secondary);"></i> ${err}`;
         }
 
         btn.disabled = false;
-        btn.innerHTML = '<i class="fas fa-satellite-dish"></i> Refresh GPS';
+        btn.innerHTML = '<i class="fas fa-satellite-dish"></i> Refresh';
     }
 
-    // Auto GPS on load
     setTimeout(refreshGPS, 1000);
 
     // ========================================
@@ -1151,14 +1126,12 @@
             document.getElementById('nama-user').textContent = user.charAt(0).toUpperCase() + user.slice(1);
             document.getElementById('status-log').innerHTML = `<i class="fas fa-check-circle" style="color:var(--success);"></i> Selamat datang, ${user}!`;
             loadAbsensi();
-            loadPeriode();
             return;
         }
 
         tampilModal('Login Gagal', 'Username atau password salah. Silakan coba lagi.');
     }
 
-    // Enter key untuk login
     document.getElementById('pass').addEventListener('keydown', (e) => {
         if (e.key === 'Enter') prosesLogin();
     });
@@ -1167,7 +1140,7 @@
     });
 
     // ========================================
-    // LOGOUT
+    // LOGOUT - KEMBALI KE LOGIN
     // ========================================
     function logout() {
         currentUser = null;
@@ -1175,9 +1148,7 @@
         document.getElementById('view-login').style.display = 'block';
         document.getElementById('user').value = '';
         document.getElementById('pass').value = '';
-        document.getElementById('admin-panel').style.display = 'none';
-        isAdminOpen = false;
-        document.getElementById('admin-text').textContent = 'Admin Panel';
+        document.getElementById('status-log').innerHTML = '<i class="fas fa-info-circle"></i> Siap melakukan absensi...';
     }
 
     // ========================================
@@ -1194,7 +1165,7 @@
     }
 
     // ========================================
-    // SIMULASI DATA ABSENSI
+    // DATA ABSENSI (LocalStorage)
     // ========================================
     function getToday() {
         return new Date().toISOString().split('T')[0];
@@ -1206,20 +1177,14 @@
 
     function loadAbsensi() {
         const stored = localStorage.getItem(`absen_${currentUser}`);
-        if (stored) {
-            absenData = JSON.parse(stored);
-        } else {
-            absenData = [];
-        }
+        absenData = stored ? JSON.parse(stored) : [];
         updateStats();
-        updateAdminTable();
         updateButtonStates();
     }
 
     function saveAbsensi() {
         localStorage.setItem(`absen_${currentUser}`, JSON.stringify(absenData));
         updateStats();
-        updateAdminTable();
         updateButtonStates();
     }
 
@@ -1229,7 +1194,6 @@
 
         let hadir = 0, off = 0, ps = 0, terlambat = 0;
 
-        // Hitung dari semua data
         absenData.forEach(a => {
             if (a.status === 'masuk') hadir++;
             else if (a.status === 'off') off++;
@@ -1237,7 +1201,6 @@
             if (a.status === 'masuk' && a.isLate) terlambat++;
         });
 
-        // Tampilkan hari ini
         const todayMasuk = todayData.find(a => a.status === 'masuk');
         const todayKeluar = todayData.find(a => a.status === 'keluar');
         const todayOff = todayData.find(a => a.status === 'off' || a.status === 'ps');
@@ -1260,32 +1223,9 @@
         const sudahKeluar = todayData.some(a => a.status === 'keluar');
         const sudahOff = todayData.some(a => a.status === 'off' || a.status === 'ps');
 
-        const btnMasuk = document.getElementById('btn-masuk');
-        const btnKeluar = document.getElementById('btn-keluar');
-        const btnOff = document.getElementById('btn-off');
-
-        btnMasuk.classList.toggle('btn-disabled', sudahMasuk || sudahOff);
-        btnKeluar.classList.toggle('btn-disabled', !sudahMasuk || sudahKeluar || sudahOff);
-        btnOff.classList.toggle('btn-disabled', sudahMasuk || sudahOff);
-
-        // Tambahkan tooltip
-        if (sudahMasuk || sudahOff) {
-            btnMasuk.title = sudahMasuk ? 'Sudah check in hari ini' : 'Sudah off hari ini';
-        } else {
-            btnMasuk.title = 'Klik untuk check in';
-        }
-
-        if (!sudahMasuk || sudahKeluar || sudahOff) {
-            btnKeluar.title = !sudahMasuk ? 'Belum check in' : sudahKeluar ? 'Sudah check out' : 'Sudah off';
-        } else {
-            btnKeluar.title = 'Klik untuk check out';
-        }
-
-        if (sudahMasuk || sudahOff) {
-            btnOff.title = sudahMasuk ? 'Sudah check in' : 'Sudah off hari ini';
-        } else {
-            btnOff.title = 'Klik untuk off / sakit';
-        }
+        document.getElementById('btn-masuk').classList.toggle('btn-disabled', sudahMasuk || sudahOff);
+        document.getElementById('btn-keluar').classList.toggle('btn-disabled', !sudahMasuk || sudahKeluar || sudahOff);
+        document.getElementById('btn-off').classList.toggle('btn-disabled', sudahMasuk || sudahOff);
     }
 
     // ========================================
@@ -1374,7 +1314,6 @@
         }
 
         const jam = getNowTime();
-        // Tampilkan pilihan OFF atau PS
         const pilihan = confirm('Klik OK untuk OFF (Izin), atau Batal untuk PS (Sakit)');
         const status = pilihan ? 'off' : 'ps';
         const label = pilihan ? 'OFF (Izin)' : 'PS (Sakit)';
@@ -1392,90 +1331,19 @@
     }
 
     // ========================================
-    // PERIODE KARYAWAN
-    // ========================================
-    function loadPeriode() {
-        // Simulasi periode: tampilkan bulan berjalan
-        const now = new Date();
-        const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
-        const periode = `${months[now.getMonth()]} ${now.getFullYear()}`;
-        document.getElementById('periodeText').textContent = periode;
-        document.getElementById('periode-karyawan-text').style.display = 'block';
-    }
-
-    // ========================================
-    // ADMIN PANEL
-    // ========================================
-    function toggleAdmin() {
-        isAdminOpen = !isAdminOpen;
-        document.getElementById('admin-panel').style.display = isAdminOpen ? 'block' : 'none';
-        document.getElementById('admin-text').textContent = isAdminOpen ? 'Tutup Admin' : 'Admin Panel';
-        if (isAdminOpen) {
-            updateAdminTable();
-        }
-    }
-
-    function updateAdminTable() {
-        const tbody = document.getElementById('admin-table-body');
-        if (!absenData || absenData.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; color:var(--text-muted);">Belum ada data absensi.</td></tr>`;
-            return;
-        }
-
-        // Urutkan dari yang terbaru
-        const sorted = [...absenData].reverse();
-        tbody.innerHTML = sorted.map((a, i) => {
-            const statusBadge = a.status === 'masuk' ? 'badge-in' :
-                               a.status === 'keluar' ? 'badge-out' :
-                               'badge-off';
-            const statusLabel = a.status === 'masuk' ? (a.isLate ? '⚠️ Terlambat' : '✅ Hadir') :
-                               a.status === 'keluar' ? '🚪 Keluar' :
-                               a.status === 'off' ? '❌ OFF' : '🏥 PS';
-            return `<tr>
-                <td>${i + 1}</td>
-                <td><strong style="color:var(--text-primary);">${currentUser}</strong></td>
-                <td>${a.tanggal}</td>
-                <td>${a.status === 'masuk' ? a.jam : '-'}</td>
-                <td>${a.status === 'keluar' ? a.jam : '-'}</td>
-                <td><span class="badge ${statusBadge}">${statusLabel}</span></td>
-                <td style="font-size:10px; color:var(--text-muted);">${a.lokasi || '-'}</td>
-            </tr>`;
-        }).join('');
-    }
-
-    function refreshAdmin() {
-        loadAbsensi();
-        tampilModal('🔄 Refresh', 'Data admin berhasil diperbarui!');
-    }
-
-    // ========================================
     // KEYBOARD SHORTCUT
     // ========================================
     document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') {
-            tutupModal();
-            if (isAdminOpen) toggleAdmin();
-        }
+        if (e.key === 'Escape') tutupModal();
         if (e.ctrlKey && e.key === 'r') {
             e.preventDefault();
             refreshGPS();
         }
     });
 
-    // ========================================
-    // INIT - Load data jika user sudah login
-    // ========================================
-    // Cek apakah ada session tersimpan (sederhana)
-    if (currentUser) {
-        document.getElementById('view-login').style.display = 'none';
-        document.getElementById('view-dashboard').style.display = 'block';
-        document.getElementById('nama-user').textContent = currentUser.charAt(0).toUpperCase() + currentUser.slice(1);
-        loadAbsensi();
-        loadPeriode();
-    }
-
-    console.log('🚀 UFO Kebonsari - Absensi System loaded!');
-    console.log('📌 Shortcut: Ctrl+R = Refresh GPS, ESC = Tutup modal/admin');
+    console.log('🚀 UFO Kebonsari - Absensi System v2.0 loaded!');
+    console.log('📌 Shortcut: Ctrl+R = Refresh GPS, ESC = Tutup modal');
+    console.log('👤 Akun: admin/admin123, karyawan/123456, yoga/yoga123, doni/doni123');
 </script>
 
 </body>
