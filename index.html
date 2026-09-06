@@ -176,7 +176,15 @@
     cursor: pointer;
     transition: var(--transition);
 }
+/* Khusus untuk tombol yang TIDAK aktif (Terang) */
+.theme-toggle .toggle-btn:not(.active) {
+    color: rgba(255, 255, 255, 0.7); /* Putih semi transparan */
+}
 
+/* Khusus untuk tombol yang AKTIF (Gelap) */
+.theme-toggle .toggle-btn.active {
+    color: #ffffff; /* Putih pekat agar kontras di atas ungu */
+}
         .theme-toggle .toggle-btn.active {
             background: var(--primary-gradient);
             color: white;
