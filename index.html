@@ -178,13 +178,19 @@
         align-items: center;
     }
 
-  /* Khusus untuk tombol yang TIDAK aktif (Otomatis kontras di segala mode) */
+/* Teks tombol yang TIDAK AKTIF (Otomatis menyesuaikan agar selalu kelihatan) */
     .theme-toggle .toggle-btn:not(.active) {
-        color: rgba(255, 255, 255, 0.75); /* Warna putih terang agar selalu terlihat jelas di mode gelap */
+        color: #4b5563; /* Warna abu-abu gelap yang sangat jelas di latar belakang terang */
+    }
+
+    /* Jika aplikasi sedang dalam mode gelap (biasanya body punya class 'dark' atau 'dark-mode') */
+    body.dark-mode .theme-toggle .toggle-btn:not(.active),
+    [data-theme="dark"] .theme-toggle .toggle-btn:not(.active) {
+        color: #9ca3af; /* Warna abu-abu terang agar jelas kelihatan di latar belakang gelap */
     }
 
     .theme-toggle .toggle-btn:not(.active):hover {
-        color: #ffffff;
+        color: #111827;
     }
 
     /* Khusus untuk tombol yang AKTIF (Ada gradient ungu) */
