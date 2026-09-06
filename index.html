@@ -2,1288 +2,759 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UFO Kebonsari - Dashboard Promotor</title>
-
-    <!-- Google Font: Outfit -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Sistem Absensi Karyawan - UFO Kebonsari</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#4f46e5">
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-
-    <!-- Library Ekspor Excel & PDF -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-
-    <!-- Firebase SDK (Modular v10) & Importer Excel -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, getDocs, doc, writeBatch } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
-        // Konfigurasi Firebase Anda
-        const firebaseConfig = {
-            apiKey: "YOUR_API_KEY",
-            authDomain: "YOUR_AUTH_DOMAIN",
-            projectId: "YOUR_PROJECT_ID",
-            storageBucket: "YOUR_STORAGE_BUCKET",
-            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-            appId: "YOUR_APP_ID"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-
-        // Ekspor ke window agar bisa diakses script global
-        window.db = db;
-        window.collection = collection;
-        window.getDocs = getDocs;
-        window.firebaseReady = true;
-
-        // FUNGSI KHUSUS ADMIN: IMPOR SELURUH SHEET EXCEL KE FIREBASE FIRESTORE
-        window.importSeluruhExcelKeFirebase = async function(fileInput) {
-            const statusEl = document.getElementById("statusUploadExcel");
-            if (!fileInput.files.length) {
-                alert("Pilih file Excel 'ABSEN FINGER(2).xlsx' terlebih dahulu!");
-                return;
-            }
-
-            statusEl.innerHTML = "⏳ Membaca file Excel...";
-            const file = fileInput.files[0];
-            const reader = new FileReader();
-
-            reader.onload = async (e) => {
-                try {
-                    const data = new Uint8Array(e.target.result);
-                    const workbook = XLSX.read(data, { type: 'array' });
-
-                    // 1. IMPORT SHEET MASTER_SALES
-                    if (workbook.Sheets["MASTER_SALES"]) {
-                        statusEl.innerHTML = "⏳ Menyimpan MASTER_SALES ke Firebase...";
-                        const masterData = XLSX.utils.sheet_to_json(workbook.Sheets["MASTER_SALES"]);
-                        const batchMaster = writeBatch(window.db);
-                        masterData.forEach((row, idx) => {
-                            const docRef = doc(window.db, "master_sales", `ms_${idx}`);
-                            batchMaster.set(docRef, row);
-                        });
-                        await batchMaster.commit();
-                    }
-
-                    // 2. IMPORT SHEET PENJUALAN (Chunk Batch Per 400 Baris)
-                    if (workbook.Sheets["PENJUALAN"]) {
-                        statusEl.innerHTML = "⏳ Menyimpan PENJUALAN ke Firebase...";
-                        const jualData = XLSX.utils.sheet_to_json(workbook.Sheets["PENJUALAN"], { header: 1 });
-                        for (let i = 1; i < jualData.length; i += 400) {
-                            const batchJual = writeBatch(window.db);
-                            const chunk = jualData.slice(i, i + 400);
-                            chunk.forEach((row, idx) => {
-                                if (row && row.length > 0) {
-                                    const docRef = doc(window.db, "laporan_penjualan", `pj_${i + idx}`);
-                                    batchJual.set(docRef, { row: row });
-                                }
-                            });
-                            await batchJual.commit();
-                        }
-                    }
-
-                    // 3. IMPORT SHEET ABSENFINGER
-                    if (workbook.Sheets["ABSENFINGER"]) {
-                        statusEl.innerHTML = "⏳ Menyimpan ABSENFINGER ke Firebase...";
-                        const absenData = XLSX.utils.sheet_to_json(workbook.Sheets["ABSENFINGER"]);
-                        const batchAbsen = writeBatch(window.db);
-                        absenData.forEach((row, idx) => {
-                            const docRef = doc(window.db, "absensi_finger", `ab_${idx}`);
-                            batchAbsen.set(docRef, row);
-                        });
-                        await batchAbsen.commit();
-                    }
-
-                    statusEl.innerHTML = "<span style='color:#34d399;'>✅ Berhasil! Seluruh data Excel telah diperbarui di Firebase.</span>";
-                    alert("Seluruh data Excel berhasil diimpor ke Firebase Firestore!");
-                    location.reload();
-
-                } catch (err) {
-                    console.error("Gagal impor Excel:", err);
-                    statusEl.innerHTML = "<span style='color:#f87171;'>❌ Gagal mengunggah: " + err.message + "</span>";
-                }
-            };
-
-            reader.readAsArrayBuffer(file);
-        };
-    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <style>
+        /* ===== ROOT VARIABLES ===== */
+        :root {
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --primary-light: #eef2ff;
+            --primary-gradient: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            --success: #10b981;
+            --success-light: #d1fae5;
+            --warning: #f59e0b;
+            --warning-light: #fef3c7;
+            --danger: #ef4444;
+            --danger-light: #fee2e2;
+            --background: #f1f5f9;
+            --card-bg: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            --radius-lg: 24px;
+            --radius-md: 16px;
+            --radius-sm: 12px;
+            --shadow-card: 0 4px 24px rgba(79, 70, 229, 0.08), 0 1px 4px rgba(0,0,0,0.04);
+            --shadow-hover: 0 12px 40px rgba(79, 70, 229, 0.15);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
         * {
             box-sizing: border-box;
-            font-family: 'Outfit', sans-serif !important;
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif !important;
+            margin: 0;
+            padding: 0;
         }
 
-        body {
-            margin: 0;
-            padding: 20px 15px;
+        body { 
+            background: var(--background);
             min-height: 100vh;
-            background: radial-gradient(circle at top, rgba(212, 175, 55, 0.08) 0%, transparent 60%), linear-gradient(135deg, #0b0f19 0%, #111827 100%);
-            color: #f3f4f6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
         }
 
-        /* KOTAK LOGIN */
-        #loginBox {
-            max-width: 420px;
-            margin: 50px auto;
-            padding: 40px 30px;
-            background: #111827;
-            border-radius: 20px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
-            color: #f3f4f6;
-            border: 1px solid rgba(212, 175, 55, 0.3);
-            animation: fadeIn 0.4s ease;
+        /* ===== BOX / CARD ===== */
+        .box { 
+            width: 100%;
+            max-width: 420px; 
+            background: var(--card-bg); 
+            padding: 32px 24px; 
+            border-radius: var(--radius-lg); 
+            box-shadow: var(--shadow-card);
+            border: 1px solid rgba(226, 232, 240, 0.6);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+        .box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--primary-gradient);
         }
 
-        .login-logo-container {
-            text-align: center;
-            margin-bottom: 20px;
+        .box-admin { 
+            max-width: 1100px !important; 
+            padding: 32px 28px;
         }
 
-        .login-logo-container img {
-            width: 90px;
-            height: 90px;
+        /* ===== LOGO ===== */
+        .logo-container {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 16px auto;
             border-radius: 50%;
+            padding: 4px;
+            background: var(--primary-gradient);
+            box-shadow: 0 8px 24px rgba(79, 70, 229, 0.25);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: var(--transition);
+        }
+        .logo-container:hover {
+            transform: scale(1.05);
+        }
+
+        .logo-toko {
+            width: 100%;
+            height: 100%;
             object-fit: cover;
-            border: 2px solid rgba(212, 175, 55, 0.5);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            border-radius: 50%;
+            background: white;
+            padding: 4px;
         }
 
-        .login-title-area {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .login-title-area h2 {
-            margin: 0;
+        /* ===== TYPOGRAPHY ===== */
+        h2 {
             font-size: 22px;
             font-weight: 800;
-            color: #ffffff;
+            color: var(--text-main);
             letter-spacing: -0.5px;
+            text-align: center;
         }
-
-        .login-title-area p {
-            margin: 6px 0 0;
-            font-size: 13.5px;
-            color: #9ca3af;
+        .sub-title {
+            color: var(--text-muted);
+            font-size: 14px;
+            text-align: center;
+            margin-top: 2px;
+            margin-bottom: 20px;
             font-weight: 500;
         }
 
-        .input-group {
-            margin-bottom: 20px;
+        /* ===== TIME WRAPPER ===== */
+        .time-wrapper {
+            background: var(--primary-light);
+            border: 1px solid rgba(79, 70, 229, 0.15);
+            border-radius: var(--radius-md);
+            padding: 18px 14px;
+            margin-bottom: 18px;
+            text-align: center;
+        }
+        .jam-digital {
+            font-size: 40px;
+            font-weight: 800;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-variant-numeric: tabular-nums;
+            letter-spacing: -0.5px;
+            line-height: 1;
+        }
+        .tanggal-digital {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-top: 6px;
+            font-weight: 600;
+            text-transform: capitalize;
         }
 
+        /* ===== PERIODE TEXT ===== */
+        #periode-karyawan-text {
+            background: var(--primary-light) !important;
+            border: 1px solid rgba(79, 70, 229, 0.15) !important;
+            border-radius: var(--radius-sm) !important;
+            padding: 14px !important;
+            margin-bottom: 16px !important;
+            text-align: center;
+        }
+
+        /* ===== STAT BOX ===== */
+        .stat-box {
+            background: #f8fafc !important;
+            border: 1px solid var(--border-color) !important;
+            border-radius: var(--radius-md) !important;
+            padding: 18px !important;
+            margin-bottom: 16px !important;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px 16px;
+        }
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+            color: var(--text-muted);
+            font-weight: 500;
+            padding: 4px 0;
+            border-bottom: 1px dashed rgba(226, 232, 240, 0.5);
+        }
+        .stat-item:last-child { border-bottom: none; }
+        .stat-item span:last-child {
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        /* ===== STATUS LOG ===== */
+        #status-log {
+            font-size: 13px !important;
+            color: var(--text-main) !important;
+            background: #f8fafc !important;
+            border: 1px solid var(--border-color) !important;
+            padding: 14px !important;
+            border-radius: var(--radius-sm) !important;
+            margin-bottom: 14px !important;
+            font-weight: 600 !important;
+            text-align: center !important;
+            line-height: 1.6 !important;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* ===== INPUT & SELECT ===== */
+        .input-group {
+            text-align: left;
+            margin-bottom: 16px;
+        }
         .input-group label {
             display: block;
             font-size: 12px;
             font-weight: 700;
-            color: #d1d5db;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
+            color: var(--text-muted);
+            text-transform: uppercase;
             letter-spacing: 0.5px;
         }
-
-        .input-group input {
-            width: 100%;
-            padding: 15px 18px;
-            border-radius: 12px;
-            border: 1px solid #374151;
-            background: #1f2937;
-            color: #ffffff;
-            font-size: 14.5px;
-            outline: none;
-            transition: all 0.25s ease;
-        }
-
-        .input-group input:focus {
-            border-color: #d4af37;
-            background: #111827;
-            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.2);
-        }
-
-        #btnLogin {
-            width: 100%;
-            padding: 16px;
-            border: none;
-            border-radius: 12px;
-            cursor: pointer;
-            font-weight: 700;
+        input, select { 
+            width: 100%; 
+            padding: 14px 18px; 
+            border-radius: var(--radius-sm); 
+            border: 2px solid var(--border-color);
+            background: #f8fafc;
             font-size: 15px;
-            color: #111827;
-            background: linear-gradient(135deg, #f3e8ff 0%, #d4af37 100%);
-            box-shadow: 0 10px 20px -5px rgba(212, 175, 55, 0.3);
-            transition: all 0.25s ease;
+            font-weight: 500;
+            color: var(--text-main);
+            transition: var(--transition);
         }
-
-        #btnLogin:hover {
-            transform: translateY(-2px);
-            background: linear-gradient(135deg, #ffffff 0%, #e6c547 100%);
-        }
-
-        /* HEADER DASHBOARD */
-        .header {
-            text-align: center;
-            margin-bottom: 25px;
-        }
-
-        .header h1 {
-            font-size: 32px;
-            font-weight: 800;
-            margin: 0;
-            letter-spacing: -1px;
-            background: linear-gradient(90deg, #ffffff, #d4af37);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .header p {
-            color: #9ca3af;
-            font-size: 13px;
-            margin-top: 4px;
-        }
-
-        /* KOTAK PENCARIAN / DROPDOWN NAMA */
-        .search-box {
-            max-width: 1100px;
-            margin: 0 auto 15px;
-        }
-
-        #nama {
-            width: 100%;
-            height: 48px;
-            padding: 0 16px;
-            border-radius: 12px;
-            border: 1px solid rgba(212, 175, 55, 0.3);
-            background: #111827;
-            color: #ffffff;
-            font-size: 14px;
-            font-weight: 600;
+        input:focus, select:focus {
             outline: none;
-            cursor: pointer;
-            appearance: none;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23d4af37' viewBox='0 0 16 16'%3E%3Cpath d='M1.5 5.5l6 6 6-6'/%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: right 16px center;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            border-color: var(--primary);
+            background: #ffffff;
+            box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
         }
-        #nama option { background: #111827; color: #ffffff; }
 
-        /* KARTU MENU UTAMA */
-        #menuGridContainer {
-            max-width: 1100px;
-            margin: 0 auto;
+        /* ===== BUTTONS ===== */
+        button { 
+            width: 100%; 
+            padding: 14px; 
+            border-radius: var(--radius-sm); 
+            font-size: 14px; 
+            font-weight: 700; 
+            cursor: pointer; 
+            border: none;
+            transition: var(--transition);
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+        button:active { transform: scale(0.97); }
+
+        .btn-primary {
+            background: var(--primary-gradient);
+            color: white;
+            box-shadow: 0 4px 16px rgba(79, 70, 229, 0.35);
+        }
+        .btn-primary:hover { 
+            transform: translateY(-2px);
+            box-shadow: 0 8px 28px rgba(79, 70, 229, 0.4);
+        }
+
+        .btn-logout { 
+            background: #059669 !important; 
+            color: #ffffff !important; 
+            font-size: 13px; 
+            padding: 14px; 
+            margin-top: 12px;
+            box-shadow: 0 4px 16px rgba(5, 150, 105, 0.3) !important;
+        }
+        .btn-logout:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 28px rgba(5, 150, 105, 0.4) !important;
+        }
+
+        .btn-kembali {
+            background: #f1f5f9;
+            color: var(--text-muted);
+            border: 1px solid var(--border-color);
+            font-size: 13px;
+            padding: 14px;
+            margin-top: 10px;
+            box-shadow: none;
+        }
+        .btn-kembali:hover {
+            background: #e2e8f0;
+        }
+
+        /* ===== ABSEN CARDS ===== */
+        .btn-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        .absen-card-group {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 15px;
-            animation: fadeIn 0.3s ease;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
         }
-
-        .menu-card-item {
-            background: #111827;
-            border: 1px solid rgba(212, 175, 55, 0.25);
-            border-radius: 16px;
-            padding: 24px 20px;
-            text-align: center;
+        .absen-card {
+            border-radius: var(--radius-md);
+            padding: 16px 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
             cursor: pointer;
-            transition: all 0.25s ease;
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+            transition: var(--transition);
+            width: 100%;
+            border: none;
             position: relative;
             overflow: hidden;
         }
-
-        .menu-card-item:hover {
-            transform: translateY(-3px);
-            border-color: #d4af37;
-            background: #151d2e;
-        }
-
-        .menu-card-item .icon { font-size: 38px; margin-bottom: 10px; }
-        .menu-card-item h3 { margin: 0 0 6px; font-size: 18px; color: #ffffff; font-weight: 800; }
-        .menu-card-item p { margin: 0; font-size: 13px; color: #9ca3af; line-height: 1.4; }
-
-        .admin-badge {
+        .absen-card::after {
+            content: '';
             position: absolute;
-            top: 10px;
-            right: 10px;
-            background: rgba(212, 175, 55, 0.15);
-            color: #d4af37;
-            font-size: 10px;
-            font-weight: 700;
-            padding: 3px 8px;
-            border-radius: 6px;
-            border: 1px solid rgba(212, 175, 55, 0.3);
-            display: none;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255,255,255,0.1);
+            opacity: 0;
+            transition: var(--transition);
         }
+        .absen-card:hover::after { opacity: 1; }
+        .absen-card:active { transform: scale(0.95); }
 
-        /* AREA KONTEN DETAIL */
-        #detailViewSection {
-            display: none;
-            max-width: 1100px;
-            margin: 0 auto;
-            animation: fadeIn 0.3s ease;
-        }
-
-        .nav-back-bar {
+        .absen-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            margin-bottom: 15px;
-            flex-wrap: wrap;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .absen-icon svg {
+            width: 22px;
+            height: 22px;
+            stroke-width: 2.2;
+            fill: none;
+            stroke: currentColor;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .card-in {
+            background: var(--primary-gradient) !important;
+            box-shadow: 0 4px 20px rgba(79, 70, 229, 0.35);
+        }
+        .card-in .absen-icon { background: rgba(255, 255, 255, 0.2); color: #ffffff; }
+        .card-in .absen-title { color: #ffffff !important; }
+        .card-in .info-jam-absen { 
+            color: #ffffff !important; 
+            background: rgba(255,255,255,0.15);
+            border-radius: 20px;
+            padding: 2px 12px;
+        }
+
+        .card-out {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%) !important;
+            box-shadow: 0 4px 20px rgba(245, 158, 11, 0.35);
+        }
+        .card-out .absen-icon { background: rgba(255, 255, 255, 0.2); color: #ffffff; }
+        .card-out .absen-title { color: #ffffff !important; }
+        .card-out .info-jam-absen { 
+            color: #ffffff !important; 
+            background: rgba(255,255,255,0.15);
+            border-radius: 20px;
+            padding: 2px 12px;
+        }
+
+        .card-off-wrapper {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+        }
+        .card-off {
+            flex-direction: row;
+            justify-content: center;
             gap: 10px;
+            padding: 12px 20px;
+            background: var(--danger) !important;
+            width: auto !important;
+            min-width: 180px;
+            box-shadow: 0 4px 20px rgba(239, 68, 68, 0.35);
+        }
+        .card-off .absen-icon { background: rgba(255, 255, 255, 0.2); color: #ffffff; width: 34px; height: 34px; }
+        .card-off .absen-title { color: #ffffff !important; }
+        .card-off .info-jam-absen { 
+            color: #ffffff !important; 
+            background: rgba(255,255,255,0.15);
+            border-radius: 20px;
+            padding: 2px 12px;
         }
 
-        .btn-back-menu {
-            padding: 9px 16px;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            font-weight: 700;
-            font-size: 12.5px;
-            color: #111827;
-            background: #d4af37;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
-        }
-        .btn-back-menu:hover { opacity: 0.9; }
-
-        #summary { margin-bottom: 15px; }
-
-        .summary-card {
-            background: #111827;
-            border: 1px solid rgba(212, 175, 55, 0.25);
-            border-radius: 14px;
-            padding: 16px;
-            color: #ffffff;
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
-        }
-
-        .summary-card h2 {
-            margin: 0 0 8px 0;
-            font-size: 15.5px;
-            font-weight: 700;
-            color: #d4af37;
-            line-height: 1.4;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .summary-card p {
-            margin: 4px 0;
-            color: #d1d5db;
-            font-size: 13px;
-            line-height: 1.4;
-        }
-
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 15px;
-        }
-
-        .card {
-            background: #111827;
-            border: 1px solid #374151;
-            border-radius: 16px;
-            padding: 16px;
-            transition: all 0.25s ease;
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
-        }
-
-        .card.success { border-left: 4px solid #10b981; }
-        .card.warning { border-left: 4px solid #ef4444; }
-        .card.late { border: 2px solid #d4af37; background: #151922; }
-
-        .row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 8px 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-            color: #9ca3af;
-            font-size: 13px;
-        }
-
-        .row:last-child { border-bottom: none; }
-        .ok { font-weight: 600; color: #ffffff; }
-        .kosong { color: #f87171; font-weight: 700; }
-        .status-ok { color: #34d399; font-weight: 700; }
-        .status-warning { color: #f87171; font-weight: 700; }
-
-        .export-container {
-            margin-bottom: 15px;
-            display: none;
-            justify-content: flex-end;
-            gap: 10px;
-        }
-
-        .btn-export {
-            padding: 9px 14px;
-            border: none;
-            border-radius: 9px;
-            font-weight: 700;
-            font-size: 12px;
-            cursor: pointer;
-            color: white;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .btn-excel { background: #065f46; border: 1px solid #10b981; }
-        .btn-pdf { background: #991b1b; border: 1px solid #ef4444; }
-
-        .btn-logout-main {
-            padding: 8px 16px;
-            border: none;
-            border-radius: 9px;
-            cursor: pointer;
-            color: #f87171;
-            background: rgba(239, 68, 68, 0.1);
-            border: 1px solid rgba(239, 68, 68, 0.3);
+        .absen-title { font-size: 13px; font-weight: 700; }
+        .info-jam-absen {
+            font-size: 11px;
             font-weight: 600;
-            font-size: 12.5px;
+            min-height: 22px;
+            display: block;
+            text-align: center;
+            padding: 2px 8px;
+            border-radius: 20px;
         }
 
-        #popup, #logoutPopup {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.85);
-            backdrop-filter: blur(8px);
-            z-index: 99999;
-            justify-content: center; align-items: center;
-            padding: 15px;
+        /* ===== DISABLED STATE ===== */
+        .btn-disabled {
+            opacity: 0.6 !important;
+            cursor: not-allowed !important;
+            pointer-events: none !important;
+            filter: grayscale(0.3);
+        }
+        .btn-disabled::after { display: none !important; }
+
+        /* ===== KAMERA ===== */
+        #kamera { 
+            width: 100%; 
+            aspect-ratio: 3 / 4;
+            object-fit: cover;
+            border-radius: var(--radius-md); 
+            background: #0f172a; 
+            border: 2px solid var(--border-color);
+            max-height: 380px;
         }
 
-        .modern-popup-box {
-            background: #111827; padding: 25px 20px; border-radius: 16px;
-            min-width: 290px; text-align: center;
-            border: 1px solid rgba(212, 175, 55, 0.4);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+        /* ===== ADMIN TABLE ===== */
+        .table-container {
+            width: 100%;
+            overflow-x: auto;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-color);
+            margin-top: 16px;
+            background: white;
+            box-shadow: var(--shadow-card);
+        }
+        table { width: 100%; border-collapse: collapse; text-align: left; }
+        th, td { padding: 14px 16px; font-size: 13px; }
+        th { 
+            background: #f8fafc; 
+            color: var(--text-muted); 
+            font-weight: 700; 
+            text-transform: uppercase; 
+            font-size: 11px; 
+            letter-spacing: 0.5px; 
+            border-bottom: 2px solid var(--border-color);
+        }
+        td { border-bottom: 1px solid var(--border-color); vertical-align: middle; }
+        tr:last-child td { border-bottom: none; }
+        tr:hover td { background: #f8fafc; }
+
+        .badge { 
+            display: inline-block; 
+            padding: 4px 14px; 
+            border-radius: 20px; 
+            font-size: 11px; 
+            font-weight: 700; 
+        }
+        .badge-in { background: var(--success-light); color: #15803d; }
+        .badge-out { background: var(--warning-light); color: #b45309; }
+        .badge-off { background: var(--danger-light); color: #be123c; }
+
+        .btn-lihat {
+            display: inline-block;
+            background: var(--primary-light);
+            color: var(--primary);
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 700;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+        .btn-lihat:hover {
+            background: var(--primary);
+            color: white;
         }
 
-        .btn-popup-ok {
-            border: none; padding: 10px 24px; border-radius: 9px;
-            cursor: pointer; color: #111827; font-weight: 700; background: #d4af37;
-        }
-
-        #btnBatal, #btnLogoutConfirm {
-            border: none; padding: 10px 18px; border-radius: 9px;
-            cursor: pointer; color: white; font-weight: 600; margin: 4px;
-        }
-        #btnBatal { background: #374151; }
-        #btnLogoutConfirm { background: #991b1b; }
-
+        /* ===== SPINNER ===== */
         .spinner {
-            width: 16px; height: 16px; display: inline-block;
-            border: 2.5px solid rgba(255,255,255,.3); border-top: 2.5px solid #fff;
-            border-radius: 50%; animation: spin .8s linear infinite; vertical-align: middle;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top: 3px solid #ffffff;
+            width: 20px;
+            height: 20px;
+            animation: spin 0.6s linear infinite;
+            display: none;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
-        @keyframes spin { to { transform: rotate(360deg); } }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
-
-        @media(max-width: 1024px) { 
-            .grid, #menuGridContainer { grid-template-columns: repeat(2, 1fr) !important; } 
+        /* ===== MODAL ===== */
+        .modal-overlay {
+            position: fixed; 
+            top: 0; left: 0; 
+            width: 100%; height: 100%;
+            background: rgba(15, 23, 42, 0.6); 
+            backdrop-filter: blur(8px);
+            display: none;
+            justify-content: center;
+            align-items: center; 
+            z-index: 1000;
+            padding: 20px;
         }
-        @media(max-width: 768px) {
-            .grid, #menuGridContainer { grid-template-columns: 1fr !important; }
+        .modal-overlay.show { display: flex; }
+        .modal-box {
+            background: white; 
+            padding: 32px 28px; 
+            border-radius: var(--radius-lg);
+            width: 100%; 
+            max-width: 340px; 
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+            animation: modalIn 0.3s ease;
+        }
+        @keyframes modalIn {
+            from { transform: scale(0.9) translateY(20px); opacity: 0; }
+            to { transform: scale(1) translateY(0); opacity: 1; }
+        }
+        .modal-box h3 {
+            font-size: 18px;
+            color: var(--primary);
+            margin-bottom: 8px;
+        }
+        .modal-box p { 
+            font-size: 14px; 
+            color: var(--text-main); 
+            margin: 12px 0 16px;
+            line-height: 1.6;
+        }
+
+        /* ===== GPS SWITCH ===== */
+        .gps-switch-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #f8fafc;
+            padding: 14px 18px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-color);
+            margin-top: 16px;
+        }
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 26px;
+            flex-shrink: 0;
+        }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider {
+            position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #cbd5e1;
+            transition: .3s;
+            border-radius: 26px;
+        }
+        .slider:before {
+            position: absolute; content: ""; height: 20px; width: 20px; left: 3px; bottom: 3px;
+            background-color: white;
+            transition: .3s;
+            border-radius: 50%;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        input:checked + .slider { background-color: var(--success); }
+        input:checked + .slider:before { transform: translateX(24px); }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .box { padding: 24px 18px; }
+            .box-admin { padding: 20px 16px; }
+            .jam-digital { font-size: 32px; }
+            .stat-box { grid-template-columns: 1fr 1fr; gap: 4px 12px; }
+            .stat-item { font-size: 12px; }
+            .absen-card { padding: 14px 10px; }
+            .absen-icon { width: 36px; height: 36px; }
+            .absen-icon svg { width: 18px; height: 18px; }
+            .card-off { min-width: 140px; padding: 10px 16px; }
+        }
+        @media (max-width: 480px) {
+            .box { padding: 20px 14px; border-radius: 20px; }
+            .logo-container { width: 64px; height: 64px; }
+            h2 { font-size: 18px; }
+            .jam-digital { font-size: 28px; }
+            .absen-card-group { gap: 8px; }
+            .stat-box { grid-template-columns: 1fr; gap: 2px; }
+            .stat-item { font-size: 12px; padding: 6px 0; }
+            .time-wrapper { padding: 14px 10px; }
         }
     </style>
 </head>
 <body>
 
-<!-- KOTAK LOGIN -->
-<div id="loginBox">
-    <div class="login-logo-container">
-        <img src="logo.png" alt="UFO Logo" onerror="this.style.display='none'">
+<!-- ========== VIEW LOGIN ========== -->
+<div id="view-login" class="box">
+    <div class="logo-container">
+        <img src="logo.png" class="logo-toko" alt="Logo UFO" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2280%22 height=%2280%22 viewBox=%220 0 80 80%22%3E%3Crect width=%2280%22 height=%2280%22 fill=%22%234f46e5%22/%3E%3Ctext x=%2240%22 y=%2250%22 text-anchor=%22middle%22 fill=%22white%22 font-size=%2230%22 font-family=%22Arial%22 font-weight=%22bold%22%3EUFO%3C/text%3E%3C/svg%3E'">
     </div>
-    <div class="login-title-area">
-        <h2>UFO KEBONSARI MALANG</h2>
-        <p>Sistem Dashboard Promotor</p>
-    </div>
-
+    <h2>UFO KEBONSARI</h2>
+    <div class="sub-title">Sistem Absensi Digital Karyawan</div>
+     
     <div class="input-group">
-        <label>USERNAME</label>
-        <input id="loginNama" type="text" placeholder="Masukkan Username" oninput="this.value = this.value.toUpperCase()">
+        <label for="user">Username</label>
+        <input type="text" id="user" placeholder="Masukkan username">
     </div>
-
+     
     <div class="input-group">
-        <label>PASSWORD</label>
-        <input id="loginPin" type="password" placeholder="Masukkan Password" onkeypress="if(event.key === 'Enter') login()">
+        <label for="pass">Password</label>
+        <input type="password" id="pass" placeholder="••••••••">
     </div>
-
-    <button id="btnLogin" onclick="login()">MASUK</button>
+     
+    <button class="btn-primary" id="btn-login" onclick="prosesLogin()">
+        <span id="text-login">MASUK KE SISTEM</span>
+        <div class="spinner" id="login-spinner"></div>
+    </button>
 </div>
 
-<!-- DASHBOARD UTAMA -->
-<div id="dashboard" style="display:none;">
-    <div class="header">
-        <h1>UFO KEBONSARI</h1>
-        <p id="roleSubtitle">Dashboard Promotor</p>
+<!-- ========== VIEW DASHBOARD ========== -->
+<div id="view-dashboard" class="box" style="display:none;">
+    <div class="logo-container">
+        <img src="logo.png" class="logo-toko" alt="Logo UFO" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2280%22 height=%2280%22 viewBox=%220 0 80 80%22%3E%3Crect width=%2280%22 height=%2280%22 fill=%22%234f46e5%22/%3E%3Ctext x=%2240%22 y=%2250%22 text-anchor=%22middle%22 fill=%22white%22 font-size=%2230%22 font-family=%22Arial%22 font-weight=%22bold%22%3EUFO%3C/text%3E%3C/svg%3E'">
+    </div>
+    <h2>Halo, <span id="nama-user" style="color: var(--primary);"></span>!</h2>
+    <div class="sub-title">Selamat Bekerja & Tetap Semangat</div>
+
+    <div class="time-wrapper">
+        <div class="jam-digital" id="live-jam">00:00:00</div>
+        <div class="tanggal-digital" id="live-tanggal">Mencari Tanggal...</div>
     </div>
 
-    <!-- PANEL UPLOAD EXCEL (KHUSUS ROLE ADMIN) -->
-    <div id="adminUploadCard" style="display:none; max-width:1100px; margin:0 auto 20px; background:#111827; border:1px solid #d4af37; padding:18px 20px; border-radius:16px; box-shadow:0 10px 25px rgba(0,0,0,0.5);">
-        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:12px;">
-            <h3 style="margin:0; color:#d4af37; font-size:16px; font-weight:800; display:flex; align-items:center; gap:8px;">
-                <span>📂</span> Form Update Data Excel (Admin Only)
-            </h3>
-            <span style="font-size:11.5px; color:#9ca3af; background:#1f2937; padding:4px 10px; border-radius:6px; border:1px solid rgba(212,175,55,0.2);">
-                File: ABSEN FINGER(2).xlsx
-            </span>
-        </div>
+    <div id="periode-karyawan-text" style="display: none;"></div>
 
-        <div style="display:flex; flex-wrap:wrap; gap:12px; align-items:center;">
-            <input type="file" id="inputFileAbsenExcel" accept=".xlsx, .xls" style="color:#d1d5db; font-size:13px; background:#1f2937; padding:8px 12px; border-radius:8px; border:1px solid #374151; flex:1; min-width:240px;">
-            <button onclick="importSeluruhExcelKeFirebase(document.getElementById('inputFileAbsenExcel'))" 
-                    style="padding:10px 20px; background:linear-gradient(135deg, #10b981 0%, #059669 100%); color:white; border:none; border-radius:9px; font-weight:700; font-size:13px; cursor:pointer; box-shadow:0 4px 12px rgba(16,185,129,0.3); display:flex; align-items:center; gap:6px;">
-                <span>🚀</span> Import & Simpan Ke Firebase
+    <div class="stat-box">
+        <div class="stat-item">
+            <span>✅ Total Kehadiran</span>
+            <span id="total-masuk">0 hari</span>
+        </div>
+        <div class="stat-item">
+            <span>📴 Total OFF (Libur)</span>
+            <span id="total-off" style="color: var(--danger) !important;">0 hari</span>
+        </div>
+        <div class="stat-item">
+            <span>⏱️ Total PS</span>
+            <span id="total-ps" style="color: var(--warning) !important;">0 hari</span>
+        </div>
+        <div class="stat-item">
+            <span>⚠️ Total Terlambat</span>
+            <span id="total-terlambat" style="color: var(--danger) !important;">0 Hari</span>
+        </div>
+    </div>
+
+    <div id="status-log">⏳ Memuat data absensi dari server...</div>
+
+    <button id="btn-refresh-gps" onclick="retrackGPS()" style="margin-bottom: 16px; padding: 10px 18px; font-size: 12px; background: #f1f5f9; color: var(--text-muted); width: auto; display: inline-flex; border-radius: 20px; border: 1px solid var(--border-color); box-shadow: none; align-self: center;">
+        🔄 Refresh Lokasi GPS
+    </button>
+ 
+    <div class="btn-grid">
+        <div class="absen-card-group">
+            <button class="absen-card card-in" id="btn-checkin" onclick="pilihAksi('Check In')">
+                <div class="absen-icon">
+                    <svg viewBox="0 0 24 24"><path d="M15 15l-3 3m0 0l-3-3m3 3V10M4 17v1a3 3 0 003 3h10a3 3 0 003-3v-1M4 7v-1a3 3 0 013-3h10a3 3 0 013 3v1"/></svg>
+                </div>
+                <span class="absen-title">Check In</span>
+                <span id="time-checkin" class="info-jam-absen">--:--</span>
+            </button>
+
+            <button class="absen-card card-out" id="btn-checkout" onclick="pilihAksi('Check Out')">
+                <div class="absen-icon">
+                    <svg viewBox="0 0 24 24"><path d="M9 11l3-3m0 0l3 3m-3-3v8M4 17v1a3 3 0 003 3h10a3 3 0 003-3v-1M4 7v-1a3 3 0 013-3h10a3 3 0 013 3v1"/></svg>
+                </div>
+                <span class="absen-title">Check Out</span>
+                <span id="time-checkout" class="info-jam-absen">--:--</span>
             </button>
         </div>
-        <div id="statusUploadExcel" style="margin-top:10px; font-size:12.5px; color:#9ca3af; font-weight:600;"></div>
-    </div>
 
-    <div id="globalLoading" style="display:none; text-align:center; margin:15px 0; color:#d4af37; font-weight:600; font-size:13.5px;">
-        <span class="spinner" style="margin-right:6px;"></span>
-        Sedang menyiapkan data dari Firebase, mohon tunggu...
-    </div>
-
-    <div style="max-width:1100px; margin:0 auto 20px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
-        <div id="loginInfo" style="padding:6px 14px; border-radius:99px; background:#111827; border:1px solid rgba(212, 175, 55, 0.3); color:#e2e8f0; font-size:12.5px; font-weight:600;"></div>
-        <button class="btn-logout-main" onclick="logout()">🚪 Keluar</button>
-    </div>
-
-    <!-- MENU UTAMA -->
-    <div id="menuGridContainer">
-        <div class="menu-card-item" onclick="pindahMenu('Absensi')">
-            <span class="admin-badge" data-badge="menu">Pribadi</span>
-            <div class="icon">📅</div>
-            <h3>Absensi</h3>
-            <p>Rekap kehadiran dan status finger harian</p>
-        </div>
-        <div class="menu-card-item" onclick="pindahMenu('Penjualan')">
-            <span class="admin-badge" data-badge="menu">Pribadi</span>
-            <div class="icon">💼</div>
-            <h3>Penjualan</h3>
-            <p>Omzet produk harian dan perolehan unit</p>
-        </div>
-        <div class="menu-card-item" onclick="pindahMenu('UC')">
-            <span class="admin-badge" data-badge="menu">Pribadi</span>
-            <div class="icon">⭐</div>
-            <h3>UC</h3>
-            <p>Pencapaian poin UC promotor</p>
-        </div>
-        <div class="menu-card-item" id="menuPerolehanCard" onclick="pindahMenu('Perolehan')">
-            <span class="admin-badge" data-badge="admin">Admin Only</span>
-            <div class="icon">📈</div>
-            <h3>Perolehan</h3>
-            <p>Peringkat & akumulasi omzet seluruh promotor</p>
-        </div>
-        <div class="menu-card-item" onclick="pindahMenu('PerolehanBrand')">
-            <span class="admin-badge" data-badge="menu">Brand Saya</span>
-            <div class="icon">🏷️</div>
-            <h3>Perolehan Brand</h3>
-            <p>Rekap penjualan khusus brand Anda sendiri</p>
-        </div>
-        <div class="menu-card-item" onclick="pindahMenu('DendaUC')">
-            <span class="admin-badge" data-badge="admin">Admin / Info</span>
-            <div class="icon">⚡</div>
-            <h3>Denda & Late</h3>
-            <p>Rekapitulasi keterlambatan & denda target</p>
-        </div>
-        <div class="menu-card-item" onclick="pindahMenu('Promo')">
-            <div class="icon">🏷️</div>
-            <h3>Promo Toko</h3>
-            <p>Daftar promo produk & program toko aktif</p>
-        </div>
-        <div class="menu-card-item" onclick="pindahMenu('Rules')">
-            <div class="icon">✨</div>
-            <h3>SOP Promotor</h3>
-            <p>Aturan kerja & standar operasional</p>
-        </div>
-        <div class="menu-card-item" onclick="pindahMenu('Punishment')">
-            <div class="icon">⚠️</div>
-            <h3>Punishment</h3>
-            <p>Daftar sanksi & ketentuan pelanggaran</p>
-        </div>
-        <div class="menu-card-item" onclick="pindahMenu('PelanggaranSaya')">
-            <span class="admin-badge" data-badge="admin">Monitor Admin</span>
-            <div class="icon">🚨</div>
-            <h3>Pelanggaran Saya</h3>
-            <p>Catatan pelanggaran & sanksi promotor</p>
-        </div>
-        <div class="menu-card-item" onclick="pindahMenu('Reward')">
-            <div class="icon">🏆</div>
-            <h3>Daftar Rewards</h3>
-            <p>Daftar Rewards pencapaian toko</p>
-        </div>
-        <div class="menu-card-item" onclick="pindahMenu('RewardSaya')">
-            <span class="admin-badge" data-badge="admin">Monitor Admin</span>
-            <div class="icon">🎁</div>
-            <h3>Rewards Saya</h3>
-            <p>Riwayat Rewards yang Anda dapatkan</p>
+        <div class="card-off-wrapper">
+            <button class="absen-card card-off" id="btn-off" onclick="prosesAbsenOff()">
+                <div class="absen-icon">
+                    <svg viewBox="0 0 24 24"><path d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                </div>
+                <span class="absen-title" id="text-off">Ambil Hari OFF</span>
+                <span id="time-off" class="info-jam-absen"></span>
+                <div class="spinner" id="off-spinner"></div>
+            </button>
         </div>
     </div>
 
-    <!-- TAMPILAN DETAIL -->
-    <div id="detailViewSection" style="display:none;">
-        <div class="nav-back-bar">
-            <button class="btn-back-menu" onclick="kembaliKeMenuUtama()">⬅ Kembali ke Menu</button>
-            <div id="currentMenuTitle" style="color:#d4af37; font-weight:700; font-size:15px;"></div>
-        </div>
-
-        <div class="search-box" id="searchBoxWrapper">
-            <select id="nama" onchange="gantiNamaAdmin()"></select>
-        </div>
-
-        <div id="summary"></div>
-
-        <div class="export-container" id="exportArea">
-            <button class="btn-export btn-excel" onclick="prosesEkspor('excel')">📥 Unduh Excel</button>
-            <button class="btn-export btn-pdf" onclick="prosesEkspor('pdf')">📄 Unduh PDF</button>
-        </div>
-
-        <div id="hasil" class="grid"></div>
-    </div>
+    <button class="btn-logout" onclick="logout()">KELUAR DARI SISTEM</button>
 </div>
 
-<script>
-let currentUser = "";
-let currentRole = "";
-let activeTab = "Absensi"; 
-
-let cacheData = {
-    absensi: null, penjualan: null, uc: null, perolehan: null, perolehanBrand: null,
-    denda: null, promo: null, reward: null, rewardSaya: null, rules: null, punishment: null, pelanggaranSaya: null
-};
-
-document.addEventListener("DOMContentLoaded", () => {
-    const savedName = localStorage.getItem("loginNama");
-    const savedRole = localStorage.getItem("loginRole");
-    if (savedName && savedRole) {
-        currentUser = savedName;
-        currentRole = savedRole;
-        aturTampilanBerdasarkanRole();
-        document.getElementById("loginInfo").innerHTML = "⭕ <b>" + currentUser + "</b>" + (currentRole === "ADMIN" ? " (ADMIN)" : " (PROMOTOR)");
-        document.getElementById("loginBox").style.display = "none";
-        document.getElementById("dashboard").style.display = "block";
-
-        if (currentRole === "USER") {
-            document.getElementById("menuPerolehanCard").style.display = "none";
-            muatSemuaDataLatarBelakang(currentUser);
-        } else {
-            document.getElementById("menuPerolehanCard").style.display = "block";
-            loadNama();
-        }
-    }
-});
-
-function aturTampilanBerdasarkanRole() {
-    const badges = document.querySelectorAll('.admin-badge');
-    const subtitle = document.getElementById("roleSubtitle");
-    const uploadCard = document.getElementById("adminUploadCard");
+<!-- ========== VIEW KAMERA ========== -->
+<div id="view-kamera" class="box" style="display:none;">
+    <div class="logo-container">
+        <img src="logo.png" class="logo-toko" alt="Logo UFO" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2280%22 height=%2280%22 viewBox=%220 0 80 80%22%3E%3Crect width=%2280%22 height=%2280%22 fill=%22%234f46e5%22/%3E%3Ctext x=%2240%22 y=%2250%22 text-anchor=%22middle%22 fill=%22white%22 font-size=%2230%22 font-family=%22Arial%22 font-weight=%22bold%22%3EUFO%3C/text%3E%3C/svg%3E'">
+    </div>
+    <h2 id="judul-kamera">Verifikasi Wajah</h2>
+    <div class="sub-title">Pastikan wajah Anda berada di dalam bingkai</div>
+     
+    <video id="kamera" autoplay playsinline></video>
+     
+    <button class="btn-kembali" id="btnGantiKamera" onclick="gantiKamera()" style="margin-top: 12px;">
+        🔄 Putar Kamera (Depan/Belakang)
+    </button>
+     
+    <button class="btn-primary" id="btnAbsen" onclick="prosesAbsen()" style="margin-top: 12px;">
+        <span id="text-absen-kirim">Kirim Absensi Sekarang</span>
+        <div class="spinner" id="absen-spinner"></div>
+    </button>
     
-    if (currentRole === "ADMIN") {
-        if(subtitle) subtitle.innerText = "Dashboard Monitoring & Kontrol Admin";
-        if(uploadCard) uploadCard.style.display = "block";
-
-        badges.forEach(b => {
-            if(b.getAttribute("data-badge") === "admin") {
-                b.style.display = "block";
-                b.innerText = "Panel Kontrol";
-            }
-        });
-    } else {
-        if(subtitle) subtitle.innerText = "Dashboard Mandiri Promotor";
-        if(uploadCard) uploadCard.style.display = "none";
-
-        badges.forEach(b => {
-            if(b.getAttribute("data-badge") === "menu") {
-                b.style.display = "block";
-                b.innerText = "Data Saya";
-            }
-        });
-    }
-}
-
-async function login() {
-    const btn = document.getElementById("btnLogin");
-    btn.disabled = true;
-    btn.innerHTML = `<span class="spinner" style="margin-right:8px;"></span>MEMPROSES...`;
-    
-    const namaInput = document.getElementById("loginNama").value.trim().toUpperCase();
-    const pinInput = document.getElementById("loginPin").value.trim();
-
-    if (!namaInput || !pinInput) {
-        showPopup("Username dan Password harus diisi.");
-        btn.disabled = false;
-        btn.innerHTML = "MASUK";
-        return;
-    }
-
-    try {
-        const usersSnap = await window.getDocs(window.collection(window.db, "users"));
-        let validUser = false;
-        let roleUser = "USER";
-
-        usersSnap.forEach(docSnap => {
-            const u = docSnap.data();
-            const dbNama = String(u.nama || u.username || "").trim().toUpperCase();
-            const dbPin = String(u.pin || u.password || "").trim();
-            const dbRole = String(u.role || "USER").trim().toUpperCase();
-
-            if (dbNama === namaInput && dbPin === pinInput) {
-                validUser = true;
-                roleUser = dbRole;
-            }
-        });
-
-        if (!validUser && namaInput === "ADMIN" && pinInput === "1234") {
-            validUser = true;
-            roleUser = "ADMIN";
-        } else if (!validUser) {
-            const masterSnap = await window.getDocs(window.collection(window.db, "master_sales"));
-            masterSnap.forEach(docSnap => {
-                const m = docSnap.data();
-                const mNama = String(m["Nama Absen"] || m.nama || "").trim().toUpperCase();
-                const mPin = String(m.PIN || m.pin || "123").trim();
-                const mRole = String(m.ROLE || m.role || "USER").trim().toUpperCase();
-
-                if (mNama === namaInput && pinInput === mPin) {
-                    validUser = true;
-                    roleUser = mRole;
-                }
-            });
-        }
-
-        if (!validUser) {
-            btn.disabled = false;
-            btn.innerHTML = "MASUK";
-            showPopup("Username atau Password salah!");
-            return;
-        }
-
-        currentUser = namaInput;
-        currentRole = roleUser;
-        localStorage.setItem("loginNama", currentUser);
-        localStorage.setItem("loginRole", currentRole);
-
-        aturTampilanBerdasarkanRole();
-        document.getElementById("loginInfo").innerHTML = "⭕ <b>" + currentUser + "</b>" + (currentRole === "ADMIN" ? " (ADMIN)" : " (PROMOTOR)");
-        document.getElementById("loginBox").style.display = "none";
-        document.getElementById("dashboard").style.display = "block";
-
-        showPopup("Selamat Datang " + currentUser);
-
-        if (currentRole === "USER") {
-            document.getElementById("menuPerolehanCard").style.display = "none";
-            await muatSemuaDataLatarBelakang(currentUser);
-        } else {
-            document.getElementById("menuPerolehanCard").style.display = "block";
-            await loadNama();
-        }
-    } catch(err) {
-        showPopup("Gagal login ke Firebase: " + err.message);
-        btn.disabled = false;
-        btn.innerHTML = "MASUK";
-    }
-}
-
-// ---------------- MEMUAT DATA LENGKAP FIREBASE ----------------
-async function muatSemuaDataLatarBelakang(namaTarget) {
-    const loadEl = document.getElementById("globalLoading");
-    if(loadEl) loadEl.style.display = "block";
-
-    try {
-        // 1. ABSENSI
-        const absenSnap = await window.getDocs(window.collection(window.db, "absensi_finger"));
-        let hasilAbsen = [];
-        let jumlahTerlambat = 0;
-        absenSnap.forEach(d => {
-            const data = d.data();
-            if (String(data.Nama || data.nama || "").trim().toUpperCase() === namaTarget.trim().toUpperCase()) {
-                if (String(data.Terlambat || data.terlambat || "").toUpperCase() === "YA") jumlahTerlambat++;
-                hasilAbsen.push({
-                    nama: data.Nama || data.nama,
-                    tanggal: data.Tanggal || data.tanggal,
-                    masuk: data.Masuk || data.masuk || "",
-                    istirahat1: data.Istirahat1 || data.istirahat1 || "",
-                    kembali1: data.Kembali1 || data.kembali1 || "",
-                    istirahat2: data.Istirahat2 || data.istirahat2 || "",
-                    kembali2: data.Kembali2 || data.kembali2 || "",
-                    pulang: data.Pulang || data.pulang || "",
-                    terlambat: data.Terlambat || data.terlambat || ""
-                });
-            }
-        });
-        cacheData.absensi = { data: hasilAbsen, terlambat: jumlahTerlambat };
-
-        // 2. MASTER SALES & PEMETAAN BRAND
-        let mapMasterPromotor = [];
-        let daftarIdSalesSaya = [];
-
-        const masterSnap = await window.getDocs(window.collection(window.db, "master_sales"));
-        masterSnap.forEach(docSnap => {
-            const md = docSnap.data();
-            const namaAbsen   = String(md["Nama Absen"] || md.nama || "").trim();
-            const idSales     = String(md["Nama Sales"] || md.idSales || "").trim().toUpperCase();
-            const brandMaster = String(md.Merk || md.brand || "UMUM").trim().toUpperCase();
-            const aktif       = String(md.Aktif || md.aktif || "YA").trim().toUpperCase();
-
-            if (namaAbsen && idSales && aktif === "YA") {
-                let brandList = brandMaster.split(",").map(b => b.trim()).filter(b => b !== "");
-                let promotorObj = {
-                    nama: namaAbsen,
-                    idSales: idSales,
-                    brandMaster: brandMaster,
-                    brandKeywords: brandList,
-                    omzetTotal: 0,
-                    omzetBrand: 0,
-                    unitBrand: 0
-                };
-                mapMasterPromotor.push(promotorObj);
-
-                if (namaAbsen.toUpperCase() === namaTarget.trim().toUpperCase()) {
-                    daftarIdSalesSaya.push(idSales);
-                }
-            }
-        });
-
-        if (daftarIdSalesSaya.length === 0) {
-            daftarIdSalesSaya.push(namaTarget.trim().toUpperCase());
-        }
-
-        // 3. LAPORAN PENJUALAN
-        let detailPenjualan = [];
-        let detailUC = [];
-        let detailPerBrandSaya = [];
-        let mapOmzetPenjualanToko = {};
-
-        const jualSnapshot = await window.getDocs(window.collection(window.db, "laporan_penjualan"));
-        jualSnapshot.forEach(docSnap => {
-            const dataDoc = docSnap.data();
-            const r = dataDoc.row || dataDoc;
-            const cols = Array.isArray(r) ? r : Object.values(r);
-
-            const tglText        = String(cols[2] || "").trim();
-            const namaProduk     = String(cols[5] || "").trim().toUpperCase();
-            const qty            = Number(cols[6]) || 0;
-            const omzet          = Number(String(cols[10] || 0).replace(/,/g, "")) || 0;
-            const idSalesExcel   = String(cols[15] || "").trim().toUpperCase();
-            const kategori       = String(cols[17] || "").trim().toUpperCase();
-            const brandPenjualan = String(cols[18] || cols[4] || "").trim().toUpperCase();
-
-            if (!idSalesExcel) return;
-
-            mapOmzetPenjualanToko[idSalesExcel] = (mapOmzetPenjualanToko[idSalesExcel] || 0) + omzet;
-
-            // Hitung Rekap Peringkat Seluruh Promotor (Master Match)
-            mapMasterPromotor.forEach(p => {
-                if (p.idSales === idSalesExcel) {
-                    p.omzetTotal += omzet;
-
-                    // Filter khusus perolehan brand sendiri
-                    let isBrandMatch = false;
-                    if (p.brandKeywords.length > 0) {
-                        for (let k = 0; k < p.brandKeywords.length; k++) {
-                            let kw = p.brandKeywords[k];
-                            if (brandPenjualan.includes(kw) || namaProduk.includes(kw)) {
-                                isBrandMatch = true;
-                                break;
-                            }
-                        }
-                    } else {
-                        isBrandMatch = true;
-                    }
-
-                    if (isBrandMatch && kategori !== "GARANSI" && kategori !== "ONGKOS") {
-                        p.omzetBrand += omzet;
-                        p.unitBrand  += qty;
-                    }
-                }
-            });
-
-            // Cocokkan Transaksi Promotor Login
-            if (daftarIdSalesSaya.includes(idSalesExcel)) {
-                if (kategori !== "GARANSI" && kategori !== "ONGKOS") {
-                    detailPenjualan.push({ tanggal: tglText, produk: namaProduk, qty: qty, omzet: omzet });
-
-                    // Cek brand milik sendiri
-                    let myUser = mapMasterPromotor.find(x => x.nama.toUpperCase() === namaTarget.trim().toUpperCase());
-                    let isMyBrand = false;
-                    if (myUser && myUser.brandKeywords.length > 0) {
-                        isMyBrand = myUser.brandKeywords.some(kw => brandPenjualan.includes(kw) || namaProduk.includes(kw));
-                    } else {
-                        isMyBrand = true;
-                    }
-
-                    if (isMyBrand) {
-                        detailPerBrandSaya.push({ tanggal: tglText, produk: namaProduk, brand: brandPenjualan, qty: qty, omzet: omzet });
-                    }
-                }
-
-                if (kategori === "GARANSI") {
-                    detailUC.push({ tanggal: tglText, produk: namaProduk, qty: qty, omzet: omzet });
-                }
-            }
-        });
-
-        // SIMPAN KE CACHE
-        cacheData.penjualan = {
-            nama: namaTarget,
-            totalUnit: detailPenjualan.reduce((a, b) => a + b.qty, 0),
-            totalOmzet: detailPenjualan.reduce((a, b) => a + b.omzet, 0),
-            detail: detailPenjualan
-        };
-
-        cacheData.uc = {
-            nama: namaTarget,
-            totalUC: detailUC.reduce((a, b) => a + b.qty, 0),
-            detail: detailUC
-        };
-
-        // Cache Perolehan Toko Keseluruhan
-        let listPerolehanToko = [...mapMasterPromotor].sort((a, b) => b.omzetTotal - a.omzetTotal);
-        cacheData.perolehan = { list: listPerolehanToko };
-
-        // Cache Perolehan Brand Keseluruhan
-        let listPerolehanBrandToko = [...mapMasterPromotor].sort((a, b) => b.omzetBrand - a.omzetBrand);
-        cacheData.perolehanBrand = { list: listPerolehanBrandToko };
-
-    } catch(e) {
-        console.error("Gagal load cache dari Firebase", e);
-    } finally {
-        if(loadEl) loadEl.style.display = "none";
-    }
-}
-
-async function loadNama(){
-    try {
-        const masterSnap = await window.getDocs(window.collection(window.db, "master_sales"));
-        let daftarNama = [];
-        masterSnap.forEach(docSnap => {
-            const md = docSnap.data();
-            const n = String(md["Nama Absen"] || md.nama || "").trim();
-            if (n && !daftarNama.includes(n)) daftarNama.push(n);
-        });
-
-        let html = `<option value="" disabled selected hidden>Pilih Nama Promotor</option>`;
-        daftarNama.forEach((nama) => { html += `<option value="${nama}">${nama}</option>`; });
-        document.getElementById("nama").innerHTML = html;
-
-        if(daftarNama.length > 0) {
-            document.getElementById("nama").value = daftarNama[0];
-            await muatSemuaDataLatarBelakang(daftarNama[0]);
-        }
-    } catch(e) {
-        console.error("Gagal memuat nama promotor", e);
-    }
-}
-
-async function gantiNamaAdmin() {
-    let namaTerpilih = document.getElementById("nama").value.trim();
-    if(!namaTerpilih) return;
-    await muatSemuaDataLatarBelakang(namaTerpilih);
-    jalankanRenderMenu(activeTab);
-}
-
-async function pindahMenu(namaMenu) {
-    activeTab = namaMenu;
-    document.getElementById("menuGridContainer").style.display = "none";
-    document.getElementById("detailViewSection").style.display = "block";
-    
-    let judulMenuText = namaMenu;
-    if (namaMenu === "PerolehanBrand") judulMenuText = "Perolehan Brand Toko";
-    document.getElementById("currentMenuTitle").innerText = "Menu: " + judulMenuText;
-    
-    document.getElementById("hasil").innerHTML = `<div style="text-align:center; padding:30px; color:#d4af37; font-weight:600;"><span class="spinner" style="margin-right:8px;"></span>Memuat data ${namaMenu}...</div>`;
-    document.getElementById("summary").innerHTML = "";
-
-    let targetNama = (currentRole === "ADMIN") ? (document.getElementById("nama").value.trim() || currentUser) : currentUser;
-    await muatSemuaDataLatarBelakang(targetNama);
-    jalankanRenderMenu(namaMenu);
-}
-
-function kembaliKeMenuUtama() {
-    document.getElementById("detailViewSection").style.display = "none";
-    document.getElementById("menuGridContainer").style.display = "grid";
-    document.getElementById("exportArea").style.display = "none";
-    document.getElementById("summary").innerHTML = "";
-    document.getElementById("hasil").innerHTML = "";
-}
-
-function jalankanRenderMenu(namaMenu) {
-    document.getElementById("exportArea").style.display = "none";
-    const menuGlobal = ["Perolehan", "PerolehanBrand", "DendaUC", "Promo", "Reward", "Rules", "Punishment"];
-    const isGlobal = menuGlobal.includes(namaMenu);
-
-    const searchBoxEl = document.getElementById("searchBoxWrapper");
-    if (searchBoxEl) {
-        if (currentRole === "USER") {
-            searchBoxEl.style.display = "none"; 
-        } else {
-            searchBoxEl.style.display = (isGlobal && namaMenu !== "PelanggaranSaya" && namaMenu !== "RewardSaya") ? "none" : "block"; 
-        }
-    }
-
-    if (namaMenu === "Absensi") renderAbsensi(cacheData.absensi);
-    else if (namaMenu === "Penjualan") renderPenjualan(cacheData.penjualan);
-    else if (namaMenu === "UC") renderUC(cacheData.uc);
-    else if (namaMenu === "PerolehanBrand") renderPerolehanBrand(cacheData.perolehanBrand);
-    else if (namaMenu === "Perolehan") renderPerolehan(cacheData.perolehan);
-}
-
-function renderAbsensi(result) {
-    if(!result) return;
-    const data = result.data || [];
-    const terlambat = result.terlambat || 0;
-
-    let html = "";
-    data.forEach(x => {
-        const isTerlambat = String(x.terlambat).toUpperCase() === "YA";
-        const isNoMasuk = !x.masuk;
-        const isNoPulang = !x.pulang;
-
-        html += `
-        <div class="card ${isNoMasuk || isNoPulang ? 'warning' : 'success'} ${isTerlambat ? "late" : ""}">
-            <div class="tanggal">📅 TANGGAL ${x.tanggal}
-                ${isTerlambat ? '<div style="color:#d4af37;font-weight:700;margin-top:4px;">TERLAMBAT</div>' : ''}
-            </div>
-            <div class="row"><span>Masuk</span><span>${x.masuk || '-'}</span></div>
-            <div class="row"><span>Istirahat 1</span><span>${x.istirahat1 || '-'}</span></div>
-            <div class="row"><span>Kembali 1</span><span>${x.kembali1 || '-'}</span></div>
-            <div class="row"><span>Pulang</span><span>${x.pulang || '-'}</span></div>
-        </div>`;
-    });
-
-    if(data.length === 0) html = `<div class="card">Data absensi tidak ditemukan</div>`;
-    document.getElementById("hasil").className = "grid";
-    document.getElementById("hasil").innerHTML = html;
-}
-
-function renderPenjualan(data) {
-    if(!data) return;
-    document.getElementById("summary").innerHTML = `
-    <div class="summary-card">
-        <h2>💰 ${data.nama}</h2>
-        <p>Total Unit : <b>${data.totalUnit} Unit</b></p>
-        <p>Total Omzet Toko : <span style="font-weight:bold; color:#34d399;">Rp ${Number(data.totalOmzet).toLocaleString("id-ID")}</span></p>
-    </div>`;
-
-    let html = "";
-    (data.detail || []).forEach(x => {
-        html += `
-        <div class="card success">
-            <div class="tanggal">📅 ${x.tanggal}</div>
-            <div style="font-size:12.5px; font-weight:600; margin-bottom:6px;">${x.produk}</div>
-            <div class="row"><span>Qty</span><span>${x.qty}</span></div>
-            <div class="row"><span>Omzet</span><span>Rp ${Number(x.omzet).toLocaleString("id-ID")}</span></div>
-        </div>`;
-    });
-
-    if(currentRole === "ADMIN") document.getElementById("exportArea").style.display = "flex";
-    document.getElementById("hasil").className = "grid";
-    document.getElementById("hasil").innerHTML = html;
-}
-
-function renderUC(data) {
-    if(!data) return;
-    document.getElementById("summary").innerHTML = `
-    <div class="summary-card">
-        <h2>⭐ ${data.nama}</h2>
-        <p>Total UC : <b>${data.totalUC} Poin</b></p>
-    </div>`;
-
-    let html = "";
-    (data.detail || []).forEach(x => {
-        html += `
-        <div class="card success">
-            <div class="tanggal">📅 ${x.tanggal}</div>
-            <div style="font-size:12.5px; font-weight:600; margin-bottom:6px;">${x.produk}</div>
-            <div class="row"><span>Qty UC</span><span>${x.qty}</span></div>
-        </div>`;
-    });
-
-    document.getElementById("hasil").className = "grid";
-    document.getElementById("hasil").innerHTML = html;
-}
-
-function renderPerolehan(data) {
-    if(!data || !data.list) return;
-    let totalOmzet = 0; 
-    data.list.forEach(x => { totalOmzet += Number(x.omzetTotal || 0); });
-
-    document.getElementById("summary").innerHTML = `
-    <div class="summary-card">
-        <h2>📊 Perolehan & Rekap Toko</h2>
-        <p>👥 Jumlah Promotor : <b>${data.list.length}</b></p>
-        <p>💰 Total Omzet Toko : <span style="font-weight:bold;color:#34d399">Rp ${totalOmzet.toLocaleString("id-ID")}</span></p>
-    </div>`;
-
-    let html = `<div class="summary-card">`;
-    data.list.forEach((x, i) => {
-        const omzetVal = Number(x.omzetTotal || 0);
-        html += `
-            <div style="display:flex; align-items:center; justify-content:space-between; padding:9px 0; border-bottom:1px solid rgba(255,255,255,0.05); gap:10px;">
-                <div style="display:flex; align-items:center; gap:10px; min-width:0; flex:1;">
-                    <div style="width:26px; height:26px; border-radius:50%; background:#1f2937; border:1px solid rgba(212,175,55,0.3); display:flex; align-items:center; justify-content:center; font-weight:700; font-size:12px; flex-shrink:0; color:#d4af37;">${i + 1}</div>
-                    <div style="font-weight:600; font-size:13px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${x.nama}</div>
-                </div>
-                <div style="text-align:right; white-space:nowrap; flex-shrink:0;">
-                    <div style="font-weight:700; font-size:13px; color:#34d399;">Rp ${omzetVal.toLocaleString("id-ID")}</div>
-                </div>
-            </div>`;
-    });
-    html += `</div>`;
-
-    if(currentRole === "ADMIN") document.getElementById("exportArea").style.display = "flex";
-    document.getElementById("hasil").className = "";
-    document.getElementById("hasil").innerHTML = html;
-}
-
-function renderPerolehanBrand(data) {
-    if(!data || !data.list) return;
-    let totalOmzetBrandToko = 0;
-    let totalUnitBrandToko = 0;
-
-    data.list.forEach(x => {
-        totalOmzetBrandToko += Number(x.omzetBrand || 0);
-        totalUnitBrandToko += Number(x.unitBrand || 0);
-    });
-
-    const user = data.list.find(x => (x.nama || "").toUpperCase() === (currentUser || "").toUpperCase());
-    const posisi = user ? data.list.findIndex(x => (x.nama || "").toUpperCase() === (currentUser || "").toUpperCase()) + 1 : 0;
-
-    document.getElementById("summary").innerHTML = `
-    <div class="summary-card">
-    <h2>🏷️ Perolehan Khusus Brand Toko</h2>
-    ${currentRole === "ADMIN" ? 
-        `<p>👥 Jumlah Promotor : <b>${data.list.length}</b></p>
-         <p>💰 Total Omzet Khusus Brand : <span style="font-weight:bold;color:#34d399">Rp ${totalOmzetBrandToko.toLocaleString("id-ID")}</span></p>
-         <p>📦 Total Unit Khusus Brand : <b>${totalUnitBrandToko} Unit</b></p>` :
-        `<p>👤 <b>${currentUser}</b></p>
-         <p>🏷️ Brand Saya : <b>${user ? user.brandMaster : '-'}</b></p>
-         <p>💰 Omzet Brand Saya : <span style="font-weight:bold; color:#34d399;">Rp ${Number(user ? user.omzetBrand : 0).toLocaleString("id-ID")}</span> (${user ? user.unitBrand : 0} Unit)</p>
-         <p>🏅 Peringkat Brand : <b>${posisi > 0 ? posisi : '-'} dari ${data.list.length} Promotor</b></p>`
-    }
-    </div>`;
-
-    let html = `<div class="summary-card">`;
-    data.list.forEach((x, i) => {
-        const omzetVal = Number(x.omzetBrand || 0);
-        const unitVal = Number(x.unitBrand || 0);
-        const warnaOmzet = omzetVal >= 100000000 ? '#34d399' : omzetVal >= 80000000 ? '#f59e0b' : '#ef4444';
-
-        html += `
-            <div style="display:flex; align-items:center; justify-content:space-between; padding:9px 0; border-bottom:1px solid rgba(255,255,255,0.05); gap:10px;">
-                <div style="display:flex; align-items:center; gap:10px; min-width:0; flex:1;">
-                    <div style="width:26px; height:26px; border-radius:50%; background:#1f2937; border:1px solid rgba(212,175,55,0.3); display:flex; align-items:center; justify-content:center; font-weight:700; font-size:12px; flex-shrink:0; color:#d4af37;">${i + 1}</div>
-                    <div style="font-weight:600; font-size:13px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
-                        ${x.nama}
-                        <div style="font-size:10.5px; color:#d4af37; font-weight:500;">Brand: ${x.brandMaster}</div>
-                    </div>
-                </div>
-                <div style="text-align:right; white-space:nowrap; flex-shrink:0;">
-                    <div style="font-weight:700; font-size:13px; color:${warnaOmzet};">Rp ${omzetVal.toLocaleString("id-ID")}</div>
-                    <div style="font-size:11.5px; font-weight:600; color:#9ca3af; margin-top:1px;">📦 ${unitVal} Unit</div>
-                </div>
-            </div>`;
-    });
-    html += `</div>`;
-
-    if(currentRole === "ADMIN") document.getElementById("exportArea").style.display = "flex";
-    document.getElementById("hasil").className = "";
-    document.getElementById("hasil").innerHTML = html;
-}
-
-// ---------------- EKSPOR EXCEL DAN PDF ----------------
-function prosesEkspor(format) {
-    let namaKaryawan = (currentRole === "USER") ? currentUser : (document.getElementById("nama").value.trim() || "Semua_Promotor");
-    const namaFile = `Laporan_${activeTab}_${namaKaryawan.replace(/\s+/g, '_')}`;
-    const targetElement = document.getElementById("hasil");
-
-    if (format === 'excel') {
-        let rowsArr = [];
+    <button class="btn-kembali" onclick="kembaliKeDashboard()">Kembali</button>
+</div>
+
+<!-- ========== VIEW ADMIN ========== -->
+<div id="view-admin" class="box box-admin" style="display:none;">
+    <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 16px; border-bottom: 2px solid var(--border-color); padding-bottom: 20px; margin-bottom: 20px;">
+        <div>
+            <h2 style="text-align: left; font-size: 20px; color: var(--primary);">UFO KEBONSARI MALANG</h2>
+            <div style="color: var(--text-muted); font-size: 13px; margin-top: 2px;">Panel Rekapitulasi Absensi Karyawan</div>
+        </div>
+        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+            <button onclick="downloadCSV()" style="width: auto; background: var(--success); color: white; padding: 10px 20px; font-size: 12px; border-radius: 10px; border: none; font-weight: 700; cursor: pointer; transition: var(--transition);">
+                📥 Unduh Laporan
+            </button>
+            <button class="btn-logout" onclick="logout()" style="margin: 0; width: auto; padding: 10px 20px;">
+                KELUAR
+            </button>
+        </div>
+    </div>
+
+    <div style="background: #f8fafc; padding: 18px; border-radius: var(--radius-md); margin-bottom: 20px; border: 1px solid var(--border-color);">
+        <label style="font-weight: 700; display: block; margin-bottom: 8px; font-size: 12px; color: var(--text-muted); text-transform: uppercase;">
+            🔍 Filter Karyawan:
+        </label>
+        <select id="filter-nama-admin" onchange="filterLaporanAdmin()" style="width: 100%; max-width: 320px;">
+            <option value="SEMUA">-- Tampilkan Semua Karyawan --</option>
+        </select>
         
-        if (activeTab === "Perolehan") {
-            rowsArr.push(["REKAP PEROLEHAN & OMZET PROMOTOR"], []);
-            rowsArr.push(["Peringkat", "Nama Promotor", "Omzet (Rp)"]);
-            if (cacheData.perolehan && cacheData.perolehan.list) {
-                cacheData.perolehan.list.forEach((x, i) => {
-                    rowsArr.push([i + 1, x.nama, Number(x.omzetTotal || 0)]);
-                });
-            }
-        } else if (activeTab === "PerolehanBrand") {
-            rowsArr.push(["REKAP PEROLEHAN KHUSUS BRAND PROMOTOR"], []);
-            rowsArr.push(["Peringkat", "Nama Promotor", "Brand", "Omzet Brand (Rp)", "Total Unit"]);
-            if (cacheData.perolehanBrand && cacheData.perolehanBrand.list) {
-                cacheData.perolehanBrand.list.forEach((x, i) => {
-                    rowsArr.push([i + 1, x.nama, x.brandMaster || "UMUM", Number(x.omzetBrand || 0), Number(x.unitBrand || 0)]);
-                });
-            }
-        }
+        <div id="periode-admin-text" style="display: none; margin-top: 12px; font-size: 12px; color: var(--primary); font-weight: 700; background: var(--primary-light); padding: 6px 16px; border-radius: 6px; display: inline-block;">
+            Periode: -
+        </div>
 
-        if (rowsArr.length > 0) {
-            const ws = XLSX.utils.aoa_to_sheet(rowsArr);
-            const wb = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(wb, ws, activeTab);
-            XLSX.writeFile(wb, `${namaFile}.xlsx`);
-        } else {
-            showPopup("Tidak ada data untuk diekspor.");
-        }
-    } else if (format === 'pdf') {
-        const elemenPrint = targetElement.cloneNode(true);
-        elemenPrint.style.color = "#000"; 
-        elemenPrint.style.background = "#fff"; 
-        elemenPrint.style.padding = "20px";
-        html2pdf().set({ margin: 10, filename: `${namaFile}.pdf`, html2canvas: { scale: 2 }, jsPDF: { format: 'a4' } }).from(elemenPrint).save();
-    }
-}
-
-function logout() { document.getElementById("logoutPopup").style.display = "flex"; }
-function tutupLogout() { document.getElementById("logoutPopup").style.display = "none"; }
-function logoutConfirm() {
-    document.getElementById("logoutPopup").style.display = "none";
-    currentUser = ""; currentRole = "";
-    document.getElementById("dashboard").style.display = "none";
-    document.getElementById("loginBox").style.display = "block";
-    document.getElementById("loginNama").value = "";
-    document.getElementById("loginPin").value = "";
-    localStorage.removeItem("loginNama");
-    localStorage.removeItem("loginRole");
-}   
-
-function showPopup(pesan) {
-    document.getElementById("popupText").innerText = pesan;
-    document.getElementById("popup").style.display = "flex";
-}
-function tutupPopup() { document.getElementById("popup").style.display = "none"; }
-</script>
-
-<!-- POPUP INFORMASI -->
-<div id="popup">
-  <div class="modern-popup-box">
-    <h3>Informasi</h3>
-    <div id="popupText" style="margin: 15px 0; font-size: 14px; color: #d1d5db;"></div>
-    <button class="btn-popup-ok" onclick="tutupPopup()">OK</button>
-  </div>
-</div>
-
-<!-- POPUP KELUAR -->
-<div id="logoutPopup">
-  <div class="modern-popup-box">
-    <h3>🚪 Keluar Aplikasi</h3>
-    <p style="margin: 15px 0; color: #d1d5db;">Yakin ingin keluar dari akun ini?</p>
-    <div>
-      <button id="btnBatal" onclick="tutupLogout()">Batal</button>
-      <button id="btnLogoutConfirm" onclick="logoutConfirm()">Keluar</button>
-    </div>
-  </div>
-</div>
-
-</body>
-</html>
+        <div class="gps-switch-wrapper">
+            <div>
+                <strong style="font-size: 13px; color: var(--text-main); display: block;">📍 Fitur Radius GPS</strong>
+                <span id="label-gps-status" style="font-size: 12px; color: var(--success); font-weight: 700;">Memuat status GPS...</span>
+            </div>
+            <label class="switch">
+                <input type="checkbox" id="toggle-gps" checked onchange
