@@ -178,13 +178,13 @@
         align-items: center;
     }
 
-    /* Khusus untuk tombol yang TIDAK aktif (Otomatis menyesuaikan warna teks agar terlihat jelas) */
+  /* Khusus untuk tombol yang TIDAK aktif (Otomatis kontras di segala mode) */
     .theme-toggle .toggle-btn:not(.active) {
-        color: var(--text-secondary, #4b5563); 
+        color: rgba(255, 255, 255, 0.75); /* Warna putih terang agar selalu terlihat jelas di mode gelap */
     }
 
     .theme-toggle .toggle-btn:not(.active):hover {
-        color: var(--text-primary, #111827);
+        color: #ffffff;
     }
 
     /* Khusus untuk tombol yang AKTIF (Ada gradient ungu) */
