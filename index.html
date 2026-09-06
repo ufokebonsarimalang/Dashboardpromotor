@@ -423,6 +423,26 @@
             box-shadow: 0 12px 48px rgba(108, 99, 255, 0.45);
         }
 
+        .btn-success {
+            background: linear-gradient(135deg, #00D2D3 0%, #01A3A4 100%);
+            color: white;
+            box-shadow: 0 4px 20px rgba(0, 210, 211, 0.3);
+        }
+        .btn-success:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 32px rgba(0, 210, 211, 0.4);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #FF6B6B 0%, #EE5A24 100%);
+            color: white;
+            box-shadow: 0 4px 20px rgba(255, 107, 107, 0.3);
+        }
+        .btn-danger:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 32px rgba(255, 107, 107, 0.4);
+        }
+
         .btn-logout {
             background: linear-gradient(135deg, #00B894 0%, #00A381 100%);
             color: white;
@@ -452,25 +472,26 @@
             color: white;
         }
 
-        .btn-camera {
+        .btn-capture {
             background: linear-gradient(135deg, #6C63FF 0%, #3F3D9E 100%);
             color: white;
-            font-size: 15px;
-            padding: 16px;
-            margin-top: 10px;
-            box-shadow: 0 4px 24px rgba(108, 99, 255, 0.35);
+            font-size: 18px;
+            padding: 18px 24px;
+            box-shadow: 0 4px 24px rgba(108, 99, 255, 0.4);
+            border-radius: 60px;
+            width: auto;
+            min-width: 160px;
         }
 
-        .btn-camera:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 40px rgba(108, 99, 255, 0.5);
+        .btn-capture:hover {
+            transform: translateY(-3px) scale(1.03);
+            box-shadow: 0 8px 40px rgba(108, 99, 255, 0.6);
         }
 
         /* ==========================================================
            TOMBOL ABSEN - VERSI PREMIUM
-           ========================================================== */
+        ========================================================== */
 
-        /* ----- CHECK IN - Purple Premium ----- */
         .card-in {
             background: linear-gradient(145deg, #6C63FF 0%, #4F46E5 50%, #3B32A8 100%) !important;
             border: none !important;
@@ -573,7 +594,7 @@
             border: 1px solid rgba(255, 255, 255, 0.05);
         }
 
-        /* ----- CHECK OUT - Orange Premium ----- */
+        /* CHECK OUT */
         .card-out {
             background: linear-gradient(145deg, #FF6B6B 0%, #EE5A24 50%, #C0392B 100%) !important;
             border: none !important;
@@ -671,7 +692,7 @@
             border: 1px solid rgba(255, 255, 255, 0.05);
         }
 
-        /* ----- OFF - Red Premium ----- */
+        /* OFF */
         .card-off {
             background: linear-gradient(145deg, #EF4444 0%, #DC2626 50%, #B91C1C 100%) !important;
             border: none !important;
@@ -772,7 +793,6 @@
             border: 1px solid rgba(255, 255, 255, 0.05);
         }
 
-        /* ----- DISABLED STATE ----- */
         .btn-disabled {
             opacity: 0.5 !important;
             cursor: not-allowed !important;
@@ -790,95 +810,139 @@
             opacity: 0.6 !important;
         }
 
-        /* ----- RIPPLE EFFECT ----- */
-        .ripple {
-            position: absolute;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.3);
-            transform: scale(0);
-            animation: rippleAnim 0.8s ease-out;
-            pointer-events: none;
-        }
-
-        @keyframes rippleAnim {
-            to {
-                transform: scale(4);
-                opacity: 0;
-            }
-        }
-
-        /* ----- RESPONSIVE TOMBOL ----- */
-        @media (max-width: 480px) {
-            .card-in .absen-icon,
-            .card-out .absen-icon {
-                width: 44px;
-                height: 44px;
-                font-size: 18px;
-                border-radius: 12px;
-            }
-            
-            .card-in .absen-title,
-            .card-out .absen-title {
-                font-size: 12px;
-            }
-            
-            .card-off {
-                min-width: 160px !important;
-                padding: 12px 18px !important;
-            }
-            
-            .card-off .absen-icon {
-                width: 34px;
-                height: 34px;
-                font-size: 15px;
-            }
-            
-            .card-off .absen-title {
-                font-size: 12px;
-            }
-        }
-
         /* ========================================
-           KAMERA
+           KAMERA - FULL SCREEN
         ======================================== */
+        .camera-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #000000;
+            z-index: 9999;
+            display: none;
+            flex-direction: column;
+        }
+
+        .camera-overlay.active {
+            display: flex;
+        }
+
         #kamera {
-            width: 100%;
-            aspect-ratio: 3 / 4;
+            width: 100vw;
+            height: 100vh;
             object-fit: cover;
-            border-radius: var(--radius-md);
-            background: #0A0A1A;
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            max-height: 380px;
+            background: #000000;
+        }
+
+        /* Preview */
+        #previewFoto {
+            width: 100vw;
+            height: 100vh;
+            object-fit: cover;
+            background: #000000;
             display: none;
         }
 
-        #kamera.active { display: block; }
+        #previewFoto.show {
+            display: block;
+        }
 
-        .camera-placeholder {
-            width: 100%;
-            aspect-ratio: 3 / 4;
-            border-radius: var(--radius-md);
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px dashed rgba(255, 255, 255, 0.08);
+        /* ========================================
+           CONTROLS - OVERLAY DI ATAS KAMERA
+        ======================================== */
+        .camera-controls {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 30px 20px 40px;
+            background: linear-gradient(transparent, rgba(0,0,0,0.8));
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
-            color: var(--text-muted);
-            font-size: 48px;
             gap: 12px;
-            max-height: 380px;
+            z-index: 10000;
         }
 
-        .camera-placeholder i {
-            font-size: 56px;
-            color: rgba(255, 255, 255, 0.05);
+        .camera-controls .top-controls {
+            display: flex;
+            gap: 16px;
+            width: 100%;
+            justify-content: center;
+            flex-wrap: wrap;
         }
 
-        .camera-placeholder span {
+        .camera-controls .btn-control {
+            padding: 12px 24px;
+            border-radius: 40px;
             font-size: 14px;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .camera-controls .btn-capture-main {
+            background: #FFFFFF;
+            color: #0A0A1A;
+            padding: 16px 40px;
+            border-radius: 60px;
+            font-size: 18px;
+            font-weight: 800;
+            box-shadow: 0 4px 30px rgba(255,255,255,0.2);
+            min-width: 180px;
+        }
+
+        .camera-controls .btn-capture-main:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 40px rgba(255,255,255,0.3);
+        }
+
+        .camera-controls .btn-capture-main:active {
+            transform: scale(0.95);
+        }
+
+        .camera-controls .btn-close-camera {
+            background: rgba(255, 255, 255, 0.1);
+            color: #FFFFFF;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .camera-controls .btn-close-camera:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .camera-controls .btn-success-camera {
+            background: linear-gradient(135deg, #00D2D3 0%, #01A3A4 100%);
+            color: white;
+        }
+
+        .camera-controls .btn-success-camera:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 40px rgba(0, 210, 211, 0.4);
+        }
+
+        .camera-controls .btn-danger-camera {
+            background: linear-gradient(135deg, #FF6B6B 0%, #EE5A24 100%);
+            color: white;
+        }
+
+        .camera-controls .btn-danger-camera:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 40px rgba(255, 107, 107, 0.4);
+        }
+
+        .camera-controls .info-text {
+            color: rgba(255,255,255,0.6);
+            font-size: 13px;
             font-weight: 500;
-            color: var(--text-muted);
+            text-align: center;
+            margin-bottom: 8px;
         }
 
         /* ========================================
@@ -1172,6 +1236,18 @@
             .stat-item .value {
                 font-size: 14px;
             }
+            .camera-controls {
+                padding: 20px 16px 30px;
+            }
+            .camera-controls .btn-capture-main {
+                padding: 14px 30px;
+                font-size: 16px;
+                min-width: 140px;
+            }
+            .camera-controls .btn-control {
+                padding: 10px 16px;
+                font-size: 12px;
+            }
         }
 
         @media (max-width: 480px) {
@@ -1198,6 +1274,11 @@
             }
             .time-wrapper {
                 padding: 14px 10px;
+            }
+            .camera-controls .btn-capture-main {
+                padding: 12px 24px;
+                font-size: 14px;
+                min-width: 120px;
             }
         }
     </style>
@@ -1305,38 +1386,37 @@
 </div>
 
 <!-- ========================================================== -->
-<!-- ===================== VIEW KAMERA ======================== -->
+<!-- ===================== CAMERA OVERLAY ===================== -->
 <!-- ========================================================== -->
-<div id="view-kamera" class="glass-card box" style="display:none;">
-    <div class="logo-wrapper">
-        <div class="logo-container" style="width:64px; height:64px;">
-            <img src="logo.png" class="logo-toko" alt="Logo UFO" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2280%22 height=%2280%22 viewBox=%220 0 80 80%22%3E%3Crect width=%2280%22 height=%2280%22 fill=%22%236C63FF%22/%3E%3Ctext x=%2240%22 y=%2250%22 text-anchor=%22middle%22 fill=%22white%22 font-size=%2232%22 font-family=%22Inter%22 font-weight=%22900%22%3EUFO%3C/text%3E%3C/svg%3E'">
+<div class="camera-overlay" id="cameraOverlay">
+    <video id="kamera" autoplay playsinline></video>
+    <img id="previewFoto" />
+    
+    <!-- Tombol Kontrol di atas kamera -->
+    <div class="camera-controls" id="cameraControls">
+        <div class="info-text" id="cameraInfoText">📸 Pastikan wajah Anda di dalam bingkai</div>
+        
+        <div class="top-controls" id="cameraButtons">
+            <!-- Mode Kamera (Capture) -->
+            <button class="btn-capture-main" id="btnCapture" onclick="captureFoto()">
+                <i class="fas fa-camera"></i> Jepret
+            </button>
+            
+            <!-- Mode Preview (Kirim / Ulang) - Sembunyi dulu -->
+            <button class="btn-control btn-success-camera" id="btnKirim" onclick="kirimFoto()" style="display:none;">
+                <i class="fas fa-check"></i> Kirim
+            </button>
+            <button class="btn-control btn-danger-camera" id="btnUlang" onclick="ulangFoto()" style="display:none;">
+                <i class="fas fa-rotate-left"></i> Ulang
+            </button>
+        </div>
+        
+        <div style="display:flex; gap:12px; width:100%; justify-content:center; flex-wrap:wrap;">
+            <button class="btn-control btn-close-camera" onclick="tutupKamera()">
+                <i class="fas fa-times"></i> Tutup
+            </button>
         </div>
     </div>
-    <h1 class="title" style="font-size:20px;" id="judul-kamera">Verifikasi Wajah</h1>
-    <div class="subtitle"><i class="fas fa-camera"></i> Pastikan wajah Anda di dalam bingkai</div>
-
-    <div class="camera-placeholder" id="cameraPlaceholder">
-        <i class="fas fa-camera"></i>
-        <span>Tekan tombol di bawah untuk memulai</span>
-    </div>
-
-    <video id="kamera" autoplay playsinline></video>
-
-    <button class="btn-camera" id="btnStartCamera" onclick="startCameraManual()">
-        <i class="fas fa-play"></i> Mulai Kamera
-    </button>
-
-    <button class="btn-back" id="btnGantiKamera" onclick="gantiKamera()" style="margin-top:12px; display:none;">
-        <i class="fas fa-arrows-rotate"></i> Ganti Kamera
-    </button>
-
-    <button class="btn-primary" id="btnAbsen" onclick="prosesAbsen()" style="margin-top:12px; display:none;">
-        <span id="text-absen-kirim"><i class="fas fa-paper-plane"></i> Kirim Absensi</span>
-        <div class="spinner" id="absen-spinner"></div>
-    </button>
-
-    <button class="btn-back" onclick="kembaliKeDashboard()"><i class="fas fa-arrow-left"></i> Kembali</button>
 </div>
 
 <!-- ========================================================== -->
@@ -1447,13 +1527,15 @@ let lat = 0, lng = 0, namaLogin = "", tipeAbsen = "";
 let totalHadir = 0, totalOff = 0, totalPs = 0, totalTerlambat = 0;
 let isGpsValid = false;
 let isGpsEnabledGlobal = true;
-let modeKamera = "user";
 let gpsWatcher = null;
 let serverTimeOffset = 0;
 let dataLaporanGlobal = [];
 let isDataLoaded = false;
 let isEksekusiOffRunning = false;
-let isCameraReady = false;
+
+// VARIABLE UNTUK FOTO
+let capturedImageData = null;
+let isCameraActive = false;
 
 // ===== RIPPLE EFFECT =====
 document.addEventListener('DOMContentLoaded', function() {
@@ -1472,7 +1554,9 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-// ===== FUNGSI LOGIN =====
+// ============================================================
+// 1. FUNGSI LOGIN
+// ============================================================
 function prosesLogin() {
     const username = document.getElementById('user').value.trim();
     const password = document.getElementById('pass').value.trim();
@@ -1534,7 +1618,292 @@ function prosesLogin() {
     });
 }
 
-// ===== FUNGSI LAINNYA =====
+// ============================================================
+// 2. FUNGSI KAMERA - FULL SCREEN + CAPTURE + PREVIEW
+// ============================================================
+
+// 2a. Buka Kamera (HANYA DEPAN)
+function bukaKamera() {
+    const overlay = document.getElementById('cameraOverlay');
+    const video = document.getElementById('kamera');
+    const preview = document.getElementById('previewFoto');
+    const btnCapture = document.getElementById('btnCapture');
+    const btnKirim = document.getElementById('btnKirim');
+    const btnUlang = document.getElementById('btnUlang');
+    const infoText = document.getElementById('cameraInfoText');
+
+    // Reset
+    overlay.classList.add('active');
+    preview.classList.remove('show');
+    preview.style.display = 'none';
+    video.style.display = 'block';
+    btnCapture.style.display = 'inline-flex';
+    btnKirim.style.display = 'none';
+    btnUlang.style.display = 'none';
+    infoText.innerHTML = '📸 Pastikan wajah Anda di dalam bingkai';
+    capturedImageData = null;
+    isCameraActive = true;
+
+    // HANYA KAMERA DEPAN (facingMode: "user")
+    navigator.mediaDevices.getUserMedia({
+        video: {
+            facingMode: "user",
+            width: { ideal: 1920 },
+            height: { ideal: 1080 }
+        }
+    })
+    .then(stream => {
+        streamKamera = stream;
+        video.srcObject = stream;
+        video.play().catch(e => console.log("Play error:", e));
+    })
+    .catch(err => {
+        tampilkanPesan("Gagal membuka kamera. Pastikan izin kamera diaktifkan.", "info");
+        tutupKamera();
+        console.error(err);
+    });
+}
+
+// 2b. Jepret Foto (Capture)
+function captureFoto() {
+    const video = document.getElementById('kamera');
+    const preview = document.getElementById('previewFoto');
+    const btnCapture = document.getElementById('btnCapture');
+    const btnKirim = document.getElementById('btnKirim');
+    const btnUlang = document.getElementById('btnUlang');
+    const infoText = document.getElementById('cameraInfoText');
+
+    // Ambil gambar dari video
+    const canvas = document.createElement('canvas');
+    canvas.width = video.videoWidth || 1920;
+    canvas.height = video.videoHeight || 1080;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+    // Simpan data foto
+    capturedImageData = canvas.toDataURL('image/jpeg', 0.9);
+
+    // Tampilkan preview
+    preview.src = capturedImageData;
+    preview.style.display = 'block';
+    preview.classList.add('show');
+    video.style.display = 'none';
+
+    // Ubah tombol
+    btnCapture.style.display = 'none';
+    btnKirim.style.display = 'inline-flex';
+    btnUlang.style.display = 'inline-flex';
+    infoText.innerHTML = '📋 Cek foto Anda, jika sudah jelas klik Kirim';
+
+    // Hentikan stream kamera sementara
+    if (streamKamera) {
+        streamKamera.getTracks().forEach(t => t.stop());
+        streamKamera = null;
+    }
+}
+
+// 2c. Ulang Foto (Kembali ke Kamera)
+function ulangFoto() {
+    const preview = document.getElementById('previewFoto');
+    const btnCapture = document.getElementById('btnCapture');
+    const btnKirim = document.getElementById('btnKirim');
+    const btnUlang = document.getElementById('btnUlang');
+    const infoText = document.getElementById('cameraInfoText');
+    const video = document.getElementById('kamera');
+
+    // Reset preview
+    preview.classList.remove('show');
+    preview.style.display = 'none';
+    capturedImageData = null;
+
+    // Tampilkan video lagi
+    video.style.display = 'block';
+
+    // Ubah tombol
+    btnCapture.style.display = 'inline-flex';
+    btnKirim.style.display = 'none';
+    btnUlang.style.display = 'none';
+    infoText.innerHTML = '📸 Ambil ulang foto, pastikan wajah terlihat jelas';
+
+    // Buka kamera lagi (HANYA DEPAN)
+    navigator.mediaDevices.getUserMedia({
+        video: {
+            facingMode: "user",
+            width: { ideal: 1920 },
+            height: { ideal: 1080 }
+        }
+    })
+    .then(stream => {
+        streamKamera = stream;
+        video.srcObject = stream;
+        video.play().catch(e => console.log("Play error:", e));
+    })
+    .catch(err => {
+        tampilkanPesan("Gagal membuka kamera.", "info");
+        console.error(err);
+    });
+}
+
+// 2d. Kirim Foto (HANYA JIKA USER KLIK KIRIM)
+function kirimFoto() {
+    if (!capturedImageData) {
+        tampilkanPesan("Ambil foto terlebih dahulu!", "info");
+        return;
+    }
+
+    // Cek GPS jika aktif
+    if (isGpsEnabledGlobal) {
+        if (lat === 0 && lng === 0) {
+            tampilkanPesan("Lokasi GPS belum terbaca. Tunggu sebentar.", "info");
+            return;
+        }
+        const jarak = hitungJarak(lat, lng, TOKO_LAT, TOKO_LNG);
+        if (jarak > RADIUS_MAKSIMAL) {
+            tampilkanPesan("Anda berada di luar radius toko.", "info");
+            return;
+        }
+    }
+
+    // Cek waktu checkout
+    const serverDate = new Date(Date.now() + serverTimeOffset);
+    const jamSekarang = serverDate.getHours();
+    const waktuSekarang = serverDate.toLocaleTimeString('id-ID');
+
+    if (tipeAbsen === 'Check Out' && (jamSekarang === 17 || jamSekarang === 18)) {
+        const waktuCheckInLokal = localStorage.getItem(`waktuCheckIn_${namaLogin}`);
+        if (waktuCheckInLokal) {
+            const selisihMilidetik = serverDate.getTime() - parseInt(waktuCheckInLokal);
+            const selisihJam = selisihMilidetik / (1000 * 60 * 60);
+            if (selisihJam < 8) {
+                const sisaMenit = Math.ceil((8 - selisihJam) * 60);
+                tampilkanPesan(`Belum bisa checkout. Kurang ${sisaMenit} menit lagi.`, "info");
+                return;
+            }
+        }
+    }
+
+    // LANJUTKAN KIRIM
+    const btnKirim = document.getElementById('btnKirim');
+    const originalText = btnKirim.innerHTML;
+    btnKirim.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Mengirim...';
+    btnKirim.disabled = true;
+
+    const latText = lat ? lat.toFixed(6) : "0.000000";
+    const lngText = lng ? lng.toFixed(6) : "0.000000";
+    const formatWaktu = serverDate.toLocaleDateString('id-ID') + ' ' + waktuSekarang + ' WIB';
+    const gpsString = `GPS: ${latText}, ${lngText}`;
+
+    // Tambahkan watermark ke foto (opsional)
+    const canvas = document.createElement('canvas');
+    const img = new Image();
+    img.src = capturedImageData;
+    img.onload = function() {
+        canvas.width = img.width;
+        canvas.height = img.height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0);
+
+        // Watermark
+        const boxHeight = Math.round(canvas.height * 0.12);
+        ctx.fillStyle = "rgba(0,0,0,0.6)";
+        ctx.fillRect(0, canvas.height - boxHeight, canvas.width, boxHeight);
+        ctx.fillStyle = "#ffffff";
+        ctx.font = `bold ${Math.round(canvas.height * 0.035)}px Inter`;
+        ctx.fillText(formatWaktu, Math.round(canvas.width * 0.05), canvas.height - Math.round(boxHeight * 0.6));
+        ctx.fillStyle = "#8B83FF";
+        ctx.font = `${Math.round(canvas.height * 0.03)}px Inter`;
+        ctx.fillText(gpsString, Math.round(canvas.width * 0.05), canvas.height - Math.round(boxHeight * 0.25));
+
+        const dataFoto = canvas.toDataURL('image/jpeg', 0.5);
+
+        // Kirim ke server
+        fetch(SCRIPT_URL, {
+            method: 'POST',
+            redirect: 'follow',
+            body: JSON.stringify({
+                aksi: "absen",
+                nama: namaLogin,
+                status: tipeAbsen,
+                lat: lat,
+                lng: lng,
+                foto: dataFoto
+            })
+        })
+        .then(res => res.json())
+        .then(data => {
+            btnKirim.innerHTML = originalText;
+            btnKirim.disabled = false;
+
+            if (data.pesan && data.pesan.includes("berhasil")) {
+                // Simpan ke localStorage
+                const log = JSON.parse(localStorage.getItem(`absen_${namaLogin}`)) || { status: [] };
+                if (!log.status.includes(tipeAbsen)) log.status.push(tipeAbsen);
+                localStorage.setItem(`absen_${namaLogin}`, JSON.stringify(log));
+
+                let detail = JSON.parse(localStorage.getItem(`detailWaktu_${namaLogin}`)) || {};
+                detail[tipeAbsen] = waktuSekarang;
+                localStorage.setItem(`detailWaktu_${namaLogin}`, JSON.stringify(detail));
+
+                let infoDurasi = "";
+                if (tipeAbsen === 'Check In') {
+                    localStorage.setItem(`waktuCheckIn_${namaLogin}`, serverDate.getTime());
+                    if (jamSekarang > 8 || (jamSekarang === 8 && serverDate.getMinutes() > 10)) {
+                        totalTerlambat++;
+                        localStorage.setItem(`totalTerlambat_${namaLogin}`, totalTerlambat);
+                    }
+                }
+                if (tipeAbsen === 'Check Out') {
+                    const waktuCheckInLokal = localStorage.getItem(`waktuCheckIn_${namaLogin}`);
+                    if (waktuCheckInLokal) {
+                        const selisihMilidetik = serverDate.getTime() - parseInt(waktuCheckInLokal);
+                        const totalMenit = Math.floor(selisihMilidetik / (1000 * 60));
+                        const jam = Math.floor(totalMenit / 60);
+                        const menit = totalMenit % 60;
+                        infoDurasi = `<br><br>⏱️ <strong>Durasi Kerja Hari Ini:</strong><br>${jam} Jam ${menit} Menit.`;
+                    }
+                    totalHadir++;
+                    localStorage.setItem(`totalHadir_${namaLogin}`, totalHadir);
+                    if (jamSekarang === 17 || jamSekarang === 18) {
+                        totalPs++;
+                        localStorage.setItem(`totalPs_${namaLogin}`, totalPs);
+                    }
+                    localStorage.removeItem(`waktuCheckIn_${namaLogin}`);
+                }
+
+                tampilkanStatistik();
+                tampilkanPesan(`✅ Absen ${tipeAbsen} berhasil pada pukul ${waktuSekarang}!` + infoDurasi, 'sukses');
+                tutupKamera();
+            } else {
+                tampilkanPesan(data.pesan || "Gagal memproses data absensi.", 'info');
+            }
+        })
+        .catch(err => {
+            btnKirim.innerHTML = originalText;
+            btnKirim.disabled = false;
+            tampilkanPesan("Terjadi kesalahan jaringan.", "info");
+            console.error(err);
+        });
+    };
+}
+
+// 2e. Tutup Kamera
+function tutupKamera() {
+    const overlay = document.getElementById('cameraOverlay');
+    if (streamKamera) {
+        streamKamera.getTracks().forEach(t => t.stop());
+        streamKamera = null;
+    }
+    overlay.classList.remove('active');
+    isCameraActive = false;
+    capturedImageData = null;
+    document.getElementById('view-dashboard').style.display = 'block';
+    cekValidasiHarian();
+}
+
+// ============================================================
+// 3. FUNGSI LAINNYA
+// ============================================================
+
 function kunciTombolKerja(statusKunci) {
     const btnIn = document.getElementById('btn-checkin');
     const btnOut = document.getElementById('btn-checkout');
@@ -2051,59 +2420,20 @@ function cekValidasiHarian() {
     }
 }
 
+// ============================================================
+// 4. FUNGSI PILIH AKSI (BUKA KAMERA)
+// ============================================================
 function pilihAksi(tipe) {
     tipeAbsen = tipe;
     document.getElementById('view-dashboard').style.display = 'none';
-    document.getElementById('view-kamera').style.display = 'block';
-    document.getElementById('judul-kamera').innerHTML = `<i class="fas fa-camera"></i> ${tipe}`;
-    isCameraReady = false;
-    document.getElementById('kamera').classList.remove('active');
-    document.getElementById('cameraPlaceholder').style.display = 'flex';
-    document.getElementById('btnStartCamera').style.display = 'block';
-    document.getElementById('btnGantiKamera').style.display = 'none';
-    document.getElementById('btnAbsen').style.display = 'none';
-    if (streamKamera) { streamKamera.getTracks().forEach(t => t.stop()); streamKamera = null; }
+    
+    // BUKA KAMERA LANGSUNG FULL SCREEN
+    bukaKamera();
 }
 
-function startCameraManual() {
-    if (streamKamera) { streamKamera.getTracks().forEach(t => t.stop()); streamKamera = null; }
-    const el = document.getElementById('kamera');
-    el.style.transform = (modeKamera === "user") ? "scaleX(-1)" : "scaleX(1)";
-    document.getElementById('cameraPlaceholder').style.display = 'none';
-    document.getElementById('btnStartCamera').style.display = 'none';
-    document.getElementById('btnGantiKamera').style.display = 'block';
-    document.getElementById('btnAbsen').style.display = 'block';
-
-    navigator.mediaDevices.getUserMedia({ video: { facingMode: modeKamera } })
-    .then(stream => {
-        streamKamera = stream;
-        el.srcObject = stream;
-        el.classList.add('active');
-        isCameraReady = true;
-        el.play().catch(e => console.log("Play error:", e));
-    })
-    .catch(err => {
-        tampilkanPesan("Gagal membuka kamera. Pastikan izin kamera diaktifkan.", "info");
-        document.getElementById('cameraPlaceholder').style.display = 'flex';
-        document.getElementById('btnStartCamera').style.display = 'block';
-        document.getElementById('btnGantiKamera').style.display = 'none';
-        document.getElementById('btnAbsen').style.display = 'none';
-    });
-}
-
-function gantiKamera() {
-    modeKamera = (modeKamera === "user") ? "environment" : "user";
-    if (streamKamera) { streamKamera.getTracks().forEach(t => t.stop()); streamKamera = null; }
-    startCameraManual();
-}
-
-function kembaliKeDashboard() {
-    if (streamKamera) { streamKamera.getTracks().forEach(t => t.stop()); streamKamera = null; }
-    document.getElementById('view-kamera').style.display = 'none';
-    document.getElementById('view-dashboard').style.display = 'block';
-    cekValidasiHarian();
-}
-
+// ============================================================
+// 5. FUNGSI ABSEN OFF (TETAP SAMA)
+// ============================================================
 function prosesAbsenOff() {
     document.getElementById('modal-title').innerText = '📴 Konfirmasi Libur';
     document.getElementById('modal-pesan').innerHTML = `
@@ -2165,128 +2495,9 @@ function eksekusiAbsenOff() {
     });
 }
 
-function prosesAbsen() {
-    if (!isCameraReady) {
-        tampilkanPesan("Kamera belum siap. Tekan 'Mulai Kamera' terlebih dahulu.", "info");
-        return;
-    }
-
-    if (isGpsEnabledGlobal) {
-        if (lat === 0 && lng === 0) { tampilkanPesan("Lokasi GPS belum terbaca...", "info"); return; }
-        let jarak = hitungJarak(lat, lng, TOKO_LAT, TOKO_LNG);
-        if (jarak > RADIUS_MAKSIMAL) { tampilkanPesan("Anda berada di luar radius toko.", "info"); return; }
-    }
-
-    const serverDate = new Date(Date.now() + serverTimeOffset);
-    const jamSekarang = serverDate.getHours();
-    const waktuSekarang = serverDate.toLocaleTimeString('id-ID');
-    const waktuMilidetikSekarang = serverDate.getTime();
-
-    if (tipeAbsen === 'Check Out' && (jamSekarang === 17 || jamSekarang === 18)) {
-        const waktuCheckInLokal = localStorage.getItem(`waktuCheckIn_${namaLogin}`);
-        if (waktuCheckInLokal) {
-            const selisihMilidetik = waktuMilidetikSekarang - parseInt(waktuCheckInLokal);
-            const selisihJam = selisihMilidetik / (1000 * 60 * 60);
-            if (selisihJam < 8) {
-                const sisaMenit = Math.ceil((8 - selisihJam) * 60);
-                tampilkanPesan(`Belum bisa checkout. Kurang ${sisaMenit} menit lagi.`, "info");
-                return;
-            }
-        }
-    }
-
-    const video = document.getElementById('kamera');
-    const canvas = document.createElement('canvas');
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
-    const ctx = canvas.getContext('2d');
-    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-
-    const latText = lat ? lat.toFixed(6) : "0.000000";
-    const lngText = lng ? lng.toFixed(6) : "0.000000";
-    const formatWaktu = serverDate.toLocaleDateString('id-ID') + ' ' + waktuSekarang + ' WIB';
-    const gpsString = `GPS: ${latText}, ${lngText}`;
-
-    const boxHeight = Math.round(canvas.height * 0.12);
-    ctx.fillStyle = "rgba(0,0,0,0.6)";
-    ctx.fillRect(0, canvas.height - boxHeight, canvas.width, boxHeight);
-    ctx.fillStyle = "#ffffff";
-    ctx.font = `bold ${Math.round(canvas.height * 0.035)}px Inter`;
-    ctx.fillText(formatWaktu, Math.round(canvas.width * 0.05), canvas.height - Math.round(boxHeight * 0.6));
-    ctx.fillStyle = "#8B83FF";
-    ctx.font = `${Math.round(canvas.height * 0.03)}px Inter`;
-    ctx.fillText(gpsString, Math.round(canvas.width * 0.05), canvas.height - Math.round(boxHeight * 0.25));
-
-    const dataFoto = canvas.toDataURL('image/jpeg', 0.5);
-
-    const btn = document.getElementById('btnAbsen');
-    const spinner = document.getElementById('absen-spinner');
-    const textKirim = document.getElementById('text-absen-kirim');
-    if (btn) { btn.disabled = true; btn.classList.add('btn-disabled'); }
-    if (spinner) spinner.style.display = 'inline-block';
-    if (textKirim) textKirim.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Memproses...';
-
-    fetch(SCRIPT_URL, {
-        method: 'POST',
-        redirect: 'follow',
-        body: JSON.stringify({ aksi: "absen", nama: namaLogin, status: tipeAbsen, lat: lat, lng: lng, foto: dataFoto })
-    })
-    .then(res => res.json())
-    .then(data => {
-        if (spinner) spinner.style.display = 'none';
-        if (textKirim) textKirim.innerHTML = '<i class="fas fa-paper-plane"></i> Kirim Absensi';
-        if (btn) { btn.disabled = false; btn.classList.remove('btn-disabled'); }
-
-        if (data.pesan && data.pesan.includes("berhasil")) {
-            const log = JSON.parse(localStorage.getItem(`absen_${namaLogin}`)) || { status: [] };
-            if (!log.status.includes(tipeAbsen)) log.status.push(tipeAbsen);
-            localStorage.setItem(`absen_${namaLogin}`, JSON.stringify(log));
-
-            let detail = JSON.parse(localStorage.getItem(`detailWaktu_${namaLogin}`)) || {};
-            detail[tipeAbsen] = waktuSekarang;
-            localStorage.setItem(`detailWaktu_${namaLogin}`, JSON.stringify(detail));
-
-            let infoDurasi = "";
-            if (tipeAbsen === 'Check In') {
-                localStorage.setItem(`waktuCheckIn_${namaLogin}`, waktuMilidetikSekarang);
-                if (jamSekarang > 8 || (jamSekarang === 8 && serverDate.getMinutes() > 10)) {
-                    totalTerlambat++;
-                    localStorage.setItem(`totalTerlambat_${namaLogin}`, totalTerlambat);
-                }
-            }
-            if (tipeAbsen === 'Check Out') {
-                const waktuCheckInLokal = localStorage.getItem(`waktuCheckIn_${namaLogin}`);
-                if (waktuCheckInLokal) {
-                    const selisihMilidetik = waktuMilidetikSekarang - parseInt(waktuCheckInLokal);
-                    const totalMenit = Math.floor(selisihMilidetik / (1000 * 60));
-                    const jam = Math.floor(totalMenit / 60);
-                    const menit = totalMenit % 60;
-                    infoDurasi = `<br><br>⏱️ <strong>Durasi Kerja Hari Ini:</strong><br>${jam} Jam ${menit} Menit.`;
-                }
-                totalHadir++;
-                localStorage.setItem(`totalHadir_${namaLogin}`, totalHadir);
-                if (jamSekarang === 17 || jamSekarang === 18) {
-                    totalPs++;
-                    localStorage.setItem(`totalPs_${namaLogin}`, totalPs);
-                }
-                localStorage.removeItem(`waktuCheckIn_${namaLogin}`);
-            }
-
-            tampilkanStatistik();
-            tampilkanPesan(`✅ Absen ${tipeAbsen} berhasil pada pukul ${waktuSekarang}!` + infoDurasi, 'sukses');
-        } else {
-            tampilkanPesan(data.pesan || "Gagal memproses data absensi.", 'info');
-        }
-        kembaliKeDashboard();
-    })
-    .catch(err => {
-        if (spinner) spinner.style.display = 'none';
-        if (textKirim) textKirim.innerHTML = '<i class="fas fa-paper-plane"></i> Kirim Absensi';
-        if (btn) { btn.disabled = false; btn.classList.remove('btn-disabled'); }
-        tampilkanPesan("Terjadi kesalahan jaringan.", "info");
-    });
-}
-
+// ============================================================
+// 6. FUNGSI LOGOUT
+// ============================================================
 function logout() {
     if (gpsWatcher) { navigator.geolocation.clearWatch(gpsWatcher); gpsWatcher = null; }
     if (streamKamera) { streamKamera.getTracks().forEach(t => t.stop()); streamKamera = null; }
@@ -2299,9 +2510,13 @@ function logout() {
     document.getElementById('view-admin').style.display = 'none';
     document.getElementById('view-kamera').style.display = 'none';
     document.getElementById('view-login').style.display = 'block';
+    document.getElementById('cameraOverlay').classList.remove('active');
     kunciTombolKerja(false);
 }
 
+// ============================================================
+// 7. FUNGSI DOWNLOAD CSV
+// ============================================================
 function downloadCSV() {
     let barisTabel = document.querySelectorAll("#isi-tabel tr");
     if (barisTabel.length === 0 || (barisTabel.length === 1 && barisTabel[0].innerText.includes("Memuat"))) {
