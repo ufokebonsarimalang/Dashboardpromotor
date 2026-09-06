@@ -654,16 +654,10 @@
             transform: translateY(-3px) scale(1.03);
             box-shadow: 0 8px 40px rgba(108, 99, 255, 0.6);
         }
-        .camera-overlay {
-    display: none !important;
-}
-
-.camera-overlay.active {
-    display: flex !important;
-}
 
         /* ==========================================================
-           TOMBOL ABSEN - VERSI PREMIUM
+           TOMBOL ABSEN - TATA LETAK BARU
+           Check In & Check Out sejajar, OFF di bawah
         ========================================================== */
         .btn-grid {
             display: flex;
@@ -764,7 +758,7 @@
             box-shadow: 0 12px 40px rgba(255, 107, 107, 0.5);
         }
 
-        /* OFF */
+        /* OFF - di bawah, tengah */
         .card-off-wrapper {
             display: flex;
             justify-content: center;
@@ -1229,6 +1223,140 @@
             cursor: not-allowed;
         }
 
+        /* ==========================================================
+           CAMERA OVERLAY - FULL SCREEN
+        ========================================================== */
+        .camera-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #000000;
+            z-index: 9999;
+            display: none;
+            flex-direction: column;
+        }
+
+        .camera-overlay.active {
+            display: flex;
+        }
+
+        #kamera {
+            width: 100vw;
+            height: 100vh;
+            object-fit: cover;
+            background: #000000;
+        }
+
+        #previewFoto {
+            width: 100vw;
+            height: 100vh;
+            object-fit: cover;
+            background: #000000;
+            display: none;
+        }
+
+        #previewFoto.show {
+            display: block;
+        }
+
+        .camera-controls {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 30px 20px 40px;
+            background: linear-gradient(transparent, rgba(0,0,0,0.85));
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            z-index: 10000;
+        }
+
+        .camera-controls .top-controls {
+            display: flex;
+            gap: 16px;
+            width: 100%;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .camera-controls .btn-control {
+            padding: 12px 24px;
+            border-radius: 40px;
+            font-size: 14px;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .camera-controls .btn-capture-main {
+            background: #FFFFFF;
+            color: #0A0A1A;
+            padding: 18px 50px;
+            border-radius: 60px;
+            font-size: 20px;
+            font-weight: 800;
+            box-shadow: 0 4px 30px rgba(255,255,255,0.3);
+            min-width: 200px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .camera-controls .btn-capture-main:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 50px rgba(255,255,255,0.4);
+        }
+
+        .camera-controls .btn-capture-main:active {
+            transform: scale(0.95);
+        }
+
+        .camera-controls .btn-close-camera {
+            background: rgba(255, 255, 255, 0.15);
+            color: #FFFFFF;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .camera-controls .btn-close-camera:hover {
+            background: rgba(255, 255, 255, 0.25);
+        }
+
+        .camera-controls .btn-success-camera {
+            background: linear-gradient(135deg, #00D2D3 0%, #01A3A4 100%);
+            color: white;
+        }
+
+        .camera-controls .btn-success-camera:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 40px rgba(0, 210, 211, 0.4);
+        }
+
+        .camera-controls .btn-danger-camera {
+            background: linear-gradient(135deg, #FF6B6B 0%, #EE5A24 100%);
+            color: white;
+        }
+
+        .camera-controls .btn-danger-camera:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 40px rgba(255, 107, 107, 0.4);
+        }
+
+        .camera-controls .info-text {
+            color: rgba(255,255,255,0.7);
+            font-size: 14px;
+            font-weight: 500;
+            text-align: center;
+            margin-bottom: 4px;
+        }
+
         /* ========================================
            RESPONSIVE
         ======================================== */
@@ -1259,6 +1387,11 @@
             }
             .title {
                 font-size: 22px;
+            }
+            .camera-controls .btn-capture-main {
+                padding: 14px 30px;
+                font-size: 16px;
+                min-width: 150px;
             }
         }
 
@@ -1305,6 +1438,14 @@
             .theme-toggle .toggle-btn {
                 padding: 4px 10px;
                 font-size: 10px;
+            }
+            .camera-controls .btn-capture-main {
+                padding: 12px 24px;
+                font-size: 14px;
+                min-width: 120px;
+            }
+            .camera-controls {
+                padding: 20px 16px 30px;
             }
         }
     </style>
@@ -1417,7 +1558,7 @@
         </button>
     </div>
 
-    <!-- Tombol Absensi -->
+    <!-- TOMBOL ABSEN - TATA LETAK BARU -->
     <div class="btn-grid">
         <div class="absen-row">
             <button class="absen-card card-in" id="btn-checkin" onclick="pilihAksi('Check In')">
@@ -1443,14 +1584,50 @@
         </div>
     </div>
 
-    <!-- Tombol Logout -->
-    <button class="btn-logout" onclick="logout()"><i class="fas fa-right-from-bracket"></i> KELUAR</button>
+    <!-- Tombol Admin + Logout -->
+    <button class="btn-primary" id="btn-admin" onclick="toggleAdmin()" style="margin-bottom:8px; background:linear-gradient(135deg, #8B5CF6 0%, #6D28D9 100%);">
+        <i class="fas fa-user-shield"></i> <span id="admin-text">Admin Panel</span>
+    </button>
+
+    <button class="btn-logout" onclick="logout()">
+        <i class="fas fa-right-from-bracket"></i> KELUAR
+    </button>
+
+    <!-- Admin Panel -->
+    <div id="admin-panel" style="display:none; margin-top:16px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+            <h4 style="color:var(--text-primary); font-size:14px; font-weight:700;">
+                <i class="fas fa-database" style="color:var(--primary-light);"></i> Data Absensi
+            </h4>
+            <button onclick="refreshAdmin()" style="background:var(--bg-card); border:1px solid var(--glass-border); border-radius:8px; padding:4px 12px; color:var(--text-secondary); font-size:11px; cursor:pointer;">
+                <i class="fas fa-rotate"></i> Refresh
+            </button>
+        </div>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Nama</th>
+                        <th>Tanggal</th>
+                        <th>Masuk</th>
+                        <th>Keluar</th>
+                        <th>Status</th>
+                        <th>Lokasi</th>
+                    </tr>
+                </thead>
+                <tbody id="admin-table-body">
+                    <tr><td colspan="7" style="text-align:center; color:var(--text-muted);">Memuat data...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
 
 <!-- ========================================================== -->
 <!-- ===================== CAMERA OVERLAY ===================== -->
 <!-- ========================================================== -->
-<div class="camera-overlay" id="cameraOverlay" style="display:none;">
+<div class="camera-overlay" id="cameraOverlay">
     <video id="kamera" autoplay playsinline></video>
     <img id="previewFoto" />
     
@@ -1459,8 +1636,9 @@
         
         <div class="top-controls" id="cameraButtons">
             <button class="btn-capture-main" id="btnCapture" onclick="captureFoto()">
-                <i class="fas fa-camera"></i> Jepret
+                <i class="fas fa-camera"></i> JEPRET
             </button>
+            
             <button class="btn-control btn-success-camera" id="btnKirim" onclick="kirimFoto()" style="display:none;">
                 <i class="fas fa-check"></i> Kirim
             </button>
@@ -1607,23 +1785,6 @@ function setTheme(theme) {
 const savedTheme = localStorage.getItem('theme') || 'dark';
 setTheme(savedTheme);
 
-// ===== RIPPLE EFFECT =====
-document.addEventListener('DOMContentLoaded', function() {
-    document.querySelectorAll('.absen-card').forEach(btn => {
-        btn.addEventListener('click', function(e) {
-            const ripple = document.createElement('span');
-            ripple.classList.add('ripple');
-            const rect = this.getBoundingClientRect();
-            const size = Math.max(rect.width, rect.height);
-            ripple.style.width = ripple.style.height = size + 'px';
-            ripple.style.left = (e.clientX - rect.left - size/2) + 'px';
-            ripple.style.top = (e.clientY - rect.top - size/2) + 'px';
-            this.appendChild(ripple);
-            setTimeout(() => ripple.remove(), 800);
-        });
-    });
-});
-
 // ============================================================
 // 1. FUNGSI LOGIN
 // ============================================================
@@ -1689,10 +1850,10 @@ function prosesLogin() {
 }
 
 // ============================================================
-// 2. FUNGSI KAMERA - FULL SCREEN + CAPTURE + PREVIEW
+// 2. FUNGSI KAMERA
 // ============================================================
 
-// 2a. Buka Kamera (HANYA DEPAN)
+// 2a. Buka Kamera
 function bukaKamera() {
     const overlay = document.getElementById('cameraOverlay');
     const video = document.getElementById('kamera');
@@ -1702,8 +1863,7 @@ function bukaKamera() {
     const btnUlang = document.getElementById('btnUlang');
     const infoText = document.getElementById('cameraInfoText');
 
-    // Reset
-    overlay.style.display = 'flex';
+    overlay.classList.add('active');
     preview.classList.remove('show');
     preview.style.display = 'none';
     video.style.display = 'block';
@@ -1714,7 +1874,6 @@ function bukaKamera() {
     capturedImageData = null;
     isCameraActive = true;
 
-    // HANYA KAMERA DEPAN (facingMode: "user")
     navigator.mediaDevices.getUserMedia({
         video: {
             facingMode: "user",
@@ -1734,7 +1893,7 @@ function bukaKamera() {
     });
 }
 
-// 2b. Jepret Foto (Capture)
+// 2b. Jepret Foto
 function captureFoto() {
     const video = document.getElementById('kamera');
     const preview = document.getElementById('previewFoto');
@@ -1743,36 +1902,31 @@ function captureFoto() {
     const btnUlang = document.getElementById('btnUlang');
     const infoText = document.getElementById('cameraInfoText');
 
-    // Ambil gambar dari video
     const canvas = document.createElement('canvas');
     canvas.width = video.videoWidth || 1920;
     canvas.height = video.videoHeight || 1080;
     const ctx = canvas.getContext('2d');
     ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-    // Simpan data foto
     capturedImageData = canvas.toDataURL('image/jpeg', 0.9);
 
-    // Tampilkan preview
     preview.src = capturedImageData;
     preview.style.display = 'block';
     preview.classList.add('show');
     video.style.display = 'none';
 
-    // Ubah tombol
     btnCapture.style.display = 'none';
     btnKirim.style.display = 'inline-flex';
     btnUlang.style.display = 'inline-flex';
     infoText.innerHTML = '📋 Cek foto Anda, jika sudah jelas klik Kirim';
 
-    // Hentikan stream kamera sementara
     if (streamKamera) {
         streamKamera.getTracks().forEach(t => t.stop());
         streamKamera = null;
     }
 }
 
-// 2c. Ulang Foto (Kembali ke Kamera)
+// 2c. Ulang Foto
 function ulangFoto() {
     const preview = document.getElementById('previewFoto');
     const btnCapture = document.getElementById('btnCapture');
@@ -1781,21 +1935,16 @@ function ulangFoto() {
     const infoText = document.getElementById('cameraInfoText');
     const video = document.getElementById('kamera');
 
-    // Reset preview
     preview.classList.remove('show');
     preview.style.display = 'none';
     capturedImageData = null;
-
-    // Tampilkan video lagi
     video.style.display = 'block';
 
-    // Ubah tombol
     btnCapture.style.display = 'inline-flex';
     btnKirim.style.display = 'none';
     btnUlang.style.display = 'none';
     infoText.innerHTML = '📸 Ambil ulang foto, pastikan wajah terlihat jelas';
 
-    // Buka kamera lagi (HANYA DEPAN)
     navigator.mediaDevices.getUserMedia({
         video: {
             facingMode: "user",
@@ -1814,14 +1963,13 @@ function ulangFoto() {
     });
 }
 
-// 2d. Kirim Foto (HANYA JIKA USER KLIK KIRIM)
+// 2d. Kirim Foto
 function kirimFoto() {
     if (!capturedImageData) {
         tampilkanPesan("Ambil foto terlebih dahulu!", "info");
         return;
     }
 
-    // Cek GPS jika aktif
     if (isGpsEnabledGlobal) {
         if (lat === 0 && lng === 0) {
             tampilkanPesan("Lokasi GPS belum terbaca. Tunggu sebentar.", "info");
@@ -1834,7 +1982,6 @@ function kirimFoto() {
         }
     }
 
-    // Cek waktu checkout
     const serverDate = new Date(Date.now() + serverTimeOffset);
     const jamSekarang = serverDate.getHours();
     const waktuSekarang = serverDate.toLocaleTimeString('id-ID');
@@ -1852,7 +1999,6 @@ function kirimFoto() {
         }
     }
 
-    // LANJUTKAN KIRIM
     const btnKirim = document.getElementById('btnKirim');
     const originalText = btnKirim.innerHTML;
     btnKirim.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Mengirim...';
@@ -1863,7 +2009,6 @@ function kirimFoto() {
     const formatWaktu = serverDate.toLocaleDateString('id-ID') + ' ' + waktuSekarang + ' WIB';
     const gpsString = `GPS: ${latText}, ${lngText}`;
 
-    // Tambahkan watermark ke foto (opsional)
     const canvas = document.createElement('canvas');
     const img = new Image();
     img.src = capturedImageData;
@@ -1873,7 +2018,6 @@ function kirimFoto() {
         const ctx = canvas.getContext('2d');
         ctx.drawImage(img, 0, 0);
 
-        // Watermark
         const boxHeight = Math.round(canvas.height * 0.12);
         ctx.fillStyle = "rgba(0,0,0,0.6)";
         ctx.fillRect(0, canvas.height - boxHeight, canvas.width, boxHeight);
@@ -1886,7 +2030,6 @@ function kirimFoto() {
 
         const dataFoto = canvas.toDataURL('image/jpeg', 0.5);
 
-        // Kirim ke server
         fetch(SCRIPT_URL, {
             method: 'POST',
             redirect: 'follow',
@@ -1905,7 +2048,6 @@ function kirimFoto() {
             btnKirim.disabled = false;
 
             if (data.pesan && data.pesan.includes("berhasil")) {
-                // Simpan ke localStorage
                 const log = JSON.parse(localStorage.getItem(`absen_${namaLogin}`)) || { status: [] };
                 if (!log.status.includes(tipeAbsen)) log.status.push(tipeAbsen);
                 localStorage.setItem(`absen_${namaLogin}`, JSON.stringify(log));
@@ -1963,7 +2105,7 @@ function tutupKamera() {
         streamKamera.getTracks().forEach(t => t.stop());
         streamKamera = null;
     }
-    overlay.style.display = 'none';
+    overlay.classList.remove('active');
     isCameraActive = false;
     capturedImageData = null;
     document.getElementById('view-dashboard').style.display = 'block';
@@ -2481,13 +2623,11 @@ function cekValidasiHarian() {
 function pilihAksi(tipe) {
     tipeAbsen = tipe;
     document.getElementById('view-dashboard').style.display = 'none';
-    
-    // BUKA KAMERA LANGSUNG FULL SCREEN
     bukaKamera();
 }
 
 // ============================================================
-// 5. FUNGSI ABSEN OFF (TETAP SAMA)
+// 5. FUNGSI ABSEN OFF
 // ============================================================
 function prosesAbsenOff() {
     document.getElementById('modal-title').innerText = '📴 Konfirmasi Libur';
@@ -2564,12 +2704,54 @@ function logout() {
     document.getElementById('view-dashboard').style.display = 'none';
     document.getElementById('view-admin').style.display = 'none';
     document.getElementById('view-login').style.display = 'block';
-    document.getElementById('cameraOverlay').style.display = 'none';
+    document.getElementById('cameraOverlay').classList.remove('active');
     kunciTombolKerja(false);
 }
 
 // ============================================================
-// 7. FUNGSI DOWNLOAD CSV
+// 7. FUNGSI TOGGLE ADMIN
+// ============================================================
+function toggleAdmin() {
+    const panel = document.getElementById('admin-panel');
+    const text = document.getElementById('admin-text');
+    if (panel.style.display === 'none') {
+        panel.style.display = 'block';
+        text.textContent = 'Tutup Admin';
+        refreshAdmin();
+    } else {
+        panel.style.display = 'none';
+        text.textContent = 'Admin Panel';
+    }
+}
+
+function refreshAdmin() {
+    const tbody = document.getElementById('admin-table-body');
+    if (!absenData || absenData.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; color:var(--text-muted);">Belum ada data absensi.</td></tr>`;
+        return;
+    }
+    const sorted = [...absenData].reverse();
+    tbody.innerHTML = sorted.map((a, i) => {
+        const statusBadge = a.status === 'masuk' ? 'badge-in' :
+                           a.status === 'keluar' ? 'badge-out' :
+                           'badge-off';
+        const statusLabel = a.status === 'masuk' ? (a.isLate ? '⚠️ Terlambat' : '✅ Hadir') :
+                           a.status === 'keluar' ? '🚪 Keluar' :
+                           a.status === 'off' ? '❌ OFF' : '🏥 PS';
+        return `<tr>
+            <td>${i + 1}</td>
+            <td><strong style="color:var(--text-primary);">${currentUser}</strong></td>
+            <td>${a.tanggal}</td>
+            <td>${a.status === 'masuk' ? a.jam : '-'}</td>
+            <td>${a.status === 'keluar' ? a.jam : '-'}</td>
+            <td><span class="badge ${statusBadge}">${statusLabel}</span></td>
+            <td style="font-size:10px; color:var(--text-muted);">${a.lokasi || '-'}</td>
+        </tr>`;
+    }).join('');
+}
+
+// ============================================================
+// 8. FUNGSI DOWNLOAD CSV
 // ============================================================
 function downloadCSV() {
     let barisTabel = document.querySelectorAll("#isi-tabel tr");
@@ -2612,7 +2794,7 @@ function downloadCSV() {
     document.body.removeChild(link);
 }
 
-console.log("🚀 UFO Kebonsari - Sistem Absensi Modern siap digunakan!");
+console.log("🚀 UFO Malang Kebonsari - Sistem Absensi Modern siap digunakan!");
 </script>
 </body>
 </html>
