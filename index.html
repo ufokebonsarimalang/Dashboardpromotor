@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Sistem Absensi - UFO Kebonsari</title>
+    <title>Sistem Absensi - UFO Malang Kebonsari</title>
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#6C63FF">
     
@@ -207,7 +207,7 @@
         .theme-toggle-wrapper {
             display: flex;
             justify-content: flex-end;
-            margin-bottom: 12px;
+            margin-bottom: 8px;
         }
 
         .theme-toggle {
@@ -258,12 +258,21 @@
         }
 
         /* ========================================
-           LOGO
+           LOGO + JUDUL + SUBTITLE - CENTER VERTIKAL
         ======================================== */
+        .header-center {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 2px;
+            margin-bottom: 20px;
+        }
+
         .logo-wrapper {
             display: flex;
             justify-content: center;
-            margin-bottom: 20px;
+            margin-bottom: 6px;
         }
 
         .logo-container {
@@ -315,6 +324,9 @@
             -webkit-text-fill-color: transparent;
             background-clip: text;
             letter-spacing: -0.5px;
+            margin: 0;
+            padding: 0;
+            line-height: 1.2;
         }
 
         [data-theme="light"] .title {
@@ -328,10 +340,11 @@
             color: var(--text-secondary);
             font-size: 14px;
             text-align: center;
-            margin-top: 2px;
-            margin-bottom: 24px;
             font-weight: 400;
             letter-spacing: 0.2px;
+            margin: 0;
+            padding: 0;
+            line-height: 1.4;
         }
 
         .subtitle i {
@@ -1233,6 +1246,13 @@
             .stat-item .value {
                 font-size: 14px;
             }
+            .logo-container {
+                width: 72px;
+                height: 72px;
+            }
+            .title {
+                font-size: 22px;
+            }
         }
 
         @media (max-width: 480px) {
@@ -1241,11 +1261,11 @@
                 border-radius: var(--radius-lg);
             }
             .logo-container {
-                width: 72px;
-                height: 72px;
+                width: 64px;
+                height: 64px;
             }
             .title {
-                font-size: 22px;
+                font-size: 20px;
             }
             .jam-digital {
                 font-size: 28px;
@@ -1300,13 +1320,16 @@
         </div>
     </div>
 
-    <div class="logo-wrapper">
-        <div class="logo-container">
-            <img src="logo.png" class="logo-toko" alt="Logo UFO" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2280%22 height=%2280%22 viewBox=%220 0 80 80%22%3E%3Crect width=%2280%22 height=%2280%22 fill=%22%236C63FF%22/%3E%3Ctext x=%2240%22 y=%2250%22 text-anchor=%22middle%22 fill=%22white%22 font-size=%2232%22 font-family=%22Inter%22 font-weight=%22900%22%3EUFO%3C/text%3E%3C/svg%3E'">
+    <!-- HEADER CENTER: LOGO + JUDUL + SUBTITLE -->
+    <div class="header-center">
+        <div class="logo-wrapper">
+            <div class="logo-container">
+                <img src="logo.png" class="logo-toko" alt="Logo UFO" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2280%22 height=%2280%22 viewBox=%220 0 80 80%22%3E%3Crect width=%2280%22 height=%2280%22 fill=%22%236C63FF%22/%3E%3Ctext x=%2240%22 y=%2250%22 text-anchor=%22middle%22 fill=%22white%22 font-size=%2232%22 font-family=%22Inter%22 font-weight=%22900%22%3EUFO%3C/text%3E%3C/svg%3E'">
+            </div>
         </div>
+        <h1 class="title">UFO MALANG KEBONSARI</h1>
+        <div class="subtitle"><i class="fas fa-fingerprint"></i> Sistem Absensi Digital</div>
     </div>
-    <h1 class="title">UFO MALANG KEBONSARI</h1>
-    <div class="subtitle"><i class="fas fa-fingerprint"></i> Sistem Absensi Digital</div>
 
     <div class="input-group">
         <label for="user"><i class="fas fa-user"></i> Username</label>
@@ -1453,7 +1476,7 @@
 <div id="view-admin" class="glass-card box box-admin" style="display:none;">
     <div style="display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:16px; border-bottom:1px solid rgba(255,255,255,0.06); padding-bottom:20px; margin-bottom:20px;">
         <div>
-            <h1 class="title" style="font-size:22px; text-align:left;">UFO KEBONSARI MALANG</h1>
+            <h1 class="title" style="font-size:22px; text-align:left;">UFO MALANG KEBONSARI</h1>
             <div style="color:var(--text-secondary); font-size:13px; margin-top:2px;"><i class="fas fa-chart-pie"></i> Panel Rekapitulasi Absensi</div>
         </div>
         <div style="display:flex; gap:10px; flex-wrap:wrap;">
