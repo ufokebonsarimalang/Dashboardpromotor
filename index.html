@@ -140,61 +140,63 @@
             padding: 32px 28px;
         }
 
-        /* ============================================================
-           THEME TOGGLE
-           ============================================================ */
-        .theme-toggle-wrapper {
-            display: flex;
-            justify-content: flex-end;
-            margin-bottom: 12px;
-        }
+     /* ============================================================
+       THEME TOGGLE
+       ============================================================ */
+    .theme-toggle-wrapper {
+        display: flex;
+        justify-content: flex-end;
+        margin-bottom: 12px;
+    }
 
-        .theme-toggle {
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: 40px;
-            padding: 6px 8px;
-            display: flex;
-            gap: 4px;
-            cursor: pointer;
-            transition: var(--transition);
-            position: relative;
-        }
+    .theme-toggle {
+        background: var(--bg-card);
+        border: 1px solid var(--border-color);
+        border-radius: 40px;
+        padding: 6px 8px;
+        display: flex;
+        gap: 4px;
+        cursor: pointer;
+        transition: var(--transition);
+        position: relative;
+    }
 
-        .theme-toggle:hover {
-            border-color: var(--border-hover);
-        }
+    .theme-toggle:hover {
+        border-color: var(--border-hover);
+    }
 
-       .theme-toggle .toggle-btn {
-    padding: 6px 14px;
-    border-radius: 30px;
-    border: none;
-    background: transparent;
-    color: var(--text-primary);
-    font-size: 12px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: var(--transition);
-}
-/* Khusus untuk tombol yang TIDAK aktif (Terang) */
-.theme-toggle .toggle-btn:not(.active) {
-    color: rgba(255, 255, 255, 0.7); /* Putih semi transparan */
-}
+    .theme-toggle .toggle-btn {
+        padding: 6px 14px;
+        border-radius: 30px;
+        border: none;
+        background: transparent;
+        font-size: 12px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: var(--transition);
+        display: flex;
+        align-items: center;
+    }
 
-/* Khusus untuk tombol yang AKTIF (Gelap) */
-.theme-toggle .toggle-btn.active {
-    color: #ffffff; /* Putih pekat agar kontras di atas ungu */
-}
-        .theme-toggle .toggle-btn.active {
-            background: var(--primary-gradient);
-            color: white;
-            box-shadow: 0 4px 16px rgba(108, 99, 255, 0.3);
-        }
+    /* Khusus untuk tombol yang TIDAK aktif (Otomatis menyesuaikan warna teks agar terlihat jelas) */
+    .theme-toggle .toggle-btn:not(.active) {
+        color: var(--text-secondary, #4b5563); 
+    }
 
-        .theme-toggle .toggle-btn i {
-            margin-right: 4px;
-        }
+    .theme-toggle .toggle-btn:not(.active):hover {
+        color: var(--text-primary, #111827);
+    }
 
+    /* Khusus untuk tombol yang AKTIF (Ada gradient ungu) */
+    .theme-toggle .toggle-btn.active {
+        background: var(--primary-gradient, linear-gradient(135deg, #6366f1 0%, #4f46e5 100%));
+        color: #ffffff;
+        box-shadow: 0 4px 16px rgba(108, 99, 255, 0.3);
+    }
+
+    .theme-toggle .toggle-btn i {
+        margin-right: 4px;
+    }
         /* ============================================================
            LOGO
            ============================================================ */
