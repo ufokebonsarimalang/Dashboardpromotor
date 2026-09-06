@@ -12,7 +12,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <style>
-        /* ===== ROOT VARIABLES ===== */
         :root {
             --primary: #4f46e5;
             --primary-hover: #4338ca;
@@ -33,7 +32,6 @@
             --radius-md: 16px;
             --radius-sm: 12px;
             --shadow-card: 0 4px 24px rgba(79, 70, 229, 0.08), 0 1px 4px rgba(0,0,0,0.04);
-            --shadow-hover: 0 12px 40px rgba(79, 70, 229, 0.15);
             --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
@@ -53,7 +51,6 @@
             padding: 20px;
         }
 
-        /* ===== BOX / CARD ===== */
         .box { 
             width: 100%;
             max-width: 420px; 
@@ -81,7 +78,6 @@
             padding: 32px 28px;
         }
 
-        /* ===== LOGO ===== */
         .logo-container {
             width: 80px;
             height: 80px;
@@ -95,9 +91,7 @@
             align-items: center;
             transition: var(--transition);
         }
-        .logo-container:hover {
-            transform: scale(1.05);
-        }
+        .logo-container:hover { transform: scale(1.05); }
 
         .logo-toko {
             width: 100%;
@@ -108,7 +102,6 @@
             padding: 4px;
         }
 
-        /* ===== TYPOGRAPHY ===== */
         h2 {
             font-size: 22px;
             font-weight: 800;
@@ -125,7 +118,6 @@
             font-weight: 500;
         }
 
-        /* ===== TIME WRAPPER ===== */
         .time-wrapper {
             background: var(--primary-light);
             border: 1px solid rgba(79, 70, 229, 0.15);
@@ -153,7 +145,6 @@
             text-transform: capitalize;
         }
 
-        /* ===== PERIODE TEXT ===== */
         #periode-karyawan-text {
             background: var(--primary-light) !important;
             border: 1px solid rgba(79, 70, 229, 0.15) !important;
@@ -163,7 +154,6 @@
             text-align: center;
         }
 
-        /* ===== STAT BOX ===== */
         .stat-box {
             background: #f8fafc !important;
             border: 1px solid var(--border-color) !important;
@@ -190,7 +180,6 @@
             color: var(--text-main);
         }
 
-        /* ===== STATUS LOG ===== */
         #status-log {
             font-size: 13px !important;
             color: var(--text-main) !important;
@@ -208,7 +197,6 @@
             justify-content: center;
         }
 
-        /* ===== INPUT & SELECT ===== */
         .input-group {
             text-align: left;
             margin-bottom: 16px;
@@ -240,7 +228,6 @@
             box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
         }
 
-        /* ===== BUTTONS ===== */
         button { 
             width: 100%; 
             padding: 14px; 
@@ -289,11 +276,21 @@
             margin-top: 10px;
             box-shadow: none;
         }
-        .btn-kembali:hover {
-            background: #e2e8f0;
+        .btn-kembali:hover { background: #e2e8f0; }
+        
+        .btn-start-camera {
+            background: var(--primary-gradient);
+            color: white;
+            font-size: 15px;
+            padding: 16px;
+            margin-top: 10px;
+            box-shadow: 0 4px 16px rgba(79, 70, 229, 0.35);
+        }
+        .btn-start-camera:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 28px rgba(79, 70, 229, 0.4);
         }
 
-        /* ===== ABSEN CARDS ===== */
         .btn-grid {
             display: flex;
             flex-direction: column;
@@ -414,7 +411,6 @@
             border-radius: 20px;
         }
 
-        /* ===== DISABLED STATE ===== */
         .btn-disabled {
             opacity: 0.6 !important;
             cursor: not-allowed !important;
@@ -423,7 +419,6 @@
         }
         .btn-disabled::after { display: none !important; }
 
-        /* ===== KAMERA ===== */
         #kamera { 
             width: 100%; 
             aspect-ratio: 3 / 4;
@@ -432,9 +427,31 @@
             background: #0f172a; 
             border: 2px solid var(--border-color);
             max-height: 380px;
+            display: none;
+        }
+        #kamera.active { display: block; }
+
+        .camera-placeholder {
+            width: 100%;
+            aspect-ratio: 3 / 4;
+            border-radius: var(--radius-md);
+            background: #0f172a;
+            border: 2px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: rgba(255,255,255,0.3);
+            font-size: 48px;
+            gap: 12px;
+            max-height: 380px;
+        }
+        .camera-placeholder span {
+            font-size: 16px;
+            font-weight: 600;
+            color: rgba(255,255,255,0.5);
         }
 
-        /* ===== ADMIN TABLE ===== */
         .table-container {
             width: 100%;
             overflow-x: auto;
@@ -486,7 +503,6 @@
             color: white;
         }
 
-        /* ===== SPINNER ===== */
         .spinner {
             border: 3px solid rgba(255, 255, 255, 0.3);
             border-radius: 50%;
@@ -501,7 +517,6 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* ===== MODAL ===== */
         .modal-overlay {
             position: fixed; 
             top: 0; left: 0; 
@@ -540,8 +555,22 @@
             margin: 12px 0 16px;
             line-height: 1.6;
         }
+        .modal-box .btn-modal {
+            background: var(--primary-gradient);
+            color: white;
+            padding: 12px 24px;
+            border-radius: var(--radius-sm);
+            border: none;
+            font-weight: 700;
+            cursor: pointer;
+            width: 100%;
+            transition: var(--transition);
+        }
+        .modal-box .btn-modal:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 28px rgba(79, 70, 229, 0.4);
+        }
 
-        /* ===== GPS SWITCH ===== */
         .gps-switch-wrapper {
             display: flex;
             align-items: center;
@@ -576,7 +605,6 @@
         input:checked + .slider { background-color: var(--success); }
         input:checked + .slider:before { transform: translateX(24px); }
 
-        /* ===== RESPONSIVE ===== */
         @media (max-width: 768px) {
             .box { padding: 24px 18px; }
             .box-admin { padding: 20px 16px; }
@@ -708,13 +736,23 @@
     <h2 id="judul-kamera">Verifikasi Wajah</h2>
     <div class="sub-title">Pastikan wajah Anda berada di dalam bingkai</div>
      
+    <!-- PLACEHOLDER KAMERA (sebelum tombol start ditekan) -->
+    <div class="camera-placeholder" id="cameraPlaceholder">
+        <i class="fas fa-camera" style="font-size: 48px; color: rgba(255,255,255,0.2);"></i>
+        <span>Tekan tombol di bawah untuk memulai</span>
+    </div>
+    
     <video id="kamera" autoplay playsinline></video>
      
-    <button class="btn-kembali" id="btnGantiKamera" onclick="gantiKamera()" style="margin-top: 12px;">
+    <button class="btn-start-camera" id="btnStartCamera" onclick="startCameraManual()">
+        📷 Mulai Kamera
+    </button>
+    
+    <button class="btn-kembali" id="btnGantiKamera" onclick="gantiKamera()" style="margin-top: 12px; display:none;">
         🔄 Putar Kamera (Depan/Belakang)
     </button>
      
-    <button class="btn-primary" id="btnAbsen" onclick="prosesAbsen()" style="margin-top: 12px;">
+    <button class="btn-primary" id="btnAbsen" onclick="prosesAbsen()" style="margin-top: 12px; display:none;">
         <span id="text-absen-kirim">Kirim Absensi Sekarang</span>
         <div class="spinner" id="absen-spinner"></div>
     </button>
@@ -743,18 +781,4 @@
         <label style="font-weight: 700; display: block; margin-bottom: 8px; font-size: 12px; color: var(--text-muted); text-transform: uppercase;">
             🔍 Filter Karyawan:
         </label>
-        <select id="filter-nama-admin" onchange="filterLaporanAdmin()" style="width: 100%; max-width: 320px;">
-            <option value="SEMUA">-- Tampilkan Semua Karyawan --</option>
-        </select>
-        
-        <div id="periode-admin-text" style="display: none; margin-top: 12px; font-size: 12px; color: var(--primary); font-weight: 700; background: var(--primary-light); padding: 6px 16px; border-radius: 6px; display: inline-block;">
-            Periode: -
-        </div>
-
-        <div class="gps-switch-wrapper">
-            <div>
-                <strong style="font-size: 13px; color: var(--text-main); display: block;">📍 Fitur Radius GPS</strong>
-                <span id="label-gps-status" style="font-size: 12px; color: var(--success); font-weight: 700;">Memuat status GPS...</span>
-            </div>
-            <label class="switch">
-                <input type="checkbox" id="toggle-gps" checked onchange
+        <select id
