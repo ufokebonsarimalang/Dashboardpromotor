@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jadwal Promotor - UFO Malang</title>
+    <title>Jadwal Promotor Berpasangan - UFO Malang</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script> tailwind.config = { darkMode: 'class' } </script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -12,23 +12,15 @@
         .app-card { backdrop-filter: blur(20px); transition: all 0.2s ease; }
         
         .shift-btn {
-            width: 38px;
-            height: 34px;
-            border-radius: 8px;
-            font-size: 11px;
-            font-weight: 900;
-            transition: all 0.15s ease;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.12);
+            width: 38px; height: 34px; border-radius: 8px; font-size: 11px; font-weight: 900;
+            transition: all 0.15s ease; box-shadow: 0 1px 2px rgba(0,0,0,0.12);
         }
         .shift-p { background-color: rgba(16, 185, 129, 0.25); color: #047857; border: 1.5px solid rgba(16, 185, 129, 0.6); }
         .dark .shift-p { color: #34d399; border-color: rgba(52, 211, 153, 0.5); }
-
         .shift-s { background-color: rgba(59, 130, 246, 0.25); color: #1d4ed8; border: 1.5px solid rgba(59, 130, 246, 0.6); }
         .dark .shift-s { color: #60a5fa; border-color: rgba(96, 165, 250, 0.5); }
-
         .shift-l { background-color: rgba(245, 158, 11, 0.25); color: #b45309; border: 1.5px solid rgba(245, 158, 11, 0.6); }
         .dark .shift-l { color: #fbbf24; border-color: rgba(251, 191, 36, 0.5); }
-
         .shift-off { background-color: rgba(239, 68, 68, 0.25); color: #b91c1c; border: 1.5px solid rgba(239, 68, 68, 0.6); }
         .dark .shift-off { color: #f87171; border-color: rgba(248, 113, 113, 0.5); }
     </style>
@@ -39,7 +31,7 @@
     <aside class="hidden md:flex md:w-72 h-screen sticky top-0 bg-white dark:bg-slate-900/95 backdrop-blur-2xl border-r border-slate-200 dark:border-slate-800 flex-col justify-between p-6 shrink-0 z-30 shadow-xl">
         <div class="flex flex-col gap-6">
             <div class="flex items-center gap-3.5">
-                <div class="p-2.5 bg-gradient-to-tr from-indigo-600 to-violet-500 text-white rounded-2xl shadow-lg shadow-indigo-500/30">
+                <div class="p-2.5 bg-gradient-to-tr from-indigo-600 to-violet-500 text-white rounded-2xl shadow-lg">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
                 </div>
                 <div>
@@ -49,21 +41,15 @@
             </div>
 
             <nav class="flex flex-col gap-2">
-                <button onclick="switchTab('promotor')" id="btnPromotor" class="flex items-center gap-3 px-4 py-3 rounded-2xl font-semibold text-sm bg-gradient-to-r from-indigo-600 to-violet-600 text-white shadow-lg shadow-indigo-600/30">
-                    <span>📅 Jadwal Promotor</span>
-                </button>
-                <button onclick="switchTab('piket')" id="btnPiket" class="flex items-center gap-3 px-4 py-3 rounded-2xl font-medium text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/60">
-                    <span>🧹 Piket Toilet</span>
-                </button>
-                <button onclick="switchTab('admin')" id="btnAdmin" class="flex items-center gap-3 px-4 py-3 rounded-2xl font-medium text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/60">
-                    <span>⚙️ Konfigurasi</span>
-                </button>
+                <button onclick="switchTab('promotor')" id="btnPromotor" class="flex items-center gap-3 px-4 py-3 rounded-2xl font-semibold text-sm bg-gradient-to-r from-indigo-600 to-violet-600 text-white shadow-lg"><span>📅 Jadwal Promotor</span></button>
+                <button onclick="switchTab('piket')" id="btnPiket" class="flex items-center gap-3 px-4 py-3 rounded-2xl font-medium text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-800/60"><span>🧹 Piket Toilet</span></button>
+                <button onclick="switchTab('admin')" id="btnAdmin" class="flex items-center gap-3 px-4 py-3 rounded-2xl font-medium text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-800/60"><span>⚙️ Konfigurasi</span></button>
             </nav>
         </div>
 
-        <div class="flex items-center justify-between bg-slate-100 dark:bg-slate-950 p-2 rounded-xl border border-slate-200 dark:border-slate-800 text-xs">
-            <span class="text-slate-700 dark:text-slate-300 font-semibold px-2">Theme</span>
-            <button onclick="toggleTheme()" class="p-2 bg-white dark:bg-slate-800 rounded-lg shadow"><span id="themeIcon">☀️ Light</span></button>
+        <div class="flex items-center justify-between bg-slate-100 dark:bg-slate-950 p-2 rounded-xl border border-slate-800 text-xs">
+            <span class="text-slate-300 font-semibold px-2">Theme</span>
+            <button onclick="toggleTheme()" class="p-2 bg-slate-800 rounded-lg shadow"><span id="themeIcon">☀️ Light</span></button>
         </div>
     </aside>
 
@@ -72,15 +58,15 @@
 
         <!-- TAB 1: JADWAL PROMOTOR -->
         <section id="tabPromotor" class="space-y-6">
-            <div class="app-card bg-white dark:bg-slate-900/80 border border-indigo-500/30 p-5 rounded-3xl shadow-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+            <div class="app-card bg-white dark:bg-slate-900/85 border border-indigo-500/30 p-5 rounded-3xl shadow-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                 <div>
                     <h2 class="text-xl font-black">JADWAL SHIFT PROMOTOR (BERPASANGAN)</h2>
                     <p class="text-xs text-slate-500 mt-1">Klik kotak shift untuk mengubah: <span class="text-emerald-600 font-bold">P</span> ➔ <span class="text-blue-600 font-bold">S</span> ➔ <span class="text-amber-600 font-bold">L</span> ➔ <span class="text-rose-600 font-bold">OFF</span></p>
                 </div>
-                <input type="text" id="inputCariPromotor" placeholder="Cari brand / nama..." onkeyup="renderTabelPromotor()" class="px-4 py-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl text-xs font-bold w-full md:w-64">
+                <input type="text" id="inputCariPromotor" placeholder="Cari brand / nama..." onkeyup="renderTabelPromotor()" class="px-4 py-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-700 rounded-xl text-xs font-bold w-full md:w-64">
             </div>
 
-            <div class="app-card bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 p-4 rounded-3xl shadow-xl">
+            <div class="app-card bg-white dark:bg-slate-900/85 border border-slate-800 p-4 rounded-3xl shadow-xl">
                 <div class="overflow-x-auto max-h-[600px]">
                     <table class="w-full text-center text-xs border-collapse">
                         <thead class="bg-slate-100 dark:bg-slate-950 uppercase font-bold text-[11px] sticky top-0 border-b border-slate-700 z-10">
@@ -104,10 +90,10 @@
 
         <!-- TAB 2: PIKET TOILET -->
         <section id="tabPiket" class="hidden space-y-6">
-            <div class="app-card bg-white dark:bg-slate-900/80 border border-indigo-500/30 p-5 rounded-3xl shadow-xl">
+            <div class="app-card bg-white dark:bg-slate-900/85 border border-indigo-500/30 p-5 rounded-3xl shadow-xl">
                 <h2 class="text-xl font-black">JADWAL PIKET TOILET PROMOTOR</h2>
             </div>
-            <div class="app-card bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 p-4 rounded-3xl shadow-xl">
+            <div class="app-card bg-white dark:bg-slate-900/85 border border-slate-800 p-4 rounded-3xl shadow-xl">
                 <div class="overflow-x-auto max-h-[600px]">
                     <table class="w-full text-center text-xs border-collapse">
                         <thead class="bg-slate-100 dark:bg-slate-950 uppercase font-bold text-[11px] sticky top-0 border-b border-slate-700">
@@ -123,25 +109,39 @@
             </div>
         </section>
 
-        <!-- TAB 3: ADMIN KONFIGURASI -->
+        <!-- TAB 3: ADMIN KONFIGURASI DENGAN PILIHAN WARNA -->
         <section id="tabAdmin" class="hidden space-y-6">
-            <div class="app-card bg-white dark:bg-slate-900/80 border border-indigo-500/30 p-5 rounded-3xl shadow-xl space-y-4">
+            <div class="app-card bg-white dark:bg-slate-900/85 border border-indigo-500/30 p-5 rounded-3xl shadow-xl space-y-4">
                 <h2 id="formTitleAdmin" class="text-xl font-black">Tambah Pasangan Brand & Sales Baru</h2>
                 <input type="hidden" id="editIndex" value="-1">
-                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-3 pt-2">
-                    <input type="text" id="inputBrand1Baru" placeholder="Brand 1 (cth: SHARP)" class="px-3 py-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-700 rounded-xl text-xs font-bold uppercase">
-                    <input type="text" id="inputBrand2Baru" placeholder="Brand 2 (cth: SAMSUNG)" class="px-3 py-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-700 rounded-xl text-xs font-bold uppercase">
-                    <input type="text" id="inputP1Baru" placeholder="Sales 1 (cth: AYUNG)" class="px-3 py-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-700 rounded-xl text-xs font-bold uppercase">
-                    <input type="text" id="inputP2Baru" placeholder="Sales 2 (cth: FEBRI)" class="px-3 py-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-700 rounded-xl text-xs font-bold uppercase">
-                    <input type="text" id="inputPiketBaru" placeholder="Piket (cth: 1, 15)" class="px-3 py-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-700 rounded-xl text-xs font-bold">
+                
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-6 gap-3 pt-2">
+                    <input type="text" id="inputBrand1Baru" placeholder="Brand 1 (cth: SHARP)" class="px-3 py-2.5 bg-slate-950 border border-slate-700 rounded-xl text-xs font-bold uppercase">
+                    <input type="text" id="inputBrand2Baru" placeholder="Brand 2 (cth: SAMSUNG)" class="px-3 py-2.5 bg-slate-950 border border-slate-700 rounded-xl text-xs font-bold uppercase">
+                    <input type="text" id="inputP1Baru" placeholder="Sales 1 (cth: AYUNG)" class="px-3 py-2.5 bg-slate-950 border border-slate-700 rounded-xl text-xs font-bold uppercase">
+                    <input type="text" id="inputP2Baru" placeholder="Sales 2 (cth: FEBRI)" class="px-3 py-2.5 bg-slate-950 border border-slate-700 rounded-xl text-xs font-bold uppercase">
+                    <input type="text" id="inputPiketBaru" placeholder="Piket (cth: 1, 15)" class="px-3 py-2.5 bg-slate-950 border border-slate-700 rounded-xl text-xs font-bold">
+                    
+                    <!-- Pilihan Warna Brand -->
+                    <select id="inputWarnaBaru" class="px-3 py-2.5 bg-slate-950 border border-slate-700 rounded-xl text-xs font-bold text-white">
+                        <option value="bg-yellow-400 text-slate-900">🟡 Kuning</option>
+                        <option value="bg-red-600 text-white">🔴 Merah</option>
+                        <option value="bg-cyan-500 text-white">🔵 Cyan / Biru Muda</option>
+                        <option value="bg-blue-600 text-white">🔷 Biru Tua</option>
+                        <option value="bg-orange-500 text-white">🟠 Orange</option>
+                        <option value="bg-emerald-600 text-white">🟢 Hijau</option>
+                        <option value="bg-purple-600 text-white">🟣 Ungu</option>
+                        <option value="bg-pink-600 text-white">🌸 Pink</option>
+                    </select>
                 </div>
+
                 <div class="flex gap-2">
                     <button onclick="simpanPasanganPromotor()" id="btnSimpanAdmin" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-2.5 px-6 rounded-xl text-xs shadow-lg">➕ Tambah Pasangan</button>
                     <button onclick="batalEditAdmin()" id="btnBatalAdmin" class="hidden bg-slate-600 hover:bg-slate-500 text-white font-bold py-2.5 px-4 rounded-xl text-xs">Batal</button>
                 </div>
             </div>
 
-            <div class="app-card bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 p-4 rounded-3xl shadow-xl">
+            <div class="app-card bg-white dark:bg-slate-900/85 border border-slate-800 p-4 rounded-3xl shadow-xl">
                 <h3 class="font-bold text-sm mb-3">Daftar Kelola Pasangan Brand & Sales</h3>
                 <div class="overflow-x-auto max-h-[400px]">
                     <table class="w-full text-left text-xs border-collapse">
@@ -163,7 +163,7 @@
     </main>
 
     <script>
-        const gasWebhookUrl = "MASUKKAN_URL_WEB_APP_APPS_SCRIPT_ANDA_DISINI";
+        const gasWebhookUrl = "https://script.google.com/macros/s/AKfycbxtcTaj4KNCykH-f3k88cIlsvVWicigtHJWt0D0u-EzDGkUEIYeQAd1oToJyhgaCdr3IQ/exec";
         let daftarPromotor = [];
 
         document.addEventListener("DOMContentLoaded", () => {
@@ -173,10 +173,10 @@
         function switchTab(tabName) {
             ['promotor', 'piket', 'admin'].forEach(t => {
                 document.getElementById('tab' + t.charAt(0).toUpperCase() + t.slice(1)).classList.add('hidden');
-                document.getElementById('btn' + t.charAt(0).toUpperCase() + t.slice(1)).className = "flex items-center gap-3 px-4 py-3 rounded-2xl font-medium text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/60";
+                document.getElementById('btn' + t.charAt(0).toUpperCase() + t.slice(1)).className = "flex items-center gap-3 px-4 py-3 rounded-2xl font-medium text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-800/60";
             });
             document.getElementById('tab' + tabName.charAt(0).toUpperCase() + tabName.slice(1)).classList.remove('hidden');
-            document.getElementById('btn' + tabName.charAt(0).toUpperCase() + tabName.slice(1)).className = "flex items-center gap-3 px-4 py-3 rounded-2xl font-semibold text-sm bg-gradient-to-r from-indigo-600 to-violet-600 text-white shadow-lg shadow-indigo-600/30";
+            document.getElementById('btn' + tabName.charAt(0).toUpperCase() + tabName.slice(1)).className = "flex items-center gap-3 px-4 py-3 rounded-2xl font-semibold text-sm bg-gradient-to-r from-indigo-600 to-violet-600 text-white shadow-lg";
 
             if (tabName === 'promotor') renderTabelPromotor();
             if (tabName === 'piket') renderTabelPiket();
@@ -236,12 +236,14 @@
                 .filter(item => item.brand1.toLowerCase().includes(keyword) || item.brand2.toLowerCase().includes(keyword) || item.p1.nama.toLowerCase().includes(keyword) || item.p2.nama.toLowerCase().includes(keyword));
 
             filtered.forEach(item => {
-                // Baris Brand 1 (Sales 1 / Ayung)
-                html += `<tr class="border-t-2 border-slate-200 dark:border-slate-800">
-                    <td class="py-2.5 px-4 text-left font-bold bg-slate-50/50 dark:bg-slate-900/50">
-                        <span class="px-2.5 py-1 rounded-lg bg-yellow-400 text-slate-900 text-[10px] font-black">${item.brand1}</span>
+                let warna = item.warnaBrand || "bg-yellow-400 text-slate-900";
+
+                // Baris Brand 1
+                html += `<tr class="border-t-2 border-slate-800">
+                    <td class="py-2.5 px-4 text-left font-bold bg-slate-900/50">
+                        <span class="px-2.5 py-1 rounded-lg ${warna} text-[10px] font-black">${item.brand1}</span>
                     </td>
-                    <td class="py-2.5 px-4 text-left font-bold text-slate-800 dark:text-slate-200">${item.p1.nama}</td>`;
+                    <td class="py-2.5 px-4 text-left font-bold text-slate-200">${item.p1.nama}</td>`;
                 
                 item.p1.jadwal.forEach((shift, dayIdx) => {
                     let shiftClass = "shift-p";
@@ -255,12 +257,12 @@
                 });
                 html += `</tr>`;
 
-                // Baris Brand 2 (Sales 2 / Febri)
-                html += `<tr class="border-b-2 border-slate-200 dark:border-slate-800">
-                    <td class="py-2.5 px-4 text-left font-bold bg-slate-50/50 dark:bg-slate-900/50">
-                        <span class="px-2.5 py-1 rounded-lg bg-yellow-400 text-slate-900 text-[10px] font-black">${item.brand2}</span>
+                // Baris Brand 2 (Warna sama agar terlihat partnernya)
+                html += `<tr class="border-b-2 border-slate-800">
+                    <td class="py-2.5 px-4 text-left font-bold bg-slate-900/50">
+                        <span class="px-2.5 py-1 rounded-lg ${warna} text-[10px] font-black">${item.brand2}</span>
                     </td>
-                    <td class="py-2.5 px-4 text-left font-bold text-slate-800 dark:text-slate-200">${item.p2.nama}</td>`;
+                    <td class="py-2.5 px-4 text-left font-bold text-slate-200">${item.p2.nama}</td>`;
                 
                 item.p2.jadwal.forEach((shift, dayIdx) => {
                     let shiftClass = "shift-p";
@@ -283,13 +285,14 @@
             if(!tbody) return;
             let html = "";
             daftarPromotor.forEach(item => {
-                html += `<tr class="border-b border-slate-200 dark:border-slate-800">
+                let warna = item.warnaBrand || "bg-yellow-400 text-slate-900";
+                html += `<tr class="border-b border-slate-800">
                     <td class="py-3 px-4 text-left font-bold">
-                        <span class="px-2 py-0.5 rounded bg-yellow-400 text-slate-900 text-[10px]">${item.brand1}</span> & 
-                        <span class="px-2 py-0.5 rounded bg-yellow-400 text-slate-900 text-[10px]">${item.brand2}</span>
+                        <span class="px-2 py-0.5 rounded ${warna} text-[10px]">${item.brand1}</span> & 
+                        <span class="px-2 py-0.5 rounded ${warna} text-[10px]">${item.brand2}</span>
                     </td>
                     <td class="py-3 px-4 text-left font-bold">1. ${item.p1.nama}<br>2. ${item.p2.nama}</td>
-                    <td class="py-3 px-4 text-center font-black text-indigo-500 text-sm">${item.piket}</td>
+                    <td class="py-3 px-4 text-center font-black text-indigo-400 text-sm">${item.piket}</td>
                 </tr>`;
             });
             tbody.innerHTML = html;
@@ -300,14 +303,17 @@
             if(!tbody) return;
             let html = "";
             daftarPromotor.forEach((item, index) => {
-                html += `<tr class="border-b border-slate-200 dark:border-slate-800">
-                    <td class="py-2.5 px-3 font-bold">${item.brand1} & ${item.brand2}</td>
-                    <td class="py-2.5 px-3 font-bold text-emerald-500">${item.p1.nama}</td>
-                    <td class="py-2.5 px-3 font-bold text-blue-500">${item.p2.nama}</td>
+                let warna = item.warnaBrand || "bg-yellow-400 text-slate-900";
+                html += `<tr class="border-b border-slate-800">
+                    <td class="py-2.5 px-3 font-bold">
+                        <span class="px-2 py-0.5 rounded ${warna} text-[10px]">${item.brand1} & ${item.brand2}</span>
+                    </td>
+                    <td class="py-2.5 px-3 font-bold text-emerald-400">${item.p1.nama}</td>
+                    <td class="py-2.5 px-3 font-bold text-blue-400">${item.p2.nama}</td>
                     <td class="py-2.5 px-3">${item.piket}</td>
                     <td class="py-2.5 px-3 text-center space-x-1">
-                        <button onclick="editPromotor(${index})" class="px-2.5 py-1 bg-amber-500/10 hover:bg-amber-500 text-amber-500 hover:text-white rounded-lg text-xs font-bold">Ubah</button>
-                        <button onclick="hapusPromotor(${index})" class="px-2.5 py-1 bg-rose-500/10 hover:bg-rose-500 text-rose-500 hover:text-white rounded-lg text-xs font-bold">Hapus</button>
+                        <button onclick="editPromotor(${index})" class="px-2.5 py-1 bg-amber-500/10 hover:bg-amber-500 text-amber-400 hover:text-white rounded-lg text-xs font-bold">Ubah</button>
+                        <button onclick="hapusPromotor(${index})" class="px-2.5 py-1 bg-rose-500/10 hover:bg-rose-500 text-rose-400 hover:text-white rounded-lg text-xs font-bold">Hapus</button>
                     </td>
                 </tr>`;
             });
@@ -321,13 +327,14 @@
             const p1 = document.getElementById('inputP1Baru').value.trim().toUpperCase();
             const p2 = document.getElementById('inputP2Baru').value.trim().toUpperCase();
             const piket = document.getElementById('inputPiketBaru').value.trim();
+            const warna = document.getElementById('inputWarnaBaru').value;
 
             if (!brand1 || !brand2 || !p1 || !p2) { alert("Isi semua data brand dan nama sales!"); return; }
 
             if (editIdx === -1) {
                 daftarPromotor.push({
                     brand1: brand1, brand2: brand2, piket: piket || "-",
-                    warnaBrand: "bg-yellow-400 text-slate-900",
+                    warnaBrand: warna,
                     p1: { nama: p1, jadwal: ["P", "OFF", "S", "L", "P", "S", "P"] },
                     p2: { nama: p2, jadwal: ["S", "L", "P", "OFF", "S", "P", "S"] }
                 });
@@ -337,6 +344,7 @@
                 daftarPromotor[editIdx].p1.nama = p1;
                 daftarPromotor[editIdx].p2.nama = p2;
                 daftarPromotor[editIdx].piket = piket || "-";
+                daftarPromotor[editIdx].warnaBrand = warna;
             }
 
             batalEditAdmin();
@@ -353,6 +361,7 @@
             document.getElementById('inputP1Baru').value = item.p1.nama;
             document.getElementById('inputP2Baru').value = item.p2.nama;
             document.getElementById('inputPiketBaru').value = item.piket;
+            document.getElementById('inputWarnaBaru').value = item.warnaBrand || "bg-yellow-400 text-slate-900";
 
             document.getElementById('formTitleAdmin').innerText = "Ubah Data Pasangan Brand & Sales";
             document.getElementById('btnSimpanAdmin').innerText = "💾 Simpan Perubahan";
