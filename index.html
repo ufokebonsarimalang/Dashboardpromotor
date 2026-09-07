@@ -9,16 +9,13 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800;14..32,900&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
-     <!-- Library untuk Download JPG -->
+    <!-- Library untuk Download JPG -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js">
-    </script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js">
-    </script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     <!-- Drag & Drop Library -->
-    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js">
-    </script>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
        
     <style>
         * {
@@ -187,7 +184,6 @@
             background: #bfdbfe;
             box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
         }
-        /* GARIS PEMBATAS DI BAWAH BARIS KEDUA (SAMSUNG, LG, dll) */
         .table-modern tbody tr.pair-divider td {
             border-bottom: 4px solid #1a3a5a !important;
             position: relative;
@@ -499,11 +495,6 @@
             right: 16px;
             bottom: 16px;
         }
-        .lock-icon {
-            display: inline-block;
-            font-size: 0.7rem;
-            margin-left: 4px;
-        }
         .admin-locked .badge-shift {
             cursor: default !important;
             opacity: 0.8;
@@ -528,50 +519,63 @@
             color: #94a3b8 !important;
         }
 
-                  @media (max-width: 768px) {
+        /* MEDIA QUERY MOBILE (TAMPILAN DI HP RAPI & LENGKAP) */
+        @media (max-width: 768px) {
             .sidebar {
-                flex-direction: column; /* Ubah jadi kolom agar rapi */
-                flex-wrap: nowrap;
+                flex-direction: row;
                 height: auto;
                 padding: 10px 16px;
                 gap: 6px;
                 border-right: none;
                 border-bottom: 1px solid rgba(255, 255, 255, 0.05);
                 align-items: center;
+                position: sticky;
+                top: 0;
+                z-index: 50;
             }
             .sidebar-brand {
                 font-size: 1rem;
                 border-bottom: none;
-                padding-bottom: 4px;
-                width: 100%;
-                display: flex;
-                justify-content: center;
-                margin-bottom: 8px;
+                padding-bottom: 0;
+                width: auto;
+                margin-bottom: 0;
             }
             .sidebar-brand img {
-                width: 140px; /* Ukuran logo di HP */
-                max-height: 60px;
+                width: 110px;
+                max-height: 40px;
+            }
+            .sidebar nav {
+                display: flex;
+                flex-direction: row !important;
+                gap: 4px;
+                flex: 1;
+                justify-content: flex-end;
             }
             .sidebar .nav-item {
-                padding: 8px 14px;
-                font-size: 0.8rem;
-                flex: 1 0 auto;
+                padding: 6px 10px;
+                font-size: 0.75rem;
+                flex: 0 1 auto;
                 justify-content: center;
                 border-radius: 10px;
             }
+            .sidebar #syncStatus,
+            .sidebar #lockStatus,
+            .sidebar .text-xs.opacity-30 {
+                display: none !important;
+            }
             .main {
-                padding: 16px;
+                padding: 12px;
             }
             .badge-shift {
-                padding: 4px 10px;
-                font-size: 0.65rem;
-                min-width: 32px;
+                padding: 4px 8px !important;
+                font-size: 0.65rem !important;
+                min-width: 30px !important;
+                display: inline-block !important;
+                text-align: center !important;
+                line-height: 16px !important;
             }
             .modal-content {
                 padding: 24px;
-            }
-            .drag-handle {
-                font-size: 0.9rem;
             }
             .stat-card .number {
                 font-size: 1.4rem;
@@ -579,58 +583,9 @@
             .stat-card {
                 padding: 14px 16px;
             }
-            
-            /* Tampilan Note di HP agar tidak overflow */
             .card-glass {
                 padding: 12px;
             }
-            .text-sm {
-                font-size: 0.8rem;
-            }
-                              /* CSS KHUSUS AGAR SAAT DI-DOWNLOAD JPG TEKS TETAP CENTER */
-        .badge-shift {
-            display: inline-flex !important;
-            align-items: center !important;
-            justify-content: center !important;
-            text-align: center !important;
-            line-height: 1 !important;
-            vertical-align: middle !important;
-        }
-        
-        .table-modern td {
-            text-align: center !important;
-            vertical-align: middle !important;
-        }
-                              /* CSS KHUSUS AGAR DOWNLOAD JPG / PRINT TEKS CENTER SEMPURNA */
-        .table-modern td .badge-shift {
-            display: inline-block !important;
-            text-align: center !important;
-            vertical-align: middle !important;
-            
-            /* Ganti Flexbox dengan Padding & Line-height */
-            padding: 6px 10px !important;
-            line-height: 16px !important; 
-            
-            /* Hilangkan properti Flexbox yang bermasalah */
-            align-items: initial !important;
-            justify-content: initial !important;
-        }
-
-        /* Tambahan agar container td tetap rata tengah */
-        .table-modern td {
-            text-align: center !important;
-            vertical-align: middle !important;
-        }
-        
-        /* Untuk Print (Ctrl+P) juga */
-        @media print {
-            .badge-shift {
-                display: inline-block !important;
-                text-align: center !important;
-                padding: 6px 10px !important;
-                line-height: 16px !important;
-            }
-        }
         }
     </style>
 </head>
@@ -674,11 +629,9 @@
 
     <div class="flex flex-col md:flex-row min-h-screen">
 
-                     <!-- SIDEBAR -->
+        <!-- SIDEBAR -->
         <aside class="sidebar w-full md:w-64 flex-shrink-0 text-white p-5 flex flex-col gap-4 md:min-h-screen sticky top-0 z-10">
-            <!-- LOGO GAMBAR -->
             <div class="sidebar-brand pb-4 border-b border-white/10 flex justify-center">
-                <!-- GANTI 'logo-ufo.png' DENGAN NAMA FILE GAMBAR ANDA -->
                 <img src="logo-ufo.png" alt="UFO Malang Kebonsari" class="w-40 md:w-48 h-auto object-contain drop-shadow-lg" />
             </div>
             
@@ -704,10 +657,11 @@
                 <button id="unlockBtn" class="text-xs text-white/40 hover:text-white/80 underline">Buka</button>
             </div>
         </aside>
+
         <!-- MAIN -->
         <main class="main flex-1 p-4 md:p-8 max-w-full" id="mainContent">
 
-                      <!-- HALAMAN SHIFT -->
+            <!-- HALAMAN SHIFT -->
             <section id="page-shift" class="page active">
                 <div class="mb-6 flex flex-wrap justify-between items-center gap-4">
                     <div>
@@ -718,7 +672,6 @@
                             <span class="drag-info" style="background:linear-gradient(135deg,#dbeafe,#bfdbfe);color:#1a3a5a;">👫 Garis biru = pasangan brand</span>
                         </p>
                     </div>
-                    <!-- TOMBOL DOWNLOAD JPG SHIFT -->
                     <button class="btn-modern btn-primary" onclick="downloadJPG('shift')">📥 Download JPG</button>
                 </div>
 
@@ -775,6 +728,7 @@
                     </div>
                 </div>
             </section>
+
             <!-- HALAMAN PIKET -->
             <section id="page-piket" class="page hidden">
                 <div class="mb-6">
@@ -782,7 +736,7 @@
                     <p class="text-slate-500 mt-1">Klik badge piket untuk pilih tanggal — otomatis tersimpan</p>
                 </div>
 
-                <!-- ==== NOTE BARU DI ATAS JADWAL ==== -->
+                <!-- NOTE -->
                 <div class="card-glass rounded-3xl p-5 mb-6 border-l-4 border-yellow-400 bg-yellow-50/80">
                     <h3 class="text-lg font-extrabold text-slate-800 mb-3" style="font-weight:900;">📌 NOTE:</h3>
                     <ul class="text-sm text-slate-700 space-y-1 list-disc pl-5">
@@ -802,9 +756,6 @@
                         <li>MENGISI FORM KONFIRMASI TUKAR SHIFT, TUKAR OFF, CUTI (DILENGKAPI SURAT IZIN CUTI)</li>
                     </ul>
                 </div>
-                <!-- ==== SELESAI NOTE ==== -->
-
-                               <!-- ==== SELESAI NOTE ==== -->
 
                 <!-- Statistik Piket -->
                 <div class="grid grid-cols-2 md:grid-cols-3 gap-3 mb-6">
@@ -844,11 +795,6 @@
                             <tbody id="piketTableBody"></tbody>
                         </table>
                     </div>
-                    <div class="mt-4 text-xs text-slate-500 border-t pt-4 border-slate-200/60">
-                        <span class="inline-block mr-6">🧽 Lantai, dinding, closet, urinoir, wastafel, langit-langit</span>
-                        <span class="inline-block">📅 General cleaning Sabtu & Minggu</span>
-                        <span class="inline-block ml-4">💡 Klik badge untuk pilih tanggal</span>
-                    </div>
                 </div>
             </section>
 
@@ -860,7 +806,6 @@
                 </div>
 
                 <div class="card-glass rounded-3xl p-5 md:p-7 space-y-6">
-
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                         <div>
                             <h3 class="font-bold text-slate-700 mb-3 text-lg">➕ Tambah Sales</h3>
@@ -875,7 +820,6 @@
                                 </select>
                                 <button class="btn-modern btn-primary" id="addSalesBtn">Tambah</button>
                             </div>
-                            <div class="mt-2 text-xs text-slate-400">Shift Senin diisi, hari lain mengikuti pola berpasangan.</div>
                         </div>
                         <div>
                             <h3 class="font-bold text-slate-700 mb-3 text-lg">🎨 Warna Brand</h3>
@@ -913,79 +857,45 @@
         </main>
     </div>
 
+    <!-- SCRIPT UTAMA -->
     <script>
-        // ================================================================
-        // KONFIGURASI
-        // ================================================================
-        const ADMIN_PIN = "7730"; // Ganti dengan PIN yang diinginkan
+        const ADMIN_PIN = "7730";
 
-        // ================================================================
-        // FIREBASE KONFIGURASI
-        // ================================================================
         const firebaseConfig = {
             apiKey: "AIzaSyBMokA92YiB87vwuqBREwNhHkkU_bXo8cI",
-
-  authDomain: "ufokebonsariapps.firebaseapp.com",
-
-  databaseURL: "https://ufokebonsariapps-default-rtdb.asia-southeast1.firebasedatabase.app",
-
-  projectId: "ufokebonsariapps",
-
-  storageBucket: "ufokebonsariapps.firebasestorage.app",
-
-  messagingSenderId: "663266923207",
-
-  appId: "1:663266923207:web:fb989ce91cd40b6d3724e2"
-
-};
-
+            authDomain: "ufokebonsariapps.firebaseapp.com",
+            databaseURL: "https://ufokebonsariapps-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "ufokebonsariapps",
+            storageBucket: "ufokebonsariapps.firebasestorage.app",
+            messagingSenderId: "663266923207",
+            appId: "1:663266923207:web:fb989ce91cd40b6d3724e2"
+        };
 
         let db = null;
         let firebaseInitialized = false;
         let isAdmin = false;
 
         try {
-            if (!firebase.apps.length) {
-                firebase.initializeApp(firebaseConfig);
-            }
+            if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
             db = firebase.firestore();
-            db.enablePersistence({ synchronizeTabs: true })
-                .catch(err => console.warn('Firebase persistence:', err.code));
+            db.enablePersistence({ synchronizeTabs: true }).catch(err => console.warn('Firebase persistence:', err.code));
             firebaseInitialized = true;
-            console.log('✅ Firebase initialized');
-        } catch (e) {
-            console.warn('⚠️ Firebase error:', e.message);
-        }
+        } catch (e) { console.warn('⚠️ Firebase error:', e.message); }
 
-        // ================================================================
-        // TOAST
-        // ================================================================
         let toastTimeout;
-
         function showToast(message, isError = false) {
             const toast = document.getElementById('toast');
             toast.textContent = message;
             toast.style.background = isError ? 'linear-gradient(135deg,#fca5a5,#ef4444)' : '#1e293b';
             toast.classList.add('show');
             clearTimeout(toastTimeout);
-            toastTimeout = setTimeout(() => {
-                toast.classList.remove('show');
-            }, 2500);
+            toastTimeout = setTimeout(() => toast.classList.remove('show'), 2500);
         }
 
-        // ================================================================
-        // PASSWORD / AUTH
-        // ================================================================
-        let pendingAction = null;
-        let pendingActionData = null;
-
+        let pendingAction = null, pendingActionData = null;
         function checkAdmin(action, data = null) {
-            if (isAdmin) {
-                if (action) action(data);
-                return true;
-            }
-            pendingAction = action;
-            pendingActionData = data;
+            if (isAdmin) { if (action) action(data); return true; }
+            pendingAction = action; pendingActionData = data;
             document.getElementById('passwordInput').value = '';
             document.getElementById('passwordError').classList.add('hidden');
             document.getElementById('passwordModal').classList.add('active');
@@ -1001,12 +911,7 @@
                 document.getElementById('lockStatus').className = 'text-xs mt-1 flex items-center gap-2 text-green-400';
                 document.getElementById('unlockBtn').textContent = 'Kunci';
                 document.getElementById('mainContent').classList.remove('admin-locked');
-
-                if (pendingAction) {
-                    pendingAction(pendingActionData);
-                    pendingAction = null;
-                    pendingActionData = null;
-                }
+                if (pendingAction) { pendingAction(pendingActionData); pendingAction = null; pendingActionData = null; }
                 showToast('🔓 Mode Admin aktif');
             } else {
                 document.getElementById('passwordError').classList.remove('hidden');
@@ -1017,8 +922,7 @@
 
         function cancelPassword() {
             document.getElementById('passwordModal').classList.remove('active');
-            pendingAction = null;
-            pendingActionData = null;
+            pendingAction = null; pendingActionData = null;
         }
 
         function lockAdmin() {
@@ -1031,121 +935,65 @@
             renderAll();
         }
 
-        function toggleLock() {
-            if (isAdmin) {
-                lockAdmin();
-            } else {
-                checkAdmin(() => {});
-            }
-        }
+        function toggleLock() { if (isAdmin) lockAdmin(); else checkAdmin(() => {}); }
 
-        // ================================================================
-        // DATA DEFAULT
-        // ================================================================
         const DEFAULT_DATA = [
-            { brand: "SHARP", name: "AYUNG", senin: "P", selasa: "OFF", rabu: "S", kamis: "L", jumat: "P", sabtu: "S",
-                minggu: "P", toilet: "" },
-            { brand: "SAMSUNG", name: "FEBRI", senin: "S", selasa: "L", rabu: "P", kamis: "OFF", jumat: "S", sabtu: "P",
-                minggu: "S", toilet: "" },
-            { brand: "POLYTRON", name: "AGUS", senin: "P", selasa: "P", rabu: "OFF", kamis: "S", jumat: "L", sabtu: "P",
-                minggu: "S", toilet: "" },
-            { brand: "LG", name: "EKA", senin: "S", selasa: "S", rabu: "L", kamis: "P", jumat: "OFF", sabtu: "S", minggu: "P",
-                toilet: "" },
-            { brand: "AQUA", name: "PUGUH", senin: "P", selasa: "S", rabu: "L", kamis: "P", jumat: "OFF", sabtu: "S",
-                minggu: "S", toilet: "" },
-            { brand: "AQUA", name: "RONI", senin: "S", selasa: "P", rabu: "OFF", kamis: "S", jumat: "L", sabtu: "P",
-                minggu: "P", toilet: "" },
-            { brand: "TOSHIBA", name: "RISKA", senin: "OFF", selasa: "S", rabu: "S", kamis: "L", jumat: "P", sabtu: "S",
-                minggu: "P", toilet: "" },
-            { brand: "TOSHIBA", name: "ARFIN", senin: "L", selasa: "P", rabu: "P", kamis: "OFF", jumat: "S", sabtu: "P",
-                minggu: "S", toilet: "" },
-            { brand: "MIDEA", name: "ADHE", senin: "P", selasa: "OFF", rabu: "S", kamis: "L", jumat: "P", sabtu: "P",
-                minggu: "S", toilet: "" },
-            { brand: "MIDEA", name: "DEDY", senin: "S", selasa: "L", rabu: "P", kamis: "OFF", jumat: "S", sabtu: "S",
-                minggu: "P", toilet: "" },
-            { brand: "CHANGHONG", name: "ZUNUN", senin: "P", selasa: "OFF", rabu: "S", kamis: "S", jumat: "L", sabtu: "P",
-                minggu: "S", toilet: "" },
-            { brand: "CHANGHONG", name: "", senin: "S", selasa: "L", rabu: "P", kamis: "P", jumat: "OFF", sabtu: "S",
-                minggu: "P", toilet: "" },
-            { brand: "TCL", name: "JIMY", senin: "L", selasa: "P", rabu: "OFF", kamis: "S", jumat: "P", sabtu: "S",
-                minggu: "S", toilet: "" },
-            { brand: "TCL", name: "FAJAR", senin: "OFF", selasa: "S", rabu: "L", kamis: "P", jumat: "S", sabtu: "P",
-                minggu: "P", toilet: "" },
-            { brand: "GREE", name: "LESYO", senin: "L", selasa: "P", rabu: "OFF", kamis: "S", jumat: "P", sabtu: "P",
-                minggu: "S", toilet: "" },
-            { brand: "PANASONIC", name: "RICKY", senin: "OFF", selasa: "S", rabu: "L", kamis: "P", jumat: "S", sabtu: "S",
-                minggu: "P", toilet: "" },
-            { brand: "ELECTROLUX", name: "WAHYU", senin: "OFF", selasa: "S", rabu: "P", kamis: "S", jumat: "L", sabtu: "P",
-                minggu: "P", toilet: "" },
-            { brand: "MODENA", name: "", senin: "L", selasa: "P", rabu: "S", kamis: "P", jumat: "OFF", sabtu: "S",
-                minggu: "S", toilet: "" },
-            { brand: "ARTUGO", name: "FENDI", senin: "P", selasa: "OFF", rabu: "S", kamis: "L", jumat: "P", sabtu: "S",
-                minggu: "P", toilet: "" },
-            { brand: "ARTUGO", name: "ENNY", senin: "S", selasa: "L", rabu: "P", kamis: "OFF", jumat: "S", sabtu: "P",
-                minggu: "S", toilet: "" },
-            { brand: "SANKEN", name: "JESICA", senin: "L", selasa: "P", rabu: "P", kamis: "OFF", jumat: "S", sabtu: "P",
-                minggu: "S", toilet: "" },
-            { brand: "ADVANCE", name: "LEO", senin: "OFF", selasa: "S", rabu: "S", kamis: "L", jumat: "P", sabtu: "S",
-                minggu: "P", toilet: "" },
-            { brand: "GADGET", name: "ROFIUL", senin: "S", selasa: "L", rabu: "P", kamis: "OFF", jumat: "S", sabtu: "P",
-                minggu: "S", toilet: "" },
-            { brand: "GADGET", name: "NEBIYA", senin: "P", selasa: "OFF", rabu: "S", kamis: "L", jumat: "P", sabtu: "S",
-                minggu: "P", toilet: "" },
-            { brand: "MASPION", name: "IBRA", senin: "P", selasa: "S", rabu: "L", kamis: "P", jumat: "OFF", sabtu: "S",
-                minggu: "S", toilet: "" },
-            { brand: "MASPION", name: "NISA", senin: "S", selasa: "P", rabu: "OFF", kamis: "S", jumat: "L", sabtu: "P",
-                minggu: "P", toilet: "" },
-            { brand: "COMFORTA", name: "INAYAH", senin: "L", selasa: "P", rabu: "P", kamis: "OFF", jumat: "S", sabtu: "P",
-                minggu: "S", toilet: "" },
-            { brand: "SMALL", name: "ANISA", senin: "OFF", selasa: "S", rabu: "S", kamis: "L", jumat: "P", sabtu: "S",
-                minggu: "P", toilet: "" }
+            { brand: "SHARP", name: "AYUNG", senin: "P", selasa: "OFF", rabu: "S", kamis: "L", jumat: "P", sabtu: "S", minggu: "P", toilet: "" },
+            { brand: "SAMSUNG", name: "FEBRI", senin: "S", selasa: "L", rabu: "P", kamis: "OFF", jumat: "S", sabtu: "P", minggu: "S", toilet: "" },
+            { brand: "POLYTRON", name: "AGUS", senin: "P", selasa: "P", rabu: "OFF", kamis: "S", jumat: "L", sabtu: "P", minggu: "S", toilet: "" },
+            { brand: "LG", name: "EKA", senin: "S", selasa: "S", rabu: "L", kamis: "P", jumat: "OFF", sabtu: "S", minggu: "P", toilet: "" },
+            { brand: "AQUA", name: "PUGUH", senin: "P", selasa: "S", rabu: "L", kamis: "P", jumat: "OFF", sabtu: "S", minggu: "S", toilet: "" },
+            { brand: "AQUA", name: "RONI", senin: "S", selasa: "P", rabu: "OFF", kamis: "S", jumat: "L", sabtu: "P", minggu: "P", toilet: "" },
+            { brand: "TOSHIBA", name: "RISKA", senin: "OFF", selasa: "S", rabu: "S", kamis: "L", jumat: "P", sabtu: "S", minggu: "P", toilet: "" },
+            { brand: "TOSHIBA", name: "ARFIN", senin: "L", selasa: "P", rabu: "P", kamis: "OFF", jumat: "S", sabtu: "P", minggu: "S", toilet: "" },
+            { brand: "MIDEA", name: "ADHE", senin: "P", selasa: "OFF", rabu: "S", kamis: "L", jumat: "P", sabtu: "P", minggu: "S", toilet: "" },
+            { brand: "MIDEA", name: "DEDY", senin: "S", selasa: "L", rabu: "P", kamis: "OFF", jumat: "S", sabtu: "S", minggu: "P", toilet: "" },
+            { brand: "CHANGHONG", name: "ZUNUN", senin: "P", selasa: "OFF", rabu: "S", kamis: "S", jumat: "L", sabtu: "P", minggu: "S", toilet: "" },
+            { brand: "CHANGHONG", name: "", senin: "S", selasa: "L", rabu: "P", kamis: "P", jumat: "OFF", sabtu: "S", minggu: "P", toilet: "" },
+            { brand: "TCL", name: "JIMY", senin: "L", selasa: "P", rabu: "OFF", kamis: "S", jumat: "P", sabtu: "S", minggu: "S", toilet: "" },
+            { brand: "TCL", name: "FAJAR", senin: "OFF", selasa: "S", rabu: "L", kamis: "P", jumat: "S", sabtu: "P", minggu: "P", toilet: "" },
+            { brand: "GREE", name: "LESYO", senin: "L", selasa: "P", rabu: "OFF", kamis: "S", jumat: "P", sabtu: "P", minggu: "S", toilet: "" },
+            { brand: "PANASONIC", name: "RICKY", senin: "OFF", selasa: "S", rabu: "L", kamis: "P", jumat: "S", sabtu: "S", minggu: "P", toilet: "" },
+            { brand: "ELECTROLUX", name: "WAHYU", senin: "OFF", selasa: "S", rabu: "P", kamis: "S", jumat: "L", sabtu: "P", minggu: "P", toilet: "" },
+            { brand: "MODENA", name: "", senin: "L", selasa: "P", rabu: "S", kamis: "P", jumat: "OFF", sabtu: "S", minggu: "S", toilet: "" },
+            { brand: "ARTUGO", name: "FENDI", senin: "P", selasa: "OFF", rabu: "S", kamis: "L", jumat: "P", sabtu: "S", minggu: "P", toilet: "" },
+            { brand: "ARTUGO", name: "ENNY", senin: "S", selasa: "L", rabu: "P", kamis: "OFF", jumat: "S", sabtu: "P", minggu: "S", toilet: "" },
+            { brand: "SANKEN", name: "JESICA", senin: "L", selasa: "P", rabu: "P", kamis: "OFF", jumat: "S", sabtu: "P", minggu: "S", toilet: "" },
+            { brand: "ADVANCE", name: "LEO", senin: "OFF", selasa: "S", rabu: "S", kamis: "L", jumat: "P", sabtu: "S", minggu: "P", toilet: "" },
+            { brand: "GADGET", name: "ROFIUL", senin: "S", selasa: "L", rabu: "P", kamis: "OFF", jumat: "S", sabtu: "P", minggu: "S", toilet: "" },
+            { brand: "GADGET", name: "NEBIYA", senin: "P", selasa: "OFF", rabu: "S", kamis: "L", jumat: "P", sabtu: "S", minggu: "P", toilet: "" },
+            { brand: "MASPION", name: "IBRA", senin: "P", selasa: "S", rabu: "L", kamis: "P", jumat: "OFF", sabtu: "S", minggu: "S", toilet: "" },
+            { brand: "MASPION", name: "NISA", senin: "S", selasa: "P", rabu: "OFF", kamis: "S", jumat: "L", sabtu: "P", minggu: "P", toilet: "" },
+            { brand: "COMFORTA", name: "INAYAH", senin: "L", selasa: "P", rabu: "P", kamis: "OFF", jumat: "S", sabtu: "P", minggu: "S", toilet: "" },
+            { brand: "SMALL", name: "ANISA", senin: "OFF", selasa: "S", rabu: "S", kamis: "L", jumat: "P", sabtu: "S", minggu: "P", toilet: "" }
         ];
 
-        // ================================================================
-        // STATE
-        // ================================================================
-        let salesData = [];
-        let brandColors = {};
-        let editingToiletIndex = null;
-        let sortableInstance = null;
+        let salesData = [], brandColors = {}, editingToiletIndex = null, sortableInstance = null;
 
-        // ================================================================
-        // FUNGSI SYNC FIREBASE
-        // ================================================================
         function updateSyncStatus(status, message) {
             const el = document.getElementById('syncStatus');
+            if(!el) return;
             el.className = `sync-status ${status}`;
             const icons = { 'synced': '✅', 'syncing': '⏳', 'error': '⚠️', 'offline': '📡' };
             el.innerHTML = `<span>${icons[status] || '📌'}</span> ${message || ''}`;
         }
 
         async function syncToFirebase() {
-            if (!firebaseInitialized || !db) {
-                updateSyncStatus('offline', 'Mode offline');
-                return false;
-            }
+            if (!firebaseInitialized || !db) { updateSyncStatus('offline', 'Mode offline'); return false; }
             updateSyncStatus('syncing', 'Menyimpan...');
             try {
-                const payload = {
-                    sales: salesData,
-                    colors: brandColors,
-                    updatedAt: new Date().toISOString()
-                };
+                const payload = { sales: salesData, colors: brandColors, updatedAt: new Date().toISOString() };
                 await db.collection('config').doc('ufo_data').set(payload, { merge: true });
                 updateSyncStatus('synced', 'Tersimpan');
                 return true;
             } catch (e) {
-                console.error('Sync error:', e.code, e.message);
                 updateSyncStatus('error', 'Gagal sync');
                 return false;
             }
         }
 
         async function loadFromFirebase() {
-            if (!firebaseInitialized || !db) {
-                updateSyncStatus('offline', 'Offline');
-                return false;
-            }
+            if (!firebaseInitialized || !db) { updateSyncStatus('offline', 'Offline'); return false; }
             updateSyncStatus('syncing', 'Memuat...');
             try {
                 const doc = await db.collection('config').doc('ufo_data').get();
@@ -1160,15 +1008,11 @@
                     return true;
                 }
             } catch (e) {
-                console.warn('Load from Firebase error:', e.code);
                 updateSyncStatus('offline', 'Offline - pakai lokal');
                 return false;
             }
         }
 
-        // ================================================================
-        // FUNGSI DATA LOKAL
-        // ================================================================
         function loadLocalData() {
             try {
                 const stored = localStorage.getItem('ufo_piket_data');
@@ -1196,24 +1040,13 @@
             saveLocalData();
             const success = await syncToFirebase();
             if (showToastMsg) {
-                if (success) {
-                    showToast('✅ Data berhasil disimpan');
-                } else {
-                    showToast('⚠️ Tersimpan di lokal', true);
-                }
+                if (success) showToast('✅ Data berhasil disimpan');
+                else showToast('⚠️ Tersimpan di lokal', true);
             }
         }
 
-        // ================================================================
-        // FUNGSI UPDATE SHIFT (dengan proteksi)
-        // ================================================================
         function updateShiftWithAuth(rowIndex, dayKey, currentValue) {
-            if (!isAdmin) {
-                checkAdmin(() => {
-                    updateShift(rowIndex, dayKey, currentValue);
-                });
-                return;
-            }
+            if (!isAdmin) { checkAdmin(() => updateShift(rowIndex, dayKey, currentValue)); return; }
             updateShift(rowIndex, dayKey, currentValue);
         }
 
@@ -1231,13 +1064,9 @@
             }
         }
 
-              function initDragDrop() {
+        function initDragDrop() {
             const tbody = document.getElementById('shiftTableBody');
-            if (sortableInstance) {
-                sortableInstance.destroy();
-                sortableInstance = null;
-            }
-
+            if (sortableInstance) { sortableInstance.destroy(); sortableInstance = null; }
             if (!salesData.length) return;
 
             sortableInstance = new Sortable(tbody, {
@@ -1246,35 +1075,26 @@
                 ghostClass: 'sortable-ghost',
                 chosenClass: 'sortable-chosen',
                 dragClass: 'sortable-drag',
-                // HAPUS onStart yang memblokir
                 onEnd: function(evt) {
                     const oldIndex = evt.oldIndex;
                     const newIndex = evt.newIndex;
-                    
-                    // Jika posisi tidak berubah, tidak usah melakukan apa-apa
                     if (oldIndex === newIndex) return;
 
                     if (!isAdmin) {
-                        // Jika belum admin: Batalkan drag, kembalikan posisi, dan MUNCULKAN POPUP PIN
-                        showToast('🔒 Masukkan PIN untuk menggeser', true);
+                        showToast('🔒 Masukkan PIN untuk geser', true);
                         checkAdmin(() => {
-                            // Jika PIN berhasil dimasukkan, lakukan perpindahan
                             const [movedItem] = salesData.splice(oldIndex, 1);
                             salesData.splice(newIndex, 0, movedItem);
                             saveData(true);
                             renderAll();
                             showToast(`↕️ ${movedItem.brand} - ${movedItem.name} dipindahkan`);
                         });
-                        
-                        // Kembalikan tampilan ke posisi semula dulu (sebelum PIN dimasukkan)
-                        renderAll(); 
+                        renderAll();
                         return;
                     }
 
-                    // Jika sudah admin (tidak perlu PIN)
                     const [movedItem] = salesData.splice(oldIndex, 1);
                     salesData.splice(newIndex, 0, movedItem);
-
                     saveData(true);
                     renderAll();
                     showToast(`↕️ ${movedItem.brand} - ${movedItem.name} dipindahkan`);
@@ -1282,16 +1102,8 @@
             });
         }
 
-        // ================================================================
-        // FUNGSI EDIT PIKET TOILET (dengan proteksi)
-        // ================================================================
         function openToiletModalWithAuth(index) {
-            if (!isAdmin) {
-                checkAdmin(() => {
-                    openToiletModal(index);
-                });
-                return;
-            }
+            if (!isAdmin) { checkAdmin(() => openToiletModal(index)); return; }
             openToiletModal(index);
         }
 
@@ -1300,16 +1112,9 @@
             const sales = salesData[index];
             if (!sales) return;
 
-            document.getElementById('modalSalesInfo').textContent =
-                `Brand: ${sales.brand} - Nama: ${sales.name || '-'}`;
-
+            document.getElementById('modalSalesInfo').textContent = `Brand: ${sales.brand} - Nama: ${sales.name || '-'}`;
             const dateInput = document.getElementById('modalToiletDate');
-            if (sales.toilet && sales.toilet !== '') {
-                dateInput.value = sales.toilet;
-            } else {
-                dateInput.value = '';
-            }
-
+            dateInput.value = (sales.toilet && sales.toilet !== '') ? sales.toilet : '';
             document.getElementById('toiletModal').classList.add('active');
         }
 
@@ -1319,11 +1124,7 @@
         }
 
         function saveToiletSchedule() {
-            if (editingToiletIndex === null || editingToiletIndex >= salesData.length) {
-                closeToiletModal();
-                return;
-            }
-
+            if (editingToiletIndex === null || editingToiletIndex >= salesData.length) { closeToiletModal(); return; }
             const value = document.getElementById('modalToiletDate').value;
             salesData[editingToiletIndex].toilet = value;
             saveData(true);
@@ -1332,10 +1133,7 @@
         }
 
         function clearToiletSchedule() {
-            if (editingToiletIndex === null || editingToiletIndex >= salesData.length) {
-                closeToiletModal();
-                return;
-            }
+            if (editingToiletIndex === null || editingToiletIndex >= salesData.length) { closeToiletModal(); return; }
             if (confirm('Kosongkan jadwal piket untuk sales ini?')) {
                 salesData[editingToiletIndex].toilet = '';
                 saveData(true);
@@ -1344,16 +1142,12 @@
             }
         }
 
-        // ================================================================
-        // UPDATE STATISTIK
-        // ================================================================
         function updateStatistics() {
             const total = salesData.length;
             const withPiket = salesData.filter(r => r.toilet && r.toilet.trim() !== '').length;
             const tanpaPiket = total - withPiket;
 
-            let totalPagi = 0,
-                totalSiang = 0;
+            let totalPagi = 0, totalSiang = 0;
             const days = ['senin', 'selasa', 'rabu', 'kamis', 'jumat', 'sabtu', 'minggu'];
             salesData.forEach(row => {
                 days.forEach(day => {
@@ -1373,9 +1167,6 @@
             document.getElementById('totalSalesPiket').textContent = total;
         }
 
-        // ================================================================
-        // RENDER
-        // ================================================================
         function getShiftClass(val) {
             const u = (val || '').toUpperCase();
             if (u === 'P') return 'badge-p';
@@ -1391,11 +1182,10 @@
             return d.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
         }
 
-                           function renderShift() {
+        function renderShift() {
             const tbody = document.getElementById('shiftTableBody');
             if (!salesData.length) {
-                tbody.innerHTML =
-                    `<tr><td colspan="10" class="text-center text-slate-400 py-8">Belum ada data sales.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="10" class="text-center text-slate-400 py-8">Belum ada data sales.</td></tr>`;
                 return;
             }
             let html = '';
@@ -1404,17 +1194,13 @@
                 const dot = `<span class="brand-color-dot" style="background:${color};"></span>`;
                 const days = ['senin', 'selasa', 'rabu', 'kamis', 'jumat', 'sabtu', 'minggu'];
 
-                // --- KEMBALIKAN LOGIKA GARIS PEMBATAS BIRU ---
                 const isSecondRow = idx % 2 === 1;
-                const pairNumber = Math.floor(idx / 2) + 1;
                 const dividerClass = isSecondRow ? 'pair-divider' : '';
-                // ---------------------------------------------
-
                 const lockClass = isAdmin ? '' : 'locked';
 
                 html += `<tr data-idx="${idx}" class="${dividerClass}">
                     <td class="text-center">
-                        <span class="drag-handle ${lockClass}" title="Seret untuk geser (butuh PIN)">⠿</span>
+                        <span class="drag-handle ${lockClass}" title="Seret untuk geser">⠿</span>
                     </td>
                     <td class="font-semibold text-slate-700"><span class="inline-flex items-center">${dot}${row.brand || ''}</span></td>
                     <td class="font-medium text-slate-600">${row.name || ''}</td>`;
@@ -1422,12 +1208,11 @@
                 days.forEach((day) => {
                     const val = row[day] || '';
                     const cls = getShiftClass(val);
-                    // --- GABUNGKAN CENTER CSS DISINI ---
                     html += `<td>
                         <span class="badge-shift ${cls} ${lockClass}" 
                               style="display:inline-block; text-align:center; vertical-align:middle; padding: 6px 10px; line-height: 16px;"
                               onclick="updateShiftWithAuth(${idx}, '${day}', '${val}')"
-                              title="${isAdmin ? 'Klik untuk ubah shift (P/S/L/OFF)' : '🔒 Kunci untuk edit'}">
+                              title="${isAdmin ? 'Klik untuk ubah shift' : '🔒 Kunci untuk edit'}">
                             ${val || '-'}
                         </span>
                     </td>`;
@@ -1440,11 +1225,11 @@
             setTimeout(initDragDrop, 50);
             updateStatistics();
         }
+
         function renderPiket() {
             const tbody = document.getElementById('piketTableBody');
             if (!salesData.length) {
-                tbody.innerHTML =
-                    `<tr><td colspan="4" class="text-center text-slate-400 py-8">Belum ada data sales.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="4" class="text-center text-slate-400 py-8">Belum ada data sales.</td></tr>`;
                 return;
             }
             let html = '';
@@ -1565,126 +1350,17 @@
             renderSalesBadge();
             updateStatistics();
 
-            // Update lock status di UI
+            const mainContent = document.getElementById('mainContent');
             if (isAdmin) {
-                document.getElementById('mainContent').classList.remove('admin-locked');
+                mainContent.classList.remove('admin-locked');
             } else {
-                document.getElementById('mainContent').classList.add('admin-locked');
+                mainContent.classList.add('admin-locked');
             }
         }
 
-        // ================================================================
-        // ADMIN ACTIONS (dengan proteksi)
-        // ================================================================
-        function addSalesWithAuth() {
-            if (!isAdmin) {
-                checkAdmin(addSales);
-                return;
-            }
-            addSales();
-        }
-
-        function addSales() {
-            const brand = document.getElementById('newBrand').value.trim().toUpperCase();
-            const name = document.getElementById('newName').value.trim();
-            const shift = document.getElementById('newShiftDay').value;
-            if (!brand || !name) { alert('Brand dan Nama wajib diisi.'); return; }
-            if (salesData.some(item => item.brand === brand && item.name === name)) {
-                alert('Sales dengan brand & nama tersebut sudah ada.');
-                return;
-            }
-            const mapShift = {
-                'P': { selasa: 'OFF', rabu: 'S', kamis: 'L', jumat: 'P', sabtu: 'S', minggu: 'P' },
-                'S': { selasa: 'L', rabu: 'P', kamis: 'OFF', jumat: 'S', sabtu: 'P', minggu: 'S' },
-                'L': { selasa: 'P', rabu: 'OFF', kamis: 'S', jumat: 'P', sabtu: 'S', minggu: 'S' },
-                'OFF': { selasa: 'S', rabu: 'L', kamis: 'P', jumat: 'S', sabtu: 'P', minggu: 'P' }
-            };
-            const pattern = mapShift[shift] || mapShift['P'];
-            const newEntry = {
-                brand,
-                name,
-                senin: shift,
-                selasa: pattern.selasa,
-                rabu: pattern.rabu,
-                kamis: pattern.kamis,
-                jumat: pattern.jumat,
-                sabtu: pattern.sabtu,
-                minggu: pattern.minggu,
-                toilet: ''
-            };
-            salesData.push(newEntry);
-            saveData(false);
-            renderAll();
-            document.getElementById('newBrand').value = '';
-            document.getElementById('newName').value = '';
-            showToast('✅ Sales berhasil ditambahkan');
-        }
-
-        function deleteSelectedWithAuth() {
-            if (!isAdmin) {
-                checkAdmin(deleteSelected);
-                return;
-            }
-            deleteSelected();
-        }
-
-        function deleteSelected() {
-            const sel = document.getElementById('deleteSelect');
-            const idx = parseInt(sel.value);
-            if (isNaN(idx) || idx < 0 || idx >= salesData.length) { alert('Pilih sales yang valid.'); return; }
-            if (confirm(`Hapus "${salesData[idx].brand} - ${salesData[idx].name}"?`)) {
-                salesData.splice(idx, 1);
-                saveData(false);
-                renderAll();
-                showToast('🗑️ Sales berhasil dihapus');
-            }
-        }
-
-        function resetDefaultWithAuth() {
-            if (!isAdmin) {
-                checkAdmin(resetDefault);
-                return;
-            }
-            resetDefault();
-        }
-
-        function resetDefault() {
-            if (confirm('Reset ke data awal? Semua perubahan akan hilang.')) {
-                salesData = DEFAULT_DATA.map(d => ({ ...d }));
-                brandColors = {};
-                saveData(false);
-                renderAll();
-                showToast('↺ Data direset ke default');
-            }
-        }
-
-        function setBrandColorWithAuth() {
-            if (!isAdmin) {
-                checkAdmin(setBrandColor);
-                return;
-            }
-            setBrandColor();
-        }
-
-        function setBrandColor() {
-            const brand = document.getElementById('colorBrandInput').value.trim().toUpperCase();
-            const color = document.getElementById('colorPicker').value;
-            if (!brand) { alert('Masukkan nama brand.'); return; }
-            brandColors[brand] = color;
-            saveData(false);
-            renderAll();
-            document.getElementById('colorBrandInput').value = '';
-            showToast('🎨 Warna brand berhasil diset');
-        }
-
-        // ================================================================
-        // NAVIGASI
-        // ================================================================
         function navigateTo(pageId) {
             if (pageId === 'admin' && !isAdmin) {
-                checkAdmin(() => {
-                    navigateToPage(pageId);
-                });
+                checkAdmin(() => { navigateToPage(pageId); });
                 return;
             }
             navigateToPage(pageId);
@@ -1706,18 +1382,12 @@
             });
         });
 
-        // ================================================================
-        // INIT
-        // ================================================================
         document.addEventListener('DOMContentLoaded', async function() {
-            // Expose functions
             window.updateShiftWithAuth = updateShiftWithAuth;
             window.openToiletModalWithAuth = openToiletModalWithAuth;
 
-            // Lock status
             document.getElementById('unlockBtn').addEventListener('click', toggleLock);
 
-            // Password modal
             document.getElementById('passwordConfirmBtn').addEventListener('click', confirmPassword);
             document.getElementById('passwordCancelBtn').addEventListener('click', cancelPassword);
             document.getElementById('passwordInput').addEventListener('keypress', function(e) {
@@ -1729,7 +1399,6 @@
 
             await loadData();
 
-            // Admin buttons with auth
             document.getElementById('addSalesBtn').addEventListener('click', addSalesWithAuth);
             document.getElementById('deleteSalesBtn').addEventListener('click', deleteSelectedWithAuth);
             document.getElementById('resetDefaultBtn').addEventListener('click', resetDefaultWithAuth);
@@ -1746,34 +1415,83 @@
                 showToast('☁️ Sinkronisasi selesai');
             });
 
-            // Modal toilet
             document.getElementById('modalSaveBtn').addEventListener('click', saveToiletSchedule);
             document.getElementById('modalCancelBtn').addEventListener('click', closeToiletModal);
             document.getElementById('modalClearBtn').addEventListener('click', clearToiletSchedule);
             document.getElementById('toiletModal').addEventListener('click', function(e) {
                 if (e.target === this) closeToiletModal();
             });
-
-            // Enter key
-            document.getElementById('newName').addEventListener('keypress', (e) => { if (e.key === 'Enter')
-                    addSalesWithAuth(); });
-            document.getElementById('newBrand').addEventListener('keypress', (e) => { if (e.key === 'Enter')
-                    addSalesWithAuth(); });
-            document.getElementById('colorBrandInput').addEventListener('keypress', (e) => { if (e.key === 'Enter')
-                    setBrandColorWithAuth(); });
         });
-                // ================================================================
-        // FITUR DOWNLOAD JPG (FIXED & GLOBAL)
-        // ================================================================
-        window.downloadJPG = async function(type) {
-            const target = type === 'shift' ? document.getElementById('page-shift') : document.getElementById('page-piket');
-            
-            if (!target) {
-                alert('Halaman tidak ditemukan!');
+
+        function addSalesWithAuth() { if (!isAdmin) { checkAdmin(addSales); return; } addSales(); }
+        function addSales() {
+            const brand = document.getElementById('newBrand').value.trim().toUpperCase();
+            const name = document.getElementById('newName').value.trim();
+            const shift = document.getElementById('newShiftDay').value;
+            if (!brand || !name) { alert('Brand dan Nama wajib diisi.'); return; }
+            if (salesData.some(item => item.brand === brand && item.name === name)) {
+                alert('Sales dengan brand & nama tersebut sudah ada.');
                 return;
             }
+            const mapShift = {
+                'P': { selasa: 'OFF', rabu: 'S', kamis: 'L', jumat: 'P', sabtu: 'S', minggu: 'P' },
+                'S': { selasa: 'L', rabu: 'P', kamis: 'OFF', jumat: 'S', sabtu: 'P', minggu: 'S' },
+                'L': { selasa: 'P', rabu: 'OFF', kamis: 'S', jumat: 'P', sabtu: 'S', minggu: 'S' },
+                'OFF': { selasa: 'S', rabu: 'L', kamis: 'P', jumat: 'S', sabtu: 'P', minggu: 'P' }
+            };
+            const pattern = mapShift[shift] || mapShift['P'];
+            salesData.push({
+                brand, name, senin: shift,
+                selasa: pattern.selasa, rabu: pattern.rabu, kamis: pattern.kamis,
+                jumat: pattern.jumat, sabtu: pattern.sabtu, minggu: pattern.minggu, toilet: ''
+            });
+            saveData(false);
+            renderAll();
+            document.getElementById('newBrand').value = '';
+            document.getElementById('newName').value = '';
+            showToast('✅ Sales berhasil ditambahkan');
+        }
 
-            // Beri feedback loading
+        function deleteSelectedWithAuth() { if (!isAdmin) { checkAdmin(deleteSelected); return; } deleteSelected(); }
+        function deleteSelected() {
+            const sel = document.getElementById('deleteSelect');
+            const idx = parseInt(sel.value);
+            if (isNaN(idx) || idx < 0 || idx >= salesData.length) { alert('Pilih sales yang valid.'); return; }
+            if (confirm(`Hapus "${salesData[idx].brand} - ${salesData[idx].name}"?`)) {
+                salesData.splice(idx, 1);
+                saveData(false);
+                renderAll();
+                showToast('🗑️ Sales berhasil dihapus');
+            }
+        }
+
+        function resetDefaultWithAuth() { if (!isAdmin) { checkAdmin(resetDefault); return; } resetDefault(); }
+        function resetDefault() {
+            if (confirm('Reset ke data awal? Semua perubahan akan hilang.')) {
+                salesData = DEFAULT_DATA.map(d => ({ ...d }));
+                brandColors = {};
+                saveData(false);
+                renderAll();
+                showToast('↺ Data direset ke default');
+            }
+        }
+
+        function setBrandColorWithAuth() { if (!isAdmin) { checkAdmin(setBrandColor); return; } setBrandColor(); }
+        function setBrandColor() {
+            const brand = document.getElementById('colorBrandInput').value.trim().toUpperCase();
+            const color = document.getElementById('colorPicker').value;
+            if (!brand) { alert('Masukkan nama brand.'); return; }
+            brandColors[brand] = color;
+            saveData(false);
+            renderAll();
+            document.getElementById('colorBrandInput').value = '';
+            showToast('🎨 Warna brand berhasil diset');
+        }
+
+        window.downloadJPG = async function(type) {
+            const target = type === 'shift' ? document.getElementById('page-shift') : document.getElementById('page-piket');
+            if (!target) { alert('Halaman tidak ditemukan!'); return; }
+
             const toast = document.getElementById('toast');
             if (toast) {
                 toast.textContent = '⏳ Membuat gambar...';
@@ -1782,39 +1500,21 @@
             }
 
             try {
-                // Ambil elemen tabel dan kontainer utamanya
-                const elementToCapture = target.querySelector('.card-glass'); // Ambil area tabel saja
-                if (!elementToCapture) {
-                    alert('Tabel tidak ditemukan!');
-                    return;
-                }
+                const elementToCapture = target.querySelector('.card-glass');
+                if (!elementToCapture) { alert('Tabel tidak ditemukan!'); return; }
+                if (typeof html2canvas === 'undefined') { alert('Library html2canvas belum termuat.'); return; }
 
-                // Pastikan library html2canvas sudah termuat
-                if (typeof html2canvas === 'undefined') {
-                    alert('Library html2canvas belum termuat. Periksa koneksi internet Anda.');
-                    return;
-                }
-
-                // Setting kualitas gambar (2x lipat agar tajam di HP)
-                const canvas = await html2canvas(elementToCapture, {
-                    scale: 2,
-                    backgroundColor: '#ffffff',
-                    useCORS: true
-                });
-
-                // Ubah canvas menjadi JPG
+                const canvas = await html2canvas(elementToCapture, { scale: 2, backgroundColor: '#ffffff', useCORS: true });
                 const imgData = canvas.toDataURL('image/jpeg', 0.95);
 
-                // Buat elemen <a> untuk download
                 const link = document.createElement('a');
-                const fileName = type === 'shift' ? 'Jadwal_Shift_UFO.jpg' : 'Jadwal_Piket_Toilet_UFO.jpg';
-                link.download = fileName;
+                link.download = type === 'shift' ? 'Jadwal_Shift_UFO.jpg' : 'Jadwal_Piket_Toilet_UFO.jpg';
+                link.link = imgData;
                 link.href = imgData;
                 document.body.appendChild(link);
                 link.click();
                 document.body.removeChild(link);
 
-                // Notifikasi sukses
                 if (toast) {
                     toast.textContent = '✅ Gambar berhasil didownload';
                     toast.style.background = '#1e293b';
@@ -1823,10 +1523,9 @@
                 }
             } catch (error) {
                 console.error('Error download JPG:', error);
-                alert('Gagal membuat gambar. Periksa console browser untuk detail.');
+                alert('Gagal membuat gambar.');
             }
         };
     </script>
-
 </body>
 </html>
