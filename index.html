@@ -587,6 +587,20 @@
             .text-sm {
                 font-size: 0.8rem;
             }
+                              /* CSS KHUSUS AGAR SAAT DI-DOWNLOAD JPG TEKS TETAP CENTER */
+        .badge-shift {
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            text-align: center !important;
+            line-height: 1 !important;
+            vertical-align: middle !important;
+        }
+        
+        .table-modern td {
+            text-align: center !important;
+            vertical-align: middle !important;
+        }
         }
     </style>
 </head>
@@ -1371,15 +1385,17 @@
                     <td class="font-semibold text-slate-700"><span class="inline-flex items-center">${dot}${row.brand || ''}</span></td>
                     <td class="font-medium text-slate-600">${row.name || ''}</td>`;
 
-                days.forEach((day) => {
+                                              days.forEach((day) => {
                     const val = row[day] || '';
                     const cls = getShiftClass(val);
                     html += `<td>
-                        <span class="badge-shift ${cls} ${lockClass}" 
-                              onclick="updateShiftWithAuth(${idx}, '${day}', '${val}')"
-                              title="${isAdmin ? 'Klik untuk ubah shift (P/S/L/OFF)' : '🔒 Kunci untuk edit'}">
-                            ${val || '-'}
-                        </span>
+                        <div class="w-full flex justify-center">
+                            <span class="badge-shift ${cls} ${lockClass}" 
+                                  onclick="updateShiftWithAuth(${idx}, '${day}', '${val}')"
+                                  title="${isAdmin ? 'Klik untuk ubah shift (P/S/L/OFF)' : '🔒 Kunci untuk edit'}">
+                                ${val || '-'}
+                            </span>
+                        </div>
                     </td>`;
                 });
 
