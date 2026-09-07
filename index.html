@@ -3,62 +3,142 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jadwal Promotor - Google Sheets DB</title>
+    <title>Jadwal Promotor & Piket - Ufo Malang Kebonsari</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script> tailwind.config = { darkMode: 'class' } </script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Inter', sans-serif; }
-        .app-card { backdrop-filter: blur(20px); }
+        .app-card { backdrop-filter: blur(20px); transition: all 0.2s ease; }
     </style>
 </head>
-<body class="bg-slate-100 dark:bg-slate-950 text-slate-900 dark:text-slate-100 min-h-screen flex flex-col md:flex-row">
+<body class="bg-slate-100 dark:bg-slate-950 text-slate-900 dark:text-slate-100 min-h-screen flex flex-col md:flex-row relative overflow-x-hidden">
 
+    <!-- SIDEBAR NAVIGASI (DESKTOP) -->
+    <aside class="hidden md:flex md:w-72 h-screen sticky top-0 bg-white dark:bg-slate-900/90 backdrop-blur-2xl border-r border-slate-200 dark:border-slate-800 flex-col justify-between p-6 shrink-0 z-30 shadow-xl">
+        <div class="flex flex-col gap-6">
+            <div class="flex items-center gap-3.5">
+                <div class="p-2.5 bg-gradient-to-tr from-indigo-600 to-violet-500 text-white rounded-2xl shadow-lg shadow-indigo-500/30">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                </div>
+                <div>
+                    <h1 class="font-black text-slate-900 dark:text-white text-base tracking-tight">Ufo Malang</h1>
+                    <p id="cloudStatus" class="text-[11px] text-amber-500 font-bold">Menghubungkan Server...</p>
+                </div>
+            </div>
+
+            <nav class="flex flex-col gap-2">
+                <button onclick="switchTab('promotor')" id="btnPromotor" class="flex items-center gap-3 px-4 py-3 rounded-2xl font-semibold text-sm bg-gradient-to-r from-indigo-600 to-violet-600 text-white shadow-lg shadow-indigo-600/30">
+                    <span>📅 Jadwal Promotor</span>
+                </button>
+                <button onclick="switchTab('piket')" id="btnPiket" class="flex items-center gap-3 px-4 py-3 rounded-2xl font-medium text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/60">
+                    <span>🧹 Jadwal Piket Toilet</span>
+                </button>
+                <button onclick="switchTab('admin')" id="btnAdmin" class="flex items-center gap-3 px-4 py-3 rounded-2xl font-medium text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/60">
+                    <span>⚙️ Konfigurasi (Admin)</span>
+                </button>
+            </nav>
+        </div>
+
+        <div class="flex items-center justify-between bg-slate-100 dark:bg-slate-950 p-2 rounded-xl border border-slate-200 dark:border-slate-800 text-xs">
+            <span class="text-slate-700 dark:text-slate-300 font-semibold px-2">Tema</span>
+            <button onclick="toggleTheme()" class="p-2 bg-white dark:bg-slate-800 rounded-lg shadow"><span id="themeIcon">☀️ Light</span></button>
+        </div>
+    </aside>
+
+    <!-- KONTEN UTAMA -->
     <main class="flex-1 p-4 md:p-10 overflow-y-auto space-y-6 max-w-7xl mx-auto w-full">
-        <div class="app-card bg-white dark:bg-slate-900/80 border border-indigo-500/30 p-5 rounded-3xl shadow-xl flex justify-between items-center">
-            <div>
-                <h2 class="text-xl md:text-2xl font-black">JADWAL PROMOTOR UFO MALANG</h2>
-                <p id="cloudStatus" class="text-xs text-amber-500 font-bold mt-1">Menghubungkan ke Google Sheets...</p>
-            </div>
-            <input type="text" id="inputCariNama" placeholder="Cari nama / brand..." onkeyup="renderTabelPromotor()" class="px-4 py-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl text-xs font-bold">
-        </div>
 
-        <!-- Form Tambah Brand & Sales -->
-        <div class="app-card bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 p-5 rounded-3xl shadow-xl space-y-4">
-            <h3 class="font-black text-sm">➕ Tambah Brand & Sales Baru ke Sheets</h3>
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
-                <input type="text" id="inputBrandBaru" placeholder="Nama Brand (cth: POLYTRON)" class="px-3 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-700 rounded-xl text-xs font-bold uppercase">
-                <input type="text" id="inputNamaBaru" placeholder="Nama Sales (cth: BUDI)" class="px-3 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-700 rounded-xl text-xs font-bold uppercase">
-                <input type="text" id="inputPiketBaru" placeholder="Piket Toilet (cth: 5, 19)" class="px-3 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-700 rounded-xl text-xs font-bold">
-                <button onclick="tambahPromotorBaru()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-2 px-4 rounded-xl text-xs shadow-lg">Simpan ke Sheets</button>
+        <!-- HALAMAN 1: JADWAL PROMOTOR -->
+        <section id="tabPromotor" class="space-y-6">
+            <div class="app-card bg-white dark:bg-slate-900/80 border border-indigo-500/30 p-5 rounded-3xl shadow-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                <div>
+                    <h2 class="text-xl font-black">Jadwal Shift Promotor</h2>
+                    <p class="text-xs text-slate-500">Klik kotak shift untuk mengubah status (<span class="text-emerald-500 font-bold">P</span> ➔ <span class="text-blue-500 font-bold">S</span> ➔ <span class="text-amber-500 font-bold">L</span> ➔ <span class="text-rose-500 font-bold">OFF</span>).</p>
+                </div>
+                <input type="text" id="inputCariPromotor" placeholder="Cari brand atau nama..." onkeyup="renderTabelPromotor()" class="px-4 py-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl text-xs font-bold w-full md:w-64">
             </div>
-        </div>
 
-        <!-- Tabel Data -->
-        <div class="app-card bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 p-4 md:p-6 rounded-3xl shadow-xl">
-            <div class="overflow-x-auto max-h-[600px]">
-                <table class="w-full text-center text-xs border-collapse">
-                    <thead class="bg-slate-100 dark:bg-slate-950 uppercase font-bold text-[11px] sticky top-0 border-b border-slate-700 z-10">
-                        <tr>
-                            <th class="py-3 px-3 text-left">Brand</th>
-                            <th class="py-3 px-3 text-left">Nama</th>
-                            <th class="py-3 px-2">Senin</th>
-                            <th class="py-3 px-2">Selasa</th>
-                            <th class="py-3 px-2">Rabu</th>
-                            <th class="py-3 px-2">Kamis</th>
-                            <th class="py-3 px-2">Jum'at</th>
-                            <th class="py-3 px-2">Sabtu</th>
-                            <th class="py-3 px-2">Minggu</th>
-                            <th class="py-3 px-3">Piket Toilet</th>
-                            <th class="py-3 px-2">Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tabelPromotorBody" class="divide-y divide-slate-800/60"></tbody>
-                </table>
+            <div class="app-card bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 p-4 rounded-3xl shadow-xl">
+                <div class="overflow-x-auto max-h-[600px]">
+                    <table class="w-full text-center text-xs border-collapse">
+                        <thead class="bg-slate-100 dark:bg-slate-950 uppercase font-bold text-[11px] sticky top-0 border-b border-slate-700 z-10">
+                            <tr>
+                                <th class="py-3 px-3 text-left">Brand</th>
+                                <th class="py-3 px-3 text-left">Nama</th>
+                                <th class="py-3 px-2">Senin</th>
+                                <th class="py-3 px-2">Selasa</th>
+                                <th class="py-3 px-2">Rabu</th>
+                                <th class="py-3 px-2">Kamis</th>
+                                <th class="py-3 px-2">Jum'at</th>
+                                <th class="py-3 px-2">Sabtu</th>
+                                <th class="py-3 px-2">Minggu</th>
+                                <th class="py-3 px-3">Piket Toilet</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabelPromotorBody" class="divide-y divide-slate-800/60"></tbody>
+                    </table>
+                </div>
             </div>
-        </div>
+        </section>
+
+        <!-- HALAMAN 2: JADWAL PIKET TOILET -->
+        <section id="tabPiket" class="hidden space-y-6">
+            <div class="app-card bg-white dark:bg-slate-900/80 border border-indigo-500/30 p-5 rounded-3xl shadow-xl">
+                <h2 class="text-xl font-black">Jadwal Piket Toilet Promotor</h2>
+                <p class="text-xs text-slate-500 mt-1">Daftar tanggal dan penanggung jawab piket toilet.</p>
+            </div>
+            <div class="app-card bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 p-4 rounded-3xl shadow-xl">
+                <div class="overflow-x-auto max-h-[600px]">
+                    <table class="w-full text-center text-xs border-collapse">
+                        <thead class="bg-slate-100 dark:bg-slate-950 uppercase font-bold text-[11px] sticky top-0 border-b border-slate-700">
+                            <tr>
+                                <th class="py-3 px-4 text-left">Brand</th>
+                                <th class="py-3 px-4 text-left">Nama Promotor</th>
+                                <th class="py-3 px-4 text-center">Tanggal Piket Toilet</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabelPiketBody" class="divide-y divide-slate-800/60"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- HALAMAN 3: KONFIGURASI ADMIN -->
+        <section id="tabAdmin" class="hidden space-y-6">
+            <div class="app-card bg-white dark:bg-slate-900/80 border border-indigo-500/30 p-5 rounded-3xl shadow-xl space-y-4">
+                <h2 class="text-xl font-black">Konfigurasi & Manajemen Data</h2>
+                <p class="text-xs text-slate-500">Tambah atau hapus data brand dan promotor.</p>
+                
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
+                    <input type="text" id="inputBrandBaru" placeholder="Nama Brand (cth: POLYTRON)" class="px-3 py-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-700 rounded-xl text-xs font-bold uppercase">
+                    <input type="text" id="inputNamaBaru" placeholder="Nama Sales (cth: BUDI)" class="px-3 py-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-700 rounded-xl text-xs font-bold uppercase">
+                    <input type="text" id="inputPiketBaru" placeholder="Piket Tanggal (cth: 2, 16)" class="px-3 py-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-700 rounded-xl text-xs font-bold">
+                </div>
+                <button onclick="tambahPromotorBaru()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-2.5 px-6 rounded-xl text-xs shadow-lg">➕ Tambah Promotor Baru</button>
+            </div>
+
+            <div class="app-card bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 p-4 rounded-3xl shadow-xl">
+                <h3 class="font-bold text-sm mb-3">Daftar Kelola Promotor</h3>
+                <div class="overflow-x-auto max-h-[400px]">
+                    <table class="w-full text-left text-xs border-collapse">
+                        <thead class="bg-slate-100 dark:bg-slate-950 uppercase font-bold text-[10px]">
+                            <tr>
+                                <th class="py-2.5 px-3">Brand</th>
+                                <th class="py-2.5 px-3">Nama</th>
+                                <th class="py-2.5 px-3">Piket</th>
+                                <th class="py-2.5 px-3 text-center">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabelAdminBody" class="divide-y divide-slate-800/60"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
     </main>
 
+    <!-- SCRIPT UTAMA -->
     <script>
         const gasWebhookUrl = "https://script.google.com/macros/s/AKfycbxtcTaj4KNCykH-f3k88cIlsvVWicigtHJWt0D0u-EzDGkUEIYeQAd1oToJyhgaCdr3IQ/exec";
         let daftarPromotor = [];
@@ -66,6 +146,19 @@
         document.addEventListener("DOMContentLoaded", () => {
             loadDataDariSheets();
         });
+
+        function switchTab(tabName) {
+            ['promotor', 'piket', 'admin'].forEach(t => {
+                document.getElementById('tab' + t.charAt(0).toUpperCase() + t.slice(1)).classList.add('hidden');
+                document.getElementById('btn' + t.charAt(0).toUpperCase() + t.slice(1)).className = "flex items-center gap-3 px-4 py-3 rounded-2xl font-medium text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/60";
+            });
+            document.getElementById('tab' + tabName.charAt(0).toUpperCase() + tabName.slice(1)).classList.remove('hidden');
+            document.getElementById('btn' + tabName.charAt(0).toUpperCase() + tabName.slice(1)).className = "flex items-center gap-3 px-4 py-3 rounded-2xl font-semibold text-sm bg-gradient-to-r from-indigo-600 to-violet-600 text-white shadow-lg shadow-indigo-600/30";
+
+            if (tabName === 'promotor') renderTabelPromotor();
+            if (tabName === 'piket') renderTabelPiket();
+            if (tabName === 'admin') renderTabelAdmin();
+        }
 
         async function loadDataDariSheets() {
             const statusEl = document.getElementById('cloudStatus');
@@ -78,29 +171,98 @@
                 let result = await response.json();
                 if (result.status === "success" && Array.isArray(result.data)) {
                     daftarPromotor = result.data;
-                    statusEl.innerText = "Terhubung ke Google Sheets ✓";
-                    statusEl.className = "text-xs text-emerald-500 font-bold mt-1";
+                    statusEl.innerText = "Terhubung Sheets ✓";
+                    statusEl.className = "text-[11px] text-emerald-500 font-bold";
                     renderTabelPromotor();
                 }
             } catch (err) {
-                statusEl.innerText = "Gagal memuat Google Sheets (Cek URL Web App)";
+                statusEl.innerText = "Gagal memuat data!";
                 console.error(err);
             }
         }
 
         async function simpanDataKeSheets() {
-            const statusEl = document.getElementById('cloudStatus');
-            statusEl.innerText = "Menyimpan ke Google Sheets...";
             try {
                 await fetch(gasWebhookUrl, {
                     method: "POST",
                     headers: { "Content-Type": "text/plain;charset=utf-8" },
                     body: JSON.stringify({ aksi: "simpan_promotor", list: daftarPromotor })
                 });
-                statusEl.innerText = "Data tersimpan di Google Sheets ✓";
             } catch (err) {
-                statusEl.innerText = "Gagal menyimpan ke Sheets!";
+                console.error("Gagal sinkronisasi ke sheets");
             }
+        }
+
+        window.toggleShift = async function(index, dayIndex) {
+            const sequence = ["P", "S", "L", "OFF"];
+            let current = daftarPromotor[index].jadwal[dayIndex];
+            let nextIdx = (sequence.indexOf(current) + 1) % sequence.length;
+            daftarPromotor[index].jadwal[dayIndex] = sequence[nextIdx];
+
+            renderTabelPromotor();
+            await simpanDataKeSheets();
+        }
+
+        function renderTabelPromotor() {
+            const tbody = document.getElementById('tabelPromotorBody');
+            const keyword = document.getElementById('inputCariPromotor').value.toLowerCase();
+            if(!tbody) return;
+
+            let html = "";
+            let filtered = daftarPromotor.map((item, originalIndex) => ({ ...item, originalIndex }))
+                .filter(item => item.brand.toLowerCase().includes(keyword) || item.nama.toLowerCase().includes(keyword));
+
+            filtered.forEach(item => {
+                html += `<tr class="hover:bg-slate-900/40">
+                    <td class="py-2.5 px-3 text-left font-bold"><span class="px-2.5 py-1 rounded-lg ${item.warnaBrand} text-[10px]">${item.brand}</span></td>
+                    <td class="py-2.5 px-3 text-left font-bold">${item.nama}</td>`;
+                
+                item.jadwal.forEach((shift, dayIdx) => {
+                    let badge = "bg-slate-800 text-slate-200";
+                    if (shift === "OFF") badge = "bg-rose-500/20 text-rose-400 font-black border border-rose-500/30";
+                    else if (shift === "P") badge = "bg-emerald-500/20 text-emerald-300 font-extrabold";
+                    else if (shift === "S") badge = "bg-blue-500/20 text-blue-300 font-extrabold";
+                    else if (shift === "L") badge = "bg-amber-500/20 text-amber-300 font-extrabold";
+
+                    html += `<td class="py-2 px-2 text-center">
+                        <button onclick="toggleShift(${item.originalIndex}, ${dayIdx})" class="w-9 h-8 rounded-lg text-xs ${badge} transition-transform active:scale-95">${shift}</button>
+                    </td>`;
+                });
+
+                html += `<td class="py-2.5 px-3 text-center font-bold text-indigo-400">${item.piket}</td></tr>`;
+            });
+            tbody.innerHTML = html;
+        }
+
+        function renderTabelPiket() {
+            const tbody = document.getElementById('tabelPiketBody');
+            if(!tbody) return;
+            let html = "";
+            daftarPromotor.forEach(item => {
+                html += `<tr class="hover:bg-slate-900/40">
+                    <td class="py-3 px-4 text-left font-bold"><span class="px-2.5 py-1 rounded-lg ${item.warnaBrand} text-[10px]">${item.brand}</span></td>
+                    <td class="py-3 px-4 text-left font-bold">${item.nama}</td>
+                    <td class="py-3 px-4 text-center font-extrabold text-indigo-400">${item.piket}</td>
+                </tr>`;
+            });
+            tbody.innerHTML = html;
+        }
+
+        function renderTabelAdmin() {
+            const tbody = document.getElementById('tabelAdminBody');
+            if(!tbody) return;
+            let html = "";
+            daftarPromotor.forEach((item, index) => {
+                html += `<tr class="hover:bg-slate-900/40">
+                    <td class="py-2.5 px-3 font-bold">${item.brand}</td>
+                    <td class="py-2.5 px-3 font-bold">${item.nama}</td>
+                    <td class="py-2.5 px-3">${item.piket}</td>
+                    <td class="py-2.5 px-3 text-center">
+                        <button onclick="hapusPromotor(${index})" class="px-2.5 py-1 bg-rose-500/10 hover:bg-rose-500 text-rose-500 hover:text-white rounded-lg text-xs font-bold">Hapus</button>
+                    </td>
+                </tr>`;
+            });
+            tbody.innerHTML = html;
         }
 
         async function tambahPromotorBaru() {
@@ -108,14 +270,10 @@
             const nama = document.getElementById('inputNamaBaru').value.trim().toUpperCase();
             const piket = document.getElementById('inputPiketBaru').value.trim();
 
-            if (!brand || !nama) {
-                alert("Isi Nama Brand dan Nama Sales!");
-                return;
-            }
+            if (!brand || !nama) { alert("Isi Nama Brand dan Nama Sales!"); return; }
 
             daftarPromotor.push({
-                brand: brand,
-                nama: nama,
+                brand: brand, nama: nama,
                 jadwal: ["P", "P", "P", "OFF", "S", "P", "S"],
                 piket: piket || "-",
                 warnaBrand: "bg-indigo-600 text-white"
@@ -125,50 +283,28 @@
             document.getElementById('inputNamaBaru').value = "";
             document.getElementById('inputPiketBaru').value = "";
 
-            renderTabelPromotor();
+            renderTabelAdmin();
             await simpanDataKeSheets();
+            alert("Data berhasil ditambahkan ke Google Sheets!");
         }
 
         async function hapusPromotor(index) {
             if (confirm("Hapus data promotor ini?")) {
                 daftarPromotor.splice(index, 1);
-                renderTabelPromotor();
+                renderTabelAdmin();
                 await simpanDataKeSheets();
             }
         }
 
-        function renderTabelPromotor() {
-            const tbody = document.getElementById('tabelPromotorBody');
-            const keyword = document.getElementById('inputCariNama').value.toLowerCase();
-            if(!tbody) return;
-
-            let html = "";
-            let filtered = daftarPromotor.map((item, originalIndex) => ({ ...item, originalIndex }))
-                .filter(item => item.brand.toLowerCase().includes(keyword) || item.nama.toLowerCase().includes(keyword));
-
-            if (filtered.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="11" class="py-8 text-center text-slate-500">Tidak ada data.</td></tr>`;
-                return;
+        function toggleTheme() {
+            const root = document.getElementById('htmlRoot');
+            if (root.classList.contains('dark')) {
+                root.classList.remove('dark'); root.classList.add('light');
+                document.getElementById('themeIcon').innerText = "🌙 Dark";
+            } else {
+                root.classList.remove('light'); root.classList.add('dark');
+                document.getElementById('themeIcon').innerText = "☀️ Light";
             }
-
-            filtered.forEach(item => {
-                html += `<tr class="hover:bg-slate-900/40">
-                    <td class="py-2.5 px-3 text-left font-bold"><span class="px-2.5 py-1 rounded-lg ${item.warnaBrand} text-[10px]">${item.brand}</span></td>
-                    <td class="py-2.5 px-3 text-left font-bold">${item.nama}</td>`;
-                
-                item.jadwal.forEach(shift => {
-                    let badge = "bg-slate-800 text-slate-200";
-                    if (shift === "OFF") badge = "bg-rose-500/20 text-rose-400 font-black";
-                    else if (shift === "P") badge = "bg-emerald-500/20 text-emerald-300 font-bold";
-                    else if (shift === "S") badge = "bg-blue-500/20 text-blue-300 font-bold";
-                    html += `<td class="py-2 px-2 text-center"><span class="inline-block w-8 h-8 leading-8 rounded-lg text-xs ${badge}">${shift}</span></td>`;
-                });
-
-                html += `<td class="py-2.5 px-3 text-center font-bold text-indigo-400">${item.piket}</td>
-                    <td class="py-2.5 px-2 text-center"><button onclick="hapusPromotor(${item.originalIndex})" class="p-1.5 bg-rose-500/10 hover:bg-rose-500 text-rose-500 hover:text-white rounded-lg text-xs">✕</button></td>
-                </tr>`;
-            });
-            tbody.innerHTML = html;
         }
     </script>
 </body>
