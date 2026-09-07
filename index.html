@@ -525,23 +525,29 @@
             color: #94a3b8 !important;
         }
 
-             @media (max-width: 768px) {
+                  @media (max-width: 768px) {
             .sidebar {
-                flex-direction: row;
-                flex-wrap: wrap;
+                flex-direction: column; /* Ubah jadi kolom agar rapi */
+                flex-wrap: nowrap;
                 height: auto;
-                padding: 12px 16px;
+                padding: 10px 16px;
                 gap: 6px;
                 border-right: none;
                 border-bottom: 1px solid rgba(255, 255, 255, 0.05);
                 align-items: center;
             }
             .sidebar-brand {
-                font-size: 1.1rem;
+                font-size: 1rem;
                 border-bottom: none;
-                padding-bottom: 0;
-                width: 100%; /* Judul & nomor 6 memenuhi satu baris di atas */
+                padding-bottom: 4px;
+                width: 100%;
+                display: flex;
+                justify-content: center;
                 margin-bottom: 8px;
+            }
+            .sidebar-brand img {
+                width: 140px; /* Ukuran logo di HP */
+                max-height: 60px;
             }
             .sidebar .nav-item {
                 padding: 8px 14px;
@@ -621,16 +627,14 @@
 
     <div class="flex flex-col md:flex-row min-h-screen">
 
-               <!-- SIDEBAR -->
+                     <!-- SIDEBAR -->
         <aside class="sidebar w-full md:w-64 flex-shrink-0 text-white p-5 flex flex-col gap-4 md:min-h-screen sticky top-0 z-10">
-            <div class="sidebar-brand text-2xl font-extrabold tracking-tight pb-4 border-b border-white/10 flex items-center justify-between">
-                <div class="flex flex-col">
-                    🚀 UFO
-                    <span class="block text-sm font-normal opacity-70">Malang Kebonsari</span>
-                </div>
-                <!-- Nomor 6 dipindah ke pojok kanan atas di Desktop, atau tetap di sidebar -->
-                <div class="badge-number bg-white text-blue-900 rounded-full w-10 h-10 flex items-center justify-center font-black shadow-lg">6</div>
+            <!-- LOGO GAMBAR -->
+            <div class="sidebar-brand pb-4 border-b border-white/10 flex justify-center">
+                <!-- GANTI 'logo-ufo.png' DENGAN NAMA FILE GAMBAR ANDA -->
+                <img src="logo-ufo.png" alt="UFO Malang Kebonsari" class="w-40 md:w-48 h-auto object-contain drop-shadow-lg" />
             </div>
+            
             <nav class="flex flex-row md:flex-col gap-1.5">
                 <button class="nav-item active flex items-center gap-3 px-4 py-3.5 text-sm font-medium text-white/80 hover:text-white w-full" data-page="shift">
                     <span class="text-xl">📋</span> Jadwal Shift
