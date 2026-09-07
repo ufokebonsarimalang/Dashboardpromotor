@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jadwal Promotor & Piket - Ufo Malang Kebonsari</title>
+    <title>Jadwal Promotor Berpasangan - UFO Malang</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script> tailwind.config = { darkMode: 'class' } </script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -11,7 +11,7 @@
         body { font-family: 'Inter', sans-serif; }
         .app-card { backdrop-filter: blur(20px); transition: all 0.2s ease; }
         
-        /* Styling tombol shift agar lebih kontras dan jelas */
+        /* Tombol Shift Kontras & Jelas */
         .shift-btn {
             width: 38px;
             height: 34px;
@@ -19,33 +19,33 @@
             font-size: 11px;
             font-weight: 900;
             transition: all 0.15s ease;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+            box-shadow: 0 1px 2px rgba(0,0,0,0.12);
         }
-        .shift-p { background-color: rgba(16, 185, 129, 0.25); color: #059669; border: 1.5px solid rgba(16, 185, 129, 0.5); }
-        .dark .shift-p { color: #34d399; border-color: rgba(52, 211, 153, 0.4); }
+        .shift-p { background-color: rgba(16, 185, 129, 0.25); color: #047857; border: 1.5px solid rgba(16, 185, 129, 0.6); }
+        .dark .shift-p { color: #34d399; border-color: rgba(52, 211, 153, 0.5); }
 
-        .shift-s { background-color: rgba(59, 130, 246, 0.25); color: #2563eb; border: 1.5px solid rgba(59, 130, 246, 0.5); }
-        .dark .shift-s { color: #60a5fa; border-color: rgba(96, 165, 250, 0.4); }
+        .shift-s { background-color: rgba(59, 130, 246, 0.25); color: #1d4ed8; border: 1.5px solid rgba(59, 130, 246, 0.6); }
+        .dark .shift-s { color: #60a5fa; border-color: rgba(96, 165, 250, 0.5); }
 
-        .shift-l { background-color: rgba(245, 158, 11, 0.25); color: #d97706; border: 1.5px solid rgba(245, 158, 11, 0.5); }
-        .dark .shift-l { color: #fbbf24; border-color: rgba(251, 191, 36, 0.4); }
+        .shift-l { background-color: rgba(245, 158, 11, 0.25); color: #b45309; border: 1.5px solid rgba(245, 158, 11, 0.6); }
+        .dark .shift-l { color: #fbbf24; border-color: rgba(251, 191, 36, 0.5); }
 
-        .shift-off { background-color: rgba(239, 68, 68, 0.25); color: #dc2626; border: 1.5px solid rgba(239, 68, 68, 0.5); }
-        .dark .shift-off { color: #f87171; border-color: rgba(248, 113, 113, 0.4); }
+        .shift-off { background-color: rgba(239, 68, 68, 0.25); color: #b91c1c; border: 1.5px solid rgba(239, 68, 68, 0.6); }
+        .dark .shift-off { color: #f87171; border-color: rgba(248, 113, 113, 0.5); }
     </style>
 </head>
 <body class="bg-slate-100 dark:bg-slate-950 text-slate-900 dark:text-slate-100 min-h-screen flex flex-col md:flex-row relative overflow-x-hidden">
 
-    <!-- SIDEBAR NAVIGASI (DESKTOP) -->
+    <!-- SIDEBAR NAVIGASI DESKTOP -->
     <aside class="hidden md:flex md:w-72 h-screen sticky top-0 bg-white dark:bg-slate-900/90 backdrop-blur-2xl border-r border-slate-200 dark:border-slate-800 flex-col justify-between p-6 shrink-0 z-30 shadow-xl">
         <div class="flex flex-col gap-6">
             <div class="flex items-center gap-3.5">
                 <div class="p-2.5 bg-gradient-to-tr from-indigo-600 to-violet-500 text-white rounded-2xl shadow-lg shadow-indigo-500/30">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
                 </div>
                 <div>
                     <h1 class="font-black text-slate-900 dark:text-white text-base tracking-tight">Ufo Malang</h1>
-                    <p id="cloudStatus" class="text-[11px] text-amber-500 font-bold">Menghubungkan Server...</p>
+                    <p id="cloudStatus" class="text-[11px] text-amber-500 font-bold">Connecting Server...</p>
                 </div>
             </div>
 
@@ -54,16 +54,16 @@
                     <span>📅 Jadwal Promotor</span>
                 </button>
                 <button onclick="switchTab('piket')" id="btnPiket" class="flex items-center gap-3 px-4 py-3 rounded-2xl font-medium text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/60">
-                    <span>🧹 Jadwal Piket Toilet</span>
+                    <span>🧹 Piket Toilet</span>
                 </button>
                 <button onclick="switchTab('admin')" id="btnAdmin" class="flex items-center gap-3 px-4 py-3 rounded-2xl font-medium text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/60">
-                    <span>⚙️ Konfigurasi (Admin)</span>
+                    <span>⚙️ Konfigurasi</span>
                 </button>
             </nav>
         </div>
 
         <div class="flex items-center justify-between bg-slate-100 dark:bg-slate-950 p-2 rounded-xl border border-slate-200 dark:border-slate-800 text-xs">
-            <span class="text-slate-700 dark:text-slate-300 font-semibold px-2">Tema</span>
+            <span class="text-slate-700 dark:text-slate-300 font-semibold px-2">Interface Theme</span>
             <button onclick="toggleTheme()" class="p-2 bg-white dark:bg-slate-800 rounded-lg shadow"><span id="themeIcon">☀️ Light</span></button>
         </div>
     </aside>
@@ -71,14 +71,14 @@
     <!-- KONTEN UTAMA -->
     <main class="flex-1 p-4 md:p-10 overflow-y-auto space-y-6 max-w-7xl mx-auto w-full">
 
-        <!-- HALAMAN 1: JADWAL PROMOTOR (Tanpa Piket Toilet) -->
+        <!-- TAB 1: JADWAL PROMOTOR (Tanpa Piket Toilet) -->
         <section id="tabPromotor" class="space-y-6">
             <div class="app-card bg-white dark:bg-slate-900/80 border border-indigo-500/30 p-5 rounded-3xl shadow-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                 <div>
-                    <h2 class="text-xl font-black">Jadwal Shift Promotor</h2>
-                    <p class="text-xs text-slate-500">Klik kotak shift untuk mengubah status (<span class="text-emerald-500 font-bold">P</span> ➔ <span class="text-blue-500 font-bold">S</span> ➔ <span class="text-amber-500 font-bold">L</span> ➔ <span class="text-rose-500 font-bold">OFF</span>).</p>
+                    <h2 class="text-xl font-black">JADWAL SHIFT PROMOTOR (BERPASANGAN)</h2>
+                    <p class="text-xs text-slate-500 mt-1">Klik kotak shift untuk mengubah: <span class="text-emerald-600 font-bold">P</span> ➔ <span class="text-blue-600 font-bold">S</span> ➔ <span class="text-amber-600 font-bold">L</span> ➔ <span class="text-rose-600 font-bold">OFF</span></p>
                 </div>
-                <input type="text" id="inputCariPromotor" placeholder="Cari brand atau nama..." onkeyup="renderTabelPromotor()" class="px-4 py-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl text-xs font-bold w-full md:w-64">
+                <input type="text" id="inputCariPromotor" placeholder="Cari brand / nama..." onkeyup="renderTabelPromotor()" class="px-4 py-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl text-xs font-bold w-full md:w-64">
             </div>
 
             <div class="app-card bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 p-4 rounded-3xl shadow-xl">
@@ -86,8 +86,8 @@
                     <table class="w-full text-center text-xs border-collapse">
                         <thead class="bg-slate-100 dark:bg-slate-950 uppercase font-bold text-[11px] sticky top-0 border-b border-slate-700 z-10">
                             <tr>
-                                <th class="py-3 px-3 text-left">Brand</th>
-                                <th class="py-3 px-3 text-left">Nama</th>
+                                <th class="py-3 px-4 text-left">Brand</th>
+                                <th class="py-3 px-4 text-left">Nama Promotor</th>
                                 <th class="py-3 px-2">Senin</th>
                                 <th class="py-3 px-2">Selasa</th>
                                 <th class="py-3 px-2">Rabu</th>
@@ -103,11 +103,11 @@
             </div>
         </section>
 
-        <!-- HALAMAN 2: JADWAL PIKET TOILET (Disendirikan) -->
+        <!-- TAB 2: JADWAL PIKET TOILET -->
         <section id="tabPiket" class="hidden space-y-6">
             <div class="app-card bg-white dark:bg-slate-900/80 border border-indigo-500/30 p-5 rounded-3xl shadow-xl">
-                <h2 class="text-xl font-black">Jadwal Piket Toilet Promotor</h2>
-                <p class="text-xs text-slate-500 mt-1">Daftar tanggal dan penanggung jawab piket toilet.</p>
+                <h2 class="text-xl font-black">JADWAL PIKET TOILET PROMOTOR</h2>
+                <p class="text-xs text-slate-500 mt-1">Daftar penanggung jawab piket toilet per pasangan brand.</p>
             </div>
             <div class="app-card bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 p-4 rounded-3xl shadow-xl">
                 <div class="overflow-x-auto max-h-[600px]">
@@ -115,7 +115,7 @@
                         <thead class="bg-slate-100 dark:bg-slate-950 uppercase font-bold text-[11px] sticky top-0 border-b border-slate-700">
                             <tr>
                                 <th class="py-3 px-4 text-left">Brand</th>
-                                <th class="py-3 px-4 text-left">Nama Promotor</th>
+                                <th class="py-3 px-4 text-left">Tim Promotor</th>
                                 <th class="py-3 px-4 text-center">Tanggal Piket Toilet</th>
                             </tr>
                         </thead>
@@ -125,28 +125,30 @@
             </div>
         </section>
 
-        <!-- HALAMAN 3: KONFIGURASI ADMIN (Tambah / Hapus Brand & Promotor) -->
+        <!-- TAB 3: KONFIGURASI ADMIN -->
         <section id="tabAdmin" class="hidden space-y-6">
             <div class="app-card bg-white dark:bg-slate-900/80 border border-indigo-500/30 p-5 rounded-3xl shadow-xl space-y-4">
-                <h2 class="text-xl font-black">Konfigurasi & Manajemen Data</h2>
-                <p class="text-xs text-slate-500">Tambah atau hapus data brand dan promotor.</p>
+                <h2 class="text-xl font-black">Tambah Pasangan Brand & Sales Baru</h2>
+                <p class="text-xs text-slate-500">Jika promotor partner belum ada, biarkan nama partner diisi tanda "-" (dapat disesuaikan kemudian).</p>
                 
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
-                    <input type="text" id="inputBrandBaru" placeholder="Nama Brand (cth: POLYTRON)" class="px-3 py-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-700 rounded-xl text-xs font-bold uppercase">
-                    <input type="text" id="inputNamaBaru" placeholder="Nama Sales (cth: BUDI)" class="px-3 py-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-700 rounded-xl text-xs font-bold uppercase">
-                    <input type="text" id="inputPiketBaru" placeholder="Piket Tanggal (cth: 2, 16)" class="px-3 py-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-700 rounded-xl text-xs font-bold">
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 pt-2">
+                    <input type="text" id="inputBrandBaru" placeholder="Nama Brand (cth: LG)" class="px-3 py-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-700 rounded-xl text-xs font-bold uppercase">
+                    <input type="text" id="inputP1Baru" placeholder="Nama Sales 1 (cth: AGUS)" class="px-3 py-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-700 rounded-xl text-xs font-bold uppercase">
+                    <input type="text" id="inputP2Baru" placeholder="Nama Sales 2 / Partner (cth: EKA atau -)" class="px-3 py-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-700 rounded-xl text-xs font-bold uppercase">
+                    <input type="text" id="inputPiketBaru" placeholder="Tanggal Piket (cth: 2, 16)" class="px-3 py-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-700 rounded-xl text-xs font-bold">
                 </div>
-                <button onclick="tambahPromotorBaru()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-2.5 px-6 rounded-xl text-xs shadow-lg">➕ Tambah Promotor Baru</button>
+                <button onclick="tambahPromotorBaru()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-2.5 px-6 rounded-xl text-xs shadow-lg">➕ Tambah Pasangan Brand</button>
             </div>
 
             <div class="app-card bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 p-4 rounded-3xl shadow-xl">
-                <h3 class="font-bold text-sm mb-3">Daftar Kelola Promotor</h3>
+                <h3 class="font-bold text-sm mb-3">Daftar Pasangan Promotor</h3>
                 <div class="overflow-x-auto max-h-[400px]">
                     <table class="w-full text-left text-xs border-collapse">
                         <thead class="bg-slate-100 dark:bg-slate-950 uppercase font-bold text-[10px]">
                             <tr>
                                 <th class="py-2.5 px-3">Brand</th>
-                                <th class="py-2.5 px-3">Nama</th>
+                                <th class="py-2.5 px-3">Sales 1</th>
+                                <th class="py-2.5 px-3">Sales 2 (Partner)</th>
                                 <th class="py-2.5 px-3">Piket</th>
                                 <th class="py-2.5 px-3 text-center">Aksi</th>
                             </tr>
@@ -159,7 +161,6 @@
 
     </main>
 
-    <!-- SCRIPT UTAMA -->
     <script>
         const gasWebhookUrl = "https://script.google.com/macros/s/AKfycbxtcTaj4KNCykH-f3k88cIlsvVWicigtHJWt0D0u-EzDGkUEIYeQAd1oToJyhgaCdr3IQ/exec";
         let daftarPromotor = [];
@@ -197,8 +198,7 @@
                     renderTabelPromotor();
                 }
             } catch (err) {
-                statusEl.innerText = "Gagal memuat data!";
-                console.error(err);
+                statusEl.innerText = "Gagal memuat Google Sheets!";
             }
         }
 
@@ -210,15 +210,16 @@
                     body: JSON.stringify({ aksi: "simpan_promotor", list: daftarPromotor })
                 });
             } catch (err) {
-                console.error("Gagal sinkronisasi ke sheets");
+                console.error("Gagal menyimpan ke Sheets");
             }
         }
 
-        window.toggleShift = async function(index, dayIndex) {
+        window.toggleShift = async function(pairIdx, partnerNum, dayIdx) {
             const sequence = ["P", "S", "L", "OFF"];
-            let current = daftarPromotor[index].jadwal[dayIndex];
+            let partnerObj = partnerNum === 1 ? daftarPromotor[pairIdx].p1 : daftarPromotor[pairIdx].p2;
+            let current = partnerObj.jadwal[dayIdx];
             let nextIdx = (sequence.indexOf(current) + 1) % sequence.length;
-            daftarPromotor[index].jadwal[dayIndex] = sequence[nextIdx];
+            partnerObj.jadwal[dayIdx] = sequence[nextIdx];
 
             renderTabelPromotor();
             await simpanDataKeSheets();
@@ -231,26 +232,45 @@
 
             let html = "";
             let filtered = daftarPromotor.map((item, originalIndex) => ({ ...item, originalIndex }))
-                .filter(item => item.brand.toLowerCase().includes(keyword) || item.nama.toLowerCase().includes(keyword));
+                .filter(item => item.brand.toLowerCase().includes(keyword) || item.p1.nama.toLowerCase().includes(keyword) || item.p2.nama.toLowerCase().includes(keyword));
 
             filtered.forEach(item => {
-                html += `<tr class="hover:bg-slate-900/40">
-                    <td class="py-2.5 px-3 text-left font-bold"><span class="px-2.5 py-1 rounded-lg ${item.warnaBrand} text-[10px]">${item.brand}</span></td>
-                    <td class="py-2.5 px-3 text-left font-bold">${item.nama}</td>`;
+                // Baris Promotor 1 (Dengan rowspan=2 untuk Brand)
+                html += `<tr class="border-t-2 border-slate-200 dark:border-slate-800">
+                    <td rowspan="2" class="py-2.5 px-4 text-left font-bold align-middle bg-slate-50/50 dark:bg-slate-900/50">
+                        <span class="px-2.5 py-1.5 rounded-lg ${item.warnaBrand} text-[11px] font-black tracking-wide shadow-sm inline-block">${item.brand}</span>
+                    </td>
+                    <td class="py-2.5 px-4 text-left font-bold text-slate-800 dark:text-slate-200">${item.p1.nama}</td>`;
                 
-                item.jadwal.forEach((shift, dayIdx) => {
+                item.p1.jadwal.forEach((shift, dayIdx) => {
                     let shiftClass = "shift-p";
                     if (shift === "S") shiftClass = "shift-s";
                     else if (shift === "L") shiftClass = "shift-l";
                     else if (shift === "OFF") shiftClass = "shift-off";
 
-                    html += `<td class="py-2 px-1.5 text-center">
-                        <button onclick="toggleShift(${item.originalIndex}, ${dayIdx})" class="shift-btn ${shiftClass}" title="Klik untuk ubah shift">${shift}</button>
+                    html += `<td class="py-2 px-1 text-center">
+                        <button onclick="toggleShift(${item.originalIndex}, 1, ${dayIdx})" class="shift-btn ${shiftClass}">${shift}</button>
                     </td>`;
                 });
+                html += `</tr>`;
 
+                // Baris Promotor 2 (Partner)
+                html += `<tr class="border-b-2 border-slate-200 dark:border-slate-800">
+                    <td class="py-2.5 px-4 text-left font-bold text-slate-800 dark:text-slate-200">${item.p2.nama}</td>`;
+                
+                item.p2.jadwal.forEach((shift, dayIdx) => {
+                    let shiftClass = "shift-p";
+                    if (shift === "S") shiftClass = "shift-s";
+                    else if (shift === "L") shiftClass = "shift-l";
+                    else if (shift === "OFF") shiftClass = "shift-off";
+
+                    html += `<td class="py-2 px-1 text-center">
+                        <button onclick="toggleShift(${item.originalIndex}, 2, ${dayIdx})" class="shift-btn ${shiftClass}">${shift}</button>
+                    </td>`;
+                });
                 html += `</tr>`;
             });
+
             tbody.innerHTML = html;
         }
 
@@ -259,10 +279,10 @@
             if(!tbody) return;
             let html = "";
             daftarPromotor.forEach(item => {
-                html += `<tr class="hover:bg-slate-900/40">
+                html += `<tr class="border-b border-slate-200 dark:border-slate-800">
                     <td class="py-3 px-4 text-left font-bold"><span class="px-2.5 py-1 rounded-lg ${item.warnaBrand} text-[10px]">${item.brand}</span></td>
-                    <td class="py-3 px-4 text-left font-bold">${item.nama}</td>
-                    <td class="py-3 px-4 text-center font-extrabold text-indigo-400">${item.piket}</td>
+                    <td class="py-3 px-4 text-left font-bold">1. ${item.p1.nama}<br>2. ${item.p2.nama}</td>
+                    <td class="py-3 px-4 text-center font-black text-indigo-500 text-sm">${item.piket}</td>
                 </tr>`;
             });
             tbody.innerHTML = html;
@@ -273,12 +293,13 @@
             if(!tbody) return;
             let html = "";
             daftarPromotor.forEach((item, index) => {
-                html += `<tr class="hover:bg-slate-900/40">
+                html += `<tr class="border-b border-slate-200 dark:border-slate-800">
                     <td class="py-2.5 px-3 font-bold">${item.brand}</td>
-                    <td class="py-2.5 px-3 font-bold">${item.nama}</td>
+                    <td class="py-2.5 px-3 font-bold text-emerald-500">${item.p1.nama}</td>
+                    <td class="py-2.5 px-3 font-bold text-blue-500">${item.p2.nama}</td>
                     <td class="py-2.5 px-3">${item.piket}</td>
                     <td class="py-2.5 px-3 text-center">
-                        <button onclick="hapusPromotor(${index})" class="px-2.5 py-1 bg-rose-500/10 hover:bg-rose-500 text-rose-500 hover:text-white rounded-lg text-xs font-bold">Hapus</button>
+                        <button onclick="hapusPromotor(${index})" class="px-2.5 py-1 bg-rose-500/10 hover:bg-rose-500 text-rose-500 hover:text-white rounded-lg text-xs font-bold">Hapus Pair</button>
                     </td>
                 </tr>`;
             });
@@ -287,29 +308,32 @@
 
         async function tambahPromotorBaru() {
             const brand = document.getElementById('inputBrandBaru').value.trim().toUpperCase();
-            const nama = document.getElementById('inputNamaBaru').value.trim().toUpperCase();
+            const p1 = document.getElementById('inputP1Baru').value.trim().toUpperCase();
+            const p2 = document.getElementById('inputP2Baru').value.trim().toUpperCase() || "-";
             const piket = document.getElementById('inputPiketBaru').value.trim();
 
-            if (!brand || !nama) { alert("Isi Nama Brand dan Nama Sales!"); return; }
+            if (!brand || !p1) { alert("Isi Nama Brand dan minimal Sales 1!"); return; }
 
             daftarPromotor.push({
-                brand: brand, nama: nama,
-                jadwal: ["P", "P", "P", "OFF", "S", "P", "S"],
+                brand: brand,
                 piket: piket || "-",
-                warnaBrand: "bg-indigo-600 text-white"
+                warnaBrand: "bg-indigo-600 text-white",
+                p1: { nama: p1, jadwal: ["P", "P", "P", "OFF", "S", "P", "S"] },
+                p2: { nama: p2, jadwal: ["S", "L", "P", "OFF", "S", "P", "S"] }
             });
 
             document.getElementById('inputBrandBaru').value = "";
-            document.getElementById('inputNamaBaru').value = "";
+            document.getElementById('inputP1Baru').value = "";
+            document.getElementById('inputP2Baru').value = "";
             document.getElementById('inputPiketBaru').value = "";
 
             renderTabelAdmin();
             await simpanDataKeSheets();
-            alert("Data berhasil ditambahkan ke Google Sheets!");
+            alert("Pasangan brand berhasil ditambahkan!");
         }
 
         async function hapusPromotor(index) {
-            if (confirm("Hapus data promotor ini?")) {
+            if (confirm("Hapus seluruh pasangan brand ini?")) {
                 daftarPromotor.splice(index, 1);
                 renderTabelAdmin();
                 await simpanDataKeSheets();
