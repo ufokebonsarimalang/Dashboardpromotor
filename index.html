@@ -1318,7 +1318,7 @@
             return d.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
         }
 
-             function renderShift() {
+                  function renderShift() {
             const tbody = document.getElementById('shiftTableBody');
             if (!salesData.length) {
                 tbody.innerHTML =
@@ -1337,14 +1337,13 @@
                 const dividerClass = isSecondRow ? 'pair-divider' : '';
                 const lockClass = isAdmin ? '' : 'locked';
 
-                // === PERUBAHAN DI SINI ===
-                // Letakkan angka pasangan (👫) di atas ikon drag-drop pada kolom paling kiri
-                // Gunakan flexbox agar ikon seret dan angka sejajar rapi di kiri atas
+                // LETAKKAN BADGE DI POJOK KIRI ATAS, SEJAJAR DENGAN IKON DRAG
+                // Kami gunakan flexbox: Badge ada di atas, drag handle di bawahnya
                 html += `<tr data-idx="${idx}" class="${dividerClass}">
                     <td class="text-center">
-                        <div class="flex flex-col items-center gap-1 pt-1">
+                        <div class="flex flex-col items-center justify-center gap-1 py-1">
                             ${isSecondRow ? `<span class="pair-badge">👫 ${pairNumber}</span>` : ''}
-                            <span class="drag-handle ${lockClass}" title="${isAdmin ? 'Seret untuk tukar posisi' : '🔒 Kunci untuk edit'}">⠿</span>
+                            <span class="drag-handle ${lockClass}" title="Seret untuk tukar posisi">⠿</span>
                         </div>
                     </td>
                     <td class="font-semibold text-slate-700"><span class="inline-flex items-center">${dot}${row.brand || ''}</span></td>
@@ -1366,6 +1365,7 @@
             });
             tbody.innerHTML = html;
 
+            // FITUR DRAG AND DROP TETAP DIPANGGIL AGAR BISA DIGESER
             setTimeout(initDragDrop, 50);
             updateStatistics();
         }
