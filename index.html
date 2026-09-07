@@ -525,7 +525,7 @@
             color: #94a3b8 !important;
         }
 
-        @media (max-width: 768px) {
+             @media (max-width: 768px) {
             .sidebar {
                 flex-direction: row;
                 flex-wrap: wrap;
@@ -534,18 +534,21 @@
                 gap: 6px;
                 border-right: none;
                 border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+                align-items: center;
+            }
+            .sidebar-brand {
+                font-size: 1.1rem;
+                border-bottom: none;
+                padding-bottom: 0;
+                width: 100%; /* Judul & nomor 6 memenuhi satu baris di atas */
+                margin-bottom: 8px;
             }
             .sidebar .nav-item {
                 padding: 8px 14px;
                 font-size: 0.8rem;
                 flex: 1 0 auto;
                 justify-content: center;
-            }
-            .sidebar-brand {
-                font-size: 1.1rem;
-                border-bottom: none;
-                padding-bottom: 0;
-                flex: 1;
+                border-radius: 10px;
             }
             .main {
                 padding: 16px;
@@ -566,6 +569,14 @@
             }
             .stat-card {
                 padding: 14px 16px;
+            }
+            
+            /* Tampilan Note di HP agar tidak overflow */
+            .card-glass {
+                padding: 12px;
+            }
+            .text-sm {
+                font-size: 0.8rem;
             }
         }
     </style>
@@ -610,11 +621,15 @@
 
     <div class="flex flex-col md:flex-row min-h-screen">
 
-        <!-- SIDEBAR -->
+               <!-- SIDEBAR -->
         <aside class="sidebar w-full md:w-64 flex-shrink-0 text-white p-5 flex flex-col gap-4 md:min-h-screen sticky top-0 z-10">
-            <div class="sidebar-brand text-2xl font-extrabold tracking-tight pb-4 border-b border-white/10">
-                🚀 UFO
-                <span class="block text-sm font-normal opacity-70">Malang Kebonsari</span>
+            <div class="sidebar-brand text-2xl font-extrabold tracking-tight pb-4 border-b border-white/10 flex items-center justify-between">
+                <div class="flex flex-col">
+                    🚀 UFO
+                    <span class="block text-sm font-normal opacity-70">Malang Kebonsari</span>
+                </div>
+                <!-- Nomor 6 dipindah ke pojok kanan atas di Desktop, atau tetap di sidebar -->
+                <div class="badge-number bg-white text-blue-900 rounded-full w-10 h-10 flex items-center justify-center font-black shadow-lg">6</div>
             </div>
             <nav class="flex flex-row md:flex-col gap-1.5">
                 <button class="nav-item active flex items-center gap-3 px-4 py-3.5 text-sm font-medium text-white/80 hover:text-white w-full" data-page="shift">
@@ -638,7 +653,6 @@
                 <button id="unlockBtn" class="text-xs text-white/40 hover:text-white/80 underline">Buka</button>
             </div>
         </aside>
-
         <!-- MAIN -->
         <main class="main flex-1 p-4 md:p-8 max-w-full" id="mainContent">
 
@@ -706,13 +720,34 @@
                     </div>
                 </div>
             </section>
-
             <!-- HALAMAN PIKET -->
             <section id="page-piket" class="page hidden">
                 <div class="mb-6">
                     <h2 class="text-4xl font-extrabold text-slate-800" style="font-weight:900;">🧹 Jadwal Piket Toilet</h2>
                     <p class="text-slate-500 mt-1">Klik badge piket untuk pilih tanggal — otomatis tersimpan</p>
                 </div>
+
+                <!-- ==== NOTE BARU DI ATAS JADWAL ==== -->
+                <div class="card-glass rounded-3xl p-5 mb-6 border-l-4 border-yellow-400 bg-yellow-50/80">
+                    <h3 class="text-lg font-extrabold text-slate-800 mb-3" style="font-weight:900;">📌 NOTE:</h3>
+                    <ul class="text-sm text-slate-700 space-y-1 list-disc pl-5">
+                        <li>PIKET TOILET (LANTAI, DINDING, CLOSET, URINOIR, WASTAFEL, LANGIT2) HARUS DISIKAT</li>
+                        <li>GENERAL CLEANING SETIAP HARI SABTU & MINGGU</li>
+                        <li>HARI SABTU MINGGU PERTAMA : AREA LEMARI ES</li>
+                        <li>HARI MINGGU MINGGU PERTAMA : AREA TV</li>
+                        <li>HARI SABTU MINGGU KEDUA : AREA MESIN CUCI</li>
+                        <li>HARI MINGGU MINGGU KEDUA : FREEZER</li>
+                        <li>HARI SABTU MINGGU KETIGA : AREA AC</li>
+                        <li>HARI MINGGU MINGGU KETIGA : LANTAI 3</li>
+                        <li>HARI SABTU MINGGU KEEMPAT : AREA GUDANG KARDUS LANTAI 1</li>
+                        <li>HARI MINGGU MINGGU KEEMPAT : AREA GUDANG KARDUS LANTAI 4</li>
+                        <li>WAJIB UPDATE STOK HARIAN DAN UPLOAD SOSMED</li>
+                        <li>WAJIB FINGER ISTIRAHAT</li>
+                        <li>IZIN SAKIT WAJIB DISERTAI SURAT DOKTER DAN OBAT</li>
+                        <li>MENGISI FORM KONFIRMASI TUKAR SHIFT, TUKAR OFF, CUTI (DILENGKAPI SURAT IZIN CUTI)</li>
+                    </ul>
+                </div>
+                <!-- ==== SELESAI NOTE ==== -->
 
                 <!-- Statistik Piket -->
                 <div class="grid grid-cols-2 md:grid-cols-3 gap-3 mb-6">
