@@ -601,6 +601,36 @@
             text-align: center !important;
             vertical-align: middle !important;
         }
+                              /* CSS KHUSUS AGAR DOWNLOAD JPG / PRINT TEKS CENTER SEMPURNA */
+        .table-modern td .badge-shift {
+            display: inline-block !important;
+            text-align: center !important;
+            vertical-align: middle !important;
+            
+            /* Ganti Flexbox dengan Padding & Line-height */
+            padding: 6px 10px !important;
+            line-height: 16px !important; 
+            
+            /* Hilangkan properti Flexbox yang bermasalah */
+            align-items: initial !important;
+            justify-content: initial !important;
+        }
+
+        /* Tambahan agar container td tetap rata tengah */
+        .table-modern td {
+            text-align: center !important;
+            vertical-align: middle !important;
+        }
+        
+        /* Untuk Print (Ctrl+P) juga */
+        @media print {
+            .badge-shift {
+                display: inline-block !important;
+                text-align: center !important;
+                padding: 6px 10px !important;
+                line-height: 16px !important;
+            }
+        }
         }
     </style>
 </head>
