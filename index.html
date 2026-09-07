@@ -51,6 +51,16 @@
             min-width: 44px;
             text-align: center;
             box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+            cursor: pointer;
+            transition: all 0.15s;
+            user-select: none;
+        }
+        .badge-shift:hover {
+            transform: scale(1.08);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+        .badge-shift:active {
+            transform: scale(0.95);
         }
         .badge-p {
             background: #dbeafe;
@@ -61,13 +71,14 @@
             color: #065f46;
         }
         .badge-l {
-            background: #fce4ec;
-            color: #b71c1c;
-            border: 1px solid #f8bbd0;
+            background: #fef08a;
+            color: #854d0e;
+            border: 1px solid #fde047;
         }
         .badge-off {
-            background: #f1f5f9;
-            color: #475569;
+            background: #fca5a5;
+            color: #7f1d1d;
+            border: 1px solid #f87171;
         }
         .table-modern th {
             background: #f8fafc;
@@ -202,6 +213,27 @@
             background: #e2e8f0;
             color: #475569;
         }
+        .toast-notification {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background: #1e293b;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 40px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.3s ease;
+            pointer-events: none;
+        }
+        .toast-notification.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
 
         @media (max-width: 768px) {
             .sidebar {
@@ -226,10 +258,18 @@
             .main {
                 padding: 16px;
             }
+            .badge-shift {
+                padding: 4px 10px;
+                font-size: 0.7rem;
+                min-width: 36px;
+            }
         }
     </style>
 </head>
 <body>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast-notification">✅ Shift berhasil diubah</div>
 
     <div class="flex flex-col md:flex-row min-h-screen">
 
@@ -265,7 +305,7 @@
             <section id="page-shift" class="page active">
                 <div class="mb-6">
                     <h2 class="text-3xl font-bold text-slate-800">📋 Jadwal Shift Promotor</h2>
-                    <p class="text-slate-500 mt-1">Shift harian semua brand & promotor — warna brand menunjukkan pasangan shift</p>
+                    <p class="text-slate-500 mt-1">Klik badge shift untuk mengubah (P/S/OFF/L) — otomatis tersimpan</p>
                 </div>
                 <div class="card-glass rounded-3xl p-4 md:p-6 overflow-hidden">
                     <div class="overflow-x-auto">
@@ -287,10 +327,11 @@
                         </table>
                     </div>
                     <div class="mt-4 flex flex-wrap gap-4 text-xs text-slate-500 border-t pt-4 border-slate-200/60">
-                        <span><span class="badge-shift badge-p">P</span> Pagi</span>
-                        <span><span class="badge-shift badge-s">S</span> Siang</span>
-                        <span><span class="badge-shift badge-l">L</span> Lembur</span>
-                        <span><span class="badge-shift badge-off">OFF</span> Libur</span>
+                        <span><span class="badge-shift badge-p" style="cursor:default;">P</span> Pagi</span>
+                        <span><span class="badge-shift badge-s" style="cursor:default;">S</span> Siang</span>
+                        <span><span class="badge-shift badge-l" style="cursor:default;">L</span> Lembur</span>
+                        <span><span class="badge-shift badge-off" style="cursor:default;">OFF</span> Libur</span>
+                        <span class="text-slate-400 ml-2">💡 Klik badge untuk mengubah shift</span>
                     </div>
                 </div>
             </section>
@@ -416,6 +457,22 @@
             console.log('✅ Firebase initialized');
         } catch (e) {
             console.warn('⚠️ Firebase error:', e.message);
+        }
+
+        // ================================================================
+        // TOAST NOTIFICATION
+        // ================================================================
+        let toastTimeout;
+
+        function showToast(message, isError = false) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.style.background = isError ? '#991b1b' : '#1e293b';
+            toast.classList.add('show');
+            clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2500);
         }
 
         // ================================================================
@@ -577,9 +634,34 @@
             renderAll();
         }
 
-        async function saveData() {
+        async function saveData(showToastMsg = true) {
             saveLocalData();
-            if (firebaseInitialized && db) await syncToFirebase();
+            const success = await syncToFirebase();
+            if (showToastMsg) {
+                if (success) {
+                    showToast('✅ Shift berhasil diubah & tersimpan');
+                } else {
+                    showToast('⚠️ Tersimpan di lokal, gagal sync ke cloud', true);
+                }
+            }
+        }
+
+        // ================================================================
+        // FUNGSI UPDATE SHIFT (KLIK BADGE)
+        // ================================================================
+        function updateShift(rowIndex, dayKey, currentValue) {
+            const shiftOrder = ['P', 'S', 'L', 'OFF'];
+            let currentIndex = shiftOrder.indexOf(currentValue);
+            if (currentIndex === -1) currentIndex = 0;
+            const nextIndex = (currentIndex + 1) % shiftOrder.length;
+            const newValue = shiftOrder[nextIndex];
+
+            // Update data
+            if (salesData[rowIndex]) {
+                salesData[rowIndex][dayKey] = newValue;
+                saveData(true);
+                renderAll();
+            }
         }
 
         // ================================================================
@@ -602,20 +684,29 @@
                 return;
             }
             let html = '';
-            salesData.forEach(row => {
+            salesData.forEach((row, idx) => {
                 const color = brandColors[row.brand] || '#e2e8f0';
                 const dot = `<span class="brand-color-dot" style="background:${color};"></span>`;
+                const days = ['senin', 'selasa', 'rabu', 'kamis', 'jumat', 'sabtu', 'minggu'];
+                const dayLabels = ['SENIN', 'SELASA', 'RABU', 'KAMIS', 'JUM\'AT', 'SABTU', 'MINGGU'];
+
                 html += `<tr>
                     <td class="font-semibold text-slate-700"><span class="inline-flex items-center">${dot}${row.brand || ''}</span></td>
-                    <td class="font-medium text-slate-600">${row.name || ''}</td>
-                    <td><span class="badge-shift ${getShiftClass(row.senin)}">${row.senin || ''}</span></td>
-                    <td><span class="badge-shift ${getShiftClass(row.selasa)}">${row.selasa || ''}</span></td>
-                    <td><span class="badge-shift ${getShiftClass(row.rabu)}">${row.rabu || ''}</span></td>
-                    <td><span class="badge-shift ${getShiftClass(row.kamis)}">${row.kamis || ''}</span></td>
-                    <td><span class="badge-shift ${getShiftClass(row.jumat)}">${row.jumat || ''}</span></td>
-                    <td><span class="badge-shift ${getShiftClass(row.sabtu)}">${row.sabtu || ''}</span></td>
-                    <td><span class="badge-shift ${getShiftClass(row.minggu)}">${row.minggu || ''}</span></td>
-                </tr>`;
+                    <td class="font-medium text-slate-600">${row.name || ''}</td>`;
+
+                days.forEach((day, dIdx) => {
+                    const val = row[day] || '';
+                    const cls = getShiftClass(val);
+                    html += `<td>
+                        <span class="badge-shift ${cls}" 
+                              onclick="updateShift(${idx}, '${day}', '${val}')"
+                              title="Klik untuk ubah shift (P/S/L/OFF)">
+                            ${val || '-'}
+                        </span>
+                    </td>`;
+                });
+
+                html += `</tr>`;
             });
             tbody.innerHTML = html;
         }
@@ -663,7 +754,7 @@
                     const brand = this.dataset.brand;
                     if (brand && confirm(`Hapus warna untuk brand "${brand}"?`)) {
                         delete brandColors[brand];
-                        saveData();
+                        saveData(false);
                         renderAll();
                     }
                 });
@@ -706,7 +797,7 @@
                     const idx = parseInt(this.dataset.idx);
                     if (!isNaN(idx) && confirm(`Hapus sales "${salesData[idx]?.brand} - ${salesData[idx]?.name}"?`)) {
                         salesData.splice(idx, 1);
-                        saveData();
+                        saveData(false);
                         renderAll();
                     }
                 });
@@ -753,10 +844,11 @@
                 toilet: ''
             };
             salesData.push(newEntry);
-            saveData();
+            saveData(false);
             renderAll();
             document.getElementById('newBrand').value = '';
             document.getElementById('newName').value = '';
+            showToast('✅ Sales berhasil ditambahkan');
         }
 
         function deleteSelected() {
@@ -765,8 +857,9 @@
             if (isNaN(idx) || idx < 0 || idx >= salesData.length) { alert('Pilih sales yang valid.'); return; }
             if (confirm(`Hapus "${salesData[idx].brand} - ${salesData[idx].name}"?`)) {
                 salesData.splice(idx, 1);
-                saveData();
+                saveData(false);
                 renderAll();
+                showToast('🗑️ Sales berhasil dihapus');
             }
         }
 
@@ -774,8 +867,9 @@
             if (confirm('Reset ke data awal? Semua perubahan akan hilang.')) {
                 salesData = DEFAULT_DATA.map(d => ({ ...d }));
                 brandColors = {};
-                saveData();
+                saveData(false);
                 renderAll();
+                showToast('↺ Data direset ke default');
             }
         }
 
@@ -784,9 +878,10 @@
             const color = document.getElementById('colorPicker').value;
             if (!brand) { alert('Masukkan nama brand.'); return; }
             brandColors[brand] = color;
-            saveData();
+            saveData(false);
             renderAll();
             document.getElementById('colorBrandInput').value = '';
+            showToast('🎨 Warna brand berhasil diset');
         }
 
         // ================================================================
@@ -812,13 +907,19 @@
         // INIT
         // ================================================================
         document.addEventListener('DOMContentLoaded', async function() {
+            // Expose updateShift ke global scope
+            window.updateShift = updateShift;
+
             await loadData();
 
             document.getElementById('addSalesBtn').addEventListener('click', addSales);
             document.getElementById('deleteSalesBtn').addEventListener('click', deleteSelected);
             document.getElementById('resetDefaultBtn').addEventListener('click', resetDefault);
             document.getElementById('setBrandColorBtn').addEventListener('click', setBrandColor);
-            document.getElementById('syncNowBtn').addEventListener('click', syncToFirebase);
+            document.getElementById('syncNowBtn').addEventListener('click', async () => {
+                await syncToFirebase();
+                showToast('☁️ Sinkronisasi selesai');
+            });
 
             document.getElementById('newName').addEventListener('keypress', (e) => { if (e.key === 'Enter') addSales(); });
             document.getElementById('newBrand').addEventListener('keypress', (e) => { if (e.key === 'Enter') addSales(); });
