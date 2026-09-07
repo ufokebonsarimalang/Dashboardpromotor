@@ -1169,10 +1169,7 @@
             }
         }
 
-        // ================================================================
-        // FUNGSI DRAG & DROP (dengan proteksi)
-        // ================================================================
-        function initDragDrop() {
+              function initDragDrop() {
             const tbody = document.getElementById('shiftTableBody');
             if (sortableInstance) {
                 sortableInstance.destroy();
@@ -1182,23 +1179,37 @@
             if (!salesData.length) return;
 
             sortableInstance = new Sortable(tbody, {
-                handle: '.drag-handle:not(.locked)',
+                handle: '.drag-handle',
                 animation: 150,
                 ghostClass: 'sortable-ghost',
                 chosenClass: 'sortable-chosen',
                 dragClass: 'sortable-drag',
-                onStart: function() {
-                    if (!isAdmin) {
-                        checkAdmin(() => {});
-                        return false;
-                    }
-                },
+                // HAPUS onStart yang memblokir
                 onEnd: function(evt) {
-                    if (!isAdmin) return;
                     const oldIndex = evt.oldIndex;
                     const newIndex = evt.newIndex;
+                    
+                    // Jika posisi tidak berubah, tidak usah melakukan apa-apa
                     if (oldIndex === newIndex) return;
 
+                    if (!isAdmin) {
+                        // Jika belum admin: Batalkan drag, kembalikan posisi, dan MUNCULKAN POPUP PIN
+                        showToast('🔒 Masukkan PIN untuk menggeser', true);
+                        checkAdmin(() => {
+                            // Jika PIN berhasil dimasukkan, lakukan perpindahan
+                            const [movedItem] = salesData.splice(oldIndex, 1);
+                            salesData.splice(newIndex, 0, movedItem);
+                            saveData(true);
+                            renderAll();
+                            showToast(`↕️ ${movedItem.brand} - ${movedItem.name} dipindahkan`);
+                        });
+                        
+                        // Kembalikan tampilan ke posisi semula dulu (sebelum PIN dimasukkan)
+                        renderAll(); 
+                        return;
+                    }
+
+                    // Jika sudah admin (tidak perlu PIN)
                     const [movedItem] = salesData.splice(oldIndex, 1);
                     salesData.splice(newIndex, 0, movedItem);
 
