@@ -1,2330 +1,287 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" class="dark" id="htmlRoot">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Absensi - UFO Kebonsari</title>
-    <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#6C63FF">
-    
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jadwal Promotor - Ufo Malang Kebonsari</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = { darkMode: 'class' }
+    </script>
+    <!-- Google Font Inter -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
     <style>
-        /* ============================================================
-           ROOT VARIABLES - DARK MODE (DEFAULT)
-           ============================================================ */
-        :root {
-            --primary: #6C63FF;
-            --primary-dark: #5A52D5;
-            --primary-light: #8B83FF;
-            --primary-gradient: linear-gradient(135deg, #6C63FF 0%, #3F3D9E 100%);
-            
-            --success: #00D2D3;
-            --warning: #F59E0B;
-            --danger: #EF4444;
-            
-            --bg-body: #0A0A1A;
-            --bg-card: rgba(255, 255, 255, 0.04);
-            --bg-card-hover: rgba(255, 255, 255, 0.07);
-            --border-color: rgba(255, 255, 255, 0.06);
-            --border-hover: rgba(255, 255, 255, 0.12);
-            
-            --text-primary: #FFFFFF;
-            --text-secondary: rgba(255, 255, 255, 0.7);
-            --text-muted: rgba(255, 255, 255, 0.4);
-            
-            --shadow-soft: 0 20px 60px rgba(0, 0, 0, 0.3);
-            --radius-xl: 28px;
-            --radius-lg: 20px;
-            --radius-md: 16px;
-            --radius-sm: 12px;
-            
-            --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            
-            --gps-on: #00D2D3;
-            --gps-off: #EF4444;
-        }
-
-        /* ============================================================
-           LIGHT MODE
-           ============================================================ */
-        [data-theme="light"] {
-            --bg-body: #F1F5F9;
-            --bg-card: rgba(255, 255, 255, 0.7);
-            --bg-card-hover: rgba(255, 255, 255, 0.9);
-            --border-color: rgba(0, 0, 0, 0.06);
-            --border-hover: rgba(0, 0, 0, 0.12);
-            
-            --text-primary: #0F172A;
-            --text-secondary: rgba(15, 23, 42, 0.7);
-            --text-muted: rgba(15, 23, 42, 0.4);
-            
-            --shadow-soft: 0 20px 60px rgba(0, 0, 0, 0.06);
-        }
-
-        /* ============================================================
-           RESET & BASE
-           ============================================================ */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-            background: var(--bg-body);
-            transition: var(--transition);
-            position: relative;
-        }
-
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-image: 
-                linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
-            background-size: 60px 60px;
-            pointer-events: none;
-            z-index: 0;
-            opacity: 0.5;
-        }
-
-        [data-theme="light"] body::before {
-            background-image: 
-                linear-gradient(rgba(0, 0, 0, 0.04) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0, 0, 0, 0.04) 1px, transparent 1px);
-        }
-
-        /* ============================================================
-           GLASS CARD
-           ============================================================ */
-        .glass-card {
-            background: var(--bg-card);
-            backdrop-filter: blur(24px) saturate(1.4);
-            -webkit-backdrop-filter: blur(24px) saturate(1.4);
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius-xl);
-            box-shadow: var(--shadow-soft);
-            position: relative;
-            z-index: 1;
-            transition: var(--transition);
-        }
-
-        .glass-card:hover {
-            border-color: var(--border-hover);
-        }
-
-        .box {
-            width: 100%;
-            max-width: 440px;
-            padding: 32px 24px;
-            position: relative;
-            z-index: 1;
-        }
-
-        .box-admin {
-            max-width: 1200px !important;
-            padding: 32px 28px;
-        }
-
-     /* ============================================================
-       THEME TOGGLE
-       ============================================================ */
-    .theme-toggle-wrapper {
-        display: flex;
-        justify-content: flex-end;
-        margin-bottom: 12px;
-    }
-
-    .theme-toggle {
-        background: var(--bg-card);
-        border: 1px solid var(--border-color);
-        border-radius: 40px;
-        padding: 6px 8px;
-        display: flex;
-        gap: 4px;
-        cursor: pointer;
-        transition: var(--transition);
-        position: relative;
-    }
-
-    .theme-toggle:hover {
-        border-color: var(--border-hover);
-    }
-
-    .theme-toggle .toggle-btn {
-        padding: 6px 14px;
-        border-radius: 30px;
-        border: none;
-        background: transparent;
-        font-size: 12px;
-        font-weight: 700;
-        cursor: pointer;
-        transition: var(--transition);
-        display: flex;
-        align-items: center;
-    }
-
-/* Teks tombol yang TIDAK AKTIF (Otomatis menyesuaikan agar selalu kelihatan) */
-    .theme-toggle .toggle-btn:not(.active) {
-        color: #4b5563; /* Warna abu-abu gelap yang sangat jelas di latar belakang terang */
-    }
-
-    /* Jika aplikasi sedang dalam mode gelap (biasanya body punya class 'dark' atau 'dark-mode') */
-    body.dark-mode .theme-toggle .toggle-btn:not(.active),
-    [data-theme="dark"] .theme-toggle .toggle-btn:not(.active) {
-        color: #9ca3af; /* Warna abu-abu terang agar jelas kelihatan di latar belakang gelap */
-    }
-
-    .theme-toggle .toggle-btn:not(.active):hover {
-        color: #111827;
-    }
-
-    /* Khusus untuk tombol yang AKTIF (Ada gradient ungu) */
-    .theme-toggle .toggle-btn.active {
-        background: var(--primary-gradient, linear-gradient(135deg, #6366f1 0%, #4f46e5 100%));
-        color: #ffffff;
-        box-shadow: 0 4px 16px rgba(108, 99, 255, 0.3);
-    }
-
-    .theme-toggle .toggle-btn i {
-        margin-right: 4px;
-    }
-        /* ============================================================
-           LOGO
-           ============================================================ */
-        .logo-wrapper {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 16px;
-        }
-
-        .logo-container {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            padding: 5px;
-            background: var(--primary-gradient);
-            box-shadow: 0 8px 32px rgba(108, 99, 255, 0.25);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            transition: var(--transition);
-            animation: float 6s ease-in-out infinite;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-6px); }
-        }
-
-        .logo-container:hover {
-            transform: scale(1.05) rotate(-2deg);
-            box-shadow: 0 0 60px rgba(108, 99, 255, 0.35);
-        }
-
-        .logo-toko {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            border-radius: 50%;
-            background: #0A0A1A;
-            padding: 4px;
-        }
-
-        [data-theme="light"] .logo-toko {
-            background: #FFFFFF;
-        }
-
-        /* ============================================================
-           TYPOGRAPHY
-           ============================================================ */
-        .title {
-            font-size: 24px;
-            font-weight: 900;
-            text-align: center;
-            color: var(--text-primary);
-            letter-spacing: -0.5px;
-        }
-
-        .subtitle {
-            color: var(--text-secondary);
-            font-size: 13px;
-            text-align: center;
-            margin-top: 2px;
-            margin-bottom: 20px;
-            font-weight: 400;
-        }
-
-        .subtitle i {
-            color: var(--primary-light);
-            margin-right: 4px;
-        }
-
-        /* ============================================================
-           TIME WRAPPER
-           ============================================================ */
-        .time-wrapper {
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius-md);
-            padding: 16px 14px;
-            margin-bottom: 16px;
-            text-align: center;
-            backdrop-filter: blur(8px);
-        }
-
-        .jam-digital {
-            font-size: 40px;
-            font-weight: 900;
-            background: var(--primary-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            font-variant-numeric: tabular-nums;
-            letter-spacing: -1px;
-            line-height: 1;
-        }
-
-        .tanggal-digital {
-            font-size: 12px;
-            color: var(--text-secondary);
-            margin-top: 4px;
-            font-weight: 500;
-            text-transform: capitalize;
-        }
-
-        /* ============================================================
-           STAT BOX
-           ============================================================ */
-        .stat-box {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 8px;
-            margin-bottom: 14px;
-        }
-
-        .stat-item {
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius-sm);
-            padding: 12px 14px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            transition: var(--transition);
-        }
-
-        .stat-item:hover {
-            background: var(--bg-card-hover);
-            border-color: var(--border-hover);
-        }
-
-        .stat-item .label {
-            font-size: 11px;
-            color: var(--text-secondary);
-            font-weight: 500;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-
-        .stat-item .label i {
-            font-size: 13px;
-        }
-
-        .stat-item .value {
-            font-size: 15px;
-            font-weight: 800;
-            color: var(--text-primary);
-        }
-
-        .stat-item .value.success { color: var(--success); }
-        .stat-item .value.danger { color: var(--danger); }
-        .stat-item .value.warning { color: var(--warning); }
-
-        /* ============================================================
-           STATUS LOG
-           ============================================================ */
-        #status-log {
-            font-size: 12px !important;
-            color: var(--text-secondary) !important;
-            background: var(--bg-card) !important;
-            border: 1px solid var(--border-color) !important;
-            border-radius: var(--radius-sm) !important;
-            padding: 14px !important;
-            margin-bottom: 14px !important;
-            font-weight: 500 !important;
-            text-align: center !important;
-            line-height: 1.6 !important;
-            min-height: 50px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        /* ============================================================
-           GPS SECTION - MODERN
-           ============================================================ */
-        .gps-section {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 16px;
-            flex-wrap: wrap;
-        }
-
-        .gps-status-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 6px 16px;
-            border-radius: 40px;
-            font-size: 12px;
-            font-weight: 700;
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            color: var(--text-secondary);
-            transition: var(--transition);
-        }
-
-        .gps-status-badge .dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            display: inline-block;
-            animation: pulse-dot 2s ease-in-out infinite;
-        }
-
-        .gps-status-badge .dot.on {
-            background: var(--gps-on);
-            box-shadow: 0 0 12px rgba(0, 210, 211, 0.4);
-        }
-
-        .gps-status-badge .dot.off {
-            background: var(--gps-off);
-            box-shadow: 0 0 12px rgba(239, 68, 68, 0.4);
-        }
-
-        .gps-status-badge .dot.loading {
-            background: var(--warning);
-            box-shadow: 0 0 12px rgba(245, 158, 11, 0.4);
-            animation: pulse-loading 0.8s ease-in-out infinite;
-        }
-
-        @keyframes pulse-dot {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.6; transform: scale(0.8); }
-        }
-
-        @keyframes pulse-loading {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.4; transform: scale(0.6); }
-        }
-
-        #btn-refresh-gps {
-            padding: 8px 18px;
-            font-size: 12px;
-            font-weight: 700;
-            background: var(--bg-card);
-            color: var(--text-secondary);
-            border: 1px solid var(--border-color);
-            border-radius: 40px;
-            cursor: pointer;
-            transition: var(--transition);
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        #btn-refresh-gps:hover {
-            background: var(--bg-card-hover);
-            border-color: var(--border-hover);
-            color: var(--text-primary);
-        }
-
-        #btn-refresh-gps:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        /* ============================================================
-           TOMBOL ABSEN - RAPI
-           ============================================================ */
-        .btn-grid {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            margin-bottom: 14px;
-        }
-
-        .absen-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-        }
-
-        .absen-card {
-            border-radius: var(--radius-md);
-            padding: 18px 12px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            cursor: pointer;
-            transition: var(--transition);
-            width: 100%;
-            border: none;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .absen-card::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, transparent 50%);
-            pointer-events: none;
-        }
-
-        .absen-card:active { transform: scale(0.95); }
-
-        .absen-icon {
-            width: 44px;
-            height: 44px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-            font-size: 18px;
-        }
-
-        .absen-title {
-            font-size: 13px;
-            font-weight: 700;
-            letter-spacing: 0.3px;
-        }
-
-        .info-jam-absen {
-            font-size: 11px;
-            font-weight: 600;
-            min-height: 20px;
-            display: block;
-            text-align: center;
-            padding: 2px 12px;
-            border-radius: 20px;
-        }
-
-        .card-in {
-            background: linear-gradient(145deg, #6C63FF 0%, #4F46E5 50%, #3B32A8 100%) !important;
-            box-shadow: 0 6px 24px rgba(108, 99, 255, 0.35);
-        }
-        .card-in .absen-icon { background: rgba(255, 255, 255, 0.15); color: #FFFFFF; }
-        .card-in .absen-title { color: #FFFFFF; }
-        .card-in .info-jam-absen { color: #C4B5FD; background: rgba(255,255,255,0.1); }
-
-        .card-out {
-            background: linear-gradient(145deg, #FF6B6B 0%, #EE5A24 50%, #C0392B 100%) !important;
-            box-shadow: 0 6px 24px rgba(255, 107, 107, 0.35);
-        }
-        .card-out .absen-icon { background: rgba(255, 255, 255, 0.15); color: #FFFFFF; }
-        .card-out .absen-title { color: #FFFFFF; }
-        .card-out .info-jam-absen { color: #FED7AA; background: rgba(255,255,255,0.1); }
-
-        .card-off-wrapper {
-            display: flex;
-            justify-content: center;
-        }
-        .card-off {
-            background: linear-gradient(145deg, #EF4444 0%, #DC2626 50%, #B91C1C 100%) !important;
-            box-shadow: 0 6px 24px rgba(239, 68, 68, 0.35);
-            flex-direction: row !important;
-            gap: 10px !important;
-            padding: 12px 24px !important;
-            min-width: 180px !important;
-            width: auto !important;
-        }
-        .card-off .absen-icon { background: rgba(255, 255, 255, 0.15); color: #FFFFFF; width: 36px; height: 36px; font-size: 16px; }
-        .card-off .absen-title { color: #FFFFFF; }
-        .card-off .info-jam-absen { color: #FCA5A5; background: rgba(255,255,255,0.1); }
-
-        .absen-card:hover {
-            transform: translateY(-4px) scale(1.02);
-        }
-
-        .btn-disabled {
-            opacity: 0.5 !important;
-            cursor: not-allowed !important;
-            pointer-events: none !important;
-            filter: grayscale(0.4) brightness(0.7) !important;
-            transform: scale(0.98) !important;
-        }
-
-        /* ============================================================
-           LOGIN INPUT
-           ============================================================ */
-        .input-group {
-            text-align: left;
-            margin-bottom: 14px;
-        }
-
-        .input-group label {
-            display: block;
-            font-size: 11px;
-            font-weight: 700;
-            margin-bottom: 4px;
-            color: var(--text-secondary);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .input-group label i {
-            margin-right: 4px;
-            color: var(--primary-light);
-        }
-
-        input {
-            width: 100%;
-            padding: 12px 16px;
-            border-radius: var(--radius-sm);
-            border: 1px solid var(--border-color);
-            background: var(--bg-card);
-            font-size: 14px;
-            font-weight: 500;
-            color: var(--text-primary);
-            transition: var(--transition);
-        }
-
-        input::placeholder {
-            color: var(--text-muted);
-        }
-
-        input:focus {
-            outline: none;
-            border-color: var(--primary);
-            background: var(--bg-card-hover);
-            box-shadow: 0 0 0 4px rgba(108, 99, 255, 0.1);
-        }
-
-        /* ============================================================
-           BUTTONS
-           ============================================================ */
-        .btn-primary {
-            background: var(--primary-gradient);
-            color: white;
-            padding: 14px;
-            border-radius: var(--radius-sm);
-            font-size: 14px;
-            font-weight: 700;
-            border: none;
-            cursor: pointer;
-            width: 100%;
-            transition: var(--transition);
-            display: inline-flex;
-            justify-content: center;
-            align-items: center;
-            gap: 8px;
-            box-shadow: 0 4px 20px rgba(108, 99, 255, 0.3);
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 32px rgba(108, 99, 255, 0.4);
-        }
-
-        .btn-logout {
-            background: linear-gradient(135deg, #00B894 0%, #00A381 100%);
-            color: white;
-            font-size: 13px;
-            padding: 13px;
-            border: none;
-            border-radius: var(--radius-sm);
-            font-weight: 700;
-            cursor: pointer;
-            width: 100%;
-            transition: var(--transition);
-            display: inline-flex;
-            justify-content: center;
-            align-items: center;
-            gap: 8px;
-            box-shadow: 0 4px 20px rgba(0, 184, 148, 0.3);
-            margin-top: 4px;
-        }
-
-        .btn-logout:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 32px rgba(0, 184, 148, 0.4);
-        }
-
-        /* ============================================================
-           KAMERA OVERLAY - FULL SCREEN
-           ============================================================ */
-        .camera-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: #000000;
-            z-index: 9999;
-            display: none;
-            flex-direction: column;
-        }
-
-        .camera-overlay.active {
-            display: flex;
-        }
-
-        #kamera {
-            width: 100vw;
-            height: 100vh;
-            object-fit: cover;
-            background: #000000;
-        }
-
-        #previewFoto {
-            width: 100vw;
-            height: 100vh;
-            object-fit: cover;
-            background: #000000;
-            display: none;
-        }
-
-        #previewFoto.show {
-            display: block;
-        }
-
-        .camera-controls {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            padding: 30px 20px 40px;
-            background: linear-gradient(transparent, rgba(0,0,0,0.8));
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 12px;
-            z-index: 10000;
-        }
-
-        .camera-controls .top-controls {
-            display: flex;
-            gap: 16px;
-            width: 100%;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        .camera-controls .btn-control {
-            padding: 12px 24px;
-            border-radius: 40px;
-            font-size: 14px;
-            font-weight: 700;
-            border: none;
-            cursor: pointer;
-            transition: var(--transition);
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .camera-controls .btn-capture-main {
-            background: #FFFFFF;
-            color: #0A0A1A;
-            padding: 16px 40px;
-            border-radius: 60px;
-            font-size: 18px;
-            font-weight: 800;
-            box-shadow: 0 4px 30px rgba(255,255,255,0.2);
-            min-width: 180px;
-        }
-
-        .camera-controls .btn-capture-main:hover {
-            transform: scale(1.05);
-            box-shadow: 0 8px 40px rgba(255,255,255,0.3);
-        }
-
-        .camera-controls .btn-capture-main:active {
-            transform: scale(0.95);
-        }
-
-        .camera-controls .btn-close-camera {
-            background: rgba(255, 255, 255, 0.1);
-            color: #FFFFFF;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-
-        .camera-controls .btn-close-camera:hover {
-            background: rgba(255, 255, 255, 0.2);
-        }
-
-        .camera-controls .btn-success-camera {
-            background: linear-gradient(135deg, #00D2D3 0%, #01A3A4 100%);
-            color: white;
-        }
-
-        .camera-controls .btn-success-camera:hover {
-            transform: scale(1.05);
-            box-shadow: 0 8px 40px rgba(0, 210, 211, 0.4);
-        }
-
-        .camera-controls .btn-danger-camera {
-            background: linear-gradient(135deg, #FF6B6B 0%, #EE5A24 100%);
-            color: white;
-        }
-
-        .camera-controls .btn-danger-camera:hover {
-            transform: scale(1.05);
-            box-shadow: 0 8px 40px rgba(255, 107, 107, 0.4);
-        }
-
-        .camera-controls .info-text {
-            color: rgba(255,255,255,0.6);
-            font-size: 13px;
-            font-weight: 500;
-            text-align: center;
-            margin-bottom: 8px;
-        }
-
-        /* ============================================================
-           ADMIN TABLE
-           ============================================================ */
-        .table-container {
-            width: 100%;
-            overflow-x: auto;
-            border-radius: var(--radius-md);
-            border: 1px solid var(--border-color);
-            margin-top: 14px;
-            background: var(--bg-card);
-        }
-
-        table { width: 100%; border-collapse: collapse; text-align: left; }
-        th, td { padding: 12px 14px; font-size: 12px; color: var(--text-secondary); }
-        th { 
-            background: var(--bg-card);
-            color: var(--text-muted);
-            font-weight: 700;
-            text-transform: uppercase;
-            font-size: 10px;
-            letter-spacing: 0.5px;
-            border-bottom: 1px solid var(--border-color);
-        }
-        td { border-bottom: 1px solid var(--border-color); }
-        tr:last-child td { border-bottom: none; }
-        tr:hover td { background: var(--bg-card-hover); }
-
-        .badge {
-            display: inline-block;
-            padding: 3px 12px;
-            border-radius: 20px;
-            font-size: 10px;
-            font-weight: 700;
-        }
-        .badge-in { background: rgba(0, 210, 211, 0.15); color: #00D2D3; }
-        .badge-out { background: rgba(245, 158, 11, 0.15); color: #F59E0B; }
-        .badge-off { background: rgba(239, 68, 68, 0.15); color: #EF4444; }
-
-        .btn-lihat {
-            display: inline-block;
-            background: rgba(108, 99, 255, 0.15);
-            color: var(--primary-light);
-            padding: 4px 12px;
-            border-radius: 6px;
-            font-size: 10px;
-            font-weight: 700;
-            text-decoration: none;
-        }
-
-        .btn-lihat:hover {
-            background: rgba(108, 99, 255, 0.25);
-        }
-
-        /* ============================================================
-           SPINNER
-           ============================================================ */
-        .spinner {
-            border: 3px solid rgba(255, 255, 255, 0.1);
-            border-radius: 50%;
-            border-top: 3px solid #FFFFFF;
-            width: 18px;
-            height: 18px;
-            animation: spin 0.6s linear infinite;
-            display: none;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        /* ============================================================
-           MODAL
-           ============================================================ */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(10, 10, 26, 0.7);
-            backdrop-filter: blur(12px);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            padding: 20px;
-        }
-
-        .modal-overlay.show { display: flex; }
-
-        .modal-box {
-            background: var(--bg-card);
-            backdrop-filter: blur(24px);
-            border: 1px solid var(--border-color);
-            padding: 28px 24px;
-            border-radius: var(--radius-lg);
-            width: 100%;
-            max-width: 340px;
-            text-align: center;
-            animation: modalIn 0.3s ease;
-        }
-
-        @keyframes modalIn {
-            from { transform: scale(0.9) translateY(20px); opacity: 0; }
-            to { transform: scale(1) translateY(0); opacity: 1; }
-        }
-
-        .modal-box h3 {
-            font-size: 18px;
-            font-weight: 800;
-            color: var(--text-primary);
-            margin-bottom: 8px;
-        }
-
-        .modal-box p {
-            font-size: 14px;
-            color: var(--text-secondary);
-            margin: 10px 0 16px;
-            line-height: 1.6;
-        }
-
-        .modal-box .btn-modal {
-            background: var(--primary-gradient);
-            color: white;
-            padding: 12px 24px;
-            border-radius: var(--radius-sm);
-            border: none;
-            font-weight: 700;
-            cursor: pointer;
-            width: 100%;
-            transition: var(--transition);
-        }
-
-        .modal-box .btn-modal:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 32px rgba(108, 99, 255, 0.4);
-        }
-
-        /* ============================================================
-           GPS SWITCH (Admin)
-           ============================================================ */
-        .gps-switch-wrapper {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background: var(--bg-card);
-            padding: 10px 14px;
-            border-radius: var(--radius-sm);
-            border: 1px solid var(--border-color);
-            margin-top: 12px;
-        }
-
-        .gps-switch-wrapper .label {
-            font-size: 12px;
-            color: var(--text-secondary);
-            font-weight: 500;
-        }
-
-        .gps-switch-wrapper .label i {
-            color: var(--primary-light);
-            margin-right: 4px;
-        }
-
-        .switch {
-            position: relative;
-            display: inline-block;
-            width: 44px;
-            height: 22px;
-            flex-shrink: 0;
-        }
-
-        .switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-
-        .slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: rgba(255, 255, 255, 0.1);
-            transition: .3s;
-            border-radius: 22px;
-        }
-
-        .slider:before {
-            position: absolute;
-            content: "";
-            height: 16px;
-            width: 16px;
-            left: 3px;
-            bottom: 3px;
-            background-color: white;
-            transition: .3s;
-            border-radius: 50%;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        input:checked + .slider {
-            background: linear-gradient(135deg, #00D2D3 0%, #01A3A4 100%);
-        }
-
-        input:checked + .slider:before {
-            transform: translateX(22px);
-        }
-
-        /* ============================================================
-           PERIODE TEXT
-           ============================================================ */
-        #periode-karyawan-text {
-            display: none;
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius-sm);
-            padding: 12px;
-            margin-bottom: 14px;
-            text-align: center;
-            font-size: 12px;
-            color: var(--text-secondary);
-        }
-
-        #periode-karyawan-text strong {
-            color: var(--primary-light);
-            font-size: 13px;
-            font-weight: 800;
-            display: block;
-        }
-
-        /* ============================================================
-           RESPONSIVE
-           ============================================================ */
-        @media (max-width: 480px) {
-            .box { padding: 20px 14px; }
-            .logo-container { width: 64px; height: 64px; }
-            .title { font-size: 20px; }
-            .jam-digital { font-size: 32px; }
-            .stat-box { grid-template-columns: 1fr; gap: 6px; }
-            .stat-item { padding: 10px 12px; }
-            .stat-item .value { font-size: 14px; }
-            .absen-card { padding: 14px 10px; }
-            .absen-icon { width: 38px; height: 38px; font-size: 16px; }
-            .card-off { min-width: 150px; padding: 10px 18px !important; }
-            .gps-section { gap: 8px; }
-            .theme-toggle .toggle-btn { padding: 4px 10px; font-size: 10px; }
+        body { font-family: 'Inter', sans-serif; }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        .dark ::-webkit-scrollbar-track { background: #030712; }
+        .dark ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 9999px; }
+        .light ::-webkit-scrollbar-track { background: #f1f5f9; }
+        .light ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 9999px; }
+        .app-card {
+            backdrop-filter: blur(20px);
+            transition: background-color 0.2s ease, border-color 0.2s ease;
         }
     </style>
 </head>
-<body>
+<body class="bg-slate-100 dark:bg-slate-950 text-slate-900 dark:text-slate-100 min-h-screen flex flex-col md:flex-row selection:bg-indigo-500 selection:text-white relative overflow-x-hidden">
 
-<!-- ========================================================== -->
-<!-- ====================== VIEW LOGIN ======================== -->
-<!-- ========================================================== -->
-<div id="view-login" class="glass-card box">
-    <div class="theme-toggle-wrapper">
-        <div class="theme-toggle" id="themeToggle">
-            <button class="toggle-btn active" data-theme="dark" onclick="setTheme('dark')">
-                <i class="fas fa-moon"></i> Gelap
-            </button>
-            <button class="toggle-btn" data-theme="light" onclick="setTheme('light')">
-                <i class="fas fa-sun"></i> Terang
-            </button>
+    <!-- Background Ambient Glow -->
+    <div class="absolute top-0 left-1/4 w-96 h-96 bg-indigo-600/10 rounded-full blur-3xl pointer-events-none"></div>
+    <div class="absolute bottom-10 right-10 w-96 h-96 bg-emerald-600/10 rounded-full blur-3xl pointer-events-none"></div>
+
+    <!-- HEADER KHUSUS HP (MOBILE TOP BAR) -->
+    <header class="md:hidden flex items-center justify-between bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 p-4 sticky top-0 z-40 shadow-md">
+        <div class="flex items-center gap-2.5">
+            <div class="p-2 bg-gradient-to-tr from-indigo-600 via-indigo-500 to-violet-500 text-white rounded-xl shadow-md">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+            </div>
+            <h1 class="font-black text-slate-900 dark:text-white text-sm tracking-tight">Jadwal Promotor Ufo</h1>
         </div>
-    </div>
-
-    <div class="logo-wrapper">
-        <div class="logo-container">
-            <img src="logo.png" class="logo-toko" alt="Logo UFO" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2280%22 height=%2280%22 viewBox=%220 0 80 80%22%3E%3Crect width=%2280%22 height=%2280%22 fill=%22%236C63FF%22/%3E%3Ctext x=%2240%22 y=%2250%22 text-anchor=%22middle%22 fill=%22white%22 font-size=%2232%22 font-family=%22Inter%22 font-weight=%22900%22%3EUFO%3C/text%3E%3C/svg%3E'">
-        </div>
-    </div>
-    <h1 class="title">UFO KEBONSARI</h1>
-    <div class="subtitle"><i class="fas fa-fingerprint"></i> Sistem Absensi Digital</div>
-
-    <div class="input-group">
-        <label for="user"><i class="fas fa-user"></i> Username</label>
-        <input type="text" id="user" placeholder="Masukkan username">
-    </div>
-
-    <div class="input-group">
-        <label for="pass"><i class="fas fa-lock"></i> Password</label>
-        <input type="password" id="pass" placeholder="••••••••">
-    </div>
-
-    <button class="btn-primary" id="btn-login" onclick="prosesLogin()">
-        <span id="text-login"><i class="fas fa-arrow-right-to-bracket"></i> MASUK</span>
-        <div class="spinner" id="login-spinner"></div>
-    </button>
-</div>
-
-<!-- ========================================================== -->
-<!-- ==================== VIEW DASHBOARD ====================== -->
-<!-- ========================================================== -->
-<div id="view-dashboard" class="glass-card box" style="display:none;">
-    <div class="theme-toggle-wrapper">
-        <div class="theme-toggle" id="themeToggle2">
-            <button class="toggle-btn active" data-theme="dark" onclick="setTheme('dark')">
-                <i class="fas fa-moon"></i> Gelap
+        <div class="flex items-center gap-2">
+            <button onclick="toggleTheme()" class="p-2 bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-yellow-400 rounded-xl text-xs shadow">
+                <span id="themeIconMobile">☀️</span>
             </button>
-            <button class="toggle-btn" data-theme="light" onclick="setTheme('light')">
-                <i class="fas fa-sun"></i> Terang
+            <button onclick="toggleMobileMenu()" class="p-2.5 bg-indigo-600 text-white rounded-xl shadow-lg">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
             </button>
         </div>
-    </div>
+    </header>
 
-    <div class="logo-wrapper">
-        <div class="logo-container" style="width:68px; height:68px;">
-            <img src="logo.png" class="logo-toko" alt="Logo UFO" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2280%22 height=%2280%22 viewBox=%220 0 80 80%22%3E%3Crect width=%2280%22 height=%2280%22 fill=%22%236C63FF%22/%3E%3Ctext x=%2240%22 y=%2250%22 text-anchor=%22middle%22 fill=%22white%22 font-size=%2232%22 font-family=%22Inter%22 font-weight=%22900%22%3EUFO%3C/text%3E%3C/svg%3E'">
-        </div>
-    </div>
-    <h1 class="title" style="font-size:18px;">Halo, <span id="nama-user" style="color:var(--primary-light);"></span>!</h1>
-    <div class="subtitle"><i class="fas fa-sparkles"></i> Selamat Bekerja & Tetap Semangat</div>
-
-    <div class="time-wrapper">
-        <div class="jam-digital" id="live-jam">00:00:00</div>
-        <div class="tanggal-digital" id="live-tanggal">Mencari Tanggal...</div>
-    </div>
-
-    <div id="periode-karyawan-text">
-        <span style="color:var(--text-muted); font-size:10px; text-transform:uppercase; letter-spacing:0.5px; display:block; margin-bottom:2px;"><i class="fas fa-calendar"></i> Periode Absensi</span>
-        <strong id="periodeText">-</strong>
-    </div>
-
-    <div class="stat-box">
-        <div class="stat-item">
-            <span class="label"><i class="fas fa-check-circle" style="color:var(--success);"></i> Hadir</span>
-            <span class="value success" id="total-masuk">0 hari</span>
-        </div>
-        <div class="stat-item">
-            <span class="label"><i class="fas fa-calendar-xmark" style="color:var(--danger);"></i> OFF</span>
-            <span class="value danger" id="total-off">0 hari</span>
-        </div>
-        <div class="stat-item">
-            <span class="label"><i class="fas fa-clock" style="color:var(--warning);"></i> PS</span>
-            <span class="value warning" id="total-ps">0 hari</span>
-        </div>
-        <div class="stat-item">
-            <span class="label"><i class="fas fa-triangle-exclamation" style="color:var(--danger);"></i> Terlambat</span>
-            <span class="value danger" id="total-terlambat">0 hari</span>
+    <!-- MENU DROPDOWN MOBILE -->
+    <div id="mobileMenuDropdown" class="hidden md:hidden bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 p-4 space-y-3 z-30 shadow-xl">
+        <div class="text-center font-bold text-xs text-indigo-600 dark:text-indigo-400">MENU UTAMA PROMOTOR</div>
+        <div class="grid grid-cols-2 gap-2">
+            <button onclick="filterBrand('SEMUA'); toggleMobileMenu();" class="p-2.5 rounded-xl text-xs font-bold bg-indigo-600 text-white text-center shadow">Semua Brand</button>
+            <button onclick="toggleTheme(); toggleMobileMenu();" class="p-2.5 rounded-xl text-xs font-bold bg-slate-200 dark:bg-slate-800 text-slate-800 dark:text-slate-200 text-center">Ganti Tema</button>
         </div>
     </div>
 
-    <div id="status-log">⏳ Memuat data absensi dari server...</div>
+    <!-- SIDEBAR NAVIGASI (DESKTOP) -->
+    <aside class="hidden md:flex md:w-72 h-screen sticky top-0 bg-white dark:bg-slate-900/90 backdrop-blur-2xl border-r border-slate-200 dark:border-slate-800 flex-col justify-between p-6 shrink-0 z-30 shadow-xl">
+        <div class="flex flex-col gap-6">
+            <div class="flex items-center gap-3.5">
+                <div class="p-2.5 bg-gradient-to-tr from-indigo-600 via-indigo-500 to-violet-500 text-white rounded-2xl shadow-lg shadow-indigo-500/30 shrink-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+                </div>
+                <div>
+                    <h1 class="font-black text-slate-900 dark:text-white text-base tracking-tight">Jadwal Promotor</h1>
+                    <p class="text-[11px] text-slate-500 dark:text-slate-400 font-medium">Ufo Malang Kebonsari</p>
+                </div>
+            </div>
 
-    <div class="gps-section">
-        <div class="gps-status-badge" id="gpsStatusBadge">
-            <span class="dot loading" id="gpsDot"></span>
-            <span id="gpsStatusText">Memuat GPS...</span>
-        </div>
-        <button id="btn-refresh-gps" onclick="retrackGPS()">
-            <i class="fas fa-satellite-dish"></i> Refresh
-        </button>
-    </div>
-
-    <div class="btn-grid">
-        <div class="absen-row">
-            <button class="absen-card card-in" id="btn-checkin" onclick="pilihAksi('Check In')">
-                <div class="absen-icon"><i class="fas fa-arrow-right-to-bracket"></i></div>
-                <span class="absen-title">Check In</span>
-                <span id="time-checkin" class="info-jam-absen">--:--</span>
-            </button>
-
-            <button class="absen-card card-out" id="btn-checkout" onclick="pilihAksi('Check Out')">
-                <div class="absen-icon"><i class="fas fa-arrow-left-from-bracket"></i></div>
-                <span class="absen-title">Check Out</span>
-                <span id="time-checkout" class="info-jam-absen">--:--</span>
-            </button>
+            <nav class="flex flex-col gap-2">
+                <button onclick="filterBrand('SEMUA')" id="btnSemua" 
+                    class="flex items-center gap-3 px-4 py-3 rounded-2xl font-semibold text-sm transition-all duration-200 bg-gradient-to-r from-indigo-600 to-violet-600 text-white shadow-lg shadow-indigo-600/30">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 opacity-90" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"/></svg>
+                    <span>Semua Brand</span>
+                </button>
+            </nav>
         </div>
 
-        <div class="card-off-wrapper">
-            <button class="absen-card card-off" id="btn-off" onclick="prosesAbsenOff()">
-                <div class="absen-icon"><i class="fas fa-calendar-xmark"></i></div>
-                <span class="absen-title" id="text-off">Ambil OFF</span>
-                <span id="time-off" class="info-jam-absen"></span>
-                <div class="spinner" id="off-spinner"></div>
-            </button>
+        <div class="flex flex-col gap-3 pt-6 border-t border-slate-200 dark:border-slate-800 text-xs">
+            <div class="flex items-center justify-between bg-slate-100 dark:bg-slate-950 p-2 rounded-xl border border-slate-200 dark:border-slate-800">
+                <span class="text-slate-700 dark:text-slate-300 font-semibold px-2">Interface Theme</span>
+                <button onclick="toggleTheme()" class="p-2 bg-white dark:bg-slate-800 text-slate-800 dark:text-yellow-400 rounded-lg shadow transition-all hover:scale-105">
+                    <span id="themeIcon">☀️ Light</span>
+                </button>
+            </div>
+            <div class="flex items-center gap-3 text-slate-500 dark:text-slate-400 px-1">
+                <span class="relative flex h-2.5 w-2.5">
+                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                  <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
+                </span>
+                <span class="font-semibold text-slate-800 dark:text-slate-200">Online & Ready</span>
+            </div>
         </div>
-    </div>
+    </aside>
 
-    <button class="btn-logout" onclick="logout()"><i class="fas fa-right-from-bracket"></i> KELUAR</button>
-</div>
-
-<!-- ========================================================== -->
-<!-- ==================== CAMERA OVERLAY ====================== -->
-<!-- ========================================================== -->
-<div class="camera-overlay" id="cameraOverlay">
-    <video id="kamera" autoplay playsinline></video>
-    <img id="previewFoto" />
-    
-    <div class="camera-controls" id="cameraControls">
-        <div class="info-text" id="cameraInfoText">📸 Pastikan wajah Anda di dalam bingkai</div>
+    <!-- KONTEN UTAMA -->
+    <main class="flex-1 p-4 md:p-10 overflow-y-auto z-10 text-slate-900 dark:text-slate-100 space-y-6 max-w-7xl mx-auto w-full">
         
-        <div class="top-controls" id="cameraButtons">
-            <button class="btn-capture-main" id="btnCapture" onclick="captureFoto()">
-                <i class="fas fa-camera"></i> Jepret
-            </button>
-            
-            <button class="btn-control btn-success-camera" id="btnKirim" onclick="kirimFoto()" style="display:none;">
-                <i class="fas fa-check"></i> Kirim
-            </button>
-            <button class="btn-control btn-danger-camera" id="btnUlang" onclick="ulangFoto()" style="display:none;">
-                <i class="fas fa-rotate-left"></i> Ulang
-            </button>
-        </div>
-        
-        <div style="display:flex; gap:12px; width:100%; justify-content:center; flex-wrap:wrap;">
-            <button class="btn-control btn-close-camera" onclick="tutupKamera()">
-                <i class="fas fa-times"></i> Tutup
-            </button>
-        </div>
-    </div>
-</div>
-
-<!-- ========================================================== -->
-<!-- ===================== VIEW ADMIN ========================= -->
-<!-- ========================================================== -->
-<div id="view-admin" class="glass-card box box-admin" style="display:none;">
-    <div style="display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:12px; border-bottom:1px solid var(--border-color); padding-bottom:16px; margin-bottom:16px;">
-        <div>
-            <h1 class="title" style="font-size:20px; text-align:left;">UFO KEBONSARI MALANG</h1>
-            <div style="color:var(--text-secondary); font-size:12px; margin-top:2px;"><i class="fas fa-chart-pie"></i> Panel Rekapitulasi Absensi</div>
-        </div>
-        <div style="display:flex; gap:8px; flex-wrap:wrap;">
-            <button onclick="downloadCSV()" style="width:auto; background:linear-gradient(135deg, #00D2D3, #01A3A4); color:white; padding:8px 16px; font-size:11px; border-radius:8px; border:none; font-weight:700; cursor:pointer; transition:var(--transition);">
-                <i class="fas fa-file-csv"></i> Unduh
-            </button>
-            <button class="btn-logout" onclick="logout()" style="margin:0; width:auto; padding:8px 16px; font-size:11px;">
-                <i class="fas fa-right-from-bracket"></i> KELUAR
-            </button>
-        </div>
-    </div>
-
-    <div style="background:var(--bg-card); padding:14px; border-radius:var(--radius-md); margin-bottom:16px; border:1px solid var(--border-color);">
-        <label style="font-weight:700; display:block; margin-bottom:6px; font-size:10px; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.5px;">
-            <i class="fas fa-filter"></i> Filter Karyawan:
-        </label>
-        <select id="filter-nama-admin" onchange="filterLaporanAdmin()" style="width:100%; max-width:280px; padding:10px 14px; border-radius:var(--radius-sm); border:1px solid var(--border-color); background:var(--bg-card); color:var(--text-primary); font-size:13px;">
-            <option value="SEMUA">-- Tampilkan Semua --</option>
-        </select>
-
-        <div id="periode-admin-text" style="display:none; margin-top:10px; font-size:11px; color:var(--primary-light); font-weight:700; background:rgba(108,99,255,0.1); padding:4px 14px; border-radius:6px; display:inline-block;">
-            <i class="fas fa-calendar"></i> Periode: -
-        </div>
-
-        <div class="gps-switch-wrapper">
-            <span class="label"><i class="fas fa-location-dot"></i> Radius GPS</span>
-            <label class="switch">
-                <input type="checkbox" id="toggle-gps" checked onchange="ubahStatusGPSAdmin(this.checked)">
-                <span class="slider"></span>
-            </label>
-        </div>
-
-        <div id="stat-karyawan-admin" style="display:none; grid-template-columns:repeat(4,1fr); gap:8px; margin-top:12px;">
-            <div style="background:var(--bg-card); padding:10px; border-radius:8px; border:1px solid var(--border-color); text-align:center;">
-                <div style="font-size:10px; font-weight:600; color:var(--text-muted);"><i class="fas fa-check-circle" style="color:var(--success);"></i> Hadir</div>
-                <strong id="admin-stat-masuk" style="font-size:18px; font-weight:900; color:var(--success);">0</strong>
+        <!-- HEADER KETERANGAN -->
+        <div class="app-card bg-white dark:bg-slate-900/80 border border-indigo-500/30 p-5 rounded-3xl shadow-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+            <div>
+                <h2 class="text-xl md:text-2xl font-black text-slate-900 dark:text-white tracking-tight">JADWAL PROMOTOR UFO MALANG</h2>
+                <p class="text-xs text-slate-600 dark:text-slate-300 mt-1">Daftar shift kerja mingguan (Senin - Minggu) lengkap dengan jadwal piket toilet.</p>
             </div>
-            <div style="background:var(--bg-card); padding:10px; border-radius:8px; border:1px solid var(--border-color); text-align:center;">
-                <div style="font-size:10px; font-weight:600; color:var(--text-muted);"><i class="fas fa-triangle-exclamation" style="color:var(--danger);"></i> Terlambat</div>
-                <strong id="admin-stat-terlambat" style="font-size:18px; font-weight:900; color:var(--danger);">0</strong>
-            </div>
-            <div style="background:var(--bg-card); padding:10px; border-radius:8px; border:1px solid var(--border-color); text-align:center;">
-                <div style="font-size:10px; font-weight:600; color:var(--text-muted);"><i class="fas fa-calendar-xmark" style="color:var(--danger);"></i> OFF</div>
-                <strong id="admin-stat-off" style="font-size:18px; font-weight:900; color:var(--danger);">0</strong>
-            </div>
-            <div style="background:var(--bg-card); padding:10px; border-radius:8px; border:1px solid var(--border-color); text-align:center;">
-                <div style="font-size:10px; font-weight:600; color:var(--text-muted);"><i class="fas fa-clock" style="color:var(--warning);"></i> PS</div>
-                <strong id="admin-stat-ps" style="font-size:18px; font-weight:900; color:var(--warning);">0</strong>
+            <div class="flex items-center gap-2 w-full md:w-auto">
+                <input type="text" id="inputCariNama" placeholder="Cari nama atau brand..." onkeyup="renderTabelPromotor()" class="w-full md:w-64 px-4 py-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl text-xs font-bold text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500">
             </div>
         </div>
-    </div>
 
-    <div class="table-container">
-        <table>
-            <thead>
-                <tr>
-                    <th><i class="fas fa-clock"></i> Waktu</th>
-                    <th><i class="fas fa-user"></i> Nama</th>
-                    <th style="text-align:center;"><i class="fas fa-circle"></i> Status</th>
-                    <th><i class="fas fa-location-dot"></i> GPS</th>
-                    <th style="text-align:center;"><i class="fas fa-camera"></i> Foto</th>
-                </tr>
-            </thead>
-            <tbody id="isi-tabel">
-                <tr>
-                    <td colspan="5" style="text-align:center; color:var(--text-muted); padding:30px; font-style:italic;">
-                        <i class="fas fa-spinner fa-spin"></i> Memuat data...
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-</div>
+        <!-- LEGENDA / KETERANGAN SHIFT -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <div class="app-card bg-white dark:bg-slate-900/80 border border-emerald-500/30 p-3 rounded-2xl shadow-md flex items-center gap-3">
+                <span class="w-8 h-8 rounded-xl bg-emerald-500/20 text-emerald-700 dark:text-emerald-400 font-black flex items-center justify-center text-xs">P</span>
+                <div>
+                    <span class="block text-[10px] font-bold text-slate-500 uppercase">Pagi</span>
+                    <span class="text-xs font-bold text-slate-800 dark:text-slate-200">Shift Masuk Pagi</span>
+                </div>
+            </div>
+            <div class="app-card bg-white dark:bg-slate-900/80 border border-blue-500/30 p-3 rounded-2xl shadow-md flex items-center gap-3">
+                <span class="w-8 h-8 rounded-xl bg-blue-500/20 text-blue-700 dark:text-blue-400 font-black flex items-center justify-center text-xs">S</span>
+                <div>
+                    <span class="block text-[10px] font-bold text-slate-500 uppercase">Siang</span>
+                    <span class="text-xs font-bold text-slate-800 dark:text-slate-200">Shift Masuk Siang</span>
+                </div>
+            </div>
+            <div class="app-card bg-white dark:bg-slate-900/80 border border-amber-500/30 p-3 rounded-2xl shadow-md flex items-center gap-3">
+                <span class="w-8 h-8 rounded-xl bg-amber-500/20 text-amber-700 dark:text-amber-400 font-black flex items-center justify-center text-xs">L</span>
+                <div>
+                    <span class="block text-[10px] font-bold text-slate-500 uppercase">Lainnya</span>
+                    <span class="text-xs font-bold text-slate-800 dark:text-slate-200">Shift Khusus / Lain</span>
+                </div>
+            </div>
+            <div class="app-card bg-white dark:bg-slate-900/80 border border-rose-500/30 p-3 rounded-2xl shadow-md flex items-center gap-3">
+                <span class="w-8 h-8 rounded-xl bg-rose-500/20 text-rose-700 dark:text-rose-400 font-black flex items-center justify-center text-xs">OFF</span>
+                <div>
+                    <span class="block text-[10px] font-bold text-slate-500 uppercase">Libur</span>
+                    <span class="text-xs font-bold text-slate-800 dark:text-slate-200">Hari Libur (OFF)</span>
+                </div>
+            </div>
+        </div>
 
-<!-- ========================================================== -->
-<!-- ======================== MODAL =========================== -->
-<!-- ========================================================== -->
-<div id="modal-notif" class="modal-overlay">
-    <div class="modal-box">
-        <h3 id="modal-title">INFO</h3>
-        <div id="modal-pesan" style="font-size:14px; color:var(--text-secondary); margin:10px 0 16px; line-height:1.6;">Pesan di sini</div>
-        <button class="btn-modal" onclick="tutupModal()"><i class="fas fa-check"></i> TUTUP</button>
-    </div>
-</div>
+        <!-- TABEL UTAMA JADWAL -->
+        <div class="app-card bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 p-4 md:p-6 rounded-3xl shadow-xl space-y-4">
+            <div class="overflow-x-auto max-h-[600px]">
+                <table class="w-full text-center text-xs border-collapse">
+                    <thead class="bg-slate-100 dark:bg-slate-950 text-slate-700 dark:text-slate-300 uppercase font-bold text-[11px] sticky top-0 border-b border-slate-300 dark:border-slate-800 z-10">
+                        <tr>
+                            <th class="py-3 px-3 text-left">Brand</th>
+                            <th class="py-3 px-3 text-left">Nama</th>
+                            <th class="py-3 px-2 text-center">Senin</th>
+                            <th class="py-3 px-2 text-center">Selasa</th>
+                            <th class="py-3 px-2 text-center">Rabu</th>
+                            <th class="py-3 px-2 text-center">Kamis</th>
+                            <th class="py-3 px-2 text-center">Jum'at</th>
+                            <th class="py-3 px-2 text-center">Sabtu</th>
+                            <th class="py-3 px-2 text-center">Minggu</th>
+                            <th class="py-3 px-3 text-center">Piket Toilet / Tanggal</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabelPromotorBody" class="divide-y divide-slate-200 dark:divide-slate-800/60">
+                        <!-- Data dirender melalui Javascript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
 
-<!-- ========================================================== -->
-<!-- ====================== JAVASCRIPT ======================== -->
-<!-- ========================================================== -->
-<script>
-// ============================================================
-// 1. THEME
-// ============================================================
-function setTheme(theme) {
-    document.documentElement.setAttribute('data-theme', theme);
-    localStorage.setItem('theme', theme);
-    document.querySelectorAll('.theme-toggle .toggle-btn').forEach(btn => {
-        btn.classList.toggle('active', btn.dataset.theme === theme);
-    });
-}
+    <!-- SCRIPT UTAMA -->
+    <script>
+        // Database data promotor sesuai gambar referensi
+        const daftarPromotor = [
+            { brand: "SHARP", nama: "AYUNG", jadwal: ["P", "OFF", "S", "L", "P", "S", "P"], piket: "1, 15", warnaBrand: "bg-yellow-400 text-slate-900" },
+            { brand: "SAMSUNG", nama: "FEBRI", jadwal: ["S", "L", "P", "OFF", "S", "P", "S"], piket: "1, 15", warnaBrand: "bg-yellow-400 text-slate-900" },
+            { brand: "POLYTRON", nama: "AGUS", jadwal: ["P", "P", "OFF", "S", "L", "P", "S"], piket: "2, 16", warnaBrand: "bg-red-600 text-white" },
+            { brand: "LG", nama: "EKA", jadwal: ["S", "S", "L", "P", "OFF", "S", "P"], piket: "2, 16", warnaBrand: "bg-red-600 text-white" },
+            { brand: "AQUA", nama: "PUGUH", jadwal: ["P", "S", "L", "P", "OFF", "S", "S"], piket: "3, 17", warnaBrand: "bg-cyan-500 text-white" },
+            { brand: "AQUA", nama: "RONI", jadwal: ["S", "P", "OFF", "S", "L", "P", "P"], piket: "3, 17", warnaBrand: "bg-cyan-500 text-white" },
+            { brand: "TOSHIBA", nama: "RISKA", jadwal: ["OFF", "S", "S", "L", "P", "S", "P"], piket: "4, 18", warnaBrand: "bg-slate-500 text-white" },
+            { brand: "TOSHIBA", nama: "ARFIN", jadwal: ["L", "P", "P", "OFF", "S", "P", "S"], piket: "4, 18", warnaBrand: "bg-slate-500 text-white" },
+            { brand: "MIDEA", nama: "ADHE", jadwal: ["P", "OFF", "S", "L", "P", "P", "S"], piket: "5, 19", warnaBrand: "bg-orange-500 text-white" },
+            { brand: "MIDEA", nama: "DEDY", jadwal: ["S", "L", "P", "OFF", "S", "S", "P"], piket: "5, 19", warnaBrand: "bg-orange-500 text-white" },
+            { brand: "CHANGHONG", nama: "ZUNUN", jadwal: ["P", "OFF", "S", "S", "L", "P", "S"], piket: "6, 20", warnaBrand: "bg-blue-600 text-white" },
+            { brand: "CHANGHONG", nama: "-", jadwal: ["S", "L", "P", "P", "OFF", "S", "P"], piket: "6, 20", warnaBrand: "bg-blue-600 text-white" },
+            { brand: "TCL", nama: "JIMY", jadwal: ["L", "P", "OFF", "S", "P", "S", "S"], piket: "7, 21", warnaBrand: "bg-emerald-600 text-white" },
+            { brand: "TCL", nama: "FAJAR", jadwal: ["OFF", "S", "L", "P", "S", "P", "P"], piket: "7, 21", warnaBrand: "bg-emerald-600 text-white" },
+            { brand: "GREE", nama: "LESYO", jadwal: ["L", "P", "OFF", "S", "P", "P", "S"], piket: "8, 22", warnaBrand: "bg-teal-400 text-slate-900" },
+            { brand: "PANASONIC", nama: "RICKY", jadwal: ["OFF", "S", "L", "P", "S", "S", "P"], piket: "8, 22", warnaBrand: "bg-sky-500 text-white" },
+            { brand: "ELECTROLUX", nama: "-", jadwal: ["OFF", "S", "P", "S", "L", "P", "S"], piket: "9, 23", warnaBrand: "bg-green-700 text-white" },
+            { brand: "MODENA", nama: "-", jadwal: ["L", "P", "S", "P", "OFF", "S", "S"], piket: "9, 23", warnaBrand: "bg-slate-800 text-white" },
+            { brand: "ARTUGO", nama: "FENDI", jadwal: ["P", "OFF", "S", "L", "P", "S", "P"], piket: "10, 24", warnaBrand: "bg-blue-800 text-white" },
+            { brand: "ARTUGO", nama: "ENNY", jadwal: ["S", "L", "P", "OFF", "S", "P", "S"], piket: "10, 24", warnaBrand: "bg-blue-800 text-white" },
+            { brand: "SANKEN", nama: "JESICA", jadwal: ["L", "P", "P", "OFF", "S", "P", "S"], piket: "11, 25", warnaBrand: "bg-indigo-600 text-white" },
+            { brand: "ADVANCE", nama: "LEO", jadwal: ["OFF", "S", "S", "L", "P", "S", "P"], piket: "11, 25", warnaBrand: "bg-purple-600 text-white" },
+            { brand: "GADGET", nama: "ROFIUL", jadwal: ["S", "L", "P", "OFF", "S", "P", "S"], piket: "12, 26", warnaBrand: "bg-pink-600 text-white" },
+            { brand: "GADGET", nama: "NEBIYA", jadwal: ["P", "OFF", "S", "L", "P", "S", "P"], piket: "12, 26", warnaBrand: "bg-pink-600 text-white" },
+            { brand: "MASPION", nama: "IBRA", jadwal: ["P", "S", "L", "P", "OFF", "S", "S"], piket: "13, 27", warnaBrand: "bg-red-500 text-white" },
+            { brand: "MASPION", nama: "NISA", jadwal: ["S", "P", "OFF", "S", "L", "P", "P"], piket: "13, 27", warnaBrand: "bg-red-500 text-white" },
+            { brand: "COMFORTA", nama: "INAYAH", jadwal: ["L", "P", "P", "OFF", "S", "P", "S"], piket: "14, 28", warnaBrand: "bg-purple-800 text-white" },
+            { brand: "SMALL", nama: "ANISA", jadwal: ["OFF", "S", "S", "L", "P", "S", "P"], piket: "14, 28", warnaBrand: "bg-zinc-600 text-white" }
+        ];
 
-const savedTheme = localStorage.getItem('theme') || 'dark';
-setTheme(savedTheme);
+        document.addEventListener("DOMContentLoaded", () => {
+            renderTabelPromotor();
+        });
 
-// ============================================================
-// 2. VARIABLES & CONSTANTS
-// ============================================================
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyzWGgEbgvoYjjrIUddHxb-QXKy0QyoHXrozQJ2951XSKK4F13-d2VvW25MEs0cfKqpnA/exec";
-const TOKO_LAT = -8.020496288923635;
-const TOKO_LNG = 112.61885029434528;
-const RADIUS_MAKSIMAL = 100;
+        window.toggleMobileMenu = function() {
+            const menu = document.getElementById('mobileMenuDropdown');
+            if (menu) menu.classList.toggle('hidden');
+        }
 
-let streamKamera = null;
-let lat = 0, lng = 0, namaLogin = "", tipeAbsen = "";
-let totalHadir = 0, totalOff = 0, totalPs = 0, totalTerlambat = 0;
-let isGpsValid = false;
-let isGpsEnabledGlobal = true;
-let gpsWatcher = null;
-let serverTimeOffset = 0;
-let dataLaporanGlobal = [];
-let isDataLoaded = false;
-let isEksekusiOffRunning = false;
-let isCameraActive = false;
-let capturedImageData = null;
-
-// ============================================================
-// 3. LOGIN
-// ============================================================
-function prosesLogin() {
-    const username = document.getElementById('user').value.trim();
-    const password = document.getElementById('pass').value.trim();
-
-    const btn = document.getElementById('btn-login');
-    const spinner = document.getElementById('login-spinner');
-    const textLogin = document.getElementById('text-login');
-
-    if (btn) { btn.disabled = true; btn.classList.add('btn-disabled'); }
-    if (spinner) spinner.style.display = 'inline-block';
-    if (textLogin) textLogin.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Memproses...';
-
-    fetch(SCRIPT_URL, {
-        method: 'POST',
-        redirect: 'follow',
-        body: JSON.stringify({ aksi: "login", username: username, password: password })
-    })
-    .then(res => res.json())
-    .then(data => {
-        if (btn) { btn.disabled = false; btn.classList.remove('btn-disabled'); }
-        if (spinner) spinner.style.display = 'none';
-        if (textLogin) textLogin.innerHTML = '<i class="fas fa-arrow-right-to-bracket"></i> MASUK';
-
-        if (data.status === "sukses") {
-            namaLogin = data.nama;
-            localStorage.setItem('sesi_username', username);
-            localStorage.setItem('sesi_password', password);
-
-            document.getElementById('view-login').style.display = 'none';
-
-            if (data.role === "admin") {
-                document.getElementById('view-admin').style.display = 'block';
-                muatPengaturanGPS();
-                muatDataAdmin();
+        function toggleTheme() {
+            const root = document.getElementById('htmlRoot');
+            const icon = document.getElementById('themeIcon');
+            const iconMob = document.getElementById('themeIconMobile');
+            if (root.classList.contains('dark')) {
+                root.classList.remove('dark'); root.classList.add('light');
+                localStorage.setItem('theme', 'light'); 
+                if(icon) icon.innerText = "🌙 Dark";
+                if(iconMob) iconMob.innerText = "🌙";
             } else {
-                initPeriodeKaryawan();
-                document.getElementById('view-dashboard').style.display = 'block';
-                document.getElementById('nama-user').innerText = namaLogin;
-
-                isDataLoaded = false;
-                kunciTombolKerja(true);
-                document.getElementById('status-log').innerHTML = "⏳ Menghubungkan & sinkronisasi data...";
-
-                muatPengaturanGPS(function() {
-                    sinkronisasiFullServer();
-                    sinkronisasiWaktuServer();
-                });
+                root.classList.remove('light'); root.classList.add('dark');
+                localStorage.setItem('theme', 'dark'); 
+                if(icon) icon.innerText = "☀️ Light";
+                if(iconMob) iconMob.innerText = "☀️";
             }
-        } else {
-            tampilkanPesan("Username atau Password salah! Periksa kembali data Anda.", "info");
         }
-    })
-    .catch(err => {
-        if (btn) { btn.disabled = false; btn.classList.remove('btn-disabled'); }
-        if (spinner) spinner.style.display = 'none';
-        if (textLogin) textLogin.innerHTML = '<i class="fas fa-arrow-right-to-bracket"></i> MASUK';
-        tampilkanPesan("Gagal terhubung ke server. Pastikan koneksi internet aktif.", "info");
-        console.error(err);
-    });
-}
+        window.toggleTheme = toggleTheme;
 
-// ============================================================
-// 4. KAMERA FUNCTIONS (FULL SCREEN, DEPAN SAJA)
-// ============================================================
-function bukaKamera() {
-    const overlay = document.getElementById('cameraOverlay');
-    const video = document.getElementById('kamera');
-    const preview = document.getElementById('previewFoto');
-    const btnCapture = document.getElementById('btnCapture');
-    const btnKirim = document.getElementById('btnKirim');
-    const btnUlang = document.getElementById('btnUlang');
-    const infoText = document.getElementById('cameraInfoText');
+        (function() {
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            document.getElementById('htmlRoot').className = savedTheme;
+            const iconMob = document.getElementById('themeIconMobile');
+            if(iconMob) iconMob.innerText = savedTheme === 'dark' ? '☀️' : '🌙';
+        })();
 
-    overlay.classList.add('active');
-    preview.classList.remove('show');
-    preview.style.display = 'none';
-    video.style.display = 'block';
-    btnCapture.style.display = 'inline-flex';
-    btnKirim.style.display = 'none';
-    btnUlang.style.display = 'none';
-    infoText.innerHTML = '📸 Pastikan wajah Anda di dalam bingkai';
-    capturedImageData = null;
-    isCameraActive = true;
+        window.renderTabelPromotor = function() {
+            const tbody = document.getElementById('tabelPromotorBody');
+            const keyword = document.getElementById('inputCariNama').value.toLowerCase();
+            if(!tbody) return;
 
-    navigator.mediaDevices.getUserMedia({
-        video: {
-            facingMode: "user",
-            width: { ideal: 1920 },
-            height: { ideal: 1080 }
-        }
-    })
-    .then(stream => {
-        streamKamera = stream;
-        video.srcObject = stream;
-        video.play().catch(e => console.log("Play error:", e));
-    })
-    .catch(err => {
-        tampilkanPesan("Gagal membuka kamera. Pastikan izin kamera diaktifkan.", "info");
-        tutupKamera();
-        console.error(err);
-    });
-}
+            let html = "";
+            let filtered = daftarPromotor.filter(item => 
+                item.brand.toLowerCase().includes(keyword) || item.nama.toLowerCase().includes(keyword)
+            );
 
-function captureFoto() {
-    const video = document.getElementById('kamera');
-    const preview = document.getElementById('previewFoto');
-    const btnCapture = document.getElementById('btnCapture');
-    const btnKirim = document.getElementById('btnKirim');
-    const btnUlang = document.getElementById('btnUlang');
-    const infoText = document.getElementById('cameraInfoText');
-
-    const canvas = document.createElement('canvas');
-    canvas.width = video.videoWidth || 1920;
-    canvas.height = video.videoHeight || 1080;
-    const ctx = canvas.getContext('2d');
-    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-
-    capturedImageData = canvas.toDataURL('image/jpeg', 0.9);
-
-    preview.src = capturedImageData;
-    preview.style.display = 'block';
-    preview.classList.add('show');
-    video.style.display = 'none';
-
-    btnCapture.style.display = 'none';
-    btnKirim.style.display = 'inline-flex';
-    btnUlang.style.display = 'inline-flex';
-    infoText.innerHTML = '📋 Cek foto Anda, jika sudah jelas klik Kirim';
-
-    if (streamKamera) {
-        streamKamera.getTracks().forEach(t => t.stop());
-        streamKamera = null;
-    }
-}
-
-function ulangFoto() {
-    const preview = document.getElementById('previewFoto');
-    const btnCapture = document.getElementById('btnCapture');
-    const btnKirim = document.getElementById('btnKirim');
-    const btnUlang = document.getElementById('btnUlang');
-    const infoText = document.getElementById('cameraInfoText');
-    const video = document.getElementById('kamera');
-
-    preview.classList.remove('show');
-    preview.style.display = 'none';
-    capturedImageData = null;
-    video.style.display = 'block';
-
-    btnCapture.style.display = 'inline-flex';
-    btnKirim.style.display = 'none';
-    btnUlang.style.display = 'none';
-    infoText.innerHTML = '📸 Ambil ulang foto, pastikan wajah terlihat jelas';
-
-    navigator.mediaDevices.getUserMedia({
-        video: {
-            facingMode: "user",
-            width: { ideal: 1920 },
-            height: { ideal: 1080 }
-        }
-    })
-    .then(stream => {
-        streamKamera = stream;
-        video.srcObject = stream;
-        video.play().catch(e => console.log("Play error:", e));
-    })
-    .catch(err => {
-        tampilkanPesan("Gagal membuka kamera.", "info");
-        console.error(err);
-    });
-}
-
-function kirimFoto() {
-    if (!capturedImageData) {
-        tampilkanPesan("Ambil foto terlebih dahulu!", "info");
-        return;
-    }
-
-    if (isGpsEnabledGlobal) {
-        if (lat === 0 && lng === 0) {
-            tampilkanPesan("Lokasi GPS belum terbaca. Tunggu sebentar.", "info");
-            return;
-        }
-        const jarak = hitungJarak(lat, lng, TOKO_LAT, TOKO_LNG);
-        if (jarak > RADIUS_MAKSIMAL) {
-            tampilkanPesan("Anda berada di luar radius toko.", "info");
-            return;
-        }
-    }
-
-    const serverDate = new Date(Date.now() + serverTimeOffset);
-    const jamSekarang = serverDate.getHours();
-    const waktuSekarang = serverDate.toLocaleTimeString('id-ID');
-
-    if (tipeAbsen === 'Check Out' && (jamSekarang === 17 || jamSekarang === 18)) {
-        const waktuCheckInLokal = localStorage.getItem(`waktuCheckIn_${namaLogin}`);
-        if (waktuCheckInLokal) {
-            const selisihMilidetik = serverDate.getTime() - parseInt(waktuCheckInLokal);
-            const selisihJam = selisihMilidetik / (1000 * 60 * 60);
-            if (selisihJam < 8) {
-                const sisaMenit = Math.ceil((8 - selisihJam) * 60);
-                tampilkanPesan(`Belum bisa checkout. Kurang ${sisaMenit} menit lagi.`, "info");
+            if (filtered.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="10" class="py-8 text-center text-slate-500">Data promotor tidak ditemukan.</td></tr>`;
                 return;
             }
-        }
-    }
 
-    const btnKirim = document.getElementById('btnKirim');
-    const originalText = btnKirim.innerHTML;
-    btnKirim.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Mengirim...';
-    btnKirim.disabled = true;
+            filtered.forEach(item => {
+                html += `<tr class="hover:bg-slate-50 dark:hover:bg-slate-900/40 transition-colors">
+                    <td class="py-2.5 px-3 text-left font-bold">
+                        <span class="px-2.5 py-1 rounded-lg ${item.warnaBrand} text-[10px] font-black tracking-wide shadow-sm inline-block">${item.brand}</span>
+                    </td>
+                    <td class="py-2.5 px-3 text-left font-bold text-slate-900 dark:text-white">${item.nama}</td>`;
 
-    const latText = lat ? lat.toFixed(6) : "0.000000";
-    const lngText = lng ? lng.toFixed(6) : "0.000000";
-    const formatWaktu = serverDate.toLocaleDateString('id-ID') + ' ' + waktuSekarang + ' WIB';
-    const gpsString = `GPS: ${latText}, ${lngText}`;
-
-    const canvas = document.createElement('canvas');
-    const img = new Image();
-    img.src = capturedImageData;
-    img.onload = function() {
-        canvas.width = img.width;
-        canvas.height = img.height;
-        const ctx = canvas.getContext('2d');
-        ctx.drawImage(img, 0, 0);
-
-        const boxHeight = Math.round(canvas.height * 0.12);
-        ctx.fillStyle = "rgba(0,0,0,0.6)";
-        ctx.fillRect(0, canvas.height - boxHeight, canvas.width, boxHeight);
-        ctx.fillStyle = "#ffffff";
-        ctx.font = `bold ${Math.round(canvas.height * 0.035)}px Inter`;
-        ctx.fillText(formatWaktu, Math.round(canvas.width * 0.05), canvas.height - Math.round(boxHeight * 0.6));
-        ctx.fillStyle = "#8B83FF";
-        ctx.font = `${Math.round(canvas.height * 0.03)}px Inter`;
-        ctx.fillText(gpsString, Math.round(canvas.width * 0.05), canvas.height - Math.round(boxHeight * 0.25));
-
-        const dataFoto = canvas.toDataURL('image/jpeg', 0.5);
-
-        fetch(SCRIPT_URL, {
-            method: 'POST',
-            redirect: 'follow',
-            body: JSON.stringify({
-                aksi: "absen",
-                nama: namaLogin,
-                status: tipeAbsen,
-                lat: lat,
-                lng: lng,
-                foto: dataFoto
-            })
-        })
-        .then(res => res.json())
-        .then(data => {
-            btnKirim.innerHTML = originalText;
-            btnKirim.disabled = false;
-
-            if (data.pesan && data.pesan.includes("berhasil")) {
-                const log = JSON.parse(localStorage.getItem(`absen_${namaLogin}`)) || { status: [] };
-                if (!log.status.includes(tipeAbsen)) log.status.push(tipeAbsen);
-                localStorage.setItem(`absen_${namaLogin}`, JSON.stringify(log));
-
-                let detail = JSON.parse(localStorage.getItem(`detailWaktu_${namaLogin}`)) || {};
-                detail[tipeAbsen] = waktuSekarang;
-                localStorage.setItem(`detailWaktu_${namaLogin}`, JSON.stringify(detail));
-
-                let infoDurasi = "";
-                if (tipeAbsen === 'Check In') {
-                    localStorage.setItem(`waktuCheckIn_${namaLogin}`, serverDate.getTime());
-                    if (jamSekarang > 8 || (jamSekarang === 8 && serverDate.getMinutes() > 10)) {
-                        totalTerlambat++;
-                        localStorage.setItem(`totalTerlambat_${namaLogin}`, totalTerlambat);
+                // Render 7 hari (Senin - Minggu)
+                item.jadwal.forEach(shift => {
+                    let badgeStyle = "bg-slate-200 dark:bg-slate-800 text-slate-800 dark:text-slate-200";
+                    if (shift === "OFF") {
+                        badgeStyle = "bg-rose-500/20 text-rose-600 dark:text-rose-400 font-black border border-rose-500/40";
+                    } else if (shift === "P") {
+                        badgeStyle = "bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 font-extrabold";
+                    } else if (shift === "S") {
+                        badgeStyle = "bg-blue-500/20 text-blue-700 dark:text-blue-300 font-extrabold";
+                    } else if (shift === "L") {
+                        badgeStyle = "bg-amber-500/20 text-amber-700 dark:text-amber-300 font-extrabold";
                     }
-                }
-                if (tipeAbsen === 'Check Out') {
-                    const waktuCheckInLokal = localStorage.getItem(`waktuCheckIn_${namaLogin}`);
-                    if (waktuCheckInLokal) {
-                        const selisihMilidetik = serverDate.getTime() - parseInt(waktuCheckInLokal);
-                        const totalMenit = Math.floor(selisihMilidetik / (1000 * 60));
-                        const jam = Math.floor(totalMenit / 60);
-                        const menit = totalMenit % 60;
-                        infoDurasi = `<br><br>⏱️ <strong>Durasi Kerja Hari Ini:</strong><br>${jam} Jam ${menit} Menit.`;
-                    }
-                    totalHadir++;
-                    localStorage.setItem(`totalHadir_${namaLogin}`, totalHadir);
-                    if (jamSekarang === 17 || jamSekarang === 18) {
-                        totalPs++;
-                        localStorage.setItem(`totalPs_${namaLogin}`, totalPs);
-                    }
-                    localStorage.removeItem(`waktuCheckIn_${namaLogin}`);
-                }
 
-                tampilkanStatistik();
-                tampilkanPesan(`✅ Absen ${tipeAbsen} berhasil pada pukul ${waktuSekarang}!` + infoDurasi, 'sukses');
-                tutupKamera();
-            } else {
-                tampilkanPesan(data.pesan || "Gagal memproses data absensi.", 'info');
-            }
-        })
-        .catch(err => {
-            btnKirim.innerHTML = originalText;
-            btnKirim.disabled = false;
-            tampilkanPesan("Terjadi kesalahan jaringan.", "info");
-            console.error(err);
-        });
-    };
-}
+                    html += `<td class="py-2 px-2 text-center">
+                        <span class="inline-block w-9 h-8 leading-8 rounded-lg text-xs ${badgeStyle}">${shift}</span>
+                    </td>`;
+                });
 
-function tutupKamera() {
-    const overlay = document.getElementById('cameraOverlay');
-    if (streamKamera) {
-        streamKamera.getTracks().forEach(t => t.stop());
-        streamKamera = null;
-    }
-    overlay.classList.remove('active');
-    isCameraActive = false;
-    capturedImageData = null;
-    document.getElementById('view-dashboard').style.display = 'block';
-    cekValidasiHarian();
-}
-
-// ============================================================
-// 5. FUNGSI LAINNYA
-// ============================================================
-function kunciTombolKerja(statusKunci) {
-    const btnIn = document.getElementById('btn-checkin');
-    const btnOut = document.getElementById('btn-checkout');
-    const btnOff = document.getElementById('btn-off');
-
-    if (statusKunci) {
-        if (btnIn) { btnIn.classList.add('btn-disabled'); btnIn.disabled = true; }
-        if (btnOut) { btnOut.classList.add('btn-disabled'); btnOut.disabled = true; }
-        if (btnOff) { btnOff.classList.add('btn-disabled'); btnOff.disabled = true; }
-    } else {
-        if (btnIn) { btnIn.classList.remove('btn-disabled'); btnIn.disabled = false; }
-        if (btnOut) { btnOut.classList.remove('btn-disabled'); btnOut.disabled = false; }
-        if (btnOff) { btnOff.classList.remove('btn-disabled'); btnOff.disabled = false; }
-    }
-}
-
-function initPeriodeKaryawan() {
-    const label = document.getElementById('periode-karyawan-text');
-    if (label) {
-        label.style.display = 'block';
-        let now = new Date();
-        const bulan = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
-        let blnMulai, thnMulai, blnSelesai, thnSelesai;
-
-        if (now.getDate() >= 26) {
-            blnMulai = bulan[now.getMonth()];
-            thnMulai = now.getFullYear();
-            let next = new Date(now.getFullYear(), now.getMonth() + 1, 1);
-            blnSelesai = bulan[next.getMonth()];
-            thnSelesai = next.getFullYear();
-        } else {
-            let prev = new Date(now.getFullYear(), now.getMonth() - 1, 1);
-            blnMulai = bulan[prev.getMonth()];
-            thnMulai = prev.getFullYear();
-            blnSelesai = bulan[now.getMonth()];
-            thnSelesai = now.getFullYear();
-        }
-        document.getElementById('periodeText').innerText = `26 ${blnMulai} ${thnMulai} - 25 ${blnSelesai} ${thnSelesai}`;
-    }
-}
-
-function muatPengaturanGPS(callback) {
-    fetch(SCRIPT_URL, {
-        method: 'POST',
-        redirect: 'follow',
-        body: JSON.stringify({ aksi: "get_gps_config" })
-    })
-    .then(res => res.json())
-    .then(data => {
-        isGpsEnabledGlobal = (data.status_gps === "ON");
-        const toggle = document.getElementById('toggle-gps');
-        if (toggle) toggle.checked = isGpsEnabledGlobal;
-        updateGPSStatus();
-        if (callback) callback();
-    })
-    .catch(err => {
-        console.error("Gagal membaca GPS config:", err);
-        if (callback) callback();
-    });
-}
-
-function updateGPSStatus() {
-    const dot = document.getElementById('gpsDot');
-    const text = document.getElementById('gpsStatusText');
-    
-    if (!isDataLoaded) {
-        dot.className = 'dot loading';
-        text.innerText = 'Memuat GPS...';
-        return;
-    }
-    
-    if (isGpsValid || !isGpsEnabledGlobal) {
-        dot.className = 'dot on';
-        text.innerText = isGpsEnabledGlobal ? 'GPS Aktif ✓' : 'Mode Bebas GPS';
-    } else {
-        dot.className = 'dot off';
-        text.innerText = 'GPS Nonaktif ✗';
-    }
-}
-
-function ubahStatusGPSAdmin(statusAktif) {
-    const statusTeks = statusAktif ? "ON" : "OFF";
-    
-    fetch(SCRIPT_URL, {
-        method: 'POST',
-        redirect: 'follow',
-        body: JSON.stringify({ aksi: "set_gps_config", status_gps: statusTeks })
-    })
-    .then(res => res.json())
-    .then(data => {
-        if (data.status === "sukses") {
-            isGpsEnabledGlobal = statusAktif;
-            updateGPSStatus();
-            // Tampilkan notifikasi ringan
-            tampilkanPesan(`Status GPS diubah menjadi ${statusAktif ? 'AKTIF' : 'NONAKTIF'}`, 'info');
-        } else {
-            alert("Gagal mengubah status GPS di server.");
-            muatPengaturanGPS();
-        }
-    })
-    .catch(err => {
-        console.error(err);
-        alert("Gagal terhubung ke server.");
-        muatPengaturanGPS();
-    });
-}
-
-function sinkronisasiWaktuServer() {
-    fetch(SCRIPT_URL, {
-        method: 'POST',
-        redirect: 'follow',
-        body: JSON.stringify({ aksi: "get_server_time" })
-    })
-    .then(res => res.json())
-    .then(data => {
-        if (data.time) {
-            const serverDate = new Date(data.time.replace(" ", "T") + "+07:00");
-            const localDate = new Date();
-            serverTimeOffset = serverDate.getTime() - localDate.getTime();
-        }
-    })
-    .catch(err => console.log("Gagal sinkronisasi waktu:", err));
-}
-
-function updateWaktu() {
-    const now = new Date(Date.now() + serverTimeOffset);
-    const opts = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-    const elTanggal = document.getElementById('live-tanggal');
-    const elJam = document.getElementById('live-jam');
-    if (elTanggal) elTanggal.innerText = now.toLocaleDateString('id-ID', opts);
-    if (elJam) {
-        const jam = now.getHours().toString().padStart(2, '0');
-        const menit = now.getMinutes().toString().padStart(2, '0');
-        const detik = now.getSeconds().toString().padStart(2, '0');
-        elJam.innerText = `${jam}:${menit}:${detik}`;
-    }
-}
-setInterval(updateWaktu, 1000);
-
-function hitungJarak(lat1, lon1, lat2, lon2) {
-    const R = 6371000;
-    const dLat = (lat2 - lat1) * Math.PI / 180;
-    const dLon = (lon2 - lon1) * Math.PI / 180;
-    const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-              Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
-              Math.sin(dLon / 2) * Math.sin(dLon / 2);
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    return R * c;
-}
-
-function tampilkanStatistik() {
-    document.getElementById('total-masuk').innerText = totalHadir + " hari";
-    document.getElementById('total-off').innerText = totalOff + " hari";
-    document.getElementById('total-ps').innerText = totalPs + " hari";
-    document.getElementById('total-terlambat').innerText = totalTerlambat + " hari";
-}
-
-function tampilkanPesan(pesan, status) {
-    document.getElementById('modal-title').innerText = status === 'sukses' ? '✅ Berhasil' : 'ℹ️ Info';
-    document.getElementById('modal-pesan').innerHTML = `<p>${pesan}</p>`;
-    document.getElementById('modal-notif').style.display = 'flex';
-}
-
-function tutupModal() {
-    document.getElementById('modal-notif').style.display = 'none';
-}
-
-function sinkronisasiFullServer() {
-    fetch(SCRIPT_URL, {
-        method: 'POST',
-        redirect: 'follow',
-        body: JSON.stringify({ aksi: "get_laporan" })
-    })
-    .then(res => res.json())
-    .then(data => {
-        isDataLoaded = true;
-        if (!data || data.length <= 1) {
-            cekValidasiHarian();
-            startGPS();
-            return;
-        }
-
-        let now = new Date();
-        let targetBulan = now.getMonth();
-        let targetTahun = now.getFullYear();
-        if (now.getDate() >= 26) { targetBulan++; if (targetBulan > 11) { targetBulan = 0; targetTahun++; } }
-
-        let hitungHadir = 0, hitungOff = 0, hitungPs = 0, hitungTerlambat = 0;
-        let logPerTanggal = {};
-        let tglSekarangFormatted = Utilities_formatTanggalHariIni();
-        let statusHariIni = [];
-        let detailWaktuHariIni = {};
-
-        for (let i = 1; i < data.length; i++) {
-            let row = data[i];
-            let kolomWaktu = String(row[0] || "").trim();
-            let kolomNama = String(row[1] || "").trim();
-            let kolomStatus = String(row[2] || "").trim();
-
-            if (kolomNama === namaLogin && kolomWaktu && kolomWaktu.includes(" ")) {
-                let parts = kolomWaktu.split(" ");
-                let dateParts = parts[0].split("-");
-                let timeParts = parts[1].split(":");
-
-                if (parts[0] === tglSekarangFormatted) {
-                    if (!statusHariIni.includes(kolomStatus)) statusHariIni.push(kolomStatus);
-                    if (parts[1]) detailWaktuHariIni[kolomStatus] = parts[1];
-                }
-
-                try {
-                    let tglAbsen = new Date(parseInt(dateParts[2]), parseInt(dateParts[1]) - 1, parseInt(dateParts[0]), parseInt(timeParts[0]), parseInt(timeParts[1]), parseInt(timeParts[2] || 0));
-                    let pBulan = tglAbsen.getMonth();
-                    let pTahun = tglAbsen.getFullYear();
-                    if (tglAbsen.getDate() >= 26) { pBulan++; if (pBulan > 11) { pBulan = 0; pTahun++; } }
-
-                    if (pBulan === targetBulan && pTahun === targetTahun) {
-                        let strTgl = dateParts[0] + "-" + dateParts[1] + "-" + dateParts[2];
-                        if (!logPerTanggal[strTgl]) logPerTanggal[strTgl] = { status: [], jamCheckIn: [], menitCheckIn: [], jamCheckOut: [] };
-                        logPerTanggal[strTgl].status.push(kolomStatus);
-                        if (kolomStatus === "Check In") {
-                            logPerTanggal[strTgl].jamCheckIn.push(tglAbsen.getHours());
-                            logPerTanggal[strTgl].menitCheckIn.push(tglAbsen.getMinutes());
-                        }
-                        if (kolomStatus === "Check Out") logPerTanggal[strTgl].jamCheckOut.push(tglAbsen.getHours());
-                    }
-                } catch (e) { console.error(e); }
-            }
-        }
-
-        for (let tgl in logPerTanggal) {
-            let item = logPerTanggal[tgl];
-            if (item.status.includes("OFF")) hitungOff++;
-            if (item.status.includes("Check In")) {
-                if (item.jamCheckIn[0] > 8 || (item.jamCheckIn[0] === 8 && item.menitCheckIn[0] > 10)) hitungTerlambat++;
-            }
-            if (item.status.includes("Check In") && item.status.includes("Check Out")) {
-                hitungHadir++;
-                let lastOut = item.jamCheckOut[item.jamCheckOut.length - 1];
-                if (lastOut === 17 || lastOut === 18) hitungPs++;
-            }
-        }
-
-        totalHadir = hitungHadir;
-        totalOff = hitungOff;
-        totalPs = hitungPs;
-        totalTerlambat = hitungTerlambat;
-        tampilkanStatistik();
-
-        const tglSekarang = new Date().toDateString();
-        localStorage.setItem(`absen_${namaLogin}`, JSON.stringify({ tanggal: tglSekarang, status: statusHariIni }));
-        localStorage.setItem(`detailWaktu_${namaLogin}`, JSON.stringify(detailWaktuHariIni));
-
-        cekValidasiHarian();
-        startGPS();
-    })
-    .catch(err => {
-        console.error("Gagal sinkronisasi data:", err);
-        isDataLoaded = true;
-        cekValidasiHarian();
-        startGPS();
-    });
-}
-
-function Utilities_formatTanggalHariIni() {
-    let d = new Date();
-    return `${d.getDate().toString().padStart(2, '0')}-${(d.getMonth() + 1).toString().padStart(2, '0')}-${d.getFullYear()}`;
-}
-
-function muatDataAdmin() {
-    const tabelBody = document.getElementById('isi-tabel');
-    if (!tabelBody) return;
-    tabelBody.innerHTML = "<tr><td colspan='5' style='text-align:center; padding:30px; color:var(--text-muted);'><i class='fas fa-spinner fa-spin'></i> Memuat data...</td></tr>";
-
-    fetch(SCRIPT_URL, { method: 'POST', redirect: 'follow', body: JSON.stringify({ aksi: "get_laporan" }) })
-    .then(res => res.json())
-    .then(data => {
-        dataLaporanGlobal = data;
-        const dropdown = document.getElementById('filter-nama-admin');
-        if (dropdown) {
-            dropdown.innerHTML = '<option value="SEMUA">-- Tampilkan Semua Karyawan --</option>';
-            let daftarNama = [];
-            for (let i = 1; i < data.length; i++) {
-                let nama = data[i][1];
-                if (nama && !daftarNama.includes(nama)) daftarNama.push(nama);
-            }
-            daftarNama.sort().forEach(nama => {
-                dropdown.innerHTML += `<option value="${nama}">${nama}</option>`;
+                html += `<td class="py-2.5 px-3 text-center font-bold text-indigo-600 dark:text-indigo-400">${item.piket}</td>
+                </tr>`;
             });
+
+            tbody.innerHTML = html;
         }
-        renderTabelAdmin("SEMUA");
-    })
-    .catch(err => {
-        tabelBody.innerHTML = "<tr><td colspan='5' style='text-align:center; padding:30px; color:#EF4444;'>Gagal memuat data. Periksa koneksi internet.</td></tr>";
-        console.error(err);
-    });
-}
-
-function filterLaporanAdmin() {
-    const namaDipilih = document.getElementById('filter-nama-admin').value;
-    renderTabelAdmin(namaDipilih);
-}
-
-function renderTabelAdmin(namaTarget) {
-    const tabelBody = document.getElementById('isi-tabel');
-    if (!tabelBody) return;
-    tabelBody.innerHTML = "";
-
-    if (!dataLaporanGlobal || dataLaporanGlobal.length <= 1) {
-        tabelBody.innerHTML = "<tr><td colspan='5' style='text-align:center; padding:30px; color:var(--text-muted);'>Belum ada data absensi.</td></tr>";
-        return;
-    }
-
-    let now = new Date();
-    let targetBulan = now.getMonth();
-    let targetTahun = now.getFullYear();
-    if (now.getDate() >= 26) { targetBulan++; if (targetBulan > 11) { targetBulan = 0; targetTahun++; } }
-
-    const labelPeriode = document.getElementById('periode-admin-text');
-    if (labelPeriode) {
-        labelPeriode.style.display = 'inline-block';
-        const bulan = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
-        let blnMulai, thnMulai, blnSelesai, thnSelesai;
-        if (now.getDate() >= 26) {
-            blnMulai = bulan[now.getMonth()];
-            thnMulai = now.getFullYear();
-            let next = new Date(now.getFullYear(), now.getMonth() + 1, 1);
-            blnSelesai = bulan[next.getMonth()];
-            thnSelesai = next.getFullYear();
-        } else {
-            let prev = new Date(now.getFullYear(), now.getMonth() - 1, 1);
-            blnMulai = bulan[prev.getMonth()];
-            thnMulai = prev.getFullYear();
-            blnSelesai = bulan[now.getMonth()];
-            thnSelesai = now.getFullYear();
-        }
-        labelPeriode.innerHTML = `<i class="fas fa-calendar"></i> Periode: 26 ${blnMulai} ${thnMulai} - 25 ${blnSelesai} ${thnSelesai}`;
-    }
-
-    let totalMasuk = 0, totalOff = 0, totalPs = 0, totalTerlambatAdmin = 0;
-    let logPerTanggal = {};
-
-    for (let i = 1; i < dataLaporanGlobal.length; i++) {
-        let row = dataLaporanGlobal[i];
-        if (!row || row.length < 3) continue;
-
-        let kolomWaktu = String(row[0] || "").trim();
-        let kolomNama = String(row[1] || "").trim();
-        let kolomStatus = String(row[2] || "").trim();
-
-        if (namaTarget === "SEMUA" || kolomNama === namaTarget) {
-            let tr = document.createElement('tr');
-            let badgeClass = 'badge-off';
-            if (kolomStatus === 'Check In') badgeClass = 'badge-in';
-            if (kolomStatus === 'Check Out') badgeClass = 'badge-out';
-
-            let koordinat = (row[3] && row[4]) ? `${parseFloat(row[3]).toFixed(5)}, ${parseFloat(row[4]).toFixed(5)}` : '-';
-
-            tr.innerHTML = `
-                <td style="padding:10px 12px; font-weight:500; font-size:12px; white-space:nowrap; color:var(--text-secondary);">${kolomWaktu || '-'}</td>
-                <td style="padding:10px 12px; font-weight:700; font-size:12px; color:var(--text-primary);">${kolomNama || '-'}</td>
-                <td style="padding:10px 12px; text-align:center;"><span class="badge ${badgeClass}">${kolomStatus || '-'}</span></td>
-                <td style="padding:10px 12px; font-family:monospace; font-size:11px; color:var(--text-muted);">${koordinat}</td>
-                <td style="padding:10px 12px; text-align:center;">
-                    ${row[5] && row[5] !== '-' ? `<a href="${row[5]}" target="_blank" class="btn-lihat"><i class="fas fa-image"></i> Lihat</a>` : '<span style="color:var(--text-muted); font-size:11px;">-</span>'}
-                </td>
-            `;
-            tabelBody.appendChild(tr);
-        }
-
-        if (namaTarget !== "SEMUA" && kolomNama === namaTarget) {
-            try {
-                if (kolomWaktu && kolomWaktu.includes(" ")) {
-                    let parts = kolomWaktu.split(" ");
-                    let dateParts = parts[0].split("-");
-                    let timeParts = parts[1].split(":");
-                    let tglAbsen = new Date(parseInt(dateParts[2]), parseInt(dateParts[1]) - 1, parseInt(dateParts[0]), parseInt(timeParts[0]), parseInt(timeParts[1]));
-                    let pBulan = tglAbsen.getMonth();
-                    let pTahun = tglAbsen.getFullYear();
-                    if (tglAbsen.getDate() >= 26) { pBulan++; if (pBulan > 11) { pBulan = 0; pTahun++; } }
-                    if (pBulan === targetBulan && pTahun === targetTahun) {
-                        let stringTanggal = parts[0];
-                        if (!logPerTanggal[stringTanggal]) logPerTanggal[stringTanggal] = { status: [], jamCheckIn: [], menitCheckIn: [], jamCheckOut: [] };
-                        logPerTanggal[stringTanggal].status.push(kolomStatus);
-                        if (kolomStatus === "Check In") {
-                            logPerTanggal[stringTanggal].jamCheckIn.push(tglAbsen.getHours());
-                            logPerTanggal[stringTanggal].menitCheckIn.push(tglAbsen.getMinutes());
-                        }
-                        if (kolomStatus === "Check Out") logPerTanggal[stringTanggal].jamCheckOut.push(tglAbsen.getHours());
-                    }
-                }
-            } catch (e) { console.error("Format tanggal bermasalah", e); }
-        }
-    }
-
-    const boxStat = document.getElementById('stat-karyawan-admin');
-    if (namaTarget === "SEMUA") {
-        if (boxStat) boxStat.style.display = 'none';
-    } else {
-        if (boxStat) boxStat.style.display = 'grid';
-        for (let tgl in logPerTanggal) {
-            let hariIni = logPerTanggal[tgl];
-            if (hariIni.status.includes("OFF")) totalOff++;
-            if (hariIni.status.includes("Check In")) {
-                if (hariIni.jamCheckIn[0] > 8 || (hariIni.jamCheckIn[0] === 8 && hariIni.menitCheckIn[0] > 10)) totalTerlambatAdmin++;
-            }
-            if (hariIni.status.includes("Check In") && hariIni.status.includes("Check Out")) {
-                totalMasuk++;
-                let lastOut = hariIni.jamCheckOut[hariIni.jamCheckOut.length - 1];
-                if (lastOut === 17 || lastOut === 18) totalPs++;
-            }
-        }
-        document.getElementById('admin-stat-masuk').innerText = totalMasuk;
-        document.getElementById('admin-stat-terlambat').innerText = totalTerlambatAdmin;
-        document.getElementById('admin-stat-off').innerText = totalOff;
-        document.getElementById('admin-stat-ps').innerText = totalPs;
-    }
-}
-
-function retrackGPS() {
-    const btn = document.getElementById('btn-refresh-gps');
-    if (btn) { btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>'; }
-    if (gpsWatcher) { navigator.geolocation.clearWatch(gpsWatcher); gpsWatcher = null; }
-    document.getElementById('status-log').innerHTML = "⏳ Mendeteksi ulang koordinat...";
-    startGPS();
-    setTimeout(() => {
-        if (btn) { btn.disabled = false; btn.innerHTML = '<i class="fas fa-satellite-dish"></i> Refresh'; }
-    }, 2000);
-}
-
-function startGPS() {
-    isGpsValid = false;
-    if (navigator.geolocation) {
-        gpsWatcher = navigator.geolocation.watchPosition(
-            (position) => {
-                lat = position.coords.latitude;
-                lng = position.coords.longitude;
-                let jarak = hitungJarak(lat, lng, TOKO_LAT, TOKO_LNG);
-                isGpsValid = (jarak <= RADIUS_MAKSIMAL || !isGpsEnabledGlobal);
-                updateGPSStatus();
-                cekValidasiHarian();
-            },
-            (error) => {
-                isGpsValid = !isGpsEnabledGlobal;
-                updateGPSStatus();
-                document.getElementById('status-log').innerHTML = "⚠️ Gagal membaca lokasi GPS. Aktifkan Izin Lokasi!";
-                cekValidasiHarian();
-            },
-            { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
-        );
-    } else {
-        isGpsValid = !isGpsEnabledGlobal;
-        updateGPSStatus();
-        tampilkanPesan("Browser tidak mendukung GPS.", "info");
-    }
-}
-
-function cekValidasiHarian() {
-    tampilkanStatistik();
-    updateGPSStatus();
-    
-    if (!isDataLoaded) { kunciTombolKerja(true); return; }
-
-    const textOff = document.getElementById('text-off');
-    if (!isEksekusiOffRunning && textOff) textOff.innerText = "Ambil OFF";
-
-    const tglSekarang = new Date().toDateString();
-    const logAbsenHariIni = JSON.parse(localStorage.getItem(`absen_${namaLogin}`)) || {};
-
-    if (logAbsenHariIni.tanggal && logAbsenHariIni.tanggal !== tglSekarang) {
-        localStorage.setItem(`absen_${namaLogin}`, JSON.stringify({ tanggal: tglSekarang, status: [] }));
-        localStorage.removeItem(`waktuCheckIn_${namaLogin}`);
-        localStorage.removeItem(`detailWaktu_${namaLogin}`);
-    }
-
-    const currentLog = JSON.parse(localStorage.getItem(`absen_${namaLogin}`)) || { status: [] };
-    const status = currentLog.status || [];
-    const detailWaktu = JSON.parse(localStorage.getItem(`detailWaktu_${namaLogin}`)) || {};
-
-    document.getElementById('time-checkin').innerText = detailWaktu['Check In'] ? "IN: " + detailWaktu['Check In'] : "--:--";
-    document.getElementById('time-checkout').innerText = detailWaktu['Check Out'] ? "OUT: " + detailWaktu['Check Out'] : "--:--";
-    document.getElementById('time-off').innerText = detailWaktu['OFF'] ? detailWaktu['OFF'] : "";
-
-    const btnIn = document.getElementById('btn-checkin');
-    const btnOut = document.getElementById('btn-checkout');
-    const btnOff = document.getElementById('btn-off');
-
-    const sudahCheckIn = status.includes('Check In');
-    const sudahCheckOut = status.includes('Check Out');
-    const sudahOff = status.includes('OFF');
-
-    if (sudahOff || sudahCheckOut) {
-        btnIn.disabled = true; btnIn.classList.add('btn-disabled');
-        btnOut.disabled = true; btnOut.classList.add('btn-disabled');
-        btnOff.disabled = true; btnOff.classList.add('btn-disabled');
-        document.getElementById('status-log').innerHTML = sudahOff ? "📴 Status: OFF (Libur)" : "✅ Anda sudah selesai bekerja hari ini. Terima kasih!";
-        return;
-    }
-
-    if (sudahCheckIn && !sudahCheckOut) {
-        btnIn.disabled = true; btnIn.classList.add('btn-disabled');
-        btnOff.disabled = true; btnOff.classList.add('btn-disabled');
-        if (isGpsValid || !isGpsEnabledGlobal) {
-            btnOut.disabled = false; btnOut.classList.remove('btn-disabled');
-            document.getElementById('status-log').innerHTML = "🟢 Sedang bekerja<br>Silahkan Checkout saat pulang";
-        } else {
-            btnOut.disabled = true; btnOut.classList.add('btn-disabled');
-            let jarak = (lat && lng) ? Math.round(hitungJarak(lat, lng, TOKO_LAT, TOKO_LNG)) : 0;
-            document.getElementById('status-log').innerHTML = `🔴 Diluar Area (+${jarak}m dari toko).<br>Masuk area toko untuk Checkout!`;
-        }
-        return;
-    }
-
-    if (!sudahCheckIn && !sudahOff) {
-        btnOff.disabled = false; btnOff.classList.remove('btn-disabled');
-        if (isGpsValid || !isGpsEnabledGlobal) {
-            btnIn.disabled = false; btnIn.classList.remove('btn-disabled');
-            btnOut.disabled = true; btnOut.classList.add('btn-disabled');
-            document.getElementById('status-log').innerHTML = isGpsEnabledGlobal ? "🟢 GPS Terverifikasi: Silakan Check In atau OFF" : "🟢 Mode Absen Bebas GPS Aktif";
-        } else {
-            btnIn.disabled = true; btnIn.classList.add('btn-disabled');
-            btnOut.disabled = true; btnOut.classList.add('btn-disabled');
-            let jarak = (lat && lng) ? Math.round(hitungJarak(lat, lng, TOKO_LAT, TOKO_LNG)) : 0;
-            document.getElementById('status-log').innerHTML = (lat === 0 && lng === 0) ? "⏳ Menghubungkan GPS...<br>Gunakan tombol OFF jika hari ini libur." : `🔴 Diluar Area (+${jarak}m dari toko).<br>Hanya tombol OFF yang aktif.`;
-        }
-    }
-}
-
-function pilihAksi(tipe) {
-    tipeAbsen = tipe;
-    document.getElementById('view-dashboard').style.display = 'none';
-    bukaKamera();
-}
-
-function prosesAbsenOff() {
-    document.getElementById('modal-title').innerText = '📴 Konfirmasi Libur';
-    document.getElementById('modal-pesan').innerHTML = `
-        <p style="margin-bottom:10px; font-weight:500;">Apakah Anda yakin ingin mengambil hari OFF (Libur) hari ini?</p>
-        <div style="display:flex; gap:10px; margin-top:12px;">
-            <button onclick="eksekusiAbsenOff()" style="background:linear-gradient(135deg,#EF4444,#DC2626); color:white; border:none; padding:12px; border-radius:10px; flex:1; font-weight:700; cursor:pointer; transition:var(--transition);"><i class="fas fa-check"></i> YA</button>
-            <button onclick="tutupModal()" style="background:var(--bg-card); color:var(--text-secondary); border:1px solid var(--border-color); padding:12px; border-radius:10px; flex:1; font-weight:700; cursor:pointer; transition:var(--transition);">BATAL</button>
-        </div>
-    `;
-    document.getElementById('modal-notif').style.display = 'flex';
-}
-
-function eksekusiAbsenOff() {
-    tutupModal();
-    isEksekusiOffRunning = true;
-    const btn = document.getElementById('btn-off');
-    const spinner = document.getElementById('off-spinner');
-    const textBtn = document.getElementById('text-off');
-    if (btn) { btn.disabled = true; btn.classList.add('btn-disabled'); }
-    if (spinner) spinner.style.display = 'inline-block';
-    if (textBtn) textBtn.innerText = "Memproses...";
-
-    fetch(SCRIPT_URL, {
-        method: 'POST',
-        redirect: 'follow',
-        body: JSON.stringify({ aksi: "absen", nama: namaLogin, status: "OFF", lat: lat || 0, lng: lng || 0, foto: "" })
-    })
-    .then(res => res.json())
-    .then(data => {
-        isEksekusiOffRunning = false;
-        if (spinner) spinner.style.display = 'none';
-        if (textBtn) textBtn.innerText = "Ambil OFF";
-        if (data.pesan && data.pesan.includes("berhasil")) {
-            const log = JSON.parse(localStorage.getItem(`absen_${namaLogin}`)) || { status: [] };
-            if (!log.status.includes('OFF')) log.status.push('OFF');
-            localStorage.setItem(`absen_${namaLogin}`, JSON.stringify(log));
-            const serverDate = new Date(Date.now() + serverTimeOffset);
-            const waktu = serverDate.toLocaleTimeString('id-ID');
-            let detail = JSON.parse(localStorage.getItem(`detailWaktu_${namaLogin}`)) || {};
-            detail['OFF'] = waktu;
-            localStorage.setItem(`detailWaktu_${namaLogin}`, JSON.stringify(detail));
-            totalOff++;
-            localStorage.setItem(`totalOff_${namaLogin}`, totalOff);
-            tampilkanStatistik();
-            cekValidasiHarian();
-            tampilkanPesan("✅ Berhasil mengambil hari OFF dan tercatat di server!", "sukses");
-        } else {
-            tampilkanPesan(data.pesan || "Gagal memproses data OFF.", 'info');
-            cekValidasiHarian();
-        }
-    })
-    .catch(err => {
-        isEksekusiOffRunning = false;
-        if (spinner) spinner.style.display = 'none';
-        if (textBtn) textBtn.innerText = "Ambil OFF";
-        if (btn) { btn.disabled = false; btn.classList.remove('btn-disabled'); }
-        tampilkanPesan("Terjadi kesalahan jaringan.", "info");
-        cekValidasiHarian();
-    });
-}
-
-function logout() {
-    if (gpsWatcher) { navigator.geolocation.clearWatch(gpsWatcher); gpsWatcher = null; }
-    if (streamKamera) { streamKamera.getTracks().forEach(t => t.stop()); streamKamera = null; }
-    namaLogin = "";
-    isDataLoaded = false;
-    isEksekusiOffRunning = false;
-    document.getElementById('user').value = "";
-    document.getElementById('pass').value = "";
-    document.getElementById('view-dashboard').style.display = 'none';
-    document.getElementById('view-admin').style.display = 'none';
-    document.getElementById('view-login').style.display = 'block';
-    document.getElementById('cameraOverlay').classList.remove('active');
-    kunciTombolKerja(false);
-}
-
-function downloadCSV() {
-    let barisTabel = document.querySelectorAll("#isi-tabel tr");
-    if (barisTabel.length === 0 || (barisTabel.length === 1 && barisTabel[0].innerText.includes("Memuat"))) {
-        alert("Data absen belum dimuat sempurna. Tunggu beberapa detik.");
-        return;
-    }
-
-    let csvContent = "\uFEFF";
-    let barisData = [["Waktu", "Nama Karyawan", "Status", "Latitude", "Longitude", "Link Foto Selfie"]];
-
-    if (dataLaporanGlobal && dataLaporanGlobal.length > 1) {
-        for (let i = 1; i < dataLaporanGlobal.length; i++) {
-            let row = dataLaporanGlobal[i];
-            barisData.push([
-                String(row[0] || "").trim(),
-                String(row[1] || "").trim(),
-                String(row[2] || "").trim(),
-                row[3] && row[3] !== "-" ? row[3] : "",
-                row[4] && row[4] !== "-" ? row[4] : "",
-                row[5] && row[5] !== "-" ? row[5] : "-"
-            ]);
-        }
-    }
-
-    barisData.forEach(rowArray => {
-        let row = rowArray.map(val => `"${String(val).replace(/"/g, '""')}"`);
-        csvContent += row.join(";") + "\r\n";
-    });
-
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    const tgl = new Date();
-    const formatTanggal = `${tgl.getFullYear()}${(tgl.getMonth()+1).toString().padStart(2,'0')}${tgl.getDate().toString().padStart(2,'0')}`;
-    link.setAttribute("href", url);
-    link.setAttribute("download", `Rekap_Absen_UFO_${formatTanggal}.csv`);
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-}
-
-console.log("🚀 UFO Kebonsari - Sistem Absensi Modern siap digunakan!");
-</script>
+    </script>
 </body>
 </html>
