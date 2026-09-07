@@ -225,7 +225,7 @@
             await simpanDataKeSheets();
         }
 
-      function renderTabelPromotor() {
+   function renderTabelPromotor() {
     const tbody = document.getElementById('tabelPromotorBody');
     const keyword = document.getElementById('inputCariPromotor').value.toLowerCase();
     if(!tbody) return;
@@ -236,15 +236,17 @@
 
     filtered.forEach(item => {
         let warna = item.warnaBrand || "bg-yellow-400 text-slate-900";
-        let j1 = item.p1.jadwal || ["P","OFF","S","P","S","P","S"];
-        let j2 = item.p2.jadwal || ["P","OFF","S","P","S","P","S"];
+        let j1 = item.p1 && item.p1.jadwal ? item.p1.jadwal : ["P","OFF","S","P","S","P","S"];
+        let j2 = item.p2 && item.p2.jadwal ? item.p2.jadwal : ["P","OFF","S","P","S","P","S"];
+        let nama1 = item.p1 && item.p1.nama ? item.p1.nama : "-";
+        let nama2 = item.p2 && item.p2.nama ? item.p2.nama : "-";
 
-        // Baris 1: Brand 1 (cth: SHARP) & Nama Promotor 1 (cth: AYUNG)
+        // Baris 1: Kolom Brand berisi Brand 1, Kolom Nama Promotor berisi Nama 1 (Ayung)
         html += `<tr class="border-t-2 border-slate-800">
             <td class="py-2.5 px-4 text-left font-bold bg-slate-900/50">
                 <span class="px-2.5 py-1 rounded-lg ${warna} text-[10px] font-black">${item.brand1}</span>
             </td>
-            <td class="py-2.5 px-4 text-left font-bold text-slate-200">${item.p1.nama}</td>`;
+            <td class="py-2.5 px-4 text-left font-bold text-slate-200">${nama1}</td>`;
         
         j1.forEach((shift, dayIdx) => {
             let shiftClass = "shift-p";
@@ -258,12 +260,12 @@
         });
         html += `</tr>`;
 
-        // Baris 2: Brand 2 (cth: SAMSUNG) & Nama Promotor 2 (cth: FEBRI) [Warna sama sebagai partner]
+        // Baris 2: Kolom Brand berisi Brand 2, Kolom Nama Promotor berisi Nama 2 (Febri) [Warna badge sama]
         html += `<tr class="border-b-2 border-slate-800">
             <td class="py-2.5 px-4 text-left font-bold bg-slate-900/50">
                 <span class="px-2.5 py-1 rounded-lg ${warna} text-[10px] font-black">${item.brand2}</span>
             </td>
-            <td class="py-2.5 px-4 text-left font-bold text-slate-200">${item.p2.nama}</td>`;
+            <td class="py-2.5 px-4 text-left font-bold text-slate-200">${nama2}</td>`;
         
         j2.forEach((shift, dayIdx) => {
             let shiftClass = "shift-p";
@@ -272,8 +274,8 @@
             else if (shift === "OFF") shiftClass = "shift-off";
 
             html += `<td class="py-2 px-1 text-center">
-                        <button onclick="toggleShift(${item.originalIndex}, 2, ${dayIdx})" class="shift-btn ${shiftClass}">${shift}</button>
-                    </td>`;
+                <button onclick="toggleShift(${item.originalIndex}, 2, ${dayIdx})" class="shift-btn ${shiftClass}">${shift}</button>
+            </td>`;
         });
         html += `</tr>`;
     });
