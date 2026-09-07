@@ -1329,7 +1329,7 @@
             return d.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
         }
 
-                  function renderShift() {
+                      function renderShift() {
             const tbody = document.getElementById('shiftTableBody');
             if (!salesData.length) {
                 tbody.innerHTML =
@@ -1342,20 +1342,13 @@
                 const dot = `<span class="brand-color-dot" style="background:${color};"></span>`;
                 const days = ['senin', 'selasa', 'rabu', 'kamis', 'jumat', 'sabtu', 'minggu'];
 
-                // GARIS PEMBATAS DI BAWAH BARIS KEDUA
-                const isSecondRow = idx % 2 === 1;
-                const pairNumber = Math.floor(idx / 2) + 1;
-                const dividerClass = isSecondRow ? 'pair-divider' : '';
+                const dividerClass = ''; // Hapus garis pembatas
                 const lockClass = isAdmin ? '' : 'locked';
 
-                // LETAKKAN BADGE DI POJOK KIRI ATAS, SEJAJAR DENGAN IKON DRAG
-                // Kami gunakan flexbox: Badge ada di atas, drag handle di bawahnya
-                html += `<tr data-idx="${idx}" class="${dividerClass}">
+                // HILANGKAN BADGE URUTAN, SISAKAN IKON DRAG DI KOLOM KIRI
+                html += `<tr data-idx="${idx}">
                     <td class="text-center">
-                        <div class="flex flex-col items-center justify-center gap-1 py-1">
-                            ${isSecondRow ? `<span class="pair-badge">👫 ${pairNumber}</span>` : ''}
-                            <span class="drag-handle ${lockClass}" title="Seret untuk tukar posisi">⠿</span>
-                        </div>
+                        <span class="drag-handle ${lockClass}" title="Seret untuk geser (butuh PIN)">⠿</span>
                     </td>
                     <td class="font-semibold text-slate-700"><span class="inline-flex items-center">${dot}${row.brand || ''}</span></td>
                     <td class="font-medium text-slate-600">${row.name || ''}</td>`;
@@ -1376,8 +1369,7 @@
             });
             tbody.innerHTML = html;
 
-            // FITUR DRAG AND DROP TETAP DIPANGGIL AGAR BISA DIGESER
-            setTimeout(initDragDrop, 50);
+            setTimeout(initDragDrop, 50); // Tetap panggil drag & drop
             updateStatistics();
         }
 
