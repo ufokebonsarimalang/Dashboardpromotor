@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jadwal Promotor Berpasangan - UFO Malang</title>
+    <title>Jadwal Promotor - UFO Malang</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script> tailwind.config = { darkMode: 'class' } </script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -11,7 +11,6 @@
         body { font-family: 'Inter', sans-serif; }
         .app-card { backdrop-filter: blur(20px); transition: all 0.2s ease; }
         
-        /* Tombol Shift Kontras & Jelas */
         .shift-btn {
             width: 38px;
             height: 34px;
@@ -36,7 +35,7 @@
 </head>
 <body class="bg-slate-100 dark:bg-slate-950 text-slate-900 dark:text-slate-100 min-h-screen flex flex-col md:flex-row relative overflow-x-hidden">
 
-    <!-- SIDEBAR NAVIGASI DESKTOP -->
+    <!-- SIDEBAR NAVIGASI -->
     <aside class="hidden md:flex md:w-72 h-screen sticky top-0 bg-white dark:bg-slate-900/90 backdrop-blur-2xl border-r border-slate-200 dark:border-slate-800 flex-col justify-between p-6 shrink-0 z-30 shadow-xl">
         <div class="flex flex-col gap-6">
             <div class="flex items-center gap-3.5">
@@ -44,7 +43,7 @@
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
                 </div>
                 <div>
-                    <h1 class="font-black text-slate-900 dark:text-white text-base tracking-tight">Ufo Malang</h1>
+                    <h1 class="font-black text-slate-900 dark:text-white text-base tracking-tight">Ufo Malang Kebonsari</h1>
                     <p id="cloudStatus" class="text-[11px] text-amber-500 font-bold">Connecting Server...</p>
                 </div>
             </div>
@@ -71,11 +70,11 @@
     <!-- KONTEN UTAMA -->
     <main class="flex-1 p-4 md:p-10 overflow-y-auto space-y-6 max-w-7xl mx-auto w-full">
 
-        <!-- TAB 1: JADWAL PROMOTOR (Tanpa Piket Toilet) -->
+        <!-- TAB 1: JADWAL PROMOTOR -->
         <section id="tabPromotor" class="space-y-6">
             <div class="app-card bg-white dark:bg-slate-900/80 border border-indigo-500/30 p-5 rounded-3xl shadow-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                 <div>
-                    <h2 class="text-xl font-black">JADWAL SHIFT PROMOTOR (BERPASANGAN)</h2>
+                    <h2 class="text-xl font-black">JADWAL SHIFT PROMOTOR</h2>
                     <p class="text-xs text-slate-500 mt-1">Klik kotak shift untuk mengubah: <span class="text-emerald-600 font-bold">P</span> ➔ <span class="text-blue-600 font-bold">S</span> ➔ <span class="text-amber-600 font-bold">L</span> ➔ <span class="text-rose-600 font-bold">OFF</span></p>
                 </div>
                 <input type="text" id="inputCariPromotor" placeholder="Cari brand / nama..." onkeyup="renderTabelPromotor()" class="px-4 py-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl text-xs font-bold w-full md:w-64">
@@ -103,11 +102,10 @@
             </div>
         </section>
 
-        <!-- TAB 2: JADWAL PIKET TOILET -->
+        <!-- TAB 2: PIKET TOILET -->
         <section id="tabPiket" class="hidden space-y-6">
             <div class="app-card bg-white dark:bg-slate-900/80 border border-indigo-500/30 p-5 rounded-3xl shadow-xl">
                 <h2 class="text-xl font-black">JADWAL PIKET TOILET PROMOTOR</h2>
-                <p class="text-xs text-slate-500 mt-1">Daftar penanggung jawab piket toilet per pasangan brand.</p>
             </div>
             <div class="app-card bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 p-4 rounded-3xl shadow-xl">
                 <div class="overflow-x-auto max-h-[600px]">
@@ -125,30 +123,29 @@
             </div>
         </section>
 
-        <!-- TAB 3: KONFIGURASI ADMIN -->
+        <!-- TAB 3: ADMIN KONFIGURASI -->
         <section id="tabAdmin" class="hidden space-y-6">
             <div class="app-card bg-white dark:bg-slate-900/80 border border-indigo-500/30 p-5 rounded-3xl shadow-xl space-y-4">
                 <h2 class="text-xl font-black">Tambah Pasangan Brand & Sales Baru</h2>
-                <p class="text-xs text-slate-500">Jika promotor partner belum ada, biarkan nama partner diisi tanda "-" (dapat disesuaikan kemudian).</p>
-                
-                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 pt-2">
-                    <input type="text" id="inputBrandBaru" placeholder="Nama Brand (cth: LG)" class="px-3 py-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-700 rounded-xl text-xs font-bold uppercase">
-                    <input type="text" id="inputP1Baru" placeholder="Nama Sales 1 (cth: AGUS)" class="px-3 py-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-700 rounded-xl text-xs font-bold uppercase">
-                    <input type="text" id="inputP2Baru" placeholder="Nama Sales 2 / Partner (cth: EKA atau -)" class="px-3 py-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-700 rounded-xl text-xs font-bold uppercase">
-                    <input type="text" id="inputPiketBaru" placeholder="Tanggal Piket (cth: 2, 16)" class="px-3 py-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-700 rounded-xl text-xs font-bold">
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-3 pt-2">
+                    <input type="text" id="inputBrand1Baru" placeholder="Brand 1 (cth: TOSHIBA)" class="px-3 py-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-700 rounded-xl text-xs font-bold uppercase">
+                    <input type="text" id="inputBrand2Baru" placeholder="Brand 2 (opsional/biarkan kosong)" class="px-3 py-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-700 rounded-xl text-xs font-bold uppercase">
+                    <input type="text" id="inputP1Baru" placeholder="Sales 1" class="px-3 py-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-700 rounded-xl text-xs font-bold uppercase">
+                    <input type="text" id="inputP2Baru" placeholder="Sales 2 (Partner/-)" class="px-3 py-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-700 rounded-xl text-xs font-bold uppercase">
+                    <input type="text" id="inputPiketBaru" placeholder="Piket (cth: 4,18)" class="px-3 py-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-700 rounded-xl text-xs font-bold">
                 </div>
-                <button onclick="tambahPromotorBaru()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-2.5 px-6 rounded-xl text-xs shadow-lg">➕ Tambah Pasangan Brand</button>
+                <button onclick="tambahPromotorBaru()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-2.5 px-6 rounded-xl text-xs shadow-lg">➕ Tambah Pasangan</button>
             </div>
 
             <div class="app-card bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 p-4 rounded-3xl shadow-xl">
-                <h3 class="font-bold text-sm mb-3">Daftar Pasangan Promotor</h3>
+                <h3 class="font-bold text-sm mb-3">Daftar Kelola Pasangan</h3>
                 <div class="overflow-x-auto max-h-[400px]">
                     <table class="w-full text-left text-xs border-collapse">
                         <thead class="bg-slate-100 dark:bg-slate-950 uppercase font-bold text-[10px]">
                             <tr>
-                                <th class="py-2.5 px-3">Brand</th>
+                                <th class="py-2.5 px-3">Brand 1 & 2</th>
                                 <th class="py-2.5 px-3">Sales 1</th>
-                                <th class="py-2.5 px-3">Sales 2 (Partner)</th>
+                                <th class="py-2.5 px-3">Sales 2</th>
                                 <th class="py-2.5 px-3">Piket</th>
                                 <th class="py-2.5 px-3 text-center">Aksi</th>
                             </tr>
@@ -232,13 +229,15 @@
 
             let html = "";
             let filtered = daftarPromotor.map((item, originalIndex) => ({ ...item, originalIndex }))
-                .filter(item => item.brand.toLowerCase().includes(keyword) || item.p1.nama.toLowerCase().includes(keyword) || item.p2.nama.toLowerCase().includes(keyword));
+                .filter(item => item.brand1.toLowerCase().includes(keyword) || item.brand2.toLowerCase().includes(keyword) || item.p1.nama.toLowerCase().includes(keyword) || item.p2.nama.toLowerCase().includes(keyword));
 
             filtered.forEach(item => {
-                // Baris Promotor 1 (Dengan rowspan=2 untuk Brand)
+                let brandDisplay = item.brand2 ? `${item.brand1} & ${item.brand2}` : item.brand1;
+
+                // Baris Sales 1
                 html += `<tr class="border-t-2 border-slate-200 dark:border-slate-800">
                     <td rowspan="2" class="py-2.5 px-4 text-left font-bold align-middle bg-slate-50/50 dark:bg-slate-900/50">
-                        <span class="px-2.5 py-1.5 rounded-lg ${item.warnaBrand} text-[11px] font-black tracking-wide shadow-sm inline-block">${item.brand}</span>
+                        <span class="px-2.5 py-1.5 rounded-lg bg-indigo-600 text-white text-[11px] font-black tracking-wide shadow-sm inline-block">${brandDisplay}</span>
                     </td>
                     <td class="py-2.5 px-4 text-left font-bold text-slate-800 dark:text-slate-200">${item.p1.nama}</td>`;
                 
@@ -254,7 +253,7 @@
                 });
                 html += `</tr>`;
 
-                // Baris Promotor 2 (Partner)
+                // Baris Sales 2 (Partner)
                 html += `<tr class="border-b-2 border-slate-200 dark:border-slate-800">
                     <td class="py-2.5 px-4 text-left font-bold text-slate-800 dark:text-slate-200">${item.p2.nama}</td>`;
                 
@@ -279,8 +278,9 @@
             if(!tbody) return;
             let html = "";
             daftarPromotor.forEach(item => {
+                let brandDisplay = item.brand2 ? `${item.brand1} & ${item.brand2}` : item.brand1;
                 html += `<tr class="border-b border-slate-200 dark:border-slate-800">
-                    <td class="py-3 px-4 text-left font-bold"><span class="px-2.5 py-1 rounded-lg ${item.warnaBrand} text-[10px]">${item.brand}</span></td>
+                    <td class="py-3 px-4 text-left font-bold"><span class="px-2.5 py-1 rounded-lg bg-indigo-600 text-white text-[10px]">${brandDisplay}</span></td>
                     <td class="py-3 px-4 text-left font-bold">1. ${item.p1.nama}<br>2. ${item.p2.nama}</td>
                     <td class="py-3 px-4 text-center font-black text-indigo-500 text-sm">${item.piket}</td>
                 </tr>`;
@@ -293,8 +293,9 @@
             if(!tbody) return;
             let html = "";
             daftarPromotor.forEach((item, index) => {
+                let brandDisplay = item.brand2 ? `${item.brand1} / ${item.brand2}` : item.brand1;
                 html += `<tr class="border-b border-slate-200 dark:border-slate-800">
-                    <td class="py-2.5 px-3 font-bold">${item.brand}</td>
+                    <td class="py-2.5 px-3 font-bold">${brandDisplay}</td>
                     <td class="py-2.5 px-3 font-bold text-emerald-500">${item.p1.nama}</td>
                     <td class="py-2.5 px-3 font-bold text-blue-500">${item.p2.nama}</td>
                     <td class="py-2.5 px-3">${item.piket}</td>
@@ -307,33 +308,36 @@
         }
 
         async function tambahPromotorBaru() {
-            const brand = document.getElementById('inputBrandBaru').value.trim().toUpperCase();
+            const brand1 = document.getElementById('inputBrand1Baru').value.trim().toUpperCase();
+            const brand2 = document.getElementById('inputBrand2Baru').value.trim().toUpperCase();
             const p1 = document.getElementById('inputP1Baru').value.trim().toUpperCase();
             const p2 = document.getElementById('inputP2Baru').value.trim().toUpperCase() || "-";
             const piket = document.getElementById('inputPiketBaru').value.trim();
 
-            if (!brand || !p1) { alert("Isi Nama Brand dan minimal Sales 1!"); return; }
+            if (!brand1 || !p1) { alert("Isi Brand 1 dan Sales 1 minimal!"); return; }
 
             daftarPromotor.push({
-                brand: brand,
+                brand1: brand1,
+                brand2: brand2,
                 piket: piket || "-",
                 warnaBrand: "bg-indigo-600 text-white",
                 p1: { nama: p1, jadwal: ["P", "P", "P", "OFF", "S", "P", "S"] },
                 p2: { nama: p2, jadwal: ["S", "L", "P", "OFF", "S", "P", "S"] }
             });
 
-            document.getElementById('inputBrandBaru').value = "";
+            document.getElementById('inputBrand1Baru').value = "";
+            document.getElementById('inputBrand2Baru').value = "";
             document.getElementById('inputP1Baru').value = "";
             document.getElementById('inputP2Baru').value = "";
             document.getElementById('inputPiketBaru').value = "";
 
             renderTabelAdmin();
             await simpanDataKeSheets();
-            alert("Pasangan brand berhasil ditambahkan!");
+            alert("Pasangan berhasil ditambahkan!");
         }
 
         async function hapusPromotor(index) {
-            if (confirm("Hapus seluruh pasangan brand ini?")) {
+            if (confirm("Hapus pasangan brand ini?")) {
                 daftarPromotor.splice(index, 1);
                 renderTabelAdmin();
                 await simpanDataKeSheets();
