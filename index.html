@@ -1713,6 +1713,70 @@
             document.getElementById('colorBrandInput').addEventListener('keypress', (e) => { if (e.key === 'Enter')
                     setBrandColorWithAuth(); });
         });
+                // ================================================================
+        // FITUR DOWNLOAD JPG (FIXED & GLOBAL)
+        // ================================================================
+        window.downloadJPG = async function(type) {
+            const target = type === 'shift' ? document.getElementById('page-shift') : document.getElementById('page-piket');
+            
+            if (!target) {
+                alert('Halaman tidak ditemukan!');
+                return;
+            }
+
+            // Beri feedback loading
+            const toast = document.getElementById('toast');
+            if (toast) {
+                toast.textContent = '⏳ Membuat gambar...';
+                toast.classList.add('show');
+                setTimeout(() => toast.classList.remove('show'), 2000);
+            }
+
+            try {
+                // Ambil elemen tabel dan kontainer utamanya
+                const elementToCapture = target.querySelector('.card-glass'); // Ambil area tabel saja
+                if (!elementToCapture) {
+                    alert('Tabel tidak ditemukan!');
+                    return;
+                }
+
+                // Pastikan library html2canvas sudah termuat
+                if (typeof html2canvas === 'undefined') {
+                    alert('Library html2canvas belum termuat. Periksa koneksi internet Anda.');
+                    return;
+                }
+
+                // Setting kualitas gambar (2x lipat agar tajam di HP)
+                const canvas = await html2canvas(elementToCapture, {
+                    scale: 2,
+                    backgroundColor: '#ffffff',
+                    useCORS: true
+                });
+
+                // Ubah canvas menjadi JPG
+                const imgData = canvas.toDataURL('image/jpeg', 0.95);
+
+                // Buat elemen <a> untuk download
+                const link = document.createElement('a');
+                const fileName = type === 'shift' ? 'Jadwal_Shift_UFO.jpg' : 'Jadwal_Piket_Toilet_UFO.jpg';
+                link.download = fileName;
+                link.href = imgData;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+
+                // Notifikasi sukses
+                if (toast) {
+                    toast.textContent = '✅ Gambar berhasil didownload';
+                    toast.style.background = '#1e293b';
+                    toast.classList.add('show');
+                    setTimeout(() => toast.classList.remove('show'), 2500);
+                }
+            } catch (error) {
+                console.error('Error download JPG:', error);
+                alert('Gagal membuat gambar. Periksa console browser untuk detail.');
+            }
+        };
     </script>
 
 </body>
