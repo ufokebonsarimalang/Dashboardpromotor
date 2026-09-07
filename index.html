@@ -4,6 +4,10 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>UFO Malang Kebonsari · Jadwal Piket & Shift</title>
+    <!-- Google Font Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js">
@@ -14,15 +18,14 @@
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js">
     </script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:opsz@14..32&display=swap');
         * {
-            font-family: 'Inter', system-ui, sans-serif;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
         }
         body {
             background: #f0f4f9;
         }
         .sidebar {
-            background: #0c2238;
+            background: linear-gradient(180deg, #0c2238 0%, #1a3a5a 100%);
             backdrop-filter: blur(4px);
             transition: all 0.2s;
         }
@@ -39,7 +42,7 @@
             box-shadow: 0 4px 16px rgba(0, 30, 60, 0.3);
         }
         .card-glass {
-            background: rgba(255, 255, 255, 0.85);
+            background: rgba(255, 255, 255, 0.92);
             backdrop-filter: blur(8px);
             border: 1px solid rgba(255, 255, 255, 0.5);
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.04);
@@ -86,7 +89,7 @@
         .badge-toilet {
             background: #eef2ff;
             color: #3730a3;
-            padding: 4px 14px;
+            padding: 6px 16px;
             border-radius: 40px;
             font-weight: 500;
             font-size: 0.8rem;
@@ -112,12 +115,16 @@
             border-bottom: 2px solid #e2e8f0;
             text-align: center;
             vertical-align: middle;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
         .table-modern td {
             padding: 10px 8px;
             border-bottom: 1px solid #f1f5f9;
             text-align: center;
             vertical-align: middle;
+            font-size: 0.85rem;
         }
         .table-modern tr:hover td {
             background: #fafcff;
@@ -143,9 +150,14 @@
         .drag-handle {
             cursor: grab;
             color: #94a3b8;
-            font-size: 1.1rem;
+            font-size: 1.2rem;
             padding: 0 4px;
             user-select: none;
+            opacity: 0.6;
+            transition: opacity 0.2s;
+        }
+        .drag-handle:hover {
+            opacity: 1;
         }
         .drag-handle:active {
             cursor: grabbing;
@@ -166,6 +178,7 @@
             border: 1px solid #e2e8f0;
             transition: all 0.15s;
             background: white;
+            font-size: 0.9rem;
         }
         .admin-input:focus {
             border-color: #2563eb;
@@ -179,6 +192,7 @@
             transition: all 0.15s;
             border: none;
             cursor: pointer;
+            font-size: 0.9rem;
         }
         .btn-modern:hover {
             transform: scale(1.02);
@@ -211,13 +225,6 @@
         }
         .btn-success:hover {
             background: #a7f3d0;
-        }
-        .btn-warning {
-            background: #fef3c7;
-            color: #92400e;
-        }
-        .btn-warning:hover {
-            background: #fde68a;
         }
         .brand-badge-color {
             display: inline-flex;
@@ -276,6 +283,7 @@
             transform: translateY(20px);
             transition: all 0.3s ease;
             pointer-events: none;
+            font-family: 'Inter', sans-serif;
         }
         .toast-notification.show {
             opacity: 1;
@@ -337,6 +345,24 @@
             align-items: center;
             gap: 8px;
         }
+        .stat-card {
+            background: white;
+            border-radius: 16px;
+            padding: 16px 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            border: 1px solid #eef2f6;
+        }
+        .stat-card .number {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #0c2238;
+        }
+        .stat-card .label {
+            font-size: 0.75rem;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
 
         @media (max-width: 768px) {
             .sidebar {
@@ -372,6 +398,9 @@
             .drag-handle {
                 font-size: 0.9rem;
             }
+            .stat-card .number {
+                font-size: 1.3rem;
+            }
         }
     </style>
 </head>
@@ -386,10 +415,10 @@
             <h3>🧹 Edit Piket Toilet</h3>
             <div class="sub" id="modalSalesInfo">Brand: SHARP - Nama: AYUNG</div>
             <div class="flex gap-2 mb-4">
-                <input type="text" id="modalToiletInput" placeholder="Contoh: 1.15 atau 5,19" class="admin-input flex-1" />
+                <input type="text" id="modalToiletInput" placeholder="Contoh: 15 atau 5,19" class="admin-input flex-1" />
                 <button class="btn-modern btn-primary" id="modalSaveBtn">Simpan</button>
             </div>
-            <div class="text-xs text-slate-400 mb-3">Format: tanggal atau periode (contoh: 1.15 atau 5,19)</div>
+            <div class="text-xs text-slate-400 mb-3">Format: tanggal (contoh: 15) atau periode (contoh: 5,19)</div>
             <button class="btn-modern btn-danger w-full" id="modalClearBtn">Kosongkan Piket</button>
             <button class="btn-modern btn-outline w-full mt-2" id="modalCancelBtn">Batal</button>
         </div>
@@ -428,12 +457,33 @@
             <!-- HALAMAN SHIFT -->
             <section id="page-shift" class="page active">
                 <div class="mb-6">
-                    <h2 class="text-3xl font-bold text-slate-800">📋 Jadwal Shift Promotor</h2>
+                    <h2 class="text-3xl font-bold text-slate-800" style="font-weight:800;">📋 Jadwal Shift Promotor</h2>
                     <p class="text-slate-500 mt-1 flex flex-wrap items-center gap-3">
                         <span>Klik badge shift untuk mengubah (P/S/OFF/L)</span>
                         <span class="drag-info">↕️ Drag & drop baris untuk tukar posisi sales</span>
                     </p>
                 </div>
+
+                <!-- Statistik -->
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
+                    <div class="stat-card">
+                        <div class="number" id="totalSales">0</div>
+                        <div class="label">Total Sales</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="number" id="totalPiket">0</div>
+                        <div class="label">Terjadwal Piket</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="number" id="totalPagi">0</div>
+                        <div class="label">Shift Pagi (P)</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="number" id="totalSiang">0</div>
+                        <div class="label">Shift Siang (S)</div>
+                    </div>
+                </div>
+
                 <div class="card-glass rounded-3xl p-4 md:p-6 overflow-hidden">
                     <div class="overflow-x-auto">
                         <table class="table-modern w-full text-sm min-w-[820px]">
@@ -467,9 +517,26 @@
             <!-- HALAMAN PIKET -->
             <section id="page-piket" class="page hidden">
                 <div class="mb-6">
-                    <h2 class="text-3xl font-bold text-slate-800">🧹 Jadwal Piket Toilet</h2>
+                    <h2 class="text-3xl font-bold text-slate-800" style="font-weight:800;">🧹 Jadwal Piket Toilet</h2>
                     <p class="text-slate-500 mt-1">Klik badge piket untuk mengatur jadwal — otomatis tersimpan</p>
                 </div>
+
+                <!-- Statistik Piket -->
+                <div class="grid grid-cols-2 md:grid-cols-3 gap-3 mb-6">
+                    <div class="stat-card">
+                        <div class="number" id="totalPiketStat">0</div>
+                        <div class="label">Total Terjadwal</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="number" id="totalKosongStat">0</div>
+                        <div class="label">Belum Terjadwal</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="number" id="totalSalesPiket">0</div>
+                        <div class="label">Total Sales</div>
+                    </div>
+                </div>
+
                 <div class="card-glass rounded-3xl p-4 md:p-6 overflow-hidden">
                     <div class="overflow-x-auto">
                         <table class="table-modern w-full text-sm min-w-[500px]">
@@ -495,7 +562,7 @@
             <!-- HALAMAN ADMIN -->
             <section id="page-admin" class="page hidden">
                 <div class="mb-6">
-                    <h2 class="text-3xl font-bold text-slate-800">⚙️ Panel Admin</h2>
+                    <h2 class="text-3xl font-bold text-slate-800" style="font-weight:800;">⚙️ Panel Admin</h2>
                     <p class="text-slate-500 mt-1">Kelola data sales, shift, dan warna brand — tersimpan otomatis di Firebase</p>
                 </div>
 
@@ -561,7 +628,7 @@
         // FIREBASE KONFIGURASI - GANTI DENGAN PROJECT ANDA
         // ================================================================
         const firebaseConfig = {
-             apiKey: "AIzaSyBMokA92YiB87vwuqBREwNhHkkU_bXo8cI",
+           apiKey: "AIzaSyBMokA92YiB87vwuqBREwNhHkkU_bXo8cI",
 
   authDomain: "ufokebonsariapps.firebaseapp.com",
 
@@ -576,7 +643,6 @@
   appId: "1:663266923207:web:fb989ce91cd40b6d3724e2"
 
 };
-
 
         // ================================================================
         // INISIALISASI FIREBASE
@@ -618,19 +684,19 @@
         // ================================================================
         const DEFAULT_DATA = [
             { brand: "SHARP", name: "AYUNG", senin: "P", selasa: "OFF", rabu: "S", kamis: "L", jumat: "P", sabtu: "S",
-                minggu: "P", toilet: "1.15" },
+                minggu: "P", toilet: "15" },
             { brand: "SAMSUNG", name: "FEBRI", senin: "S", selasa: "L", rabu: "P", kamis: "OFF", jumat: "S", sabtu: "P",
                 minggu: "S", toilet: "" },
             { brand: "POLYTRON", name: "AGUS", senin: "P", selasa: "P", rabu: "OFF", kamis: "S", jumat: "L", sabtu: "P",
-                minggu: "S", toilet: "2.16" },
+                minggu: "S", toilet: "16" },
             { brand: "LG", name: "EKA", senin: "S", selasa: "S", rabu: "L", kamis: "P", jumat: "OFF", sabtu: "S", minggu: "P",
                 toilet: "" },
             { brand: "AQUA", name: "PUGUH", senin: "P", selasa: "S", rabu: "L", kamis: "P", jumat: "OFF", sabtu: "S",
-                minggu: "S", toilet: "3.17" },
+                minggu: "S", toilet: "17" },
             { brand: "AQUA", name: "RONI", senin: "S", selasa: "P", rabu: "OFF", kamis: "S", jumat: "L", sabtu: "P",
                 minggu: "P", toilet: "" },
             { brand: "TOSHIBA", name: "RISKA", senin: "OFF", selasa: "S", rabu: "S", kamis: "L", jumat: "P", sabtu: "S",
-                minggu: "P", toilet: "4.18" },
+                minggu: "P", toilet: "18" },
             { brand: "TOSHIBA", name: "ARFIN", senin: "L", selasa: "P", rabu: "P", kamis: "OFF", jumat: "S", sabtu: "P",
                 minggu: "S", toilet: "" },
             { brand: "MIDEA", name: "ADHE", senin: "P", selasa: "OFF", rabu: "S", kamis: "L", jumat: "P", sabtu: "P",
@@ -638,11 +704,11 @@
             { brand: "MIDEA", name: "DEDY", senin: "S", selasa: "L", rabu: "P", kamis: "OFF", jumat: "S", sabtu: "S",
                 minggu: "P", toilet: "" },
             { brand: "CHANGHONG", name: "ZUNUN", senin: "P", selasa: "OFF", rabu: "S", kamis: "S", jumat: "L", sabtu: "P",
-                minggu: "S", toilet: "6.2" },
+                minggu: "S", toilet: "2" },
             { brand: "CHANGHONG", name: "", senin: "S", selasa: "L", rabu: "P", kamis: "P", jumat: "OFF", sabtu: "S",
                 minggu: "P", toilet: "" },
             { brand: "TCL", name: "JIMY", senin: "L", selasa: "P", rabu: "OFF", kamis: "S", jumat: "P", sabtu: "S",
-                minggu: "S", toilet: "7.21" },
+                minggu: "S", toilet: "21" },
             { brand: "TCL", name: "FAJAR", senin: "OFF", selasa: "S", rabu: "L", kamis: "P", jumat: "S", sabtu: "P",
                 minggu: "P", toilet: "" },
             { brand: "GREE", name: "LESYO", senin: "L", selasa: "P", rabu: "OFF", kamis: "S", jumat: "P", sabtu: "P",
@@ -650,27 +716,27 @@
             { brand: "PANASONIC", name: "RICKY", senin: "OFF", selasa: "S", rabu: "L", kamis: "P", jumat: "S", sabtu: "S",
                 minggu: "P", toilet: "" },
             { brand: "ELECTROLUX", name: "WAHYU", senin: "OFF", selasa: "S", rabu: "P", kamis: "S", jumat: "L", sabtu: "P",
-                minggu: "P", toilet: "9.23" },
+                minggu: "P", toilet: "23" },
             { brand: "MODENA", name: "", senin: "L", selasa: "P", rabu: "S", kamis: "P", jumat: "OFF", sabtu: "S",
                 minggu: "S", toilet: "" },
             { brand: "ARTUGO", name: "FENDI", senin: "P", selasa: "OFF", rabu: "S", kamis: "L", jumat: "P", sabtu: "S",
-                minggu: "P", toilet: "10.24" },
+                minggu: "P", toilet: "24" },
             { brand: "ARTUGO", name: "ENNY", senin: "S", selasa: "L", rabu: "P", kamis: "OFF", jumat: "S", sabtu: "P",
                 minggu: "S", toilet: "" },
             { brand: "SANKEN", name: "JESICA", senin: "L", selasa: "P", rabu: "P", kamis: "OFF", jumat: "S", sabtu: "P",
-                minggu: "S", toilet: "11.25" },
+                minggu: "S", toilet: "25" },
             { brand: "ADVANCE", name: "LEO", senin: "OFF", selasa: "S", rabu: "S", kamis: "L", jumat: "P", sabtu: "S",
                 minggu: "P", toilet: "" },
             { brand: "GADGET", name: "ROFIUL", senin: "S", selasa: "L", rabu: "P", kamis: "OFF", jumat: "S", sabtu: "P",
-                minggu: "S", toilet: "12.26" },
+                minggu: "S", toilet: "26" },
             { brand: "GADGET", name: "NEBIYA", senin: "P", selasa: "OFF", rabu: "S", kamis: "L", jumat: "P", sabtu: "S",
                 minggu: "P", toilet: "" },
             { brand: "MASPION", name: "IBRA", senin: "P", selasa: "S", rabu: "L", kamis: "P", jumat: "OFF", sabtu: "S",
-                minggu: "S", toilet: "13.27" },
+                minggu: "S", toilet: "27" },
             { brand: "MASPION", name: "NISA", senin: "S", selasa: "P", rabu: "OFF", kamis: "S", jumat: "L", sabtu: "P",
                 minggu: "P", toilet: "" },
             { brand: "COMFORTA", name: "INAYAH", senin: "L", selasa: "P", rabu: "P", kamis: "OFF", jumat: "S", sabtu: "P",
-                minggu: "S", toilet: "14.28" },
+                minggu: "S", toilet: "28" },
             { brand: "SMALL", name: "ANISA", senin: "OFF", selasa: "S", rabu: "S", kamis: "L", jumat: "P", sabtu: "S",
                 minggu: "P", toilet: "" }
         ];
@@ -826,11 +892,9 @@
                     const newIndex = evt.newIndex;
                     if (oldIndex === newIndex) return;
 
-                    // Pindahkan data di array
                     const [movedItem] = salesData.splice(oldIndex, 1);
                     salesData.splice(newIndex, 0, movedItem);
 
-                    // Simpan & render ulang
                     saveData(true);
                     renderAll();
                     showToast(`↕️ ${movedItem.brand} - ${movedItem.name} dipindahkan`);
@@ -885,6 +949,37 @@
         }
 
         // ================================================================
+        // UPDATE STATISTIK
+        // ================================================================
+        function updateStatistics() {
+            const total = salesData.length;
+            const withPiket = salesData.filter(r => r.toilet && r.toilet.trim() !== '').length;
+            const tanpaPiket = total - withPiket;
+
+            let totalPagi = 0,
+                totalSiang = 0;
+            const days = ['senin', 'selasa', 'rabu', 'kamis', 'jumat', 'sabtu', 'minggu'];
+            salesData.forEach(row => {
+                days.forEach(day => {
+                    const val = (row[day] || '').toUpperCase();
+                    if (val === 'P') totalPagi++;
+                    if (val === 'S') totalSiang++;
+                });
+            });
+
+            // Update shift stats
+            document.getElementById('totalSales').textContent = total;
+            document.getElementById('totalPiket').textContent = withPiket;
+            document.getElementById('totalPagi').textContent = totalPagi;
+            document.getElementById('totalSiang').textContent = totalSiang;
+
+            // Update piket stats
+            document.getElementById('totalPiketStat').textContent = withPiket;
+            document.getElementById('totalKosongStat').textContent = tanpaPiket;
+            document.getElementById('totalSalesPiket').textContent = total;
+        }
+
+        // ================================================================
         // RENDER
         // ================================================================
         function getShiftClass(val) {
@@ -932,8 +1027,8 @@
             });
             tbody.innerHTML = html;
 
-            // Init drag & drop setelah render
             setTimeout(initDragDrop, 50);
+            updateStatistics();
         }
 
         function renderPiket() {
@@ -965,6 +1060,7 @@
                 </tr>`;
             });
             tbody.innerHTML = html;
+            updateStatistics();
         }
 
         function renderBrandColorList() {
@@ -1044,6 +1140,7 @@
             renderBrandColorList();
             populateDeleteSelect();
             renderSalesBadge();
+            updateStatistics();
         }
 
         // ================================================================
@@ -1141,13 +1238,11 @@
         // INIT
         // ================================================================
         document.addEventListener('DOMContentLoaded', async function() {
-            // Expose functions ke global scope
             window.updateShift = updateShift;
             window.openToiletModal = openToiletModal;
 
             await loadData();
 
-            // Modal events
             document.getElementById('modalSaveBtn').addEventListener('click', saveToiletSchedule);
             document.getElementById('modalCancelBtn').addEventListener('click', closeToiletModal);
             document.getElementById('modalClearBtn').addEventListener('click', clearToiletSchedule);
@@ -1158,7 +1253,6 @@
                 if (e.key === 'Enter') saveToiletSchedule();
             });
 
-            // Admin events
             document.getElementById('addSalesBtn').addEventListener('click', addSales);
             document.getElementById('deleteSalesBtn').addEventListener('click', deleteSelected);
             document.getElementById('resetDefaultBtn').addEventListener('click', resetDefault);
