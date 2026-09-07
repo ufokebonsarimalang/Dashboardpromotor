@@ -1,407 +1,561 @@
 <!DOCTYPE html>
-<html lang="id" class="dark" id="htmlRoot">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jadwal Promotor - UFO Malang</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script> tailwind.config = { darkMode: 'class' } </script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <title>Jadwal Piket & Shift · UFO Malang</title>
     <style>
-        body { font-family: 'Inter', sans-serif; }
-        .app-card { backdrop-filter: blur(20px); transition: all 0.2s ease; }
-        
-        .shift-btn {
-            width: 38px; height: 34px; border-radius: 8px; font-size: 11px; font-weight: 900;
-            transition: all 0.15s ease; box-shadow: 0 1px 2px rgba(0,0,0,0.12);
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
         }
-        .shift-p { background-color: rgba(16, 185, 129, 0.25); color: #047857; border: 1.5px solid rgba(16, 185, 129, 0.6); }
-        .dark .shift-p { color: #34d399; border-color: rgba(52, 211, 153, 0.5); }
-        .shift-s { background-color: rgba(59, 130, 246, 0.25); color: #1d4ed8; border: 1.5px solid rgba(59, 130, 246, 0.6); }
-        .dark .shift-s { color: #60a5fa; border-color: rgba(96, 165, 250, 0.5); }
-        .shift-l { background-color: rgba(245, 158, 11, 0.25); color: #b45309; border: 1.5px solid rgba(245, 158, 11, 0.6); }
-        .dark .shift-l { color: #fbbf24; border-color: rgba(251, 191, 36, 0.5); }
-        .shift-off { background-color: rgba(239, 68, 68, 0.25); color: #b91c1c; border: 1.5px solid rgba(239, 68, 68, 0.6); }
-        .dark .shift-off { color: #f87171; border-color: rgba(248, 113, 113, 0.5); }
+        body {
+            font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+            background: #f4f7fc;
+            padding: 20px;
+            color: #1e293b;
+        }
+        .app {
+            max-width: 1440px;
+            margin: 0 auto;
+        }
+        header {
+            background: linear-gradient(145deg, #0b2b4f, #1a4b7a);
+            color: white;
+            padding: 18px 24px;
+            border-radius: 28px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 28px;
+            box-shadow: 0 12px 24px -8px rgba(0,20,40,0.3);
+        }
+        header h1 {
+            font-weight: 600;
+            font-size: 1.9rem;
+            letter-spacing: -0.5px;
+        }
+        header small {
+            font-weight: 300;
+            opacity: 0.85;
+            font-size: 0.95rem;
+            margin-left: 10px;
+        }
+        .admin-toggle {
+            background: rgba(255,255,255,0.15);
+            border: 1px solid rgba(255,255,255,0.25);
+            color: white;
+            padding: 10px 24px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: 0.2s;
+            backdrop-filter: blur(4px);
+        }
+        .admin-toggle:hover {
+            background: #ffffff20;
+            border-color: #ffffff60;
+            transform: scale(1.02);
+        }
+        .panel {
+            background: white;
+            border-radius: 28px;
+            padding: 24px 28px;
+            box-shadow: 0 8px 28px rgba(0,0,0,0.04);
+            margin-bottom: 32px;
+            border: 1px solid #e9eef3;
+            transition: 0.25s;
+        }
+        .panel.hidden {
+            display: none;
+        }
+        .panel-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 28px 36px;
+        }
+        .admin-section {
+            background: #f8faff;
+            border-radius: 20px;
+            padding: 20px 22px;
+            border: 1px solid #e2e9f2;
+        }
+        .admin-section h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: #0b2b4f;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .admin-section h3 i {
+            opacity: 0.7;
+        }
+        .form-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px 12px;
+            margin-bottom: 14px;
+        }
+        .form-row input, .form-row select {
+            padding: 10px 14px;
+            border: 1px solid #d0dae8;
+            border-radius: 40px;
+            font-size: 0.9rem;
+            background: white;
+            flex: 1 0 130px;
+            outline: none;
+            transition: 0.15s;
+        }
+        .form-row input:focus, .form-row select:focus {
+            border-color: #1a4b7a;
+            box-shadow: 0 0 0 3px #1a4b7a20;
+        }
+        .btn {
+            background: #eef2f8;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #1e293b;
+            cursor: pointer;
+            transition: 0.15s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            border: 1px solid transparent;
+        }
+        .btn-primary {
+            background: #1a4b7a;
+            color: white;
+        }
+        .btn-primary:hover {
+            background: #0f3b60;
+            transform: scale(1.01);
+        }
+        .btn-danger {
+            background: #fee9e7;
+            color: #b91c1c;
+        }
+        .btn-danger:hover {
+            background: #fcd3d0;
+        }
+        .btn-outline {
+            background: transparent;
+            border: 1px solid #cbd5e1;
+        }
+        .btn-outline:hover {
+            background: #f1f5f9;
+        }
+        .btn-sm {
+            padding: 5px 14px;
+            font-size: 0.8rem;
+        }
+        .list-badge {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px 12px;
+            margin-top: 8px;
+        }
+        .badge-item {
+            background: white;
+            border-radius: 40px;
+            padding: 4px 14px 4px 18px;
+            border: 1px solid #dce3ed;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.9rem;
+        }
+        .badge-item .remove {
+            color: #a0b3cc;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 1.1rem;
+            line-height: 1;
+        }
+        .badge-item .remove:hover {
+            color: #b91c1c;
+        }
+        .table-wrap {
+            overflow-x: auto;
+            border-radius: 18px;
+            border: 1px solid #e3eaf2;
+            background: white;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+            min-width: 900px;
+        }
+        th {
+            background: #f0f5fb;
+            color: #1a3b5a;
+            font-weight: 600;
+            padding: 14px 8px;
+            border-bottom: 2px solid #d7e1ec;
+            text-align: center;
+        }
+        td {
+            padding: 10px 6px;
+            border-bottom: 1px solid #e9eff5;
+            text-align: center;
+            vertical-align: middle;
+        }
+        tr:last-child td {
+            border-bottom: none;
+        }
+        .shift-badge {
+            background: #e5edf8;
+            padding: 4px 10px;
+            border-radius: 30px;
+            font-weight: 500;
+            font-size: 0.75rem;
+            display: inline-block;
+            min-width: 32px;
+        }
+        .shift-p { background: #d2e6ff; color: #004080; }
+        .shift-s { background: #d4f0e6; color: #00664d; }
+        .shift-l { background: #fff3d4; color: #8a5d00; }
+        .shift-off { background: #f0f0f0; color: #6b6b6b; }
+        .toilet-cell {
+            font-weight: 600;
+            color: #0b4b6b;
+        }
+        .brand-name {
+            font-weight: 600;
+            color: #0a2a44;
+        }
+        .empty-state {
+            color: #8899b0;
+            padding: 16px;
+            text-align: center;
+        }
+        .footer-notes {
+            margin-top: 24px;
+            background: #f8fafd;
+            border-radius: 20px;
+            padding: 18px 22px;
+            font-size: 0.85rem;
+            color: #2d4059;
+            border: 1px solid #e4ebf3;
+        }
+        .footer-notes ul {
+            list-style: none;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px 28px;
+        }
+        .footer-notes ul li::before {
+            content: "• ";
+            color: #1a4b7a;
+            font-weight: bold;
+        }
+        .flex-between {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        @media (max-width: 800px) {
+            .panel-grid { grid-template-columns: 1fr; }
+            header { flex-direction: column; align-items: start; gap: 12px; }
+        }
     </style>
 </head>
-<body class="bg-slate-100 dark:bg-slate-950 text-slate-900 dark:text-slate-100 min-h-screen flex flex-col md:flex-row relative overflow-x-hidden">
-
-    <!-- SIDEBAR NAVIGASI -->
-    <aside class="hidden md:flex md:w-72 h-screen sticky top-0 bg-white dark:bg-slate-900/95 backdrop-blur-2xl border-r border-slate-200 dark:border-slate-800 flex-col justify-between p-6 shrink-0 z-30 shadow-xl">
-        <div class="flex flex-col gap-6">
-            <div class="flex items-center gap-3.5">
-                <div class="p-2.5 bg-gradient-to-tr from-indigo-600 to-violet-500 text-white rounded-2xl shadow-lg">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
-                </div>
-                <div>
-                    <h1 class="font-black text-slate-900 dark:text-white text-base tracking-tight">Ufo Malang</h1>
-                    <p id="cloudStatus" class="text-[11px] text-amber-500 font-bold">Connecting Server...</p>
-                </div>
-            </div>
-
-            <nav class="flex flex-col gap-2">
-                <button onclick="switchTab('promotor')" id="btnPromotor" class="flex items-center gap-3 px-4 py-3 rounded-2xl font-semibold text-sm bg-gradient-to-r from-indigo-600 to-violet-600 text-white shadow-lg"><span>📅 Jadwal Promotor</span></button>
-                <button onclick="switchTab('piket')" id="btnPiket" class="flex items-center gap-3 px-4 py-3 rounded-2xl font-medium text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-800/60"><span>🧹 Piket Toilet</span></button>
-                <button onclick="switchTab('admin')" id="btnAdmin" class="flex items-center gap-3 px-4 py-3 rounded-2xl font-medium text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-800/60"><span>⚙️ Konfigurasi</span></button>
-            </nav>
+<body>
+<div class="app">
+    <header>
+        <div>
+            <h1>🧹 Piket & Shift <small>UFO Malang</small></h1>
         </div>
+        <button class="admin-toggle" id="adminToggle">⚙️ Panel Admin</button>
+    </header>
 
-        <div class="flex items-center justify-between bg-slate-100 dark:bg-slate-950 p-2 rounded-xl border border-slate-800 text-xs">
-            <span class="text-slate-300 font-semibold px-2">Theme</span>
-            <button onclick="toggleTheme()" class="p-2 bg-slate-800 rounded-lg shadow"><span id="themeIcon">☀️ Light</span></button>
+    <!-- ADMIN PANEL -->
+    <div id="adminPanel" class="panel hidden">
+        <div class="panel-grid">
+            <div class="admin-section">
+                <h3>➕ Tambah Sales</h3>
+                <div class="form-row">
+                    <input type="text" id="newBrand" placeholder="Brand (contoh: SHARP)">
+                    <input type="text" id="newName" placeholder="Nama Sales">
+                    <select id="newShiftDay"><option value="P">Pagi</option><option value="S">Siang</option><option value="L">Libur</option><option value="OFF">OFF</option></select>
+                    <button class="btn btn-primary" id="addSalesBtn">Tambah</button>
+                </div>
+                <div style="margin-top: 8px;font-size:0.85rem;color:#446688;">Shift diisi untuk hari Senin (akan ditentukan otomatis untuk hari lain dengan pola berpasangan)</div>
+            </div>
+            <div class="admin-section">
+                <h3>🗑️ Hapus Sales</h3>
+                <div class="form-row">
+                    <select id="deleteSelect" style="flex:2;"><option value="">Pilih sales untuk dihapus</option></select>
+                    <button class="btn btn-danger" id="deleteSalesBtn">Hapus</button>
+                </div>
+                <div style="margin-top: 12px;">
+                    <button class="btn btn-outline btn-sm" id="resetDefaultBtn">↺ Reset ke data awal</button>
+                </div>
+            </div>
+            <div class="admin-section" style="grid-column: 1 / -1;">
+                <h3>📋 Daftar Sales Terdaftar</h3>
+                <div id="salesListContainer" class="list-badge"></div>
+            </div>
         </div>
-    </aside>
+    </div>
 
-    <!-- KONTEN UTAMA -->
-    <main class="flex-1 p-4 md:p-10 overflow-y-auto space-y-6 max-w-7xl mx-auto w-full">
+    <!-- JADWAL TABLE -->
+    <div class="panel">
+        <div class="flex-between" style="margin-bottom:18px;">
+            <h2 style="font-weight:600; font-size:1.4rem;">📅 Jadwal Shift & Piket Toilet</h2>
+            <span style="background:#eef4fa;padding:6px 18px;border-radius:40px;font-size:0.8rem;color:#1f466b;">💡 Klik admin untuk konfigurasi</span>
+        </div>
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr><th>BRAND</th><th>NAMA</th><th>SENIN</th><th>SELASA</th><th>RABU</th><th>KAMIS</th><th>JUM'AT</th><th>SABTU</th><th>MINGGU</th><th>PIKET TOILET</th></tr>
+                </thead>
+                <tbody id="scheduleBody"></tbody>
+            </table>
+        </div>
+        <div class="footer-notes">
+            <ul>
+                <li>Piket toilet (lantai, dinding, closet, urinoir, wastafel, langit-langit) harus disikat</li>
+                <li>General cleaning setiap Sabtu & Minggu</li>
+                <li>Update stok harian & upload sosmed wajib</li>
+                <li>Izin sakit wajib surat dokter & obat</li>
+            </ul>
+        </div>
+    </div>
+</div>
 
-        <!-- TAB 1: JADWAL PROMOTOR -->
-        <section id="tabPromotor" class="space-y-6">
-            <div class="app-card bg-white dark:bg-slate-900/85 border border-indigo-500/30 p-5 rounded-3xl shadow-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                <div>
-                    <h2 class="text-xl font-black">JADWAL SHIFT PROMOTOR (BERPASANGAN)</h2>
-                    <p class="text-xs text-slate-500 mt-1">Klik kotak shift untuk mengubah: <span class="text-emerald-600 font-bold">P</span> ➔ <span class="text-blue-600 font-bold">S</span> ➔ <span class="text-amber-600 font-bold">L</span> ➔ <span class="text-rose-600 font-bold">OFF</span></p>
-                </div>
-                <input type="text" id="inputCariPromotor" placeholder="Cari brand / nama..." onkeyup="renderTabelPromotor()" class="px-4 py-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-700 rounded-xl text-xs font-bold w-full md:w-64">
-            </div>
+<script>
+    // --------------------- DATA DEFAULT (dari dua sheet utama) --------------------
+    const DEFAULT_DATA = [
+        { brand: "SHARP", name: "AYUNG", senin: "P", selasa: "OFF", rabu: "S", kamis: "L", jumat: "P", sabtu: "S", minggu: "P", toilet: "1.15" },
+        { brand: "SAMSUNG", name: "FEBRI", senin: "S", selasa: "L", rabu: "P", kamis: "OFF", jumat: "S", sabtu: "P", minggu: "S", toilet: "" },
+        { brand: "POLYTRON", name: "AGUS", senin: "P", selasa: "P", rabu: "OFF", kamis: "S", jumat: "L", sabtu: "P", minggu: "S", toilet: "2.16" },
+        { brand: "LG", name: "EKA", senin: "S", selasa: "S", rabu: "L", kamis: "P", jumat: "OFF", sabtu: "S", minggu: "P", toilet: "" },
+        { brand: "AQUA", name: "PUGUH", senin: "P", selasa: "S", rabu: "L", kamis: "P", jumat: "OFF", sabtu: "S", minggu: "S", toilet: "3.17" },
+        { brand: "AQUA", name: "RONI", senin: "S", selasa: "P", rabu: "OFF", kamis: "S", jumat: "L", sabtu: "P", minggu: "P", toilet: "" },
+        { brand: "TOSHIBA", name: "RISKA", senin: "OFF", selasa: "S", rabu: "S", kamis: "L", jumat: "P", sabtu: "S", minggu: "P", toilet: "4.18" },
+        { brand: "TOSHIBA", name: "ARFIN", senin: "L", selasa: "P", rabu: "P", kamis: "OFF", jumat: "S", sabtu: "P", minggu: "S", toilet: "" },
+        { brand: "MIDEA", name: "ADHE", senin: "P", selasa: "OFF", rabu: "S", kamis: "L", jumat: "P", sabtu: "P", minggu: "S", toilet: "5,19" },
+        { brand: "MIDEA", name: "DEDY", senin: "S", selasa: "L", rabu: "P", kamis: "OFF", jumat: "S", sabtu: "S", minggu: "P", toilet: "" },
+        { brand: "CHANGHONG", name: "ZUNUN", senin: "P", selasa: "OFF", rabu: "S", kamis: "S", jumat: "L", sabtu: "P", minggu: "S", toilet: "6.2" },
+        { brand: "CHANGHONG", name: "", senin: "S", selasa: "L", rabu: "P", kamis: "P", jumat: "OFF", sabtu: "S", minggu: "P", toilet: "" },
+        { brand: "TCL", name: "JIMY", senin: "L", selasa: "P", rabu: "OFF", kamis: "S", jumat: "P", sabtu: "S", minggu: "S", toilet: "7.21" },
+        { brand: "TCL", name: "FAJAR", senin: "OFF", selasa: "S", rabu: "L", kamis: "P", jumat: "S", sabtu: "P", minggu: "P", toilet: "" },
+        { brand: "GREE", name: "LESYO", senin: "L", selasa: "P", rabu: "OFF", kamis: "S", jumat: "P", sabtu: "P", minggu: "S", toilet: "8,22" },
+        { brand: "PANASONIC", name: "RICKY", senin: "OFF", selasa: "S", rabu: "L", kamis: "P", jumat: "S", sabtu: "S", minggu: "P", toilet: "" },
+        { brand: "ELECTROLUX", name: "WAHYU", senin: "OFF", selasa: "S", rabu: "P", kamis: "S", jumat: "L", sabtu: "P", minggu: "P", toilet: "9.23" },
+        { brand: "MODENA", name: "", senin: "L", selasa: "P", rabu: "S", kamis: "P", jumat: "OFF", sabtu: "S", minggu: "S", toilet: "" },
+        { brand: "ARTUGO", name: "FENDI", senin: "P", selasa: "OFF", rabu: "S", kamis: "L", jumat: "P", sabtu: "S", minggu: "P", toilet: "10.24" },
+        { brand: "ARTUGO", name: "ENNY", senin: "S", selasa: "L", rabu: "P", kamis: "OFF", jumat: "S", sabtu: "P", minggu: "S", toilet: "" },
+        { brand: "SANKEN", name: "JESICA", senin: "L", selasa: "P", rabu: "P", kamis: "OFF", jumat: "S", sabtu: "P", minggu: "S", toilet: "11.25" },
+        { brand: "ADVANCE", name: "LEO", senin: "OFF", selasa: "S", rabu: "S", kamis: "L", jumat: "P", sabtu: "S", minggu: "P", toilet: "" },
+        { brand: "GADGET", name: "ROFIUL", senin: "S", selasa: "L", rabu: "P", kamis: "OFF", jumat: "S", sabtu: "P", minggu: "S", toilet: "12.26" },
+        { brand: "GADGET", name: "NEBIYA", senin: "P", selasa: "OFF", rabu: "S", kamis: "L", jumat: "P", sabtu: "S", minggu: "P", toilet: "" },
+        { brand: "MASPION", name: "IBRA", senin: "P", selasa: "S", rabu: "L", kamis: "P", jumat: "OFF", sabtu: "S", minggu: "S", toilet: "13.27" },
+        { brand: "MASPION", name: "NISA", senin: "S", selasa: "P", rabu: "OFF", kamis: "S", jumat: "L", sabtu: "P", minggu: "P", toilet: "" },
+        { brand: "COMFORTA", name: "INAYAH", senin: "L", selasa: "P", rabu: "P", kamis: "OFF", jumat: "S", sabtu: "P", minggu: "S", toilet: "14.28" },
+        { brand: "SMALL", name: "ANISA", senin: "OFF", selasa: "S", rabu: "S", kamis: "L", jumat: "P", sabtu: "S", minggu: "P", toilet: "" }
+    ];
 
-            <div class="app-card bg-white dark:bg-slate-900/85 border border-slate-800 p-4 rounded-3xl shadow-xl">
-                <div class="overflow-x-auto max-h-[600px]">
-                    <table class="w-full text-center text-xs border-collapse">
-                        <thead class="bg-slate-100 dark:bg-slate-950 uppercase font-bold text-[11px] sticky top-0 border-b border-slate-700 z-10">
-                            <tr>
-                                <th class="py-3 px-4 text-left">Brand</th>
-                                <th class="py-3 px-4 text-left">Nama Promotor</th>
-                                <th class="py-3 px-2">Senin</th>
-                                <th class="py-3 px-2">Selasa</th>
-                                <th class="py-3 px-2">Rabu</th>
-                                <th class="py-3 px-2">Kamis</th>
-                                <th class="py-3 px-2">Jum'at</th>
-                                <th class="py-3 px-2">Sabtu</th>
-                                <th class="py-3 px-2">Minggu</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tabelPromotorBody" class="divide-y divide-slate-800/60"></tbody>
-                    </table>
-                </div>
-            </div>
-        </section>
+    // --------------------- STATE --------------------
+    let salesData = [];
 
-        <!-- TAB 2: PIKET TOILET -->
-        <section id="tabPiket" class="hidden space-y-6">
-            <div class="app-card bg-white dark:bg-slate-900/85 border border-indigo-500/30 p-5 rounded-3xl shadow-xl">
-                <h2 class="text-xl font-black">JADWAL PIKET TOILET PROMOTOR</h2>
-            </div>
-            <div class="app-card bg-white dark:bg-slate-900/85 border border-slate-800 p-4 rounded-3xl shadow-xl">
-                <div class="overflow-x-auto max-h-[600px]">
-                    <table class="w-full text-center text-xs border-collapse">
-                        <thead class="bg-slate-100 dark:bg-slate-950 uppercase font-bold text-[11px] sticky top-0 border-b border-slate-700">
-                            <tr>
-                                <th class="py-3 px-4 text-left">Brand Pasangan</th>
-                                <th class="py-3 px-4 text-left">Tim Promotor</th>
-                                <th class="py-3 px-4 text-center">Tanggal Piket Toilet</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tabelPiketBody" class="divide-y divide-slate-800/60"></tbody>
-                    </table>
-                </div>
-            </div>
-        </section>
-
-        <!-- TAB 3: ADMIN KONFIGURASI -->
-        <section id="tabAdmin" class="hidden space-y-6">
-            <div class="app-card bg-white dark:bg-slate-900/85 border border-indigo-500/30 p-5 rounded-3xl shadow-xl space-y-4">
-                <h2 id="formTitleAdmin" class="text-xl font-black">Tambah Pasangan Brand & Sales Baru</h2>
-                <input type="hidden" id="editIndex" value="-1">
-                
-                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-6 gap-3 pt-2">
-                    <input type="text" id="inputBrand1Baru" placeholder="Brand 1 (cth: SHARP)" class="px-3 py-2.5 bg-slate-950 border border-slate-700 rounded-xl text-xs font-bold uppercase">
-                    <input type="text" id="inputBrand2Baru" placeholder="Brand 2 (cth: SAMSUNG)" class="px-3 py-2.5 bg-slate-950 border border-slate-700 rounded-xl text-xs font-bold uppercase">
-                    <input type="text" id="inputP1Baru" placeholder="Sales 1 (cth: AYUNG)" class="px-3 py-2.5 bg-slate-950 border border-slate-700 rounded-xl text-xs font-bold uppercase">
-                    <input type="text" id="inputP2Baru" placeholder="Sales 2 (cth: FEBRI)" class="px-3 py-2.5 bg-slate-950 border border-slate-700 rounded-xl text-xs font-bold uppercase">
-                    <input type="text" id="inputPiketBaru" placeholder="Piket (cth: 1, 15)" class="px-3 py-2.5 bg-slate-950 border border-slate-700 rounded-xl text-xs font-bold">
-                    
-                    <select id="inputWarnaBaru" class="px-3 py-2.5 bg-slate-950 border border-slate-700 rounded-xl text-xs font-bold text-white">
-                        <option value="bg-yellow-400 text-slate-900">🟡 Kuning</option>
-                        <option value="bg-red-600 text-white">🔴 Merah</option>
-                        <option value="bg-cyan-500 text-white">🔵 Cyan / Biru Muda</option>
-                        <option value="bg-blue-600 text-white">🔷 Biru Tua</option>
-                        <option value="bg-orange-500 text-white">🟠 Orange</option>
-                        <option value="bg-emerald-600 text-white">🟢 Hijau</option>
-                        <option value="bg-purple-600 text-white">🟣 Ungu</option>
-                        <option value="bg-pink-600 text-white">🌸 Pink</option>
-                    </select>
-                </div>
-
-                <div class="flex gap-2">
-                    <button onclick="simpanPasanganPromotor()" id="btnSimpanAdmin" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-2.5 px-6 rounded-xl text-xs shadow-lg">➕ Tambah Pasangan</button>
-                    <button onclick="batalEditAdmin()" id="btnBatalAdmin" class="hidden bg-slate-600 hover:bg-slate-500 text-white font-bold py-2.5 px-4 rounded-xl text-xs">Batal</button>
-                </div>
-            </div>
-
-            <div class="app-card bg-white dark:bg-slate-900/85 border border-slate-800 p-4 rounded-3xl shadow-xl">
-                <h3 class="font-bold text-sm mb-3">Daftar Kelola Pasangan Brand & Sales</h3>
-                <div class="overflow-x-auto max-h-[400px]">
-                    <table class="w-full text-left text-xs border-collapse">
-                        <thead class="bg-slate-100 dark:bg-slate-950 uppercase font-bold text-[10px]">
-                            <tr>
-                                <th class="py-2.5 px-3">Brand 1 & Brand 2</th>
-                                <th class="py-2.5 px-3">Sales 1</th>
-                                <th class="py-2.5 px-3">Sales 2</th>
-                                <th class="py-2.5 px-3">Piket</th>
-                                <th class="py-2.5 px-3 text-center">Aksi (Ubah / Hapus)</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tabelAdminBody" class="divide-y divide-slate-800/60"></tbody>
-                    </table>
-                </div>
-            </div>
-        </section>
-
-    </main>
-
-    <script>
-        const gasWebhookUrl = "https://script.google.com/macros/s/AKfycbxtcTaj4KNCykH-f3k88cIlsvVWicigtHJWt0D0u-EzDGkUEIYeQAd1oToJyhgaCdr3IQ/exec";
-        let daftarPromotor = [];
-
-        document.addEventListener("DOMContentLoaded", () => {
-            loadDataDariSheets();
-        });
-
-        function switchTab(tabName) {
-            ['promotor', 'piket', 'admin'].forEach(t => {
-                document.getElementById('tab' + t.charAt(0).toUpperCase() + t.slice(1)).classList.add('hidden');
-                document.getElementById('btn' + t.charAt(0).toUpperCase() + t.slice(1)).className = "flex items-center gap-3 px-4 py-3 rounded-2xl font-medium text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-800/60";
-            });
-            document.getElementById('tab' + tabName.charAt(0).toUpperCase() + tabName.slice(1)).classList.remove('hidden');
-            document.getElementById('btn' + tabName.charAt(0).toUpperCase() + tabName.slice(1)).className = "flex items-center gap-3 px-4 py-3 rounded-2xl font-semibold text-sm bg-gradient-to-r from-indigo-600 to-violet-600 text-white shadow-lg";
-
-            if (tabName === 'promotor') renderTabelPromotor();
-            if (tabName === 'piket') renderTabelPiket();
-            if (tabName === 'admin') renderTabelAdmin();
-        }
-
-        async function loadDataDariSheets() {
-            const statusEl = document.getElementById('cloudStatus');
+    // Load from localStorage or default
+    function loadData() {
+        const stored = localStorage.getItem('ufo_piket_data');
+        if (stored) {
             try {
-                let response = await fetch(gasWebhookUrl, {
-                    method: "POST",
-                    headers: { "Content-Type": "text/plain;charset=utf-8" },
-                    body: JSON.stringify({ aksi: "get_promotor" })
-                });
-                let result = await response.json();
-                if (result.status === "success" && Array.isArray(result.data)) {
-                    daftarPromotor = result.data;
-                    statusEl.innerText = "Terhubung Sheets ✓";
-                    statusEl.className = "text-[11px] text-emerald-500 font-bold";
-                    renderTabelPromotor();
+                salesData = JSON.parse(stored);
+                return;
+            } catch(e) {}
+        }
+        salesData = DEFAULT_DATA.map(item => ({...item}));
+    }
+
+    function saveData() {
+        localStorage.setItem('ufo_piket_data', JSON.stringify(salesData));
+    }
+
+    // --------------------- RENDER --------------------
+    function renderTable() {
+        const tbody = document.getElementById('scheduleBody');
+        if (!salesData.length) {
+            tbody.innerHTML = `<tr><td colspan="9" class="empty-state">Belum ada data sales. Tambahkan melalui panel admin.</td></tr>`;
+            return;
+        }
+        let html = '';
+        salesData.forEach((row, idx) => {
+            const shiftMap = { P:'P', S:'S', L:'L', OFF:'OFF' };
+            const getShiftClass = (val) => {
+                const v = (val||'').toUpperCase();
+                if (v === 'P') return 'shift-p';
+                if (v === 'S') return 'shift-s';
+                if (v === 'L') return 'shift-l';
+                if (v === 'OFF') return 'shift-off';
+                return '';
+            };
+            html += `<tr>
+                <td class="brand-name">${row.brand || ''}</td>
+                <td>${row.name || ''}</td>
+                <td><span class="shift-badge ${getShiftClass(row.senin)}">${row.senin || ''}</span></td>
+                <td><span class="shift-badge ${getShiftClass(row.selasa)}">${row.selasa || ''}</span></td>
+                <td><span class="shift-badge ${getShiftClass(row.rabu)}">${row.rabu || ''}</span></td>
+                <td><span class="shift-badge ${getShiftClass(row.kamis)}">${row.kamis || ''}</span></td>
+                <td><span class="shift-badge ${getShiftClass(row.jumat)}">${row.jumat || ''}</span></td>
+                <td><span class="shift-badge ${getShiftClass(row.sabtu)}">${row.sabtu || ''}</span></td>
+                <td><span class="shift-badge ${getShiftClass(row.minggu)}">${row.minggu || ''}</span></td>
+                <td class="toilet-cell">${row.toilet || ''}</td>
+            </tr>`;
+        });
+        tbody.innerHTML = html;
+        // update delete dropdown
+        populateDeleteSelect();
+        renderBadgeList();
+    }
+
+    function populateDeleteSelect() {
+        const sel = document.getElementById('deleteSelect');
+        const current = sel.value;
+        sel.innerHTML = '<option value="">Pilih sales untuk dihapus</option>';
+        salesData.forEach((item, idx) => {
+            const label = `${item.brand} - ${item.name}`.trim() || `Sales #${idx+1}`;
+            const opt = document.createElement('option');
+            opt.value = idx;
+            opt.textContent = label;
+            sel.appendChild(opt);
+        });
+        if (current && sel.querySelector(`option[value="${current}"]`)) sel.value = current;
+    }
+
+    function renderBadgeList() {
+        const container = document.getElementById('salesListContainer');
+        if (!salesData.length) {
+            container.innerHTML = '<span class="empty-state">Belum ada sales terdaftar</span>';
+            return;
+        }
+        let html = '';
+        salesData.forEach((item, idx) => {
+            const label = `${item.brand} - ${item.name}`.trim() || `#${idx+1}`;
+            html += `<span class="badge-item">${label} <span class="remove" data-idx="${idx}">✕</span></span>`;
+        });
+        container.innerHTML = html;
+        // event listener hapus via badge
+        container.querySelectorAll('.remove').forEach(el => {
+            el.addEventListener('click', (e) => {
+                const idx = parseInt(el.dataset.idx);
+                if (!isNaN(idx) && confirm(`Hapus sales "${salesData[idx]?.brand} - ${salesData[idx]?.name}"?`)) {
+                    salesData.splice(idx, 1);
+                    saveData();
+                    renderTable();
                 }
-            } catch (err) {
-                statusEl.innerText = "Gagal memuat Google Sheets!";
-            }
-        }
-
-        async function simpanDataKeSheets() {
-            try {
-                await fetch(gasWebhookUrl, {
-                    method: "POST",
-                    headers: { "Content-Type": "text/plain;charset=utf-8" },
-                    body: JSON.stringify({ aksi: "simpan_promotor", list: daftarPromotor })
-                });
-            } catch (err) {
-                console.error("Gagal menyimpan ke Sheets");
-            }
-        }
-
-        window.toggleShift = async function(pairIdx, partnerNum, dayIdx) {
-            const sequence = ["P", "S", "L", "OFF"];
-            let partnerObj = partnerNum === 1 ? daftarPromotor[pairIdx].p1 : daftarPromotor[pairIdx].p2;
-            let current = partnerObj.jadwal[dayIdx] || "P";
-            let nextIdx = (sequence.indexOf(current) + 1) % sequence.length;
-            partnerObj.jadwal[dayIdx] = sequence[nextIdx];
-
-            renderTabelPromotor();
-            await simpanDataKeSheets();
-        }
-
-   function renderTabelPromotor() {
-    const tbody = document.getElementById('tabelPromotorBody');
-    const keyword = document.getElementById('inputCariPromotor').value.toLowerCase();
-    if(!tbody) return;
-
-    let html = "";
-    let filtered = daftarPromotor.map((item, originalIndex) => ({ ...item, originalIndex }))
-        .filter(item => item.brand1.toLowerCase().includes(keyword) || item.brand2.toLowerCase().includes(keyword) || item.p1.nama.toLowerCase().includes(keyword) || item.p2.nama.toLowerCase().includes(keyword));
-
-    filtered.forEach(item => {
-        let warna = item.warnaBrand || "bg-yellow-400 text-slate-900";
-        let j1 = item.p1 && item.p1.jadwal ? item.p1.jadwal : ["P","OFF","S","P","S","P","S"];
-        let j2 = item.p2 && item.p2.jadwal ? item.p2.jadwal : ["P","OFF","S","P","S","P","S"];
-        let nama1 = item.p1 && item.p1.nama ? item.p1.nama : "-";
-        let nama2 = item.p2 && item.p2.nama ? item.p2.nama : "-";
-
-        // Baris 1: Kolom Brand berisi Brand 1, Kolom Nama Promotor berisi Nama 1 (Ayung)
-        html += `<tr class="border-t-2 border-slate-800">
-            <td class="py-2.5 px-4 text-left font-bold bg-slate-900/50">
-                <span class="px-2.5 py-1 rounded-lg ${warna} text-[10px] font-black">${item.brand1}</span>
-            </td>
-            <td class="py-2.5 px-4 text-left font-bold text-slate-200">${nama1}</td>`;
-        
-        j1.forEach((shift, dayIdx) => {
-            let shiftClass = "shift-p";
-            if (shift === "S") shiftClass = "shift-s";
-            else if (shift === "L") shiftClass = "shift-l";
-            else if (shift === "OFF") shiftClass = "shift-off";
-
-            html += `<td class="py-2 px-1 text-center">
-                <button onclick="toggleShift(${item.originalIndex}, 1, ${dayIdx})" class="shift-btn ${shiftClass}">${shift}</button>
-            </td>`;
+            });
         });
-        html += `</tr>`;
+    }
 
-        // Baris 2: Kolom Brand berisi Brand 2, Kolom Nama Promotor berisi Nama 2 (Febri) [Warna badge sama]
-        html += `<tr class="border-b-2 border-slate-800">
-            <td class="py-2.5 px-4 text-left font-bold bg-slate-900/50">
-                <span class="px-2.5 py-1 rounded-lg ${warna} text-[10px] font-black">${item.brand2}</span>
-            </td>
-            <td class="py-2.5 px-4 text-left font-bold text-slate-200">${nama2}</td>`;
-        
-        j2.forEach((shift, dayIdx) => {
-            let shiftClass = "shift-p";
-            if (shift === "S") shiftClass = "shift-s";
-            else if (shift === "L") shiftClass = "shift-l";
-            else if (shift === "OFF") shiftClass = "shift-off";
+    // --------------------- ADMIN ACTION: TAMBAH --------------------
+    function addSales() {
+        const brand = document.getElementById('newBrand').value.trim();
+        const name = document.getElementById('newName').value.trim();
+        const shift = document.getElementById('newShiftDay').value; // P / S / L / OFF
+        if (!brand || !name) {
+            alert('Brand dan Nama wajib diisi.');
+            return;
+        }
+        // cek duplikat
+        if (salesData.some(item => item.brand === brand && item.name === name)) {
+            alert('Sales dengan brand dan nama tersebut sudah ada.');
+            return;
+        }
+        // pola shift berpasangan: kita set Senin = shift, lalu pola otomatis selasa-minggu mengikuti sheet (di sini kita set sederhana)
+        // Untuk kemudahan, kita set Senin = shift, dan hari lain kita buat pola standar (seperti data default)
+        // Namun agar fleksibel: kita isi dengan pola umum (P,S,L,OFF) sesuai urutan.
+        // Tapi untuk kemudahan, kita set Senin = shift, dan hari lain kita set berdasarkan pola yang sering muncul: 
+        // P -> Selasa OFF, Rabu S, Kamis L, Jumat P, Sabtu S, Minggu P (mirip AYUNG)
+        // S -> Selasa L, Rabu P, Kamis OFF, Jumat S, Sabtu P, Minggu S (mirip FEBRI)
+        // L -> Selasa P, Rabu OFF, Kamis S, Jumat P, Sabtu S, Minggu S (mirip JIMY)
+        // OFF -> Selasa S, Rabu L, Kamis P, Jumat S, Sabtu P, Minggu P (mirip RISKA)
+        let days = { senin: shift };
+        const mapShift = {
+            'P': { selasa: 'OFF', rabu: 'S', kamis: 'L', jumat: 'P', sabtu: 'S', minggu: 'P' },
+            'S': { selasa: 'L', rabu: 'P', kamis: 'OFF', jumat: 'S', sabtu: 'P', minggu: 'S' },
+            'L': { selasa: 'P', rabu: 'OFF', kamis: 'S', jumat: 'P', sabtu: 'S', minggu: 'S' },
+            'OFF': { selasa: 'S', rabu: 'L', kamis: 'P', jumat: 'S', sabtu: 'P', minggu: 'P' }
+        };
+        const pattern = mapShift[shift] || mapShift['P'];
+        const newEntry = {
+            brand,
+            name,
+            senin: shift,
+            selasa: pattern.selasa,
+            rabu: pattern.rabu,
+            kamis: pattern.kamis,
+            jumat: pattern.jumat,
+            sabtu: pattern.sabtu,
+            minggu: pattern.minggu,
+            toilet: ''
+        };
+        salesData.push(newEntry);
+        saveData();
+        renderTable();
+        document.getElementById('newBrand').value = '';
+        document.getElementById('newName').value = '';
+    }
 
-            html += `<td class="py-2 px-1 text-center">
-                <button onclick="toggleShift(${item.originalIndex}, 2, ${dayIdx})" class="shift-btn ${shiftClass}">${shift}</button>
-            </td>`;
+    // --------------------- ADMIN: DELETE --------------------
+    function deleteSelected() {
+        const sel = document.getElementById('deleteSelect');
+        const idx = parseInt(sel.value);
+        if (isNaN(idx) || idx < 0 || idx >= salesData.length) {
+            alert('Pilih sales yang valid.');
+            return;
+        }
+        if (confirm(`Hapus "${salesData[idx].brand} - ${salesData[idx].name}"?`)) {
+            salesData.splice(idx, 1);
+            saveData();
+            renderTable();
+        }
+    }
+
+    // --------------------- RESET --------------------
+    function resetDefault() {
+        if (confirm('Reset ke data awal? Semua perubahan akan hilang.')) {
+            salesData = DEFAULT_DATA.map(item => ({...item}));
+            saveData();
+            renderTable();
+        }
+    }
+
+    // --------------------- INIT --------------------
+    document.addEventListener('DOMContentLoaded', function() {
+        loadData();
+        renderTable();
+
+        // admin toggle
+        const adminToggle = document.getElementById('adminToggle');
+        const adminPanel = document.getElementById('adminPanel');
+        adminToggle.addEventListener('click', () => {
+            adminPanel.classList.toggle('hidden');
+            adminToggle.textContent = adminPanel.classList.contains('hidden') ? '⚙️ Panel Admin' : '✖️ Tutup Panel';
         });
-        html += `</tr>`;
+
+        document.getElementById('addSalesBtn').addEventListener('click', addSales);
+        document.getElementById('deleteSalesBtn').addEventListener('click', deleteSelected);
+        document.getElementById('resetDefaultBtn').addEventListener('click', resetDefault);
+
+        // enter key pada input tambah
+        document.getElementById('newName').addEventListener('keypress', (e) => { if (e.key === 'Enter') addSales(); });
+        document.getElementById('newBrand').addEventListener('keypress', (e) => { if (e.key === 'Enter') addSales(); });
     });
-
-    tbody.innerHTML = html;
-}
-
-        function renderTabelPiket() {
-            const tbody = document.getElementById('tabelPiketBody');
-            if(!tbody) return;
-            let html = "";
-            daftarPromotor.forEach(item => {
-                let warna = item.warnaBrand || "bg-yellow-400 text-slate-900";
-                html += `<tr class="border-b border-slate-800">
-                    <td class="py-3 px-4 text-left font-bold">
-                        <span class="px-2 py-0.5 rounded ${warna} text-[10px]">${item.brand1}</span> & 
-                        <span class="px-2 py-0.5 rounded ${warna} text-[10px]">${item.brand2}</span>
-                    </td>
-                    <td class="py-3 px-4 text-left font-bold">1. ${item.p1.nama}<br>2. ${item.p2.nama}</td>
-                    <td class="py-3 px-4 text-center font-black text-indigo-400 text-sm">${item.piket}</td>
-                </tr>`;
-            });
-            tbody.innerHTML = html;
-        }
-
-        function renderTabelAdmin() {
-            const tbody = document.getElementById('tabelAdminBody');
-            if(!tbody) return;
-            let html = "";
-            daftarPromotor.forEach((item, index) => {
-                let warna = item.warnaBrand || "bg-yellow-400 text-slate-900";
-                html += `<tr class="border-b border-slate-800">
-                    <td class="py-2.5 px-3 font-bold">
-                        <span class="px-2 py-0.5 rounded ${warna} text-[10px]">${item.brand1} & ${item.brand2}</span>
-                    </td>
-                    <td class="py-2.5 px-3 font-bold text-emerald-400">${item.p1.nama}</td>
-                    <td class="py-2.5 px-3 font-bold text-blue-400">${item.p2.nama}</td>
-                    <td class="py-2.5 px-3">${item.piket}</td>
-                    <td class="py-2.5 px-3 text-center space-x-1">
-                        <button onclick="editPromotor(${index})" class="px-2.5 py-1 bg-amber-500/10 hover:bg-amber-500 text-amber-400 hover:text-white rounded-lg text-xs font-bold">Ubah</button>
-                        <button onclick="hapusPromotor(${index})" class="px-2.5 py-1 bg-rose-500/10 hover:bg-rose-500 text-rose-400 hover:text-white rounded-lg text-xs font-bold">Hapus</button>
-                    </td>
-                </tr>`;
-            });
-            tbody.innerHTML = html;
-        }
-
-        async function simpanPasanganPromotor() {
-            const editIdx = parseInt(document.getElementById('editIndex').value);
-            const brand1 = document.getElementById('inputBrand1Baru').value.trim().toUpperCase();
-            const brand2 = document.getElementById('inputBrand2Baru').value.trim().toUpperCase();
-            const p1 = document.getElementById('inputP1Baru').value.trim().toUpperCase();
-            const p2 = document.getElementById('inputP2Baru').value.trim().toUpperCase();
-            const piket = document.getElementById('inputPiketBaru').value.trim();
-            const warna = document.getElementById('inputWarnaBaru').value;
-
-            if (!brand1 || !brand2 || !p1 || !p2) { alert("Isi semua data brand dan nama sales!"); return; }
-
-            if (editIdx === -1) {
-                daftarPromotor.push({
-                    brand1: brand1, brand2: brand2, piket: piket || "-",
-                    warnaBrand: warna,
-                    p1: { nama: p1, jadwal: ["P", "OFF", "S", "L", "P", "S", "P"] },
-                    p2: { nama: p2, jadwal: ["S", "L", "P", "OFF", "S", "P", "S"] }
-                });
-            } else {
-                daftarPromotor[editIdx].brand1 = brand1;
-                daftarPromotor[editIdx].brand2 = brand2;
-                daftarPromotor[editIdx].p1.nama = p1;
-                daftarPromotor[editIdx].p2.nama = p2;
-                daftarPromotor[editIdx].piket = piket || "-";
-                daftarPromotor[editIdx].warnaBrand = warna;
-            }
-
-            batalEditAdmin();
-            renderTabelAdmin();
-            await simpanDataKeSheets();
-            alert("Data pasangan berhasil disimpan!");
-        }
-
-        function editPromotor(index) {
-            let item = daftarPromotor[index];
-            document.getElementById('editIndex').value = index;
-            document.getElementById('inputBrand1Baru').value = item.brand1;
-            document.getElementById('inputBrand2Baru').value = item.brand2;
-            document.getElementById('inputP1Baru').value = item.p1.nama;
-            document.getElementById('inputP2Baru').value = item.p2.nama;
-            document.getElementById('inputPiketBaru').value = item.piket;
-            document.getElementById('inputWarnaBaru').value = item.warnaBrand || "bg-yellow-400 text-slate-900";
-
-            document.getElementById('formTitleAdmin').innerText = "Ubah Data Pasangan Brand & Sales";
-            document.getElementById('btnSimpanAdmin').innerText = "💾 Simpan Perubahan";
-            document.getElementById('btnBatalAdmin').classList.remove('hidden');
-        }
-
-        function batalEditAdmin() {
-            document.getElementById('editIndex').value = "-1";
-            document.getElementById('inputBrand1Baru').value = "";
-            document.getElementById('inputBrand2Baru').value = "";
-            document.getElementById('inputP1Baru').value = "";
-            document.getElementById('inputP2Baru').value = "";
-            document.getElementById('inputPiketBaru').value = "";
-
-            document.getElementById('formTitleAdmin').innerText = "Tambah Pasangan Brand & Sales Baru";
-            document.getElementById('btnSimpanAdmin').innerText = "➕ Tambah Pasangan";
-            document.getElementById('btnBatalAdmin').classList.add('hidden');
-        }
-
-        async function hapusPromotor(index) {
-            if (confirm("Hapus pasangan brand ini?")) {
-                daftarPromotor.splice(index, 1);
-                renderTabelAdmin();
-                await simpanDataKeSheets();
-            }
-        }
-
-        function toggleTheme() {
-            const root = document.getElementById('htmlRoot');
-            if (root.classList.contains('dark')) {
-                root.classList.remove('dark'); root.classList.add('light');
-                document.getElementById('themeIcon').innerText = "🌙 Dark";
-            } else {
-                root.classList.remove('light'); root.classList.add('dark');
-                document.getElementById('themeIcon').innerText = "☀️ Light";
-            }
-        }
-    </script>
+</script>
 </body>
 </html>
