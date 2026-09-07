@@ -61,17 +61,13 @@
             color: #065f46;
         }
         .badge-l {
-            background: #fef3c7;
-            color: #92400e;
+            background: #fce4ec;
+            color: #b71c1c;
+            border: 1px solid #f8bbd0;
         }
         .badge-off {
             background: #f1f5f9;
             color: #475569;
-        }
-        .badge-lembur {
-            background: #fce4ec;
-            color: #b71c1c;
-            border: 1px solid #f8bbd0;
         }
         .table-modern th {
             background: #f8fafc;
@@ -165,21 +161,6 @@
         .btn-success:hover {
             background: #a7f3d0;
         }
-        .color-picker-wrap {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-        .color-picker-wrap input[type="color"] {
-            width: 40px;
-            height: 40px;
-            border: 2px solid #e2e8f0;
-            border-radius: 40px;
-            padding: 2px;
-            cursor: pointer;
-            background: white;
-        }
         .brand-badge-color {
             display: inline-flex;
             align-items: center;
@@ -196,20 +177,6 @@
             border-radius: 50%;
             border: 2px solid rgba(255, 255, 255, 0.7);
             flex-shrink: 0;
-        }
-        .loading-spinner {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid rgba(255, 255, 255, 0.3);
-            border-radius: 50%;
-            border-top-color: #fff;
-            animation: spin 0.8s ease-in-out infinite;
-        }
-        @keyframes spin {
-            to {
-                transform: rotate(360deg);
-            }
         }
         .sync-status {
             font-size: 0.75rem;
@@ -230,6 +197,10 @@
         .sync-status.error {
             background: #fee2e2;
             color: #991b1b;
+        }
+        .sync-status.offline {
+            background: #e2e8f0;
+            color: #475569;
         }
 
         @media (max-width: 768px) {
@@ -318,9 +289,8 @@
                     <div class="mt-4 flex flex-wrap gap-4 text-xs text-slate-500 border-t pt-4 border-slate-200/60">
                         <span><span class="badge-shift badge-p">P</span> Pagi</span>
                         <span><span class="badge-shift badge-s">S</span> Siang</span>
-                        <span><span class="badge-shift badge-l">L</span> Libur</span>
-                        <span><span class="badge-shift badge-off">OFF</span> Off</span>
-                        <span><span class="badge-shift badge-lembur">LE</span> Lembur</span>
+                        <span><span class="badge-shift badge-l">L</span> Lembur</span>
+                        <span><span class="badge-shift badge-off">OFF</span> Libur</span>
                     </div>
                 </div>
             </section>
@@ -371,8 +341,8 @@
                                 <select id="newShiftDay" class="admin-input flex-1 min-w-[100px]">
                                     <option value="P">Pagi (P)</option>
                                     <option value="S">Siang (S)</option>
-                                    <option value="L">Libur (L)</option>
-                                    <option value="OFF">OFF</option>
+                                    <option value="L">Lembur (L)</option>
+                                    <option value="OFF">Libur (OFF)</option>
                                 </select>
                                 <button class="btn-modern btn-primary" id="addSalesBtn">Tambah</button>
                             </div>
@@ -418,90 +388,84 @@
 
     <script>
         // ================================================================
-        // FIREBASE KONFIGURASI
+        // FIREBASE KONFIGURASI - GANTI DENGAN PROJECT ANDA
         // ================================================================
         const firebaseConfig = {
-             apiKey: "AIzaSyBMokA92YiB87vwuqBREwNhHkkU_bXo8cI",
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_PROJECT.firebaseapp.com",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_PROJECT.appspot.com",
+            messagingSenderId: "YOUR_SENDER_ID",
+            appId: "YOUR_APP_ID"
+        };
 
-  authDomain: "ufokebonsariapps.firebaseapp.com",
-
-  databaseURL: "https://ufokebonsariapps-default-rtdb.asia-southeast1.firebasedatabase.app",
-
-  projectId: "ufokebonsariapps",
-
-  storageBucket: "ufokebonsariapps.firebasestorage.app",
-
-  messagingSenderId: "663266923207",
-
-  appId: "1:663266923207:web:fb989ce91cd40b6d3724e2"
-
-};
-
-
-        // Inisialisasi Firebase
+        // ================================================================
+        // INISIALISASI FIREBASE
+        // ================================================================
         let db = null;
         let firebaseInitialized = false;
 
         try {
-            firebase.initializeApp(firebaseConfig);
+            if (!firebase.apps.length) {
+                firebase.initializeApp(firebaseConfig);
+            }
             db = firebase.firestore();
-            // Enable offline persistence
             db.enablePersistence({ synchronizeTabs: true })
-                .catch(err => console.warn('Firebase persistence:', err));
+                .catch(err => console.warn('Firebase persistence:', err.code));
             firebaseInitialized = true;
             console.log('✅ Firebase initialized');
         } catch (e) {
-            console.warn('⚠️ Firebase tidak terinisialisasi, menggunakan localStorage saja:', e.message);
+            console.warn('⚠️ Firebase error:', e.message);
         }
 
         // ================================================================
-        // DATA
+        // DATA DEFAULT (L = LEMBUR, OFF = LIBUR)
         // ================================================================
         const DEFAULT_DATA = [
             { brand: "SHARP", name: "AYUNG", senin: "P", selasa: "OFF", rabu: "S", kamis: "L", jumat: "P", sabtu: "S",
-            minggu: "P", toilet: "1.15" },
+                minggu: "P", toilet: "1.15" },
             { brand: "SAMSUNG", name: "FEBRI", senin: "S", selasa: "L", rabu: "P", kamis: "OFF", jumat: "S", sabtu: "P",
                 minggu: "S", toilet: "" },
             { brand: "POLYTRON", name: "AGUS", senin: "P", selasa: "P", rabu: "OFF", kamis: "S", jumat: "L", sabtu: "P",
                 minggu: "S", toilet: "2.16" },
             { brand: "LG", name: "EKA", senin: "S", selasa: "S", rabu: "L", kamis: "P", jumat: "OFF", sabtu: "S", minggu: "P",
                 toilet: "" },
-            { brand: "AQUA", name: "PUGUH", senin: "P", selasa: "S", rabu: "L", kamis: "P", jumat: "OFF", sabtu: "S", minggu: "S",
-                toilet: "3.17" },
-            { brand: "AQUA", name: "RONI", senin: "S", selasa: "P", rabu: "OFF", kamis: "S", jumat: "L", sabtu: "P", minggu: "P",
-                toilet: "" },
+            { brand: "AQUA", name: "PUGUH", senin: "P", selasa: "S", rabu: "L", kamis: "P", jumat: "OFF", sabtu: "S",
+                minggu: "S", toilet: "3.17" },
+            { brand: "AQUA", name: "RONI", senin: "S", selasa: "P", rabu: "OFF", kamis: "S", jumat: "L", sabtu: "P",
+                minggu: "P", toilet: "" },
             { brand: "TOSHIBA", name: "RISKA", senin: "OFF", selasa: "S", rabu: "S", kamis: "L", jumat: "P", sabtu: "S",
                 minggu: "P", toilet: "4.18" },
             { brand: "TOSHIBA", name: "ARFIN", senin: "L", selasa: "P", rabu: "P", kamis: "OFF", jumat: "S", sabtu: "P",
                 minggu: "S", toilet: "" },
-            { brand: "MIDEA", name: "ADHE", senin: "P", selasa: "OFF", rabu: "S", kamis: "L", jumat: "P", sabtu: "P", minggu: "S",
-                toilet: "5,19" },
-            { brand: "MIDEA", name: "DEDY", senin: "S", selasa: "L", rabu: "P", kamis: "OFF", jumat: "S", sabtu: "S", minggu: "P",
-                toilet: "" },
+            { brand: "MIDEA", name: "ADHE", senin: "P", selasa: "OFF", rabu: "S", kamis: "L", jumat: "P", sabtu: "P",
+                minggu: "S", toilet: "5,19" },
+            { brand: "MIDEA", name: "DEDY", senin: "S", selasa: "L", rabu: "P", kamis: "OFF", jumat: "S", sabtu: "S",
+                minggu: "P", toilet: "" },
             { brand: "CHANGHONG", name: "ZUNUN", senin: "P", selasa: "OFF", rabu: "S", kamis: "S", jumat: "L", sabtu: "P",
                 minggu: "S", toilet: "6.2" },
-            { brand: "CHANGHONG", name: "", senin: "S", selasa: "L", rabu: "P", kamis: "P", jumat: "OFF", sabtu: "S", minggu: "P",
-                toilet: "" },
-            { brand: "TCL", name: "JIMY", senin: "L", selasa: "P", rabu: "OFF", kamis: "S", jumat: "P", sabtu: "S", minggu: "S",
-                toilet: "7.21" },
-            { brand: "TCL", name: "FAJAR", senin: "OFF", selasa: "S", rabu: "L", kamis: "P", jumat: "S", sabtu: "P", minggu: "P",
-                toilet: "" },
-            { brand: "GREE", name: "LESYO", senin: "L", selasa: "P", rabu: "OFF", kamis: "S", jumat: "P", sabtu: "P", minggu: "S",
-                toilet: "8,22" },
+            { brand: "CHANGHONG", name: "", senin: "S", selasa: "L", rabu: "P", kamis: "P", jumat: "OFF", sabtu: "S",
+                minggu: "P", toilet: "" },
+            { brand: "TCL", name: "JIMY", senin: "L", selasa: "P", rabu: "OFF", kamis: "S", jumat: "P", sabtu: "S",
+                minggu: "S", toilet: "7.21" },
+            { brand: "TCL", name: "FAJAR", senin: "OFF", selasa: "S", rabu: "L", kamis: "P", jumat: "S", sabtu: "P",
+                minggu: "P", toilet: "" },
+            { brand: "GREE", name: "LESYO", senin: "L", selasa: "P", rabu: "OFF", kamis: "S", jumat: "P", sabtu: "P",
+                minggu: "S", toilet: "8,22" },
             { brand: "PANASONIC", name: "RICKY", senin: "OFF", selasa: "S", rabu: "L", kamis: "P", jumat: "S", sabtu: "S",
                 minggu: "P", toilet: "" },
             { brand: "ELECTROLUX", name: "WAHYU", senin: "OFF", selasa: "S", rabu: "P", kamis: "S", jumat: "L", sabtu: "P",
                 minggu: "P", toilet: "9.23" },
-            { brand: "MODENA", name: "", senin: "L", selasa: "P", rabu: "S", kamis: "P", jumat: "OFF", sabtu: "S", minggu: "S",
-                toilet: "" },
-            { brand: "ARTUGO", name: "FENDI", senin: "P", selasa: "OFF", rabu: "S", kamis: "L", jumat: "P", sabtu: "S", minggu: "P",
-                toilet: "10.24" },
-            { brand: "ARTUGO", name: "ENNY", senin: "S", selasa: "L", rabu: "P", kamis: "OFF", jumat: "S", sabtu: "P", minggu: "S",
-                toilet: "" },
+            { brand: "MODENA", name: "", senin: "L", selasa: "P", rabu: "S", kamis: "P", jumat: "OFF", sabtu: "S",
+                minggu: "S", toilet: "" },
+            { brand: "ARTUGO", name: "FENDI", senin: "P", selasa: "OFF", rabu: "S", kamis: "L", jumat: "P", sabtu: "S",
+                minggu: "P", toilet: "10.24" },
+            { brand: "ARTUGO", name: "ENNY", senin: "S", selasa: "L", rabu: "P", kamis: "OFF", jumat: "S", sabtu: "P",
+                minggu: "S", toilet: "" },
             { brand: "SANKEN", name: "JESICA", senin: "L", selasa: "P", rabu: "P", kamis: "OFF", jumat: "S", sabtu: "P",
                 minggu: "S", toilet: "11.25" },
-            { brand: "ADVANCE", name: "LEO", senin: "OFF", selasa: "S", rabu: "S", kamis: "L", jumat: "P", sabtu: "S", minggu: "P",
-                toilet: "" },
+            { brand: "ADVANCE", name: "LEO", senin: "OFF", selasa: "S", rabu: "S", kamis: "L", jumat: "P", sabtu: "S",
+                minggu: "P", toilet: "" },
             { brand: "GADGET", name: "ROFIUL", senin: "S", selasa: "L", rabu: "P", kamis: "OFF", jumat: "S", sabtu: "P",
                 minggu: "S", toilet: "12.26" },
             { brand: "GADGET", name: "NEBIYA", senin: "P", selasa: "OFF", rabu: "S", kamis: "L", jumat: "P", sabtu: "S",
@@ -512,11 +476,13 @@
                 minggu: "P", toilet: "" },
             { brand: "COMFORTA", name: "INAYAH", senin: "L", selasa: "P", rabu: "P", kamis: "OFF", jumat: "S", sabtu: "P",
                 minggu: "S", toilet: "14.28" },
-            { brand: "SMALL", name: "ANISA", senin: "OFF", selasa: "S", rabu: "S", kamis: "L", jumat: "P", sabtu: "S", minggu: "P",
-                toilet: "" }
+            { brand: "SMALL", name: "ANISA", senin: "OFF", selasa: "S", rabu: "S", kamis: "L", jumat: "P", sabtu: "S",
+                minggu: "P", toilet: "" }
         ];
 
+        // ================================================================
         // STATE
+        // ================================================================
         let salesData = [];
         let brandColors = {};
 
@@ -526,14 +492,13 @@
         function updateSyncStatus(status, message) {
             const el = document.getElementById('syncStatus');
             el.className = `sync-status ${status}`;
-            if (status === 'synced') el.innerHTML = `<span>✅</span> ${message || 'Tersimpan di Cloud'}`;
-            else if (status === 'syncing') el.innerHTML = `<span>⏳</span> ${message || 'Menyimpan...'}`;
-            else if (status === 'error') el.innerHTML = `<span>⚠️</span> ${message || 'Gagal sync'}`;
+            const icons = { 'synced': '✅', 'syncing': '⏳', 'error': '⚠️', 'offline': '📡' };
+            el.innerHTML = `<span>${icons[status] || '📌'}</span> ${message || ''}`;
         }
 
         async function syncToFirebase() {
             if (!firebaseInitialized || !db) {
-                updateSyncStatus('error', 'Firebase tidak terhubung');
+                updateSyncStatus('offline', 'Mode offline - data di lokal');
                 return false;
             }
             updateSyncStatus('syncing', 'Menyimpan ke Cloud...');
@@ -543,19 +508,23 @@
                     colors: brandColors,
                     updatedAt: new Date().toISOString()
                 };
-                await db.collection('config').doc('ufo_data').set(payload);
+                await db.collection('config').doc('ufo_data').set(payload, { merge: true });
                 updateSyncStatus('synced', 'Berhasil disimpan ke Cloud');
                 return true;
             } catch (e) {
-                console.error('Sync error:', e);
-                updateSyncStatus('error', 'Gagal sync: ' + e.message);
+                console.error('Sync error:', e.code, e.message);
+                if (e.code === 'permission-denied') {
+                    updateSyncStatus('error', 'Izin ditolak. Atur security rules di Firebase Console.');
+                } else {
+                    updateSyncStatus('error', 'Gagal sync: ' + e.message.substring(0, 40));
+                }
                 return false;
             }
         }
 
         async function loadFromFirebase() {
             if (!firebaseInitialized || !db) {
-                console.warn('Firebase tidak tersedia, pakai localStorage');
+                updateSyncStatus('offline', 'Mode offline - pakai data lokal');
                 return false;
             }
             updateSyncStatus('syncing', 'Memuat dari Cloud...');
@@ -563,23 +532,21 @@
                 const doc = await db.collection('config').doc('ufo_data').get();
                 if (doc.exists) {
                     const data = doc.data();
-                    if (data.sales && Array.isArray(data.sales)) {
-                        salesData = data.sales;
-                    }
-                    if (data.colors && typeof data.colors === 'object') {
-                        brandColors = data.colors;
-                    }
+                    if (data.sales && Array.isArray(data.sales)) salesData = data.sales;
+                    if (data.colors && typeof data.colors === 'object') brandColors = data.colors;
                     updateSyncStatus('synced', 'Dimuat dari Cloud');
                     return true;
                 } else {
-                    // First time, push default data
-                    console.log('Cloud kosong, akan upload default');
                     await syncToFirebase();
                     return true;
                 }
             } catch (e) {
-                console.warn('Load from Firebase error:', e);
-                updateSyncStatus('error', 'Gagal muat dari Cloud, pakai lokal');
+                console.warn('Load from Firebase error:', e.code);
+                if (e.code === 'permission-denied') {
+                    updateSyncStatus('error', 'Izin ditolak. Cek security rules.');
+                } else {
+                    updateSyncStatus('offline', 'Offline - pakai data lokal');
+                }
                 return false;
             }
         }
@@ -588,16 +555,14 @@
         // FUNGSI DATA LOKAL
         // ================================================================
         function loadLocalData() {
-            const stored = localStorage.getItem('ufo_piket_data');
-            if (stored) {
-                try { salesData = JSON.parse(stored); } catch (e) { salesData = DEFAULT_DATA.map(d => ({ ...d })); }
-            } else {
-                salesData = DEFAULT_DATA.map(d => ({ ...d }));
-            }
-            const storedColors = localStorage.getItem('ufo_brand_colors');
-            if (storedColors) {
-                try { brandColors = JSON.parse(storedColors); } catch (e) { brandColors = {}; }
-            }
+            try {
+                const stored = localStorage.getItem('ufo_piket_data');
+                salesData = stored ? JSON.parse(stored) : DEFAULT_DATA.map(d => ({ ...d }));
+            } catch (e) { salesData = DEFAULT_DATA.map(d => ({ ...d })); }
+            try {
+                const storedColors = localStorage.getItem('ufo_brand_colors');
+                brandColors = storedColors ? JSON.parse(storedColors) : {};
+            } catch (e) { brandColors = {}; }
         }
 
         function saveLocalData() {
@@ -606,22 +571,15 @@
         }
 
         async function loadData() {
-            // Coba dari Firebase dulu
+            loadLocalData();
             const loaded = await loadFromFirebase();
-            if (!loaded) {
-                loadLocalData();
-            }
-            // Simpan lokal sebagai cadangan
-            saveLocalData();
+            if (loaded) saveLocalData();
             renderAll();
         }
 
         async function saveData() {
             saveLocalData();
-            // Sync ke Firebase jika tersedia
-            if (firebaseInitialized && db) {
-                await syncToFirebase();
-            }
+            if (firebaseInitialized && db) await syncToFirebase();
         }
 
         // ================================================================
@@ -633,7 +591,6 @@
             if (u === 'S') return 'badge-s';
             if (u === 'L') return 'badge-l';
             if (u === 'OFF') return 'badge-off';
-            if (u === 'LE') return 'badge-lembur';
             return '';
         }
 
@@ -641,14 +598,13 @@
             const tbody = document.getElementById('shiftTableBody');
             if (!salesData.length) {
                 tbody.innerHTML =
-                `<tr><td colspan="9" class="text-center text-slate-400 py-8">Belum ada data sales.</td></tr>`;
+                    `<tr><td colspan="9" class="text-center text-slate-400 py-8">Belum ada data sales.</td></tr>`;
                 return;
             }
             let html = '';
             salesData.forEach(row => {
                 const color = brandColors[row.brand] || '#e2e8f0';
-                const dot =
-                    `<span class="brand-color-dot" style="background:${color};"></span>`;
+                const dot = `<span class="brand-color-dot" style="background:${color};"></span>`;
                 html += `<tr>
                     <td class="font-semibold text-slate-700"><span class="inline-flex items-center">${dot}${row.brand || ''}</span></td>
                     <td class="font-medium text-slate-600">${row.name || ''}</td>
@@ -669,14 +625,13 @@
             const filtered = salesData.filter(r => r.toilet && r.toilet.trim() !== '');
             if (!filtered.length) {
                 tbody.innerHTML =
-                `<tr><td colspan="4" class="text-center text-slate-400 py-8">Belum ada jadwal piket toilet.</td></tr>`;
+                    `<tr><td colspan="4" class="text-center text-slate-400 py-8">Belum ada jadwal piket toilet.</td></tr>`;
                 return;
             }
             let html = '';
             filtered.forEach(row => {
                 const color = brandColors[row.brand] || '#e2e8f0';
-                const dot =
-                    `<span class="brand-color-dot" style="background:${color};"></span>`;
+                const dot = `<span class="brand-color-dot" style="background:${color};"></span>`;
                 html += `<tr>
                     <td class="font-semibold text-slate-700"><span class="inline-flex items-center">${dot}${row.brand || ''}</span></td>
                     <td class="font-medium text-slate-600">${row.name || ''}</td>
