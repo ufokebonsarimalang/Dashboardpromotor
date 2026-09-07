@@ -80,6 +80,27 @@
             color: #7f1d1d;
             border: 1px solid #f87171;
         }
+        .badge-toilet {
+            background: #eef2ff;
+            color: #3730a3;
+            padding: 4px 14px;
+            border-radius: 40px;
+            font-weight: 500;
+            font-size: 0.8rem;
+            display: inline-block;
+            cursor: pointer;
+            transition: all 0.15s;
+            border: 1px solid #c7d2fe;
+        }
+        .badge-toilet:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        .badge-toilet.empty {
+            background: #f1f5f9;
+            color: #94a3b8;
+            border: 1px dashed #cbd5e1;
+        }
         .table-modern th {
             background: #f8fafc;
             color: #1e293b;
@@ -110,15 +131,6 @@
             border: 2px solid rgba(255, 255, 255, 0.6);
             box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
             flex-shrink: 0;
-        }
-        .toilet-badge {
-            background: #eef2ff;
-            color: #3730a3;
-            padding: 4px 14px;
-            border-radius: 40px;
-            font-weight: 500;
-            font-size: 0.8rem;
-            display: inline-block;
         }
         .admin-input {
             border-radius: 40px;
@@ -171,6 +183,13 @@
         }
         .btn-success:hover {
             background: #a7f3d0;
+        }
+        .btn-warning {
+            background: #fef3c7;
+            color: #92400e;
+        }
+        .btn-warning:hover {
+            background: #fde68a;
         }
         .brand-badge-color {
             display: inline-flex;
@@ -234,6 +253,52 @@
             opacity: 1;
             transform: translateY(0);
         }
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            z-index: 999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-overlay.active {
+            display: flex;
+        }
+        .modal-content {
+            background: white;
+            border-radius: 28px;
+            padding: 32px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 24px 64px rgba(0, 0, 0, 0.2);
+            animation: modalIn 0.3s ease;
+        }
+        @keyframes modalIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95) translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+        .modal-content h3 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+            color: #0c2238;
+        }
+        .modal-content .sub {
+            color: #64748b;
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+        }
 
         @media (max-width: 768px) {
             .sidebar {
@@ -263,6 +328,9 @@
                 font-size: 0.7rem;
                 min-width: 36px;
             }
+            .modal-content {
+                padding: 24px;
+            }
         }
     </style>
 </head>
@@ -270,6 +338,21 @@
 
     <!-- Toast Notification -->
     <div id="toast" class="toast-notification">✅ Shift berhasil diubah</div>
+
+    <!-- Modal Edit Piket Toilet -->
+    <div id="toiletModal" class="modal-overlay">
+        <div class="modal-content">
+            <h3>🧹 Edit Piket Toilet</h3>
+            <div class="sub" id="modalSalesInfo">Brand: SHARP - Nama: AYUNG</div>
+            <div class="flex gap-2 mb-4">
+                <input type="text" id="modalToiletInput" placeholder="Contoh: 1.15 atau 5,19" class="admin-input flex-1" />
+                <button class="btn-modern btn-primary" id="modalSaveBtn">Simpan</button>
+            </div>
+            <div class="text-xs text-slate-400 mb-3">Format: tanggal atau periode (contoh: 1.15 atau 5,19)</div>
+            <button class="btn-modern btn-danger w-full" id="modalClearBtn">Kosongkan Piket</button>
+            <button class="btn-modern btn-outline w-full mt-2" id="modalCancelBtn">Batal</button>
+        </div>
+    </div>
 
     <div class="flex flex-col md:flex-row min-h-screen">
 
@@ -340,7 +423,7 @@
             <section id="page-piket" class="page hidden">
                 <div class="mb-6">
                     <h2 class="text-3xl font-bold text-slate-800">🧹 Jadwal Piket Toilet</h2>
-                    <p class="text-slate-500 mt-1">Penugasan kebersihan toilet & area</p>
+                    <p class="text-slate-500 mt-1">Klik badge piket untuk mengatur jadwal — otomatis tersimpan</p>
                 </div>
                 <div class="card-glass rounded-3xl p-4 md:p-6 overflow-hidden">
                     <div class="overflow-x-auto">
@@ -359,6 +442,7 @@
                     <div class="mt-4 text-xs text-slate-500 border-t pt-4 border-slate-200/60">
                         <span class="inline-block mr-6">🧽 Lantai, dinding, closet, urinoir, wastafel, langit-langit</span>
                         <span class="inline-block">📅 General cleaning Sabtu & Minggu</span>
+                        <span class="inline-block ml-4">💡 Klik badge untuk edit jadwal</span>
                     </div>
                 </div>
             </section>
@@ -432,7 +516,7 @@
         // FIREBASE KONFIGURASI - GANTI DENGAN PROJECT ANDA
         // ================================================================
         const firebaseConfig = {
-            apiKey: "AIzaSyBMokA92YiB87vwuqBREwNhHkkU_bXo8cI",
+             apiKey: "AIzaSyBMokA92YiB87vwuqBREwNhHkkU_bXo8cI",
 
   authDomain: "ufokebonsariapps.firebaseapp.com",
 
@@ -551,6 +635,7 @@
         // ================================================================
         let salesData = [];
         let brandColors = {};
+        let editingToiletIndex = null;
 
         // ================================================================
         // FUNGSI SYNC FIREBASE
@@ -648,7 +733,7 @@
             const success = await syncToFirebase();
             if (showToastMsg) {
                 if (success) {
-                    showToast('✅ Shift berhasil diubah & tersimpan');
+                    showToast('✅ Data berhasil disimpan');
                 } else {
                     showToast('⚠️ Tersimpan di lokal, gagal sync ke cloud', true);
                 }
@@ -665,11 +750,56 @@
             const nextIndex = (currentIndex + 1) % shiftOrder.length;
             const newValue = shiftOrder[nextIndex];
 
-            // Update data
             if (salesData[rowIndex]) {
                 salesData[rowIndex][dayKey] = newValue;
                 saveData(true);
                 renderAll();
+            }
+        }
+
+        // ================================================================
+        // FUNGSI EDIT PIKET TOILET
+        // ================================================================
+        function openToiletModal(index) {
+            editingToiletIndex = index;
+            const sales = salesData[index];
+            if (!sales) return;
+
+            document.getElementById('modalSalesInfo').textContent =
+                `Brand: ${sales.brand} - Nama: ${sales.name || '-'}`;
+            document.getElementById('modalToiletInput').value = sales.toilet || '';
+
+            document.getElementById('toiletModal').classList.add('active');
+        }
+
+        function closeToiletModal() {
+            document.getElementById('toiletModal').classList.remove('active');
+            editingToiletIndex = null;
+        }
+
+        function saveToiletSchedule() {
+            if (editingToiletIndex === null || editingToiletIndex >= salesData.length) {
+                closeToiletModal();
+                return;
+            }
+
+            const value = document.getElementById('modalToiletInput').value.trim();
+            salesData[editingToiletIndex].toilet = value;
+            saveData(true);
+            renderAll();
+            closeToiletModal();
+        }
+
+        function clearToiletSchedule() {
+            if (editingToiletIndex === null || editingToiletIndex >= salesData.length) {
+                closeToiletModal();
+                return;
+            }
+            if (confirm('Kosongkan jadwal piket untuk sales ini?')) {
+                salesData[editingToiletIndex].toilet = '';
+                saveData(true);
+                renderAll();
+                closeToiletModal();
             }
         }
 
@@ -697,13 +827,12 @@
                 const color = brandColors[row.brand] || '#e2e8f0';
                 const dot = `<span class="brand-color-dot" style="background:${color};"></span>`;
                 const days = ['senin', 'selasa', 'rabu', 'kamis', 'jumat', 'sabtu', 'minggu'];
-                const dayLabels = ['SENIN', 'SELASA', 'RABU', 'KAMIS', 'JUM\'AT', 'SABTU', 'MINGGU'];
 
                 html += `<tr>
                     <td class="font-semibold text-slate-700"><span class="inline-flex items-center">${dot}${row.brand || ''}</span></td>
                     <td class="font-medium text-slate-600">${row.name || ''}</td>`;
 
-                days.forEach((day, dIdx) => {
+                days.forEach((day) => {
                     const val = row[day] || '';
                     const cls = getShiftClass(val);
                     html += `<td>
@@ -722,21 +851,30 @@
 
         function renderPiket() {
             const tbody = document.getElementById('piketTableBody');
-            const filtered = salesData.filter(r => r.toilet && r.toilet.trim() !== '');
-            if (!filtered.length) {
+            if (!salesData.length) {
                 tbody.innerHTML =
-                    `<tr><td colspan="4" class="text-center text-slate-400 py-8">Belum ada jadwal piket toilet.</td></tr>`;
+                    `<tr><td colspan="4" class="text-center text-slate-400 py-8">Belum ada data sales.</td></tr>`;
                 return;
             }
             let html = '';
-            filtered.forEach(row => {
+            salesData.forEach((row, idx) => {
                 const color = brandColors[row.brand] || '#e2e8f0';
                 const dot = `<span class="brand-color-dot" style="background:${color};"></span>`;
+                const hasToilet = row.toilet && row.toilet.trim() !== '';
+                const badgeClass = hasToilet ? 'badge-toilet' : 'badge-toilet empty';
+                const displayText = hasToilet ? row.toilet : 'Klik untuk atur';
+
                 html += `<tr>
                     <td class="font-semibold text-slate-700"><span class="inline-flex items-center">${dot}${row.brand || ''}</span></td>
                     <td class="font-medium text-slate-600">${row.name || ''}</td>
-                    <td><span class="toilet-badge">${row.toilet}</span></td>
-                    <td class="text-slate-400 text-xs">—</td>
+                    <td>
+                        <span class="${badgeClass}" 
+                              onclick="openToiletModal(${idx})"
+                              title="Klik untuk atur jadwal piket toilet">
+                            ${displayText}
+                        </span>
+                    </td>
+                    <td class="text-slate-400 text-xs">${hasToilet ? '✅ Terjadwal' : '⚪ Kosong'}</td>
                 </tr>`;
             });
             tbody.innerHTML = html;
@@ -916,11 +1054,24 @@
         // INIT
         // ================================================================
         document.addEventListener('DOMContentLoaded', async function() {
-            // Expose updateShift ke global scope
+            // Expose functions ke global scope
             window.updateShift = updateShift;
+            window.openToiletModal = openToiletModal;
 
             await loadData();
 
+            // Modal events
+            document.getElementById('modalSaveBtn').addEventListener('click', saveToiletSchedule);
+            document.getElementById('modalCancelBtn').addEventListener('click', closeToiletModal);
+            document.getElementById('modalClearBtn').addEventListener('click', clearToiletSchedule);
+            document.getElementById('toiletModal').addEventListener('click', function(e) {
+                if (e.target === this) closeToiletModal();
+            });
+            document.getElementById('modalToiletInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') saveToiletSchedule();
+            });
+
+            // Admin events
             document.getElementById('addSalesBtn').addEventListener('click', addSales);
             document.getElementById('deleteSalesBtn').addEventListener('click', deleteSelected);
             document.getElementById('resetDefaultBtn').addEventListener('click', resetDefault);
