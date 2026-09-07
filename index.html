@@ -9,13 +9,16 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800;14..32,900&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Library untuk Download JPG -->
+     <!-- Library untuk Download JPG -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js">
+    </script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js">
+    </script>
     <!-- Drag & Drop Library -->
-    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js">
+    </script>
        
     <style>
         * {
@@ -62,21 +65,15 @@
             border: 1px solid rgba(255, 255, 255, 0.6);
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
         }
-        
-        /* ============================================= */
-        /* PERBAIKAN BADGE SHIFT (CENTER SEMPURNA)      */
-        /* ============================================= */
         .badge-shift {
-            display: inline-block !important;
-            text-align: center !important;
-            vertical-align: middle !important;
-            line-height: 18px !important; 
-            padding: 6px 12px !important;
+            padding: 6px 14px;
             border-radius: 40px;
             font-weight: 700;
             font-size: 0.75rem;
             letter-spacing: 0.3px;
+            display: inline-block;
             min-width: 44px;
+            text-align: center;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
             cursor: pointer;
             transition: all 0.2s ease;
@@ -116,10 +113,6 @@
             color: #7f1d1d;
             border: 1px solid #ef4444;
         }
-        /* ============================================= */
-        /* AKHIR PERBAIKAN BADGE SHIFT                  */
-        /* ============================================= */
-
         .badge-toilet {
             background: linear-gradient(135deg, #eef2ff, #c7d2fe);
             color: #3730a3;
@@ -128,7 +121,6 @@
             font-weight: 600;
             font-size: 0.8rem;
             display: inline-block;
-            text-align: center;
             cursor: pointer;
             transition: all 0.2s ease;
             border: 1px solid #a5b4fc;
@@ -536,94 +528,93 @@
             color: #94a3b8 !important;
         }
 
-        /* ============================================= */
-        /* PERBAIKAN CSS MOBILE (AGAR RAPI DI HP)       */
-        /* ============================================= */
+        /* ================================================================
+           RESPONSIVE MOBILE - TABEL MENJADI CARD, BUKAN SHRINK
+           ================================================================ */
         @media (max-width: 768px) {
-            .sidebar {
-                flex-direction: column;
-                flex-wrap: nowrap;
-                height: auto;
-                padding: 10px 16px;
-                gap: 6px;
-                border-right: none;
-                border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-                align-items: center;
-            }
-            .sidebar-brand {
-                font-size: 1rem;
-                border-bottom: none;
-                padding-bottom: 4px;
-                width: 100%;
-                display: flex;
-                justify-content: center;
-                margin-bottom: 8px;
-            }
-            .sidebar-brand img {
-                width: 140px;
-                max-height: 60px;
-            }
-            .sidebar .nav-item {
-                padding: 8px 14px;
-                font-size: 0.8rem;
-                flex: 1 0 auto;
-                justify-content: center;
-                border-radius: 10px;
-            }
-            .main {
-                padding: 12px;
-            }
-            
-            /* Perkecil tabel di HP agar muat */
-            .table-modern th, .table-modern td {
-                padding: 6px 4px !important;
-                font-size: 0.6rem !important;
-            }
-            .badge-shift {
-                padding: 4px 6px !important;
-                min-width: 24px !important;
-                line-height: 14px !important;
-                font-size: 0.6rem !important;
-            }
-            .badge-toilet {
-                padding: 4px 8px !important;
-                font-size: 0.65rem !important;
-            }
-            .brand-color-dot {
-                width: 10px !important;
-                height: 10px !important;
-                margin-right: 4px !important;
-            }
-            .drag-handle {
-                font-size: 0.8rem !important;
-            }
-            .card-glass {
-                padding: 10px !important;
-            }
-        }
-        /* ============================================= */
-        /* AKHIR PERBAIKAN CSS MOBILE                   */
-        /* ============================================= */
+            .sidebar { flex-direction: column; flex-wrap: nowrap; height: auto; padding: 10px 16px; gap: 6px; border-right: none; border-bottom: 1px solid rgba(255,255,255,.05); align-items: center; }
+            .sidebar-brand { font-size: 1rem; border-bottom: none; padding-bottom: 4px; width: 100%; display: flex; justify-content: center; margin-bottom: 8px; }
+            .sidebar-brand img { width: 140px; max-height: 60px; }
+            .sidebar .nav-item { padding: 8px 14px; font-size: .8rem; flex: 1 0 auto; justify-content: center; border-radius: 10px; }
+            .main { padding: 12px; }
+            .modal-content { padding: 24px; }
+            .drag-handle { font-size: .9rem; }
+            .stat-card .number { font-size: 1.4rem; }
+            .stat-card { padding: 14px 16px; }
+            .card-glass { padding: 12px; }
+            .text-sm { font-size: .8rem; }
 
-        /* ============================================= */
-        /* PERBAIKAN PRINT & DOWNLOAD JPG (CENTER)      */
-        /* ============================================= */
-        @media print {
-            .badge-shift {
-                display: inline-block !important;
-                text-align: center !important;
-                vertical-align: middle !important;
-                line-height: 16px !important;
-                padding: 6px 10px !important;
+            /* Hilangkan min-width Tailwind di HP */
+            .table-modern { min-width: 0 !important; width: 100% !important; border-collapse: separate; border-spacing: 0; }
+            .table-modern thead { display: none; }
+            .table-modern tbody { display: block; width: 100%; }
+            .table-modern tbody tr {
+                display: grid; width: 100%; margin: 0 0 12px; padding: 12px;
+                border: 1px solid #e2e8f0; border-radius: 18px; background: #fff;
+                box-shadow: 0 4px 14px rgba(15,43,68,.06); box-sizing: border-box; cursor: default;
             }
+            .table-modern tbody tr:last-child { margin-bottom: 0; }
             .table-modern td {
-                text-align: center !important;
-                vertical-align: middle !important;
+                display: flex; align-items: center; justify-content: space-between; gap: 8px;
+                min-width: 0; padding: 7px 4px; border: 0 !important;
+                text-align: right !important; box-sizing: border-box; font-size: .78rem;
             }
+            .table-modern td::before {
+                content: attr(data-label); flex: 0 0 auto; color: #64748b; font-size: .65rem;
+                font-weight: 800; letter-spacing: .35px; text-transform: uppercase; text-align: left;
+            }
+
+            /* SHIFT: Brand + Nama di atas, tujuh hari menjadi grid badge */
+            #page-shift .table-modern tbody tr { grid-template-columns: repeat(4,minmax(0,1fr)); gap: 4px 6px; }
+            #page-shift .table-modern tbody tr.pair-divider { border-bottom: 3px solid #1a3a5a !important; }
+            #page-shift .table-modern tbody td:nth-child(1) { display: none; }
+            #page-shift .table-modern tbody td:nth-child(2),
+            #page-shift .table-modern tbody td:nth-child(3) {
+                grid-column: span 2; justify-content: flex-start; text-align: left !important;
+                padding: 4px 2px 8px; border-bottom: 1px solid #eef2f6 !important;
+            }
+            #page-shift .table-modern tbody td:nth-child(2)::before,
+            #page-shift .table-modern tbody td:nth-child(3)::before { display: none; }
+            #page-shift .table-modern tbody td:nth-child(n+4) {
+                flex-direction: column; justify-content: center; text-align: center !important; padding: 7px 2px;
+            }
+            #page-shift .table-modern tbody td:nth-child(n+4)::before { width: 100%; text-align: center; white-space: nowrap; }
+
+            /* PIKET: Brand + Nama di atas, piket + keterangan di bawah */
+            #page-piket .table-modern tbody tr { grid-template-columns: repeat(2,minmax(0,1fr)); gap: 4px 10px; }
+            #page-piket .table-modern tbody td:nth-child(1),
+            #page-piket .table-modern tbody td:nth-child(2) {
+                justify-content: flex-start; text-align: left !important; padding: 4px 2px 8px;
+                border-bottom: 1px solid #eef2f6 !important;
+            }
+            #page-piket .table-modern tbody td:nth-child(1)::before,
+            #page-piket .table-modern tbody td:nth-child(2)::before { display: none; }
+            #page-piket .table-modern tbody td:nth-child(3),
+            #page-piket .table-modern tbody td:nth-child(4) {
+                flex-direction: column; justify-content: center; text-align: center !important; padding: 9px 2px 4px;
+            }
+            #page-piket .table-modern tbody td:nth-child(3)::before,
+            #page-piket .table-modern tbody td:nth-child(4)::before { width: 100%; text-align: center; }
+
+            .badge-shift { min-width: 38px; width: 38px; height: 28px; padding: 0 !important; font-size: .68rem; }
+            .badge-toilet { max-width: 100%; padding: 6px 10px; font-size: .72rem; white-space: nowrap; }
+            .shift-capture-card, .piket-capture-card { overflow: hidden !important; }
         }
-        /* ============================================= */
-        /* AKHIR PERBAIKAN PRINT & DOWNLOAD JPG         */
-        /* ============================================= */
+
+        /* ================================================================
+           BADGE SHIFT - CENTER SELALU KONSISTEN
+           Berlaku di desktop, mobile, print, dan html2canvas/JPG.
+           ================================================================ */
+        .badge-shift {
+            display: inline-flex !important; align-items: center !important; justify-content: center !important;
+            text-align: center !important; vertical-align: middle !important; box-sizing: border-box;
+            min-width: 44px; min-height: 28px; padding: 0 10px !important; line-height: 1 !important;
+            white-space: nowrap; margin: 0 auto;
+        }
+        .table-modern td { text-align: center; vertical-align: middle; }
+        @media print {
+            .badge-shift { display: inline-flex !important; align-items: center !important; justify-content: center !important; text-align: center !important; line-height: 1 !important; padding: 0 10px !important; }
+        }
     </style>
 </head>
 <body>
@@ -666,7 +657,7 @@
 
     <div class="flex flex-col md:flex-row min-h-screen">
 
-        <!-- SIDEBAR -->
+                     <!-- SIDEBAR -->
         <aside class="sidebar w-full md:w-64 flex-shrink-0 text-white p-5 flex flex-col gap-4 md:min-h-screen sticky top-0 z-10">
             <!-- LOGO GAMBAR -->
             <div class="sidebar-brand pb-4 border-b border-white/10 flex justify-center">
@@ -699,7 +690,7 @@
         <!-- MAIN -->
         <main class="main flex-1 p-4 md:p-8 max-w-full" id="mainContent">
 
-            <!-- HALAMAN SHIFT -->
+                      <!-- HALAMAN SHIFT -->
             <section id="page-shift" class="page active">
                 <div class="mb-6 flex flex-wrap justify-between items-center gap-4">
                     <div>
@@ -710,6 +701,7 @@
                             <span class="drag-info" style="background:linear-gradient(135deg,#dbeafe,#bfdbfe);color:#1a3a5a;">👫 Garis biru = pasangan brand</span>
                         </p>
                     </div>
+                    <!-- TOMBOL DOWNLOAD JPG SHIFT -->
                     <button class="btn-modern btn-primary" onclick="downloadJPG('shift')">📥 Download JPG</button>
                 </div>
 
@@ -737,7 +729,7 @@
                     </div>
                 </div>
 
-                <div class="card-glass rounded-3xl p-4 md:p-6 overflow-hidden">
+                <div class="card-glass capture-card shift-capture-card rounded-3xl p-4 md:p-6 overflow-hidden">
                     <div class="overflow-x-auto">
                         <table class="table-modern w-full text-sm min-w-[820px]">
                             <thead>
@@ -766,7 +758,6 @@
                     </div>
                 </div>
             </section>
-
             <!-- HALAMAN PIKET -->
             <section id="page-piket" class="page hidden">
                 <div class="mb-6">
@@ -774,7 +765,7 @@
                     <p class="text-slate-500 mt-1">Klik badge piket untuk pilih tanggal — otomatis tersimpan</p>
                 </div>
 
-                <!-- NOTE DI ATAS JADWAL -->
+                <!-- ==== NOTE BARU DI ATAS JADWAL ==== -->
                 <div class="card-glass rounded-3xl p-5 mb-6 border-l-4 border-yellow-400 bg-yellow-50/80">
                     <h3 class="text-lg font-extrabold text-slate-800 mb-3" style="font-weight:900;">📌 NOTE:</h3>
                     <ul class="text-sm text-slate-700 space-y-1 list-disc pl-5">
@@ -794,6 +785,9 @@
                         <li>MENGISI FORM KONFIRMASI TUKAR SHIFT, TUKAR OFF, CUTI (DILENGKAPI SURAT IZIN CUTI)</li>
                     </ul>
                 </div>
+                <!-- ==== SELESAI NOTE ==== -->
+
+                               <!-- ==== SELESAI NOTE ==== -->
 
                 <!-- Statistik Piket -->
                 <div class="grid grid-cols-2 md:grid-cols-3 gap-3 mb-6">
@@ -819,7 +813,7 @@
                     <button class="btn-modern btn-primary" onclick="downloadJPG('piket')">📥 Download JPG Piket</button>
                 </div>
 
-                <div class="card-glass rounded-3xl p-4 md:p-6 overflow-hidden">
+                <div class="card-glass capture-card piket-capture-card rounded-3xl p-4 md:p-6 overflow-hidden">
                     <div class="overflow-x-auto">
                         <table class="table-modern w-full text-sm min-w-[500px]">
                             <thead>
@@ -913,13 +907,21 @@
         // ================================================================
         const firebaseConfig = {
             apiKey: "AIzaSyBMokA92YiB87vwuqBREwNhHkkU_bXo8cI",
-            authDomain: "ufokebonsariapps.firebaseapp.com",
-            databaseURL: "https://ufokebonsariapps-default-rtdb.asia-southeast1.firebasedatabase.app",
-            projectId: "ufokebonsariapps",
-            storageBucket: "ufokebonsariapps.firebasestorage.app",
-            messagingSenderId: "663266923207",
-            appId: "1:663266923207:web:fb989ce91cd40b6d3724e2"
-        };
+
+  authDomain: "ufokebonsariapps.firebaseapp.com",
+
+  databaseURL: "https://ufokebonsariapps-default-rtdb.asia-southeast1.firebasedatabase.app",
+
+  projectId: "ufokebonsariapps",
+
+  storageBucket: "ufokebonsariapps.firebasestorage.app",
+
+  messagingSenderId: "663266923207",
+
+  appId: "1:663266923207:web:fb989ce91cd40b6d3724e2"
+
+};
+
 
         let db = null;
         let firebaseInitialized = false;
@@ -1024,34 +1026,62 @@
         // DATA DEFAULT
         // ================================================================
         const DEFAULT_DATA = [
-            { brand: "SHARP", name: "AYUNG", senin: "P", selasa: "OFF", rabu: "S", kamis: "L", jumat: "P", sabtu: "S", minggu: "P", toilet: "" },
-            { brand: "SAMSUNG", name: "FEBRI", senin: "S", selasa: "L", rabu: "P", kamis: "OFF", jumat: "S", sabtu: "P", minggu: "S", toilet: "" },
-            { brand: "POLYTRON", name: "AGUS", senin: "P", selasa: "P", rabu: "OFF", kamis: "S", jumat: "L", sabtu: "P", minggu: "S", toilet: "" },
-            { brand: "LG", name: "EKA", senin: "S", selasa: "S", rabu: "L", kamis: "P", jumat: "OFF", sabtu: "S", minggu: "P", toilet: "" },
-            { brand: "AQUA", name: "PUGUH", senin: "P", selasa: "S", rabu: "L", kamis: "P", jumat: "OFF", sabtu: "S", minggu: "S", toilet: "" },
-            { brand: "AQUA", name: "RONI", senin: "S", selasa: "P", rabu: "OFF", kamis: "S", jumat: "L", sabtu: "P", minggu: "P", toilet: "" },
-            { brand: "TOSHIBA", name: "RISKA", senin: "OFF", selasa: "S", rabu: "S", kamis: "L", jumat: "P", sabtu: "S", minggu: "P", toilet: "" },
-            { brand: "TOSHIBA", name: "ARFIN", senin: "L", selasa: "P", rabu: "P", kamis: "OFF", jumat: "S", sabtu: "P", minggu: "S", toilet: "" },
-            { brand: "MIDEA", name: "ADHE", senin: "P", selasa: "OFF", rabu: "S", kamis: "L", jumat: "P", sabtu: "P", minggu: "S", toilet: "" },
-            { brand: "MIDEA", name: "DEDY", senin: "S", selasa: "L", rabu: "P", kamis: "OFF", jumat: "S", sabtu: "S", minggu: "P", toilet: "" },
-            { brand: "CHANGHONG", name: "ZUNUN", senin: "P", selasa: "OFF", rabu: "S", kamis: "S", jumat: "L", sabtu: "P", minggu: "S", toilet: "" },
-            { brand: "CHANGHONG", name: "", senin: "S", selasa: "L", rabu: "P", kamis: "P", jumat: "OFF", sabtu: "S", minggu: "P", toilet: "" },
-            { brand: "TCL", name: "JIMY", senin: "L", selasa: "P", rabu: "OFF", kamis: "S", jumat: "P", sabtu: "S", minggu: "S", toilet: "" },
-            { brand: "TCL", name: "FAJAR", senin: "OFF", selasa: "S", rabu: "L", kamis: "P", jumat: "S", sabtu: "P", minggu: "P", toilet: "" },
-            { brand: "GREE", name: "LESYO", senin: "L", selasa: "P", rabu: "OFF", kamis: "S", jumat: "P", sabtu: "P", minggu: "S", toilet: "" },
-            { brand: "PANASONIC", name: "RICKY", senin: "OFF", selasa: "S", rabu: "L", kamis: "P", jumat: "S", sabtu: "S", minggu: "P", toilet: "" },
-            { brand: "ELECTROLUX", name: "WAHYU", senin: "OFF", selasa: "S", rabu: "P", kamis: "S", jumat: "L", sabtu: "P", minggu: "P", toilet: "" },
-            { brand: "MODENA", name: "", senin: "L", selasa: "P", rabu: "S", kamis: "P", jumat: "OFF", sabtu: "S", minggu: "S", toilet: "" },
-            { brand: "ARTUGO", name: "FENDI", senin: "P", selasa: "OFF", rabu: "S", kamis: "L", jumat: "P", sabtu: "S", minggu: "P", toilet: "" },
-            { brand: "ARTUGO", name: "ENNY", senin: "S", selasa: "L", rabu: "P", kamis: "OFF", jumat: "S", sabtu: "P", minggu: "S", toilet: "" },
-            { brand: "SANKEN", name: "JESICA", senin: "L", selasa: "P", rabu: "P", kamis: "OFF", jumat: "S", sabtu: "P", minggu: "S", toilet: "" },
-            { brand: "ADVANCE", name: "LEO", senin: "OFF", selasa: "S", rabu: "S", kamis: "L", jumat: "P", sabtu: "S", minggu: "P", toilet: "" },
-            { brand: "GADGET", name: "ROFIUL", senin: "S", selasa: "L", rabu: "P", kamis: "OFF", jumat: "S", sabtu: "P", minggu: "S", toilet: "" },
-            { brand: "GADGET", name: "NEBIYA", senin: "P", selasa: "OFF", rabu: "S", kamis: "L", jumat: "P", sabtu: "S", minggu: "P", toilet: "" },
-            { brand: "MASPION", name: "IBRA", senin: "P", selasa: "S", rabu: "L", kamis: "P", jumat: "OFF", sabtu: "S", minggu: "S", toilet: "" },
-            { brand: "MASPION", name: "NISA", senin: "S", selasa: "P", rabu: "OFF", kamis: "S", jumat: "L", sabtu: "P", minggu: "P", toilet: "" },
-            { brand: "COMFORTA", name: "INAYAH", senin: "L", selasa: "P", rabu: "P", kamis: "OFF", jumat: "S", sabtu: "P", minggu: "S", toilet: "" },
-            { brand: "SMALL", name: "ANISA", senin: "OFF", selasa: "S", rabu: "S", kamis: "L", jumat: "P", sabtu: "S", minggu: "P", toilet: "" }
+            { brand: "SHARP", name: "AYUNG", senin: "P", selasa: "OFF", rabu: "S", kamis: "L", jumat: "P", sabtu: "S",
+                minggu: "P", toilet: "" },
+            { brand: "SAMSUNG", name: "FEBRI", senin: "S", selasa: "L", rabu: "P", kamis: "OFF", jumat: "S", sabtu: "P",
+                minggu: "S", toilet: "" },
+            { brand: "POLYTRON", name: "AGUS", senin: "P", selasa: "P", rabu: "OFF", kamis: "S", jumat: "L", sabtu: "P",
+                minggu: "S", toilet: "" },
+            { brand: "LG", name: "EKA", senin: "S", selasa: "S", rabu: "L", kamis: "P", jumat: "OFF", sabtu: "S", minggu: "P",
+                toilet: "" },
+            { brand: "AQUA", name: "PUGUH", senin: "P", selasa: "S", rabu: "L", kamis: "P", jumat: "OFF", sabtu: "S",
+                minggu: "S", toilet: "" },
+            { brand: "AQUA", name: "RONI", senin: "S", selasa: "P", rabu: "OFF", kamis: "S", jumat: "L", sabtu: "P",
+                minggu: "P", toilet: "" },
+            { brand: "TOSHIBA", name: "RISKA", senin: "OFF", selasa: "S", rabu: "S", kamis: "L", jumat: "P", sabtu: "S",
+                minggu: "P", toilet: "" },
+            { brand: "TOSHIBA", name: "ARFIN", senin: "L", selasa: "P", rabu: "P", kamis: "OFF", jumat: "S", sabtu: "P",
+                minggu: "S", toilet: "" },
+            { brand: "MIDEA", name: "ADHE", senin: "P", selasa: "OFF", rabu: "S", kamis: "L", jumat: "P", sabtu: "P",
+                minggu: "S", toilet: "" },
+            { brand: "MIDEA", name: "DEDY", senin: "S", selasa: "L", rabu: "P", kamis: "OFF", jumat: "S", sabtu: "S",
+                minggu: "P", toilet: "" },
+            { brand: "CHANGHONG", name: "ZUNUN", senin: "P", selasa: "OFF", rabu: "S", kamis: "S", jumat: "L", sabtu: "P",
+                minggu: "S", toilet: "" },
+            { brand: "CHANGHONG", name: "", senin: "S", selasa: "L", rabu: "P", kamis: "P", jumat: "OFF", sabtu: "S",
+                minggu: "P", toilet: "" },
+            { brand: "TCL", name: "JIMY", senin: "L", selasa: "P", rabu: "OFF", kamis: "S", jumat: "P", sabtu: "S",
+                minggu: "S", toilet: "" },
+            { brand: "TCL", name: "FAJAR", senin: "OFF", selasa: "S", rabu: "L", kamis: "P", jumat: "S", sabtu: "P",
+                minggu: "P", toilet: "" },
+            { brand: "GREE", name: "LESYO", senin: "L", selasa: "P", rabu: "OFF", kamis: "S", jumat: "P", sabtu: "P",
+                minggu: "S", toilet: "" },
+            { brand: "PANASONIC", name: "RICKY", senin: "OFF", selasa: "S", rabu: "L", kamis: "P", jumat: "S", sabtu: "S",
+                minggu: "P", toilet: "" },
+            { brand: "ELECTROLUX", name: "WAHYU", senin: "OFF", selasa: "S", rabu: "P", kamis: "S", jumat: "L", sabtu: "P",
+                minggu: "P", toilet: "" },
+            { brand: "MODENA", name: "", senin: "L", selasa: "P", rabu: "S", kamis: "P", jumat: "OFF", sabtu: "S",
+                minggu: "S", toilet: "" },
+            { brand: "ARTUGO", name: "FENDI", senin: "P", selasa: "OFF", rabu: "S", kamis: "L", jumat: "P", sabtu: "S",
+                minggu: "P", toilet: "" },
+            { brand: "ARTUGO", name: "ENNY", senin: "S", selasa: "L", rabu: "P", kamis: "OFF", jumat: "S", sabtu: "P",
+                minggu: "S", toilet: "" },
+            { brand: "SANKEN", name: "JESICA", senin: "L", selasa: "P", rabu: "P", kamis: "OFF", jumat: "S", sabtu: "P",
+                minggu: "S", toilet: "" },
+            { brand: "ADVANCE", name: "LEO", senin: "OFF", selasa: "S", rabu: "S", kamis: "L", jumat: "P", sabtu: "S",
+                minggu: "P", toilet: "" },
+            { brand: "GADGET", name: "ROFIUL", senin: "S", selasa: "L", rabu: "P", kamis: "OFF", jumat: "S", sabtu: "P",
+                minggu: "S", toilet: "" },
+            { brand: "GADGET", name: "NEBIYA", senin: "P", selasa: "OFF", rabu: "S", kamis: "L", jumat: "P", sabtu: "S",
+                minggu: "P", toilet: "" },
+            { brand: "MASPION", name: "IBRA", senin: "P", selasa: "S", rabu: "L", kamis: "P", jumat: "OFF", sabtu: "S",
+                minggu: "S", toilet: "" },
+            { brand: "MASPION", name: "NISA", senin: "S", selasa: "P", rabu: "OFF", kamis: "S", jumat: "L", sabtu: "P",
+                minggu: "P", toilet: "" },
+            { brand: "COMFORTA", name: "INAYAH", senin: "L", selasa: "P", rabu: "P", kamis: "OFF", jumat: "S", sabtu: "P",
+                minggu: "S", toilet: "" },
+            { brand: "SMALL", name: "ANISA", senin: "OFF", selasa: "S", rabu: "S", kamis: "L", jumat: "P", sabtu: "S",
+                minggu: "P", toilet: "" }
         ];
 
         // ================================================================
@@ -1184,7 +1214,7 @@
             }
         }
 
-        function initDragDrop() {
+              function initDragDrop() {
             const tbody = document.getElementById('shiftTableBody');
             if (sortableInstance) {
                 sortableInstance.destroy();
@@ -1344,7 +1374,7 @@
             return d.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
         }
 
-        function renderShift() {
+                           function renderShift() {
             const tbody = document.getElementById('shiftTableBody');
             if (!salesData.length) {
                 tbody.innerHTML =
@@ -1366,17 +1396,19 @@
                 const lockClass = isAdmin ? '' : 'locked';
 
                 html += `<tr data-idx="${idx}" class="${dividerClass}">
-                    <td class="text-center">
+                    <td class="text-center" data-label="#">
                         <span class="drag-handle ${lockClass}" title="Seret untuk geser (butuh PIN)">⠿</span>
                     </td>
-                    <td class="font-semibold text-slate-700"><span class="inline-flex items-center">${dot}${row.brand || ''}</span></td>
-                    <td class="font-medium text-slate-600">${row.name || ''}</td>`;
+                    <td class="font-semibold text-slate-700" data-label="Brand"><span class="inline-flex items-center">${dot}${row.brand || ''}</span></td>
+                    <td class="font-medium text-slate-600" data-label="Nama">${row.name || ''}</td>`;
 
                 days.forEach((day) => {
                     const val = row[day] || '';
                     const cls = getShiftClass(val);
-                    html += `<td>
-                        <span class="badge-shift ${cls} ${lockClass}" 
+                    // --- GABUNGKAN CENTER CSS DISINI ---
+                    const dayLabel = { senin: 'Senin', selasa: 'Selasa', rabu: 'Rabu', kamis: 'Kamis', jumat: "Jum'at", sabtu: 'Sabtu', minggu: 'Minggu' }[day] || day;
+                    html += `<td data-label="${dayLabel}">
+                        <span class="badge-shift ${cls} ${lockClass}"
                               onclick="updateShiftWithAuth(${idx}, '${day}', '${val}')"
                               title="${isAdmin ? 'Klik untuk ubah shift (P/S/L/OFF)' : '🔒 Kunci untuk edit'}">
                             ${val || '-'}
@@ -1391,7 +1423,6 @@
             setTimeout(initDragDrop, 50);
             updateStatistics();
         }
-
         function renderPiket() {
             const tbody = document.getElementById('piketTableBody');
             if (!salesData.length) {
@@ -1412,16 +1443,16 @@
                 const dividerClass = isSecondRow ? 'pair-divider' : '';
 
                 html += `<tr class="${dividerClass}">
-                    <td class="font-semibold text-slate-700"><span class="inline-flex items-center">${dot}${row.brand || ''}</span></td>
-                    <td class="font-medium text-slate-600">${row.name || ''}</td>
-                    <td>
+                    <td class="font-semibold text-slate-700" data-label="Brand"><span class="inline-flex items-center">${dot}${row.brand || ''}</span></td>
+                    <td class="font-medium text-slate-600" data-label="Nama">${row.name || ''}</td>
+                    <td data-label="Piket Toilet">
                         <span class="${badgeClass} ${lockClass}" 
                               onclick="openToiletModalWithAuth(${idx})"
                               title="${isAdmin ? 'Klik untuk pilih tanggal piket' : '🔒 Kunci untuk edit'}">
                             ${displayText}
                         </span>
                     </td>
-                    <td class="text-slate-400 text-xs">${hasToilet ? '✅ Terjadwal' : '⚪ Kosong'}</td>
+                    <td class="text-slate-400 text-xs" data-label="Keterangan">${hasToilet ? '✅ Terjadwal' : '⚪ Kosong'}</td>
                 </tr>`;
             });
             tbody.innerHTML = html;
@@ -1714,8 +1745,7 @@
             document.getElementById('colorBrandInput').addEventListener('keypress', (e) => { if (e.key === 'Enter')
                     setBrandColorWithAuth(); });
         });
-
-        // ================================================================
+                // ================================================================
         // FITUR DOWNLOAD JPG (FIXED & GLOBAL)
         // ================================================================
         window.downloadJPG = async function(type) {
@@ -1735,10 +1765,11 @@
             }
 
             try {
-                // AMBIL TABEL SECARA SPESIFIK (bukan .card-glass pertama)
-                const tableElement = target.querySelector('table.table-modern');
-                
-                if (!tableElement) {
+                // Ambil elemen tabel dan kontainer utamanya
+                const elementToCapture = type === 'shift'
+                    ? target.querySelector('.shift-capture-card')
+                    : target.querySelector('.piket-capture-card'); // Target tabel, bukan NOTE
+                if (!elementToCapture) {
                     alert('Tabel tidak ditemukan!');
                     return;
                 }
@@ -1750,7 +1781,7 @@
                 }
 
                 // Setting kualitas gambar (2x lipat agar tajam di HP)
-                const canvas = await html2canvas(tableElement, {
+                const canvas = await html2canvas(elementToCapture, {
                     scale: 2,
                     backgroundColor: '#ffffff',
                     useCORS: true
@@ -1781,5 +1812,6 @@
             }
         };
     </script>
+
 </body>
 </html>
