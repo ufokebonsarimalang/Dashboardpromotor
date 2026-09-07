@@ -9,6 +9,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800;14..32,900&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
+     <!-- Library untuk Download JPG -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js">
     </script>
@@ -17,6 +19,7 @@
     <!-- Drag & Drop Library -->
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js">
     </script>
+       
     <style>
         * {
             font-family: 'Inter', system-ui, -apple-system, sans-serif;
@@ -660,15 +663,19 @@
         <!-- MAIN -->
         <main class="main flex-1 p-4 md:p-8 max-w-full" id="mainContent">
 
-            <!-- HALAMAN SHIFT -->
+                      <!-- HALAMAN SHIFT -->
             <section id="page-shift" class="page active">
-                <div class="mb-6">
-                    <h2 class="text-4xl font-extrabold text-slate-800" style="font-weight:900;">📋 Jadwal Shift Promotor</h2>
-                    <p class="text-slate-500 mt-1 flex flex-wrap items-center gap-3">
-                        <span>Klik badge shift untuk mengubah (P/S/OFF/L)</span>
-                        <span class="drag-info">↕️ Drag & drop baris untuk tukar posisi</span>
-                        <span class="drag-info" style="background:linear-gradient(135deg,#dbeafe,#bfdbfe);color:#1a3a5a;">👫 Garis biru = pasangan brand</span>
-                    </p>
+                <div class="mb-6 flex flex-wrap justify-between items-center gap-4">
+                    <div>
+                        <h2 class="text-4xl font-extrabold text-slate-800" style="font-weight:900;">📋 Jadwal Shift Promotor</h2>
+                        <p class="text-slate-500 mt-1 flex flex-wrap items-center gap-3">
+                            <span>Klik badge shift untuk mengubah (P/S/OFF/L)</span>
+                            <span class="drag-info">↕️ Drag & drop baris untuk tukar posisi</span>
+                            <span class="drag-info" style="background:linear-gradient(135deg,#dbeafe,#bfdbfe);color:#1a3a5a;">👫 Garis biru = pasangan brand</span>
+                        </p>
+                    </div>
+                    <!-- TOMBOL DOWNLOAD JPG SHIFT -->
+                    <button class="btn-modern btn-primary" onclick="downloadJPG('shift')">📥 Download JPG</button>
                 </div>
 
                 <!-- Statistik -->
@@ -753,6 +760,8 @@
                 </div>
                 <!-- ==== SELESAI NOTE ==== -->
 
+                               <!-- ==== SELESAI NOTE ==== -->
+
                 <!-- Statistik Piket -->
                 <div class="grid grid-cols-2 md:grid-cols-3 gap-3 mb-6">
                     <div class="stat-card">
@@ -770,6 +779,11 @@
                         <div class="label">Total Sales</div>
                         <span class="icon">👥</span>
                     </div>
+                </div>
+
+                <!-- TOMBOL DOWNLOAD JPG PIKET -->
+                <div class="mb-4 flex justify-end">
+                    <button class="btn-modern btn-primary" onclick="downloadJPG('piket')">📥 Download JPG Piket</button>
                 </div>
 
                 <div class="card-glass rounded-3xl p-4 md:p-6 overflow-hidden">
