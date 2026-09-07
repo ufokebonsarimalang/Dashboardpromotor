@@ -10,6 +10,28 @@
     <style>
         body { font-family: 'Inter', sans-serif; }
         .app-card { backdrop-filter: blur(20px); transition: all 0.2s ease; }
+        
+        /* Styling tombol shift agar lebih kontras dan jelas */
+        .shift-btn {
+            width: 38px;
+            height: 34px;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 900;
+            transition: all 0.15s ease;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        }
+        .shift-p { background-color: rgba(16, 185, 129, 0.25); color: #059669; border: 1.5px solid rgba(16, 185, 129, 0.5); }
+        .dark .shift-p { color: #34d399; border-color: rgba(52, 211, 153, 0.4); }
+
+        .shift-s { background-color: rgba(59, 130, 246, 0.25); color: #2563eb; border: 1.5px solid rgba(59, 130, 246, 0.5); }
+        .dark .shift-s { color: #60a5fa; border-color: rgba(96, 165, 250, 0.4); }
+
+        .shift-l { background-color: rgba(245, 158, 11, 0.25); color: #d97706; border: 1.5px solid rgba(245, 158, 11, 0.5); }
+        .dark .shift-l { color: #fbbf24; border-color: rgba(251, 191, 36, 0.4); }
+
+        .shift-off { background-color: rgba(239, 68, 68, 0.25); color: #dc2626; border: 1.5px solid rgba(239, 68, 68, 0.5); }
+        .dark .shift-off { color: #f87171; border-color: rgba(248, 113, 113, 0.4); }
     </style>
 </head>
 <body class="bg-slate-100 dark:bg-slate-950 text-slate-900 dark:text-slate-100 min-h-screen flex flex-col md:flex-row relative overflow-x-hidden">
@@ -49,7 +71,7 @@
     <!-- KONTEN UTAMA -->
     <main class="flex-1 p-4 md:p-10 overflow-y-auto space-y-6 max-w-7xl mx-auto w-full">
 
-        <!-- HALAMAN 1: JADWAL PROMOTOR -->
+        <!-- HALAMAN 1: JADWAL PROMOTOR (Tanpa Piket Toilet) -->
         <section id="tabPromotor" class="space-y-6">
             <div class="app-card bg-white dark:bg-slate-900/80 border border-indigo-500/30 p-5 rounded-3xl shadow-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                 <div>
@@ -73,7 +95,6 @@
                                 <th class="py-3 px-2">Jum'at</th>
                                 <th class="py-3 px-2">Sabtu</th>
                                 <th class="py-3 px-2">Minggu</th>
-                                <th class="py-3 px-3">Piket Toilet</th>
                             </tr>
                         </thead>
                         <tbody id="tabelPromotorBody" class="divide-y divide-slate-800/60"></tbody>
@@ -82,7 +103,7 @@
             </div>
         </section>
 
-        <!-- HALAMAN 2: JADWAL PIKET TOILET -->
+        <!-- HALAMAN 2: JADWAL PIKET TOILET (Disendirikan) -->
         <section id="tabPiket" class="hidden space-y-6">
             <div class="app-card bg-white dark:bg-slate-900/80 border border-indigo-500/30 p-5 rounded-3xl shadow-xl">
                 <h2 class="text-xl font-black">Jadwal Piket Toilet Promotor</h2>
@@ -104,7 +125,7 @@
             </div>
         </section>
 
-        <!-- HALAMAN 3: KONFIGURASI ADMIN -->
+        <!-- HALAMAN 3: KONFIGURASI ADMIN (Tambah / Hapus Brand & Promotor) -->
         <section id="tabAdmin" class="hidden space-y-6">
             <div class="app-card bg-white dark:bg-slate-900/80 border border-indigo-500/30 p-5 rounded-3xl shadow-xl space-y-4">
                 <h2 class="text-xl font-black">Konfigurasi & Manajemen Data</h2>
@@ -140,7 +161,7 @@
 
     <!-- SCRIPT UTAMA -->
     <script>
-        const gasWebhookUrl = "https://script.google.com/macros/s/AKfycbxtcTaj4KNCykH-f3k88cIlsvVWicigtHJWt0D0u-EzDGkUEIYeQAd1oToJyhgaCdr3IQ/exec";
+        const gasWebhookUrl = "MASUKKAN_URL_WEB_APP_APPS_SCRIPT_ANDA_DISINI";
         let daftarPromotor = [];
 
         document.addEventListener("DOMContentLoaded", () => {
@@ -218,18 +239,17 @@
                     <td class="py-2.5 px-3 text-left font-bold">${item.nama}</td>`;
                 
                 item.jadwal.forEach((shift, dayIdx) => {
-                    let badge = "bg-slate-800 text-slate-200";
-                    if (shift === "OFF") badge = "bg-rose-500/20 text-rose-400 font-black border border-rose-500/30";
-                    else if (shift === "P") badge = "bg-emerald-500/20 text-emerald-300 font-extrabold";
-                    else if (shift === "S") badge = "bg-blue-500/20 text-blue-300 font-extrabold";
-                    else if (shift === "L") badge = "bg-amber-500/20 text-amber-300 font-extrabold";
+                    let shiftClass = "shift-p";
+                    if (shift === "S") shiftClass = "shift-s";
+                    else if (shift === "L") shiftClass = "shift-l";
+                    else if (shift === "OFF") shiftClass = "shift-off";
 
-                    html += `<td class="py-2 px-2 text-center">
-                        <button onclick="toggleShift(${item.originalIndex}, ${dayIdx})" class="w-9 h-8 rounded-lg text-xs ${badge} transition-transform active:scale-95">${shift}</button>
+                    html += `<td class="py-2 px-1.5 text-center">
+                        <button onclick="toggleShift(${item.originalIndex}, ${dayIdx})" class="shift-btn ${shiftClass}" title="Klik untuk ubah shift">${shift}</button>
                     </td>`;
                 });
 
-                html += `<td class="py-2.5 px-3 text-center font-bold text-indigo-400">${item.piket}</td></tr>`;
+                html += `</tr>`;
             });
             tbody.innerHTML = html;
         }
