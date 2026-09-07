@@ -9,23 +9,24 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800;14..32,900&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Library untuk Download JPG -->
+     <!-- Library untuk Download JPG -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js">
+    </script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js">
+    </script>
     <!-- Drag & Drop Library -->
-    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js">
+    </script>
        
     <style>
         * {
             font-family: 'Inter', system-ui, -apple-system, sans-serif;
-            box-sizing: border-box;
         }
         body {
             background: linear-gradient(135deg, #eef2f7 0%, #f8fafc 100%);
             min-height: 100vh;
-            overflow-x: hidden;
         }
         .sidebar {
             background: linear-gradient(180deg, #0a1e30 0%, #162d4a 50%, #1a3a5a 100%);
@@ -65,25 +66,19 @@
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
         }
         .badge-shift {
-            display: inline-flex !important;
-            align-items: center !important;
-            justify-content: center !important;
-            text-align: center !important;
-            vertical-align: middle !important;
-            padding: 4px 12px !important;
-            height: 26px !important;
-            min-width: 44px;
+            padding: 6px 14px;
             border-radius: 40px;
             font-weight: 700;
             font-size: 0.75rem;
             letter-spacing: 0.3px;
+            display: inline-block;
+            min-width: 44px;
+            text-align: center;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
             cursor: pointer;
             transition: all 0.2s ease;
             user-select: none;
             position: relative;
-            box-sizing: border-box !important;
-            line-height: normal !important;
         }
         .badge-shift:hover {
             transform: scale(1.08) translateY(-2px);
@@ -192,6 +187,7 @@
             background: #bfdbfe;
             box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
         }
+        /* GARIS PEMBATAS DI BAWAH BARIS KEDUA (SAMSUNG, LG, dll) */
         .table-modern tbody tr.pair-divider td {
             border-bottom: 4px solid #1a3a5a !important;
             position: relative;
@@ -205,6 +201,19 @@
             height: 4px;
             background: linear-gradient(90deg, #1a3a5a, #3b82f6, #1a3a5a);
             border-radius: 2px;
+        }
+        .pair-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: linear-gradient(135deg, #1a3a5a, #2563a0);
+            color: white;
+            font-size: 0.6rem;
+            font-weight: 800;
+            padding: 3px 12px 3px 10px;
+            border-radius: 40px;
+            letter-spacing: 0.5px;
+            box-shadow: 0 2px 8px rgba(26, 58, 90, 0.3);
         }
         .drag-handle {
             cursor: grab;
@@ -251,7 +260,6 @@
             transition: all 0.15s;
             background: white;
             font-size: 0.9rem;
-            width: 100%;
         }
         .admin-input:focus {
             border-color: #3b82f6;
@@ -268,10 +276,6 @@
             font-size: 0.9rem;
             position: relative;
             overflow: hidden;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
         }
         .btn-modern::after {
             content: '';
@@ -343,11 +347,22 @@
             gap: 6px;
             font-weight: 600;
         }
-        .sync-status.synced { background: linear-gradient(135deg, #d1fae5, #a7f3d0); color: #065f46; }
-        .sync-status.syncing { background: linear-gradient(135deg, #fef3c7, #fde68a); color: #92400e; }
-        .sync-status.error { background: linear-gradient(135deg, #fecaca, #f87171); color: #7f1d1d; }
-        .sync-status.offline { background: #e2e8f0; color: #475569; }
-
+        .sync-status.synced {
+            background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+            color: #065f46;
+        }
+        .sync-status.syncing {
+            background: linear-gradient(135deg, #fef3c7, #fde68a);
+            color: #92400e;
+        }
+        .sync-status.error {
+            background: linear-gradient(135deg, #fecaca, #f87171);
+            color: #7f1d1d;
+        }
+        .sync-status.offline {
+            background: #e2e8f0;
+            color: #475569;
+        }
         .toast-notification {
             position: fixed;
             bottom: 24px;
@@ -364,6 +379,7 @@
             transform: translateY(20px) scale(0.95);
             transition: all 0.3s ease;
             pointer-events: none;
+            font-family: 'Inter', sans-serif;
         }
         .toast-notification.show {
             opacity: 1;
@@ -371,142 +387,257 @@
         }
         .modal-overlay {
             position: fixed;
-            inset: 0;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
             background: rgba(0, 0, 0, 0.5);
             backdrop-filter: blur(8px);
             z-index: 999;
             display: none;
             align-items: center;
             justify-content: center;
-            padding: 16px;
         }
-        .modal-overlay.active { display: flex; }
+        .modal-overlay.active {
+            display: flex;
+        }
         .modal-content {
             background: white;
             border-radius: 32px;
             padding: 32px;
             max-width: 420px;
-            width: 100%;
+            width: 90%;
             box-shadow: 0 32px 80px rgba(0, 0, 0, 0.2);
             animation: modalIn 0.3s ease;
         }
         @keyframes modalIn {
-            from { opacity: 0; transform: scale(0.92) translateY(30px); }
-            to { opacity: 1; transform: scale(1) translateY(0); }
+            from {
+                opacity: 0;
+                transform: scale(0.92) translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
         }
-        .modal-content h3 { font-size: 1.4rem; font-weight: 800; margin-bottom: 4px; color: #0c2238; }
-        .modal-content .sub { color: #64748b; font-size: 0.9rem; margin-bottom: 20px; }
-
+        .modal-content h3 {
+            font-size: 1.4rem;
+            font-weight: 800;
+            margin-bottom: 4px;
+            color: #0c2238;
+        }
+        .modal-content .sub {
+            color: #64748b;
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+        }
+        .modal-content input[type="date"],
+        .modal-content input[type="password"] {
+            border-radius: 40px;
+            padding: 12px 18px;
+            border: 2px solid #e2e8f0;
+            font-size: 0.95rem;
+            background: white;
+            width: 100%;
+            transition: all 0.15s;
+        }
+        .modal-content input:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+            outline: none;
+        }
+        .drag-info {
+            background: linear-gradient(135deg, #f1f5f9, #e2e8f0);
+            padding: 8px 16px;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            color: #475569;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+        }
         .stat-card {
             background: white;
             border-radius: 20px;
             padding: 18px 22px;
             box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
             border: 1px solid #eef2f6;
+            transition: all 0.2s;
             position: relative;
             overflow: hidden;
-            transition: all 0.2s;
         }
         .stat-card::before {
             content: '';
             position: absolute;
-            top: 0; left: 0; right: 0;
+            top: 0;
+            left: 0;
+            right: 0;
             height: 4px;
             background: linear-gradient(90deg, #1a3a5a, #3b82f6);
         }
-        .stat-card:hover { transform: translateY(-4px); box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08); }
-        .stat-card .number { font-size: 2rem; font-weight: 800; color: #0c2238; }
-        .stat-card .label { font-size: 0.7rem; color: #64748b; text-transform: uppercase; letter-spacing: 0.8px; font-weight: 600; }
-        .stat-card .icon { font-size: 1.8rem; opacity: 0.3; position: absolute; right: 16px; bottom: 16px; }
-
-        .admin-locked .badge-shift,
-        .admin-locked .badge-toilet,
-        .admin-locked .drag-handle {
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+        }
+        .stat-card .number {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #0c2238;
+        }
+        .stat-card .label {
+            font-size: 0.7rem;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            font-weight: 600;
+        }
+        .stat-card .icon {
+            font-size: 1.8rem;
+            opacity: 0.3;
+            position: absolute;
+            right: 16px;
+            bottom: 16px;
+        }
+        .lock-icon {
+            display: inline-block;
+            font-size: 0.7rem;
+            margin-left: 4px;
+        }
+        .admin-locked .badge-shift {
             cursor: default !important;
             opacity: 0.8;
         }
-        .admin-locked .badge-shift:hover,
-        .admin-locked .badge-toilet:hover {
+        .admin-locked .badge-shift:hover {
             transform: none !important;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06) !important;
+        }
+        .admin-locked .badge-toilet {
+            cursor: default !important;
+            opacity: 0.8;
+        }
+        .admin-locked .badge-toilet:hover {
+            transform: none !important;
+        }
+        .admin-locked .drag-handle {
+            cursor: default !important;
+            opacity: 0.3 !important;
         }
         .admin-locked .drag-handle:hover {
             opacity: 0.3 !important;
             color: #94a3b8 !important;
         }
 
-        /* MEDIA QUERY MOBILE */
-        @media (max-width: 768px) {
-            body { background: #f1f5f9; }
+                  @media (max-width: 768px) {
             .sidebar {
-                position: sticky;
-                top: 0;
-                width: 100%;
-                flex-direction: row;
-                align-items: center;
-                justify-content: space-between;
-                padding: 10px 16px;
+                flex-direction: column; /* Ubah jadi kolom agar rapi */
+                flex-wrap: nowrap;
                 height: auto;
-                z-index: 50;
-                box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+                padding: 10px 16px;
+                gap: 6px;
+                border-right: none;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+                align-items: center;
             }
             .sidebar-brand {
+                font-size: 1rem;
                 border-bottom: none;
-                padding-bottom: 0;
-                margin-bottom: 0;
+                padding-bottom: 4px;
+                width: 100%;
+                display: flex;
+                justify-content: center;
+                margin-bottom: 8px;
             }
             .sidebar-brand img {
-                width: 110px !important;
-                max-height: 40px !important;
-            }
-            .sidebar nav {
-                display: flex;
-                flex-direction: row !important;
-                gap: 4px;
+                width: 140px; /* Ukuran logo di HP */
+                max-height: 60px;
             }
             .sidebar .nav-item {
-                padding: 6px 10px;
-                font-size: 0.75rem;
-                border-radius: 8px;
+                padding: 8px 14px;
+                font-size: 0.8rem;
+                flex: 1 0 auto;
+                justify-content: center;
+                border-radius: 10px;
             }
-            .sidebar .nav-item span:first-child {
-                font-size: 1rem;
+            .main {
+                padding: 16px;
             }
-            .sidebar #syncStatus,
-            .sidebar #lockStatus,
-            .sidebar .text-xs.opacity-30 {
-                display: none !important;
+            .badge-shift {
+                padding: 4px 10px;
+                font-size: 0.65rem;
+                min-width: 32px;
             }
-
-            .main { padding: 12px !important; }
-            h2.text-4xl { font-size: 1.5rem !important; }
-            p.text-slate-500 { font-size: 0.75rem !important; }
-            .btn-modern { padding: 8px 16px !important; font-size: 0.8rem !important; }
-
-            .overflow-x-auto {
-                -webkit-overflow-scrolling: touch;
-                scrollbar-width: thin;
+            .modal-content {
+                padding: 24px;
             }
-            .table-modern th, .table-modern td {
-                padding: 8px 6px !important;
-                font-size: 0.75rem !important;
+            .drag-handle {
+                font-size: 0.9rem;
             }
-            .stat-card { padding: 14px 16px !important; }
-            .stat-card .number { font-size: 1.4rem !important; }
-            .stat-card .icon { font-size: 1.2rem !important; right: 10px; bottom: 10px; }
+            .stat-card .number {
+                font-size: 1.4rem;
+            }
+            .stat-card {
+                padding: 14px 16px;
+            }
             
-            .toast-notification {
-                bottom: 16px; right: 16px; left: 16px;
-                text-align: center;
-                padding: 10px 16px;
+            /* Tampilan Note di HP agar tidak overflow */
+            .card-glass {
+                padding: 12px;
             }
+            .text-sm {
+                font-size: 0.8rem;
+            }
+                              /* CSS KHUSUS AGAR SAAT DI-DOWNLOAD JPG TEKS TETAP CENTER */
+        .badge-shift {
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            text-align: center !important;
+            line-height: 1 !important;
+            vertical-align: middle !important;
+        }
+        
+        .table-modern td {
+            text-align: center !important;
+            vertical-align: middle !important;
+        }
+                              /* CSS KHUSUS AGAR DOWNLOAD JPG / PRINT TEKS CENTER SEMPURNA */
+        .table-modern td .badge-shift {
+            display: inline-block !important;
+            text-align: center !important;
+            vertical-align: middle !important;
+            
+            /* Ganti Flexbox dengan Padding & Line-height */
+            padding: 6px 10px !important;
+            line-height: 16px !important; 
+            
+            /* Hilangkan properti Flexbox yang bermasalah */
+            align-items: initial !important;
+            justify-content: initial !important;
+        }
+
+        /* Tambahan agar container td tetap rata tengah */
+        .table-modern td {
+            text-align: center !important;
+            vertical-align: middle !important;
+        }
+        
+        /* Untuk Print (Ctrl+P) juga */
+        @media print {
+            .badge-shift {
+                display: inline-block !important;
+                text-align: center !important;
+                padding: 6px 10px !important;
+                line-height: 16px !important;
+            }
+        }
         }
     </style>
 </head>
 <body>
 
     <!-- Toast Notification -->
-    <div id="toast" class="toast-notification">✅ Berhasil</div>
+    <div id="toast" class="toast-notification">✅ Shift berhasil diubah</div>
 
     <!-- Modal Password -->
     <div id="passwordModal" class="modal-overlay">
@@ -514,7 +645,7 @@
             <h3>🔒 Masukkan PIN Admin</h3>
             <div class="sub">Untuk mengubah shift atau akses panel admin</div>
             <div class="mb-4">
-                <input type="password" id="passwordInput" placeholder="Masukkan PIN..." class="admin-input w-full" />
+                <input type="password" id="passwordInput" placeholder="Masukkan PIN..." class="w-full" />
             </div>
             <div class="flex gap-2">
                 <button class="btn-modern btn-primary flex-1" id="passwordConfirmBtn">✅ Konfirmasi</button>
@@ -531,66 +662,68 @@
             <div class="sub" id="modalSalesInfo">Brand: SHARP - Nama: AYUNG</div>
             <div class="mb-4">
                 <label class="text-sm font-semibold text-slate-600 block mb-1">Pilih Tanggal Piket</label>
-                <input type="date" id="modalToiletDate" class="admin-input w-full" />
+                <input type="date" id="modalToiletDate" class="w-full" />
             </div>
-            <div class="flex gap-2 mb-2">
+            <div class="flex gap-2">
                 <button class="btn-modern btn-primary flex-1" id="modalSaveBtn">✅ Simpan</button>
                 <button class="btn-modern btn-danger" id="modalClearBtn">✖ Kosongkan</button>
             </div>
-            <button class="btn-modern btn-outline w-full" id="modalCancelBtn">Batal</button>
+            <button class="btn-modern btn-outline w-full mt-2" id="modalCancelBtn">Batal</button>
         </div>
     </div>
 
     <div class="flex flex-col md:flex-row min-h-screen">
 
-        <!-- SIDEBAR -->
-        <aside class="sidebar w-full md:w-64 flex-shrink-0 text-white p-4 md:p-5 flex flex-col gap-4 md:min-h-screen sticky top-0 z-40">
-            <div class="sidebar-brand flex justify-center md:pb-4 md:border-b md:border-white/10">
-                <img src="logo-ufo.png" alt="UFO Malang Kebonsari" class="w-28 md:w-48 h-auto object-contain drop-shadow-lg" />
+                     <!-- SIDEBAR -->
+        <aside class="sidebar w-full md:w-64 flex-shrink-0 text-white p-5 flex flex-col gap-4 md:min-h-screen sticky top-0 z-10">
+            <!-- LOGO GAMBAR -->
+            <div class="sidebar-brand pb-4 border-b border-white/10 flex justify-center">
+                <!-- GANTI 'logo-ufo.png' DENGAN NAMA FILE GAMBAR ANDA -->
+                <img src="logo-ufo.png" alt="UFO Malang Kebonsari" class="w-40 md:w-48 h-auto object-contain drop-shadow-lg" />
             </div>
             
-            <nav class="flex flex-row md:flex-col gap-1.5 justify-center">
-                <button class="nav-item active flex items-center justify-center md:justify-start gap-2.5 px-3 md:px-4 py-2.5 md:py-3.5 text-xs md:text-sm font-medium text-white/80 hover:text-white flex-1 md:flex-none" data-page="shift">
-                    <span class="text-lg md:text-xl">📋</span> <span class="hidden md:inline">Jadwal Shift</span><span class="md:hidden">Shift</span>
+            <nav class="flex flex-row md:flex-col gap-1.5">
+                <button class="nav-item active flex items-center gap-3 px-4 py-3.5 text-sm font-medium text-white/80 hover:text-white w-full" data-page="shift">
+                    <span class="text-xl">📋</span> Jadwal Shift
                 </button>
-                <button class="nav-item flex items-center justify-center md:justify-start gap-2.5 px-3 md:px-4 py-2.5 md:py-3.5 text-xs md:text-sm font-medium text-white/80 hover:text-white flex-1 md:flex-none" data-page="piket">
-                    <span class="text-lg md:text-xl">🧹</span> <span class="hidden md:inline">Piket Toilet</span><span class="md:hidden">Piket</span>
+                <button class="nav-item flex items-center gap-3 px-4 py-3.5 text-sm font-medium text-white/80 hover:text-white w-full" data-page="piket">
+                    <span class="text-xl">🧹</span> Piket Toilet
                 </button>
-                <button class="nav-item flex items-center justify-center md:justify-start gap-2.5 px-3 md:px-4 py-2.5 md:py-3.5 text-xs md:text-sm font-medium text-white/80 hover:text-white flex-1 md:flex-none" data-page="admin">
-                    <span class="text-lg md:text-xl">⚙️</span> <span class="hidden md:inline">Panel Admin</span><span class="md:hidden">Admin</span>
+                <button class="nav-item flex items-center gap-3 px-4 py-3.5 text-sm font-medium text-white/80 hover:text-white w-full" data-page="admin">
+                    <span class="text-xl">⚙️</span> Panel Admin
                 </button>
             </nav>
-
-            <div class="mt-auto hidden md:block pt-4 border-t border-white/10">
-                <div id="syncStatus" class="sync-status synced text-xs mb-2">
-                    <span>✅</span> Tersimpan di Cloud
-                </div>
-                <div id="lockStatus" class="text-xs flex items-center gap-2 text-white/60">
-                    <span>🔒</span> <span id="lockStatusText">Terkunci</span>
-                    <button id="unlockBtn" class="text-xs text-white/40 hover:text-white/80 underline ml-auto">Buka</button>
-                </div>
-                <div class="text-[10px] opacity-30 mt-3">v2.0 · UFO Kebonsari</div>
+            <div class="text-xs opacity-30 mt-auto pt-4 border-t border-white/10 hidden md:block">
+                v2.0 · UFO Kebonsari
+            </div>
+            <div id="syncStatus" class="sync-status synced text-xs mt-2">
+                <span>✅</span> Tersimpan di Cloud
+            </div>
+            <div id="lockStatus" class="text-xs mt-1 flex items-center gap-2 text-white/60">
+                <span>🔒</span> <span id="lockStatusText">Terkunci</span>
+                <button id="unlockBtn" class="text-xs text-white/40 hover:text-white/80 underline">Buka</button>
             </div>
         </aside>
-
         <!-- MAIN -->
-        <main class="main flex-1 p-3 md:p-8 max-w-full overflow-x-hidden" id="mainContent">
+        <main class="main flex-1 p-4 md:p-8 max-w-full" id="mainContent">
 
-            <!-- HALAMAN SHIFT -->
+                      <!-- HALAMAN SHIFT -->
             <section id="page-shift" class="page active">
-                <div class="mb-4 md:mb-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
+                <div class="mb-6 flex flex-wrap justify-between items-center gap-4">
                     <div>
-                        <h2 class="text-2xl md:text-4xl font-extrabold text-slate-800 tracking-tight" style="font-weight:900;">📋 Jadwal Shift Promotor</h2>
-                        <p class="text-slate-500 mt-0.5 text-xs md:text-sm flex flex-wrap items-center gap-2">
+                        <h2 class="text-4xl font-extrabold text-slate-800" style="font-weight:900;">📋 Jadwal Shift Promotor</h2>
+                        <p class="text-slate-500 mt-1 flex flex-wrap items-center gap-3">
                             <span>Klik badge shift untuk mengubah (P/S/OFF/L)</span>
-                            <span class="hidden sm:inline" style="background:linear-gradient(135deg,#f1f5f9,#e2e8f0);padding:4px 10px;border-radius:40px;font-size:0.75rem;">↕️ Drag & drop baris untuk tukar posisi</span>
+                            <span class="drag-info">↕️ Drag & drop baris untuk tukar posisi</span>
+                            <span class="drag-info" style="background:linear-gradient(135deg,#dbeafe,#bfdbfe);color:#1a3a5a;">👫 Garis biru = pasangan brand</span>
                         </p>
                     </div>
-                    <button class="btn-modern btn-primary text-xs md:text-sm w-full md:w-auto" onclick="downloadJPG('shift')">📥 Download JPG</button>
+                    <!-- TOMBOL DOWNLOAD JPG SHIFT -->
+                    <button class="btn-modern btn-primary" onclick="downloadJPG('shift')">📥 Download JPG</button>
                 </div>
 
                 <!-- Statistik -->
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-2.5 md:gap-4 mb-4 md:mb-6">
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
                     <div class="stat-card">
                         <div class="number" id="totalSales">0</div>
                         <div class="label">Total Sales</div>
@@ -613,12 +746,12 @@
                     </div>
                 </div>
 
-                <div class="card-glass rounded-2xl md:rounded-3xl p-3 md:p-6 overflow-hidden">
+                <div class="card-glass rounded-3xl p-4 md:p-6 overflow-hidden">
                     <div class="overflow-x-auto">
-                        <table class="table-modern w-full text-xs md:text-sm min-w-[750px]">
+                        <table class="table-modern w-full text-sm min-w-[820px]">
                             <thead>
                                 <tr>
-                                    <th class="text-left" style="width:30px;">#</th>
+                                    <th class="text-left" style="width:40px;">#</th>
                                     <th class="text-left">BRAND</th>
                                     <th class="text-center">NAMA</th>
                                     <th class="text-center">SENIN</th>
@@ -633,65 +766,73 @@
                             <tbody id="shiftTableBody"></tbody>
                         </table>
                     </div>
-                    <div class="mt-3 md:mt-4 flex flex-wrap gap-3 text-[11px] md:text-xs text-slate-500 border-t pt-3 md:pt-4 border-slate-200/60">
-                        <span><span class="badge-shift badge-p" style="cursor:default; padding:2px 8px; min-width:auto;">P</span> Pagi</span>
-                        <span><span class="badge-shift badge-s" style="cursor:default; padding:2px 8px; min-width:auto;">S</span> Siang</span>
-                        <span><span class="badge-shift badge-l" style="cursor:default; padding:2px 8px; min-width:auto;">L</span> Lembur</span>
-                        <span><span class="badge-shift badge-off" style="cursor:default; padding:2px 8px; min-width:auto;">OFF</span> Libur</span>
+                    <div class="mt-4 flex flex-wrap gap-4 text-xs text-slate-500 border-t pt-4 border-slate-200/60">
+                        <span><span class="badge-shift badge-p" style="cursor:default;">P</span> Pagi</span>
+                        <span><span class="badge-shift badge-s" style="cursor:default;">S</span> Siang</span>
+                        <span><span class="badge-shift badge-l" style="cursor:default;">L</span> Lembur</span>
+                        <span><span class="badge-shift badge-off" style="cursor:default;">OFF</span> Libur</span>
+                        <span class="text-slate-400 ml-2">💡 Klik badge untuk mengubah shift</span>
                     </div>
                 </div>
             </section>
-
-            <!-- HALAMAN PIKET (NOTE + TABEL MENJADI SATU KONTAINER UTUH) -->
+            <!-- HALAMAN PIKET -->
             <section id="page-piket" class="page hidden">
-                <div class="mb-4 md:mb-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
-                    <div>
-                        <h2 class="text-2xl md:text-4xl font-extrabold text-slate-800 tracking-tight" style="font-weight:900;">🧹 Jadwal Piket Toilet</h2>
-                        <p class="text-slate-500 mt-0.5 text-xs md:text-sm">Klik badge piket untuk pilih tanggal — otomatis tersimpan</p>
-                    </div>
-                    <button class="btn-modern btn-primary text-xs md:text-sm w-full md:w-auto" onclick="downloadJPG('piket')">📥 Download JPG Piket</button>
+                <div class="mb-6">
+                    <h2 class="text-4xl font-extrabold text-slate-800" style="font-weight:900;">🧹 Jadwal Piket Toilet</h2>
+                    <p class="text-slate-500 mt-1">Klik badge piket untuk pilih tanggal — otomatis tersimpan</p>
                 </div>
 
-                <div class="card-glass rounded-2xl md:rounded-3xl p-4 md:p-6 space-y-6">
-                    <!-- NOTE -->
-                    <div class="rounded-2xl p-4 md:p-5 border-l-4 border-yellow-400 bg-yellow-50/90 text-xs md:text-sm">
-                        <h3 class="text-base md:text-lg font-extrabold text-slate-800 mb-2" style="font-weight:900;">📌 NOTE:</h3>
-                        <ul class="text-slate-700 space-y-1 list-disc pl-4 md:pl-5">
-                            <li>PIKET TOILET (LANTAI, DINDING, CLOSET, URINOIR, WASTAFEL, LANGIT2) HARUS DISIKAT</li>
-                            <li>GENERAL CLEANING SETIAP HARI SABTU & MINGGU</li>
-                            <li>HARI SABTU MINGGU PERTAMA : AREA LEMARI ES | HARI MINGGU : AREA TV</li>
-                            <li>HARI SABTU MINGGU KEDUA : AREA MESIN CUCI | HARI MINGGU : FREEZER</li>
-                            <li>HARI SABTU MINGGU KETIGA : AREA AC | HARI MINGGU : LANTAI 3</li>
-                            <li>HARI SABTU MINGGU KEEMPAT : AREA GUDANG KARDUS LANTAI 1 | HARI MINGGU : LANTAI 4</li>
-                            <li>WAJIB UPDATE STOK HARIAN DAN UPLOAD SOSMED</li>
-                            <li>WAJIB FINGER ISTIRAHAT</li>
-                            <li>IZIN SAKIT WAJIB DISERTAI SURAT DOKTER DAN OBAT</li>
-                            <li>MENGISI FORM KONFIRMASI TUKAR SHIFT, TUKAR OFF, CUTI (DILENGKAPI SURAT IZIN CUTI)</li>
-                        </ul>
-                    </div>
+                <!-- ==== NOTE BARU DI ATAS JADWAL ==== -->
+                <div class="card-glass rounded-3xl p-5 mb-6 border-l-4 border-yellow-400 bg-yellow-50/80">
+                    <h3 class="text-lg font-extrabold text-slate-800 mb-3" style="font-weight:900;">📌 NOTE:</h3>
+                    <ul class="text-sm text-slate-700 space-y-1 list-disc pl-5">
+                        <li>PIKET TOILET (LANTAI, DINDING, CLOSET, URINOIR, WASTAFEL, LANGIT2) HARUS DISIKAT</li>
+                        <li>GENERAL CLEANING SETIAP HARI SABTU & MINGGU</li>
+                        <li>HARI SABTU MINGGU PERTAMA : AREA LEMARI ES</li>
+                        <li>HARI MINGGU MINGGU PERTAMA : AREA TV</li>
+                        <li>HARI SABTU MINGGU KEDUA : AREA MESIN CUCI</li>
+                        <li>HARI MINGGU MINGGU KEDUA : FREEZER</li>
+                        <li>HARI SABTU MINGGU KETIGA : AREA AC</li>
+                        <li>HARI MINGGU MINGGU KETIGA : LANTAI 3</li>
+                        <li>HARI SABTU MINGGU KEEMPAT : AREA GUDANG KARDUS LANTAI 1</li>
+                        <li>HARI MINGGU MINGGU KEEMPAT : AREA GUDANG KARDUS LANTAI 4</li>
+                        <li>WAJIB UPDATE STOK HARIAN DAN UPLOAD SOSMED</li>
+                        <li>WAJIB FINGER ISTIRAHAT</li>
+                        <li>IZIN SAKIT WAJIB DISERTAI SURAT DOKTER DAN OBAT</li>
+                        <li>MENGISI FORM KONFIRMASI TUKAR SHIFT, TUKAR OFF, CUTI (DILENGKAPI SURAT IZIN CUTI)</li>
+                    </ul>
+                </div>
+                <!-- ==== SELESAI NOTE ==== -->
 
-                    <!-- Statistik Piket -->
-                    <div class="grid grid-cols-2 md:grid-cols-3 gap-2.5 md:gap-4">
-                        <div class="stat-card">
-                            <div class="number" id="totalPiketStat">0</div>
-                            <div class="label">Total Terjadwal</div>
-                            <span class="icon">✅</span>
-                        </div>
-                        <div class="stat-card">
-                            <div class="number" id="totalKosongStat">0</div>
-                            <div class="label">Belum Terjadwal</div>
-                            <span class="icon">⏳</span>
-                        </div>
-                        <div class="stat-card col-span-2 md:col-span-1">
-                            <div class="number" id="totalSalesPiket">0</div>
-                            <div class="label">Total Sales</div>
-                            <span class="icon">👥</span>
-                        </div>
-                    </div>
+                               <!-- ==== SELESAI NOTE ==== -->
 
-                    <!-- Tabel Piket -->
+                <!-- Statistik Piket -->
+                <div class="grid grid-cols-2 md:grid-cols-3 gap-3 mb-6">
+                    <div class="stat-card">
+                        <div class="number" id="totalPiketStat">0</div>
+                        <div class="label">Total Terjadwal</div>
+                        <span class="icon">✅</span>
+                    </div>
+                    <div class="stat-card">
+                        <div class="number" id="totalKosongStat">0</div>
+                        <div class="label">Belum Terjadwal</div>
+                        <span class="icon">⏳</span>
+                    </div>
+                    <div class="stat-card">
+                        <div class="number" id="totalSalesPiket">0</div>
+                        <div class="label">Total Sales</div>
+                        <span class="icon">👥</span>
+                    </div>
+                </div>
+
+                <!-- TOMBOL DOWNLOAD JPG PIKET -->
+                <div class="mb-4 flex justify-end">
+                    <button class="btn-modern btn-primary" onclick="downloadJPG('piket')">📥 Download JPG Piket</button>
+                </div>
+
+                <div class="card-glass rounded-3xl p-4 md:p-6 overflow-hidden">
                     <div class="overflow-x-auto">
-                        <table class="table-modern w-full text-xs md:text-sm min-w-[450px]">
+                        <table class="table-modern w-full text-sm min-w-[500px]">
                             <thead>
                                 <tr>
                                     <th class="text-left">BRAND</th>
@@ -703,24 +844,30 @@
                             <tbody id="piketTableBody"></tbody>
                         </table>
                     </div>
+                    <div class="mt-4 text-xs text-slate-500 border-t pt-4 border-slate-200/60">
+                        <span class="inline-block mr-6">🧽 Lantai, dinding, closet, urinoir, wastafel, langit-langit</span>
+                        <span class="inline-block">📅 General cleaning Sabtu & Minggu</span>
+                        <span class="inline-block ml-4">💡 Klik badge untuk pilih tanggal</span>
+                    </div>
                 </div>
             </section>
 
             <!-- HALAMAN ADMIN -->
             <section id="page-admin" class="page hidden">
-                <div class="mb-4 md:mb-6">
-                    <h2 class="text-2xl md:text-4xl font-extrabold text-slate-800 tracking-tight" style="font-weight:900;">⚙️ Panel Admin</h2>
-                    <p class="text-slate-500 mt-0.5 text-xs md:text-sm">Kelola data sales, shift, dan warna brand — tersimpan otomatis di Firebase</p>
+                <div class="mb-6">
+                    <h2 class="text-4xl font-extrabold text-slate-800" style="font-weight:900;">⚙️ Panel Admin</h2>
+                    <p class="text-slate-500 mt-1">Kelola data sales, shift, dan warna brand — tersimpan otomatis di Firebase</p>
                 </div>
 
-                <div class="card-glass rounded-2xl md:rounded-3xl p-4 md:p-7 space-y-6">
+                <div class="card-glass rounded-3xl p-5 md:p-7 space-y-6">
+
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                         <div>
-                            <h3 class="font-bold text-slate-700 mb-3 text-base md:text-lg">➕ Tambah Sales</h3>
-                            <div class="flex flex-col sm:flex-row gap-2">
-                                <input type="text" id="newBrand" placeholder="Brand" class="admin-input flex-1" />
-                                <input type="text" id="newName" placeholder="Nama Sales" class="admin-input flex-1" />
-                                <select id="newShiftDay" class="admin-input sm:w-36">
+                            <h3 class="font-bold text-slate-700 mb-3 text-lg">➕ Tambah Sales</h3>
+                            <div class="flex flex-wrap gap-2">
+                                <input type="text" id="newBrand" placeholder="Brand" class="admin-input flex-1 min-w-[100px]" />
+                                <input type="text" id="newName" placeholder="Nama Sales" class="admin-input flex-1 min-w-[100px]" />
+                                <select id="newShiftDay" class="admin-input flex-1 min-w-[100px]">
                                     <option value="P">Pagi (P)</option>
                                     <option value="S">Siang (S)</option>
                                     <option value="L">Lembur (L)</option>
@@ -728,36 +875,37 @@
                                 </select>
                                 <button class="btn-modern btn-primary" id="addSalesBtn">Tambah</button>
                             </div>
+                            <div class="mt-2 text-xs text-slate-400">Shift Senin diisi, hari lain mengikuti pola berpasangan.</div>
                         </div>
                         <div>
-                            <h3 class="font-bold text-slate-700 mb-3 text-base md:text-lg">🎨 Warna Brand</h3>
-                            <div class="flex items-center gap-2">
-                                <input type="text" id="colorBrandInput" placeholder="Nama Brand" class="admin-input flex-1" />
-                                <input type="color" id="colorPicker" value="#dbeafe" class="w-12 h-12 rounded-full border-2 border-slate-200 p-1 cursor-pointer flex-shrink-0" />
+                            <h3 class="font-bold text-slate-700 mb-3 text-lg">🎨 Warna Brand</h3>
+                            <div class="flex flex-wrap items-center gap-3">
+                                <input type="text" id="colorBrandInput" placeholder="Nama Brand" class="admin-input flex-1 min-w-[100px]" />
+                                <input type="color" id="colorPicker" value="#dbeafe" class="w-14 h-14 rounded-full border-2 border-slate-200 p-1 cursor-pointer shadow-sm" />
                                 <button class="btn-modern btn-primary" id="setBrandColorBtn">Set</button>
                             </div>
                             <div id="brandColorList" class="flex flex-wrap gap-2 mt-3"></div>
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 border-t border-slate-200/60 pt-5">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 border-t border-slate-200/60 pt-5">
                         <div>
-                            <h3 class="font-bold text-slate-700 mb-2 text-sm">🗑️ Hapus Sales</h3>
-                            <div class="flex gap-2">
-                                <select id="deleteSelect" class="admin-input flex-1"><option value="">Pilih sales</option></select>
+                            <h3 class="font-bold text-slate-700 mb-2">🗑️ Hapus Sales</h3>
+                            <div class="flex flex-wrap gap-2">
+                                <select id="deleteSelect" class="admin-input flex-1 min-w-[120px]"><option value="">Pilih sales</option></select>
                                 <button class="btn-modern btn-danger" id="deleteSalesBtn">Hapus</button>
                             </div>
                         </div>
                         <div class="flex items-end">
-                            <button class="btn-modern btn-outline w-full" id="resetDefaultBtn">↺ Reset</button>
+                            <button class="btn-modern btn-outline" id="resetDefaultBtn">↺ Reset</button>
                         </div>
                         <div class="flex items-end justify-end">
-                            <button class="btn-modern btn-success w-full" id="syncNowBtn">☁️ Sync</button>
+                            <button class="btn-modern btn-success" id="syncNowBtn">☁️ Sync</button>
                         </div>
                     </div>
 
                     <div class="border-t border-slate-200/60 pt-5">
-                        <h3 class="font-bold text-slate-700 mb-3 text-base md:text-lg">📋 Daftar Sales</h3>
+                        <h3 class="font-bold text-slate-700 mb-3 text-lg">📋 Daftar Sales</h3>
                         <div id="salesListContainer" class="flex flex-wrap gap-2"></div>
                     </div>
                 </div>
@@ -765,46 +913,79 @@
         </main>
     </div>
 
-    <!-- SCRIPT UTAMA LENGKAP -->
     <script>
-        const ADMIN_PIN = "7730";
+        // ================================================================
+        // KONFIGURASI
+        // ================================================================
+        const ADMIN_PIN = "7730"; // Ganti dengan PIN yang diinginkan
 
+        // ================================================================
+        // FIREBASE KONFIGURASI
+        // ================================================================
         const firebaseConfig = {
             apiKey: "AIzaSyBMokA92YiB87vwuqBREwNhHkkU_bXo8cI",
-            authDomain: "ufokebonsariapps.firebaseapp.com",
-            databaseURL: "https://ufokebonsariapps-default-rtdb.asia-southeast1.firebasedatabase.app",
-            projectId: "ufokebonsariapps",
-            storageBucket: "ufokebonsariapps.firebasestorage.app",
-            messagingSenderId: "663266923207",
-            appId: "1:663266923207:web:fb989ce91cd40b6d3724e2"
-        };
+
+  authDomain: "ufokebonsariapps.firebaseapp.com",
+
+  databaseURL: "https://ufokebonsariapps-default-rtdb.asia-southeast1.firebasedatabase.app",
+
+  projectId: "ufokebonsariapps",
+
+  storageBucket: "ufokebonsariapps.firebasestorage.app",
+
+  messagingSenderId: "663266923207",
+
+  appId: "1:663266923207:web:fb989ce91cd40b6d3724e2"
+
+};
+
 
         let db = null;
         let firebaseInitialized = false;
         let isAdmin = false;
 
         try {
-            if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+            if (!firebase.apps.length) {
+                firebase.initializeApp(firebaseConfig);
+            }
             db = firebase.firestore();
-            db.enablePersistence({ synchronizeTabs: true }).catch(() => {});
+            db.enablePersistence({ synchronizeTabs: true })
+                .catch(err => console.warn('Firebase persistence:', err.code));
             firebaseInitialized = true;
-        } catch (e) { console.warn('Firebase error:', e.message); }
+            console.log('✅ Firebase initialized');
+        } catch (e) {
+            console.warn('⚠️ Firebase error:', e.message);
+        }
 
+        // ================================================================
+        // TOAST
+        // ================================================================
         let toastTimeout;
+
         function showToast(message, isError = false) {
             const toast = document.getElementById('toast');
-            if(!toast) return;
             toast.textContent = message;
             toast.style.background = isError ? 'linear-gradient(135deg,#fca5a5,#ef4444)' : '#1e293b';
             toast.classList.add('show');
             clearTimeout(toastTimeout);
-            toastTimeout = setTimeout(() => toast.classList.remove('show'), 2500);
+            toastTimeout = setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2500);
         }
 
-        let pendingAction = null, pendingActionData = null;
+        // ================================================================
+        // PASSWORD / AUTH
+        // ================================================================
+        let pendingAction = null;
+        let pendingActionData = null;
+
         function checkAdmin(action, data = null) {
-            if (isAdmin) { if (action) action(data); return true; }
-            pendingAction = action; pendingActionData = data;
+            if (isAdmin) {
+                if (action) action(data);
+                return true;
+            }
+            pendingAction = action;
+            pendingActionData = data;
             document.getElementById('passwordInput').value = '';
             document.getElementById('passwordError').classList.add('hidden');
             document.getElementById('passwordModal').classList.add('active');
@@ -812,14 +993,20 @@
         }
 
         function confirmPassword() {
-            if (document.getElementById('passwordInput').value === ADMIN_PIN) {
+            const input = document.getElementById('passwordInput').value;
+            if (input === ADMIN_PIN) {
                 isAdmin = true;
                 document.getElementById('passwordModal').classList.remove('active');
                 document.getElementById('lockStatusText').textContent = 'Terbuka (Admin)';
-                document.getElementById('lockStatus').className = 'text-xs flex items-center gap-2 text-green-400';
+                document.getElementById('lockStatus').className = 'text-xs mt-1 flex items-center gap-2 text-green-400';
                 document.getElementById('unlockBtn').textContent = 'Kunci';
                 document.getElementById('mainContent').classList.remove('admin-locked');
-                if (pendingAction) { pendingAction(pendingActionData); pendingAction = null; pendingActionData = null; }
+
+                if (pendingAction) {
+                    pendingAction(pendingActionData);
+                    pendingAction = null;
+                    pendingActionData = null;
+                }
                 showToast('🔓 Mode Admin aktif');
             } else {
                 document.getElementById('passwordError').classList.remove('hidden');
@@ -830,77 +1017,135 @@
 
         function cancelPassword() {
             document.getElementById('passwordModal').classList.remove('active');
-            pendingAction = null; pendingActionData = null;
+            pendingAction = null;
+            pendingActionData = null;
         }
 
         function lockAdmin() {
             isAdmin = false;
             document.getElementById('lockStatusText').textContent = 'Terkunci';
-            document.getElementById('lockStatus').className = 'text-xs flex items-center gap-2 text-white/60';
+            document.getElementById('lockStatus').className = 'text-xs mt-1 flex items-center gap-2 text-white/60';
             document.getElementById('unlockBtn').textContent = 'Buka';
             document.getElementById('mainContent').classList.add('admin-locked');
             showToast('🔒 Mode terkunci');
             renderAll();
         }
 
-        function toggleLock() { if (isAdmin) lockAdmin(); else checkAdmin(() => {}); }
+        function toggleLock() {
+            if (isAdmin) {
+                lockAdmin();
+            } else {
+                checkAdmin(() => {});
+            }
+        }
 
+        // ================================================================
+        // DATA DEFAULT
+        // ================================================================
         const DEFAULT_DATA = [
-            { brand: "SHARP", name: "AYUNG", senin: "P", selasa: "OFF", rabu: "S", kamis: "L", jumat: "P", sabtu: "S", minggu: "P", toilet: "" },
-            { brand: "SAMSUNG", name: "FEBRI", senin: "S", selasa: "L", rabu: "P", kamis: "OFF", jumat: "S", sabtu: "P", minggu: "S", toilet: "" },
-            { brand: "POLYTRON", name: "AGUS", senin: "P", selasa: "P", rabu: "OFF", kamis: "S", jumat: "L", sabtu: "P", minggu: "S", toilet: "" },
-            { brand: "LG", name: "EKA", senin: "S", selasa: "S", rabu: "L", kamis: "P", jumat: "OFF", sabtu: "S", minggu: "P", toilet: "" },
-            { brand: "AQUA", name: "PUGUH", senin: "P", selasa: "S", rabu: "L", kamis: "P", jumat: "OFF", sabtu: "S", minggu: "S", toilet: "" },
-            { brand: "AQUA", name: "RONI", senin: "S", selasa: "P", rabu: "OFF", kamis: "S", jumat: "L", sabtu: "P", minggu: "P", toilet: "" },
-            { brand: "TOSHIBA", name: "RISKA", senin: "OFF", selasa: "S", rabu: "S", kamis: "L", jumat: "P", sabtu: "S", minggu: "P", toilet: "" },
-            { brand: "TOSHIBA", name: "ARFIN", senin: "L", selasa: "P", rabu: "P", kamis: "OFF", jumat: "S", sabtu: "P", minggu: "S", toilet: "" },
-            { brand: "MIDEA", name: "ADHE", senin: "P", selasa: "OFF", rabu: "S", kamis: "L", jumat: "P", sabtu: "P", minggu: "S", toilet: "" },
-            { brand: "MIDEA", name: "DEDY", senin: "S", selasa: "L", rabu: "P", kamis: "OFF", jumat: "S", sabtu: "S", minggu: "P", toilet: "" },
-            { brand: "CHANGHONG", name: "ZUNUN", senin: "P", selasa: "OFF", rabu: "S", kamis: "S", jumat: "L", sabtu: "P", minggu: "S", toilet: "" },
-            { brand: "CHANGHONG", name: "", senin: "S", selasa: "L", rabu: "P", kamis: "P", jumat: "OFF", sabtu: "S", minggu: "P", toilet: "" },
-            { brand: "TCL", name: "JIMY", senin: "L", selasa: "P", rabu: "OFF", kamis: "S", jumat: "P", sabtu: "S", minggu: "S", toilet: "" },
-            { brand: "TCL", name: "FAJAR", senin: "OFF", selasa: "S", rabu: "L", kamis: "P", jumat: "S", sabtu: "P", minggu: "P", toilet: "" },
-            { brand: "GREE", name: "LESYO", senin: "L", selasa: "P", rabu: "OFF", kamis: "S", jumat: "P", sabtu: "P", minggu: "S", toilet: "" },
-            { brand: "PANASONIC", name: "RICKY", senin: "OFF", selasa: "S", rabu: "L", kamis: "P", jumat: "S", sabtu: "S", minggu: "P", toilet: "" },
-            { brand: "ELECTROLUX", name: "WAHYU", senin: "OFF", selasa: "S", rabu: "P", kamis: "S", jumat: "L", sabtu: "P", minggu: "P", toilet: "" },
-            { brand: "MODENA", name: "", senin: "L", selasa: "P", rabu: "S", kamis: "P", jumat: "OFF", sabtu: "S", minggu: "S", toilet: "" },
-            { brand: "ARTUGO", name: "FENDI", senin: "P", selasa: "OFF", rabu: "S", kamis: "L", jumat: "P", sabtu: "S", minggu: "P", toilet: "" },
-            { brand: "ARTUGO", name: "ENNY", senin: "S", selasa: "L", rabu: "P", kamis: "OFF", jumat: "S", sabtu: "P", minggu: "S", toilet: "" },
-            { brand: "SANKEN", name: "JESICA", senin: "L", selasa: "P", rabu: "P", kamis: "OFF", jumat: "S", sabtu: "P", minggu: "S", toilet: "" },
-            { brand: "ADVANCE", name: "LEO", senin: "OFF", selasa: "S", rabu: "S", kamis: "L", jumat: "P", sabtu: "S", minggu: "P", toilet: "" },
-            { brand: "GADGET", name: "ROFIUL", senin: "S", selasa: "L", rabu: "P", kamis: "OFF", jumat: "S", sabtu: "P", minggu: "S", toilet: "" },
-            { brand: "GADGET", name: "NEBIYA", senin: "P", selasa: "OFF", rabu: "S", kamis: "L", jumat: "P", sabtu: "S", minggu: "P", toilet: "" },
-            { brand: "MASPION", name: "IBRA", senin: "P", selasa: "S", rabu: "L", kamis: "P", jumat: "OFF", sabtu: "S", minggu: "S", toilet: "" },
-            { brand: "MASPION", name: "NISA", senin: "S", selasa: "P", rabu: "OFF", kamis: "S", jumat: "L", sabtu: "P", minggu: "P", toilet: "" },
-            { brand: "COMFORTA", name: "INAYAH", senin: "L", selasa: "P", rabu: "P", kamis: "OFF", jumat: "S", sabtu: "P", minggu: "S", toilet: "" },
-            { brand: "SMALL", name: "ANISA", senin: "OFF", selasa: "S", rabu: "S", kamis: "L", jumat: "P", sabtu: "S", minggu: "P", toilet: "" }
+            { brand: "SHARP", name: "AYUNG", senin: "P", selasa: "OFF", rabu: "S", kamis: "L", jumat: "P", sabtu: "S",
+                minggu: "P", toilet: "" },
+            { brand: "SAMSUNG", name: "FEBRI", senin: "S", selasa: "L", rabu: "P", kamis: "OFF", jumat: "S", sabtu: "P",
+                minggu: "S", toilet: "" },
+            { brand: "POLYTRON", name: "AGUS", senin: "P", selasa: "P", rabu: "OFF", kamis: "S", jumat: "L", sabtu: "P",
+                minggu: "S", toilet: "" },
+            { brand: "LG", name: "EKA", senin: "S", selasa: "S", rabu: "L", kamis: "P", jumat: "OFF", sabtu: "S", minggu: "P",
+                toilet: "" },
+            { brand: "AQUA", name: "PUGUH", senin: "P", selasa: "S", rabu: "L", kamis: "P", jumat: "OFF", sabtu: "S",
+                minggu: "S", toilet: "" },
+            { brand: "AQUA", name: "RONI", senin: "S", selasa: "P", rabu: "OFF", kamis: "S", jumat: "L", sabtu: "P",
+                minggu: "P", toilet: "" },
+            { brand: "TOSHIBA", name: "RISKA", senin: "OFF", selasa: "S", rabu: "S", kamis: "L", jumat: "P", sabtu: "S",
+                minggu: "P", toilet: "" },
+            { brand: "TOSHIBA", name: "ARFIN", senin: "L", selasa: "P", rabu: "P", kamis: "OFF", jumat: "S", sabtu: "P",
+                minggu: "S", toilet: "" },
+            { brand: "MIDEA", name: "ADHE", senin: "P", selasa: "OFF", rabu: "S", kamis: "L", jumat: "P", sabtu: "P",
+                minggu: "S", toilet: "" },
+            { brand: "MIDEA", name: "DEDY", senin: "S", selasa: "L", rabu: "P", kamis: "OFF", jumat: "S", sabtu: "S",
+                minggu: "P", toilet: "" },
+            { brand: "CHANGHONG", name: "ZUNUN", senin: "P", selasa: "OFF", rabu: "S", kamis: "S", jumat: "L", sabtu: "P",
+                minggu: "S", toilet: "" },
+            { brand: "CHANGHONG", name: "", senin: "S", selasa: "L", rabu: "P", kamis: "P", jumat: "OFF", sabtu: "S",
+                minggu: "P", toilet: "" },
+            { brand: "TCL", name: "JIMY", senin: "L", selasa: "P", rabu: "OFF", kamis: "S", jumat: "P", sabtu: "S",
+                minggu: "S", toilet: "" },
+            { brand: "TCL", name: "FAJAR", senin: "OFF", selasa: "S", rabu: "L", kamis: "P", jumat: "S", sabtu: "P",
+                minggu: "P", toilet: "" },
+            { brand: "GREE", name: "LESYO", senin: "L", selasa: "P", rabu: "OFF", kamis: "S", jumat: "P", sabtu: "P",
+                minggu: "S", toilet: "" },
+            { brand: "PANASONIC", name: "RICKY", senin: "OFF", selasa: "S", rabu: "L", kamis: "P", jumat: "S", sabtu: "S",
+                minggu: "P", toilet: "" },
+            { brand: "ELECTROLUX", name: "WAHYU", senin: "OFF", selasa: "S", rabu: "P", kamis: "S", jumat: "L", sabtu: "P",
+                minggu: "P", toilet: "" },
+            { brand: "MODENA", name: "", senin: "L", selasa: "P", rabu: "S", kamis: "P", jumat: "OFF", sabtu: "S",
+                minggu: "S", toilet: "" },
+            { brand: "ARTUGO", name: "FENDI", senin: "P", selasa: "OFF", rabu: "S", kamis: "L", jumat: "P", sabtu: "S",
+                minggu: "P", toilet: "" },
+            { brand: "ARTUGO", name: "ENNY", senin: "S", selasa: "L", rabu: "P", kamis: "OFF", jumat: "S", sabtu: "P",
+                minggu: "S", toilet: "" },
+            { brand: "SANKEN", name: "JESICA", senin: "L", selasa: "P", rabu: "P", kamis: "OFF", jumat: "S", sabtu: "P",
+                minggu: "S", toilet: "" },
+            { brand: "ADVANCE", name: "LEO", senin: "OFF", selasa: "S", rabu: "S", kamis: "L", jumat: "P", sabtu: "S",
+                minggu: "P", toilet: "" },
+            { brand: "GADGET", name: "ROFIUL", senin: "S", selasa: "L", rabu: "P", kamis: "OFF", jumat: "S", sabtu: "P",
+                minggu: "S", toilet: "" },
+            { brand: "GADGET", name: "NEBIYA", senin: "P", selasa: "OFF", rabu: "S", kamis: "L", jumat: "P", sabtu: "S",
+                minggu: "P", toilet: "" },
+            { brand: "MASPION", name: "IBRA", senin: "P", selasa: "S", rabu: "L", kamis: "P", jumat: "OFF", sabtu: "S",
+                minggu: "S", toilet: "" },
+            { brand: "MASPION", name: "NISA", senin: "S", selasa: "P", rabu: "OFF", kamis: "S", jumat: "L", sabtu: "P",
+                minggu: "P", toilet: "" },
+            { brand: "COMFORTA", name: "INAYAH", senin: "L", selasa: "P", rabu: "P", kamis: "OFF", jumat: "S", sabtu: "P",
+                minggu: "S", toilet: "" },
+            { brand: "SMALL", name: "ANISA", senin: "OFF", selasa: "S", rabu: "S", kamis: "L", jumat: "P", sabtu: "S",
+                minggu: "P", toilet: "" }
         ];
 
-        let salesData = [], brandColors = {}, editingToiletIndex = null, sortableInstance = null;
+        // ================================================================
+        // STATE
+        // ================================================================
+        let salesData = [];
+        let brandColors = {};
+        let editingToiletIndex = null;
+        let sortableInstance = null;
 
+        // ================================================================
+        // FUNGSI SYNC FIREBASE
+        // ================================================================
         function updateSyncStatus(status, message) {
             const el = document.getElementById('syncStatus');
-            if(!el) return;
             el.className = `sync-status ${status}`;
             const icons = { 'synced': '✅', 'syncing': '⏳', 'error': '⚠️', 'offline': '📡' };
             el.innerHTML = `<span>${icons[status] || '📌'}</span> ${message || ''}`;
         }
 
         async function syncToFirebase() {
-            if (!firebaseInitialized || !db) { updateSyncStatus('offline', 'Mode offline'); return false; }
+            if (!firebaseInitialized || !db) {
+                updateSyncStatus('offline', 'Mode offline');
+                return false;
+            }
             updateSyncStatus('syncing', 'Menyimpan...');
             try {
-                await db.collection('config').doc('ufo_data').set({ sales: salesData, colors: brandColors, updatedAt: new Date().toISOString() }, { merge: true });
+                const payload = {
+                    sales: salesData,
+                    colors: brandColors,
+                    updatedAt: new Date().toISOString()
+                };
+                await db.collection('config').doc('ufo_data').set(payload, { merge: true });
                 updateSyncStatus('synced', 'Tersimpan');
                 return true;
             } catch (e) {
+                console.error('Sync error:', e.code, e.message);
                 updateSyncStatus('error', 'Gagal sync');
                 return false;
             }
         }
 
         async function loadFromFirebase() {
-            if (!firebaseInitialized || !db) { updateSyncStatus('offline', 'Offline'); return false; }
+            if (!firebaseInitialized || !db) {
+                updateSyncStatus('offline', 'Offline');
+                return false;
+            }
             updateSyncStatus('syncing', 'Memuat...');
             try {
                 const doc = await db.collection('config').doc('ufo_data').get();
@@ -915,16 +1160,24 @@
                     return true;
                 }
             } catch (e) {
+                console.warn('Load from Firebase error:', e.code);
                 updateSyncStatus('offline', 'Offline - pakai lokal');
                 return false;
             }
         }
 
+        // ================================================================
+        // FUNGSI DATA LOKAL
+        // ================================================================
         function loadLocalData() {
             try {
-                salesData = localStorage.getItem('ufo_piket_data') ? JSON.parse(localStorage.getItem('ufo_piket_data')) : DEFAULT_DATA.map(d => ({ ...d }));
-                brandColors = localStorage.getItem('ufo_brand_colors') ? JSON.parse(localStorage.getItem('ufo_brand_colors')) : {};
-            } catch (e) { salesData = DEFAULT_DATA.map(d => ({ ...d })); brandColors = {}; }
+                const stored = localStorage.getItem('ufo_piket_data');
+                salesData = stored ? JSON.parse(stored) : DEFAULT_DATA.map(d => ({ ...d }));
+            } catch (e) { salesData = DEFAULT_DATA.map(d => ({ ...d })); }
+            try {
+                const storedColors = localStorage.getItem('ufo_brand_colors');
+                brandColors = storedColors ? JSON.parse(storedColors) : {};
+            } catch (e) { brandColors = {}; }
         }
 
         function saveLocalData() {
@@ -942,50 +1195,86 @@
         async function saveData(showToastMsg = true) {
             saveLocalData();
             const success = await syncToFirebase();
-            if (showToastMsg) showToast(success ? '✅ Data berhasil disimpan' : '⚠️ Tersimpan di lokal', !success);
+            if (showToastMsg) {
+                if (success) {
+                    showToast('✅ Data berhasil disimpan');
+                } else {
+                    showToast('⚠️ Tersimpan di lokal', true);
+                }
+            }
         }
 
+        // ================================================================
+        // FUNGSI UPDATE SHIFT (dengan proteksi)
+        // ================================================================
         function updateShiftWithAuth(rowIndex, dayKey, currentValue) {
-            if (!isAdmin) { checkAdmin(() => updateShift(rowIndex, dayKey, currentValue)); return; }
+            if (!isAdmin) {
+                checkAdmin(() => {
+                    updateShift(rowIndex, dayKey, currentValue);
+                });
+                return;
+            }
             updateShift(rowIndex, dayKey, currentValue);
         }
 
         function updateShift(rowIndex, dayKey, currentValue) {
             const shiftOrder = ['P', 'S', 'L', 'OFF'];
-            let nextIndex = (shiftOrder.indexOf(currentValue) + 1) % shiftOrder.length;
+            let currentIndex = shiftOrder.indexOf(currentValue);
+            if (currentIndex === -1) currentIndex = 0;
+            const nextIndex = (currentIndex + 1) % shiftOrder.length;
+            const newValue = shiftOrder[nextIndex];
+
             if (salesData[rowIndex]) {
-                salesData[rowIndex][dayKey] = shiftOrder[nextIndex];
+                salesData[rowIndex][dayKey] = newValue;
                 saveData(true);
                 renderAll();
             }
         }
 
-        function initDragDrop() {
+              function initDragDrop() {
             const tbody = document.getElementById('shiftTableBody');
-            if (!tbody || !salesData.length) return;
-            if (sortableInstance) { sortableInstance.destroy(); sortableInstance = null; }
+            if (sortableInstance) {
+                sortableInstance.destroy();
+                sortableInstance = null;
+            }
+
+            if (!salesData.length) return;
 
             sortableInstance = new Sortable(tbody, {
                 handle: '.drag-handle',
                 animation: 150,
                 ghostClass: 'sortable-ghost',
                 chosenClass: 'sortable-chosen',
+                dragClass: 'sortable-drag',
+                // HAPUS onStart yang memblokir
                 onEnd: function(evt) {
-                    if (evt.oldIndex === evt.newIndex) return;
+                    const oldIndex = evt.oldIndex;
+                    const newIndex = evt.newIndex;
+                    
+                    // Jika posisi tidak berubah, tidak usah melakukan apa-apa
+                    if (oldIndex === newIndex) return;
+
                     if (!isAdmin) {
-                        showToast('🔒 Masukkan PIN untuk geser', true);
+                        // Jika belum admin: Batalkan drag, kembalikan posisi, dan MUNCULKAN POPUP PIN
+                        showToast('🔒 Masukkan PIN untuk menggeser', true);
                         checkAdmin(() => {
-                            const [movedItem] = salesData.splice(evt.oldIndex, 1);
-                            salesData.splice(evt.newIndex, 0, movedItem);
+                            // Jika PIN berhasil dimasukkan, lakukan perpindahan
+                            const [movedItem] = salesData.splice(oldIndex, 1);
+                            salesData.splice(newIndex, 0, movedItem);
                             saveData(true);
                             renderAll();
                             showToast(`↕️ ${movedItem.brand} - ${movedItem.name} dipindahkan`);
                         });
-                        renderAll();
+                        
+                        // Kembalikan tampilan ke posisi semula dulu (sebelum PIN dimasukkan)
+                        renderAll(); 
                         return;
                     }
-                    const [movedItem] = salesData.splice(evt.oldIndex, 1);
-                    salesData.splice(evt.newIndex, 0, movedItem);
+
+                    // Jika sudah admin (tidak perlu PIN)
+                    const [movedItem] = salesData.splice(oldIndex, 1);
+                    salesData.splice(newIndex, 0, movedItem);
+
                     saveData(true);
                     renderAll();
                     showToast(`↕️ ${movedItem.brand} - ${movedItem.name} dipindahkan`);
@@ -993,8 +1282,16 @@
             });
         }
 
+        // ================================================================
+        // FUNGSI EDIT PIKET TOILET (dengan proteksi)
+        // ================================================================
         function openToiletModalWithAuth(index) {
-            if (!isAdmin) { checkAdmin(() => openToiletModal(index)); return; }
+            if (!isAdmin) {
+                checkAdmin(() => {
+                    openToiletModal(index);
+                });
+                return;
+            }
             openToiletModal(index);
         }
 
@@ -1002,8 +1299,17 @@
             editingToiletIndex = index;
             const sales = salesData[index];
             if (!sales) return;
-            document.getElementById('modalSalesInfo').textContent = `Brand: ${sales.brand} - Nama: ${sales.name || '-'}`;
-            document.getElementById('modalToiletDate').value = sales.toilet || '';
+
+            document.getElementById('modalSalesInfo').textContent =
+                `Brand: ${sales.brand} - Nama: ${sales.name || '-'}`;
+
+            const dateInput = document.getElementById('modalToiletDate');
+            if (sales.toilet && sales.toilet !== '') {
+                dateInput.value = sales.toilet;
+            } else {
+                dateInput.value = '';
+            }
+
             document.getElementById('toiletModal').classList.add('active');
         }
 
@@ -1013,16 +1319,24 @@
         }
 
         function saveToiletSchedule() {
-            if (editingToiletIndex === null) return;
-            salesData[editingToiletIndex].toilet = document.getElementById('modalToiletDate').value;
+            if (editingToiletIndex === null || editingToiletIndex >= salesData.length) {
+                closeToiletModal();
+                return;
+            }
+
+            const value = document.getElementById('modalToiletDate').value;
+            salesData[editingToiletIndex].toilet = value;
             saveData(true);
             renderAll();
             closeToiletModal();
         }
 
         function clearToiletSchedule() {
-            if (editingToiletIndex === null) return;
-            if (confirm('Kosongkan jadwal piket?')) {
+            if (editingToiletIndex === null || editingToiletIndex >= salesData.length) {
+                closeToiletModal();
+                return;
+            }
+            if (confirm('Kosongkan jadwal piket untuk sales ini?')) {
                 salesData[editingToiletIndex].toilet = '';
                 saveData(true);
                 renderAll();
@@ -1030,12 +1344,16 @@
             }
         }
 
+        // ================================================================
+        // UPDATE STATISTIK
+        // ================================================================
         function updateStatistics() {
             const total = salesData.length;
             const withPiket = salesData.filter(r => r.toilet && r.toilet.trim() !== '').length;
             const tanpaPiket = total - withPiket;
 
-            let totalPagi = 0, totalSiang = 0;
+            let totalPagi = 0,
+                totalSiang = 0;
             const days = ['senin', 'selasa', 'rabu', 'kamis', 'jumat', 'sabtu', 'minggu'];
             salesData.forEach(row => {
                 days.forEach(day => {
@@ -1045,23 +1363,19 @@
                 });
             });
 
-            const elTotalSales = document.getElementById('totalSales');
-            const elTotalPiket = document.getElementById('totalPiket');
-            const elTotalPagi = document.getElementById('totalPagi');
-            const elTotalSiang = document.getElementById('totalSiang');
-            const elTotalPiketStat = document.getElementById('totalPiketStat');
-            const elTotalKosongStat = document.getElementById('totalKosongStat');
-            const elTotalSalesPiket = document.getElementById('totalSalesPiket');
+            document.getElementById('totalSales').textContent = total;
+            document.getElementById('totalPiket').textContent = withPiket;
+            document.getElementById('totalPagi').textContent = totalPagi;
+            document.getElementById('totalSiang').textContent = totalSiang;
 
-            if(elTotalSales) elTotalSales.textContent = total;
-            if(elTotalPiket) elTotalPiket.textContent = withPiket;
-            if(elTotalPagi) elTotalPagi.textContent = totalPagi;
-            if(elTotalSiang) elTotalSiang.textContent = totalSiang;
-            if(elTotalPiketStat) elTotalPiketStat.textContent = withPiket;
-            if(elTotalKosongStat) elTotalKosongStat.textContent = tanpaPiket;
-            if(elTotalSalesPiket) elTotalSalesPiket.textContent = total;
+            document.getElementById('totalPiketStat').textContent = withPiket;
+            document.getElementById('totalKosongStat').textContent = tanpaPiket;
+            document.getElementById('totalSalesPiket').textContent = total;
         }
 
+        // ================================================================
+        // RENDER
+        // ================================================================
         function getShiftClass(val) {
             const u = (val || '').toUpperCase();
             if (u === 'P') return 'badge-p';
@@ -1077,71 +1391,114 @@
             return d.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
         }
 
-        function renderShift() {
+                           function renderShift() {
             const tbody = document.getElementById('shiftTableBody');
-            if (!tbody) return;
-            if (!salesData.length) { tbody.innerHTML = `<tr><td colspan="10" class="text-center text-slate-400 py-8">Belum ada data</td></tr>`; return; }
+            if (!salesData.length) {
+                tbody.innerHTML =
+                    `<tr><td colspan="10" class="text-center text-slate-400 py-8">Belum ada data sales.</td></tr>`;
+                return;
+            }
             let html = '';
             salesData.forEach((row, idx) => {
                 const color = brandColors[row.brand] || '#e2e8f0';
                 const dot = `<span class="brand-color-dot" style="background:${color};"></span>`;
                 const days = ['senin', 'selasa', 'rabu', 'kamis', 'jumat', 'sabtu', 'minggu'];
-                const dividerClass = idx % 2 === 1 ? 'pair-divider' : '';
+
+                // --- KEMBALIKAN LOGIKA GARIS PEMBATAS BIRU ---
+                const isSecondRow = idx % 2 === 1;
+                const pairNumber = Math.floor(idx / 2) + 1;
+                const dividerClass = isSecondRow ? 'pair-divider' : '';
+                // ---------------------------------------------
+
                 const lockClass = isAdmin ? '' : 'locked';
 
-                html += `<tr class="${dividerClass}">
-                    <td class="text-center"><span class="drag-handle ${lockClass}" title="Seret">⠿</span></td>
-                    <td class="font-semibold text-slate-700 whitespace-nowrap"><span class="inline-flex items-center">${dot}${row.brand || ''}</span></td>
-                    <td class="font-medium text-slate-600 whitespace-nowrap">${row.name || ''}</td>`;
+                html += `<tr data-idx="${idx}" class="${dividerClass}">
+                    <td class="text-center">
+                        <span class="drag-handle ${lockClass}" title="Seret untuk geser (butuh PIN)">⠿</span>
+                    </td>
+                    <td class="font-semibold text-slate-700"><span class="inline-flex items-center">${dot}${row.brand || ''}</span></td>
+                    <td class="font-medium text-slate-600">${row.name || ''}</td>`;
 
-                days.forEach(day => {
+                days.forEach((day) => {
                     const val = row[day] || '';
-                    html += `<td><span class="badge-shift ${getShiftClass(val)} ${lockClass}" onclick="updateShiftWithAuth(${idx}, '${day}', '${val}')">${val || '-'}</span></td>`;
+                    const cls = getShiftClass(val);
+                    // --- GABUNGKAN CENTER CSS DISINI ---
+                    html += `<td>
+                        <span class="badge-shift ${cls} ${lockClass}" 
+                              style="display:inline-block; text-align:center; vertical-align:middle; padding: 6px 10px; line-height: 16px;"
+                              onclick="updateShiftWithAuth(${idx}, '${day}', '${val}')"
+                              title="${isAdmin ? 'Klik untuk ubah shift (P/S/L/OFF)' : '🔒 Kunci untuk edit'}">
+                            ${val || '-'}
+                        </span>
+                    </td>`;
                 });
+
                 html += `</tr>`;
             });
             tbody.innerHTML = html;
-            setTimeout(initDragDrop, 50);
-        }
 
+            setTimeout(initDragDrop, 50);
+            updateStatistics();
+        }
         function renderPiket() {
             const tbody = document.getElementById('piketTableBody');
-            if (!tbody) return;
-            if (!salesData.length) { tbody.innerHTML = `<tr><td colspan="4" class="text-center text-slate-400 py-8">Belum ada data</td></tr>`; return; }
+            if (!salesData.length) {
+                tbody.innerHTML =
+                    `<tr><td colspan="4" class="text-center text-slate-400 py-8">Belum ada data sales.</td></tr>`;
+                return;
+            }
             let html = '';
             salesData.forEach((row, idx) => {
                 const color = brandColors[row.brand] || '#e2e8f0';
                 const dot = `<span class="brand-color-dot" style="background:${color};"></span>`;
                 const hasToilet = row.toilet && row.toilet.trim() !== '';
                 const badgeClass = hasToilet ? 'badge-toilet has-date' : 'badge-toilet empty';
+                const displayText = hasToilet ? formatDate(row.toilet) : 'Pilih Tanggal';
                 const lockClass = isAdmin ? '' : 'locked';
 
-                html += `<tr class="${idx % 2 === 1 ? 'pair-divider' : ''}">
-                    <td class="font-semibold text-slate-700 whitespace-nowrap"><span class="inline-flex items-center">${dot}${row.brand || ''}</span></td>
-                    <td class="font-medium text-slate-600 whitespace-nowrap">${row.name || ''}</td>
-                    <td><span class="${badgeClass} ${lockClass}" onclick="openToiletModalWithAuth(${idx})">${hasToilet ? formatDate(row.toilet) : 'Pilih Tanggal'}</span></td>
+                const isSecondRow = idx % 2 === 1;
+                const dividerClass = isSecondRow ? 'pair-divider' : '';
+
+                html += `<tr class="${dividerClass}">
+                    <td class="font-semibold text-slate-700"><span class="inline-flex items-center">${dot}${row.brand || ''}</span></td>
+                    <td class="font-medium text-slate-600">${row.name || ''}</td>
+                    <td>
+                        <span class="${badgeClass} ${lockClass}" 
+                              onclick="openToiletModalWithAuth(${idx})"
+                              title="${isAdmin ? 'Klik untuk pilih tanggal piket' : '🔒 Kunci untuk edit'}">
+                            ${displayText}
+                        </span>
+                    </td>
                     <td class="text-slate-400 text-xs">${hasToilet ? '✅ Terjadwal' : '⚪ Kosong'}</td>
                 </tr>`;
             });
             tbody.innerHTML = html;
+            updateStatistics();
         }
 
         function renderBrandColorList() {
             const container = document.getElementById('brandColorList');
-            if(!container) return;
             const entries = Object.entries(brandColors);
-            if (!entries.length) { container.innerHTML = '<span class="text-xs text-slate-400">Belum ada warna.</span>'; return; }
+            if (!entries.length) {
+                container.innerHTML = '<span class="text-xs text-slate-400">Belum ada warna brand diset.</span>';
+                return;
+            }
             let html = '';
             entries.forEach(([brand, color]) => {
-                html += `<span class="brand-badge-color"><span class="dot" style="background:${color};"></span>${brand}<button class="text-slate-300 hover:text-red-500 ml-1 remove-brand-color" data-brand="${brand}">✕</button></span>`;
+                html += `<span class="brand-badge-color">
+                    <span class="dot" style="background:${color};"></span>
+                    ${brand}
+                    <button class="text-slate-300 hover:text-red-500 text-sm font-bold ml-1 remove-brand-color" data-brand="${brand}">✕</button>
+                </span>`;
             });
             container.innerHTML = html;
             container.querySelectorAll('.remove-brand-color').forEach(btn => {
                 btn.addEventListener('click', function() {
                     const brand = this.dataset.brand;
-                    if (confirm(`Hapus warna untuk brand "${brand}"?`)) {
+                    if (brand && confirm(`Hapus warna untuk brand "${brand}"?`)) {
                         delete brandColors[brand];
-                        saveData(false); renderAll();
+                        saveData(false);
+                        renderAll();
                     }
                 });
             });
@@ -1149,24 +1506,33 @@
 
         function populateDeleteSelect() {
             const sel = document.getElementById('deleteSelect');
-            if(!sel) return;
+            const current = sel.value;
             sel.innerHTML = '<option value="">Pilih sales</option>';
             salesData.forEach((item, idx) => {
+                const label = `${item.brand} - ${item.name}`.trim() || `#${idx+1}`;
                 const opt = document.createElement('option');
                 opt.value = idx;
-                opt.textContent = `${item.brand} - ${item.name}`.trim() || `#${idx+1}`;
+                opt.textContent = label;
                 sel.appendChild(opt);
             });
+            if (current && sel.querySelector(`option[value="${current}"]`)) sel.value = current;
         }
 
         function renderSalesBadge() {
             const container = document.getElementById('salesListContainer');
-            if(!container) return;
-            if (!salesData.length) { container.innerHTML = '<span class="text-sm text-slate-400">Kosong</span>'; return; }
+            if (!salesData.length) {
+                container.innerHTML = '<span class="text-sm text-slate-400">Belum ada sales terdaftar</span>';
+                return;
+            }
             let html = '';
             salesData.forEach((item, idx) => {
                 const color = brandColors[item.brand] || '#e2e8f0';
-                html += `<span class="brand-badge-color"><span class="dot" style="background:${color};"></span>${item.brand} - ${item.name}<button class="text-slate-300 hover:text-red-500 ml-1 remove-sales" data-idx="${idx}">✕</button></span>`;
+                const label = `${item.brand} - ${item.name}`.trim() || `#${idx+1}`;
+                html += `<span class="brand-badge-color">
+                    <span class="dot" style="background:${color};"></span>
+                    ${label}
+                    <button class="text-slate-300 hover:text-red-500 text-sm font-bold ml-1 remove-sales" data-idx="${idx}">✕</button>
+                </span>`;
             });
             container.innerHTML = html;
             container.querySelectorAll('.remove-sales').forEach(btn => {
@@ -1174,11 +1540,19 @@
                     const idx = parseInt(this.dataset.idx);
                     if (!isAdmin) {
                         checkAdmin(() => {
-                            if (confirm('Hapus sales ini?')) { salesData.splice(idx, 1); saveData(false); renderAll(); }
+                            if (confirm(`Hapus sales "${salesData[idx]?.brand} - ${salesData[idx]?.name}"?`)) {
+                                salesData.splice(idx, 1);
+                                saveData(false);
+                                renderAll();
+                            }
                         });
                         return;
                     }
-                    if (confirm('Hapus sales ini?')) { salesData.splice(idx, 1); saveData(false); renderAll(); }
+                    if (!isNaN(idx) && confirm(`Hapus sales "${salesData[idx]?.brand} - ${salesData[idx]?.name}"?`)) {
+                        salesData.splice(idx, 1);
+                        saveData(false);
+                        renderAll();
+                    }
                 });
             });
         }
@@ -1190,15 +1564,129 @@
             populateDeleteSelect();
             renderSalesBadge();
             updateStatistics();
-            const main = document.getElementById('mainContent');
-            if(main) {
-                if (isAdmin) main.classList.remove('admin-locked');
-                else main.classList.add('admin-locked');
+
+            // Update lock status di UI
+            if (isAdmin) {
+                document.getElementById('mainContent').classList.remove('admin-locked');
+            } else {
+                document.getElementById('mainContent').classList.add('admin-locked');
             }
         }
 
+        // ================================================================
+        // ADMIN ACTIONS (dengan proteksi)
+        // ================================================================
+        function addSalesWithAuth() {
+            if (!isAdmin) {
+                checkAdmin(addSales);
+                return;
+            }
+            addSales();
+        }
+
+        function addSales() {
+            const brand = document.getElementById('newBrand').value.trim().toUpperCase();
+            const name = document.getElementById('newName').value.trim();
+            const shift = document.getElementById('newShiftDay').value;
+            if (!brand || !name) { alert('Brand dan Nama wajib diisi.'); return; }
+            if (salesData.some(item => item.brand === brand && item.name === name)) {
+                alert('Sales dengan brand & nama tersebut sudah ada.');
+                return;
+            }
+            const mapShift = {
+                'P': { selasa: 'OFF', rabu: 'S', kamis: 'L', jumat: 'P', sabtu: 'S', minggu: 'P' },
+                'S': { selasa: 'L', rabu: 'P', kamis: 'OFF', jumat: 'S', sabtu: 'P', minggu: 'S' },
+                'L': { selasa: 'P', rabu: 'OFF', kamis: 'S', jumat: 'P', sabtu: 'S', minggu: 'S' },
+                'OFF': { selasa: 'S', rabu: 'L', kamis: 'P', jumat: 'S', sabtu: 'P', minggu: 'P' }
+            };
+            const pattern = mapShift[shift] || mapShift['P'];
+            const newEntry = {
+                brand,
+                name,
+                senin: shift,
+                selasa: pattern.selasa,
+                rabu: pattern.rabu,
+                kamis: pattern.kamis,
+                jumat: pattern.jumat,
+                sabtu: pattern.sabtu,
+                minggu: pattern.minggu,
+                toilet: ''
+            };
+            salesData.push(newEntry);
+            saveData(false);
+            renderAll();
+            document.getElementById('newBrand').value = '';
+            document.getElementById('newName').value = '';
+            showToast('✅ Sales berhasil ditambahkan');
+        }
+
+        function deleteSelectedWithAuth() {
+            if (!isAdmin) {
+                checkAdmin(deleteSelected);
+                return;
+            }
+            deleteSelected();
+        }
+
+        function deleteSelected() {
+            const sel = document.getElementById('deleteSelect');
+            const idx = parseInt(sel.value);
+            if (isNaN(idx) || idx < 0 || idx >= salesData.length) { alert('Pilih sales yang valid.'); return; }
+            if (confirm(`Hapus "${salesData[idx].brand} - ${salesData[idx].name}"?`)) {
+                salesData.splice(idx, 1);
+                saveData(false);
+                renderAll();
+                showToast('🗑️ Sales berhasil dihapus');
+            }
+        }
+
+        function resetDefaultWithAuth() {
+            if (!isAdmin) {
+                checkAdmin(resetDefault);
+                return;
+            }
+            resetDefault();
+        }
+
+        function resetDefault() {
+            if (confirm('Reset ke data awal? Semua perubahan akan hilang.')) {
+                salesData = DEFAULT_DATA.map(d => ({ ...d }));
+                brandColors = {};
+                saveData(false);
+                renderAll();
+                showToast('↺ Data direset ke default');
+            }
+        }
+
+        function setBrandColorWithAuth() {
+            if (!isAdmin) {
+                checkAdmin(setBrandColor);
+                return;
+            }
+            setBrandColor();
+        }
+
+        function setBrandColor() {
+            const brand = document.getElementById('colorBrandInput').value.trim().toUpperCase();
+            const color = document.getElementById('colorPicker').value;
+            if (!brand) { alert('Masukkan nama brand.'); return; }
+            brandColors[brand] = color;
+            saveData(false);
+            renderAll();
+            document.getElementById('colorBrandInput').value = '';
+            showToast('🎨 Warna brand berhasil diset');
+        }
+
+        // ================================================================
+        // NAVIGASI
+        // ================================================================
         function navigateTo(pageId) {
-            if (pageId === 'admin' && !isAdmin) { checkAdmin(() => navigateToPage(pageId)); return; }
+            if (pageId === 'admin' && !isAdmin) {
+                checkAdmin(() => {
+                    navigateToPage(pageId);
+                });
+                return;
+            }
             navigateToPage(pageId);
         }
 
@@ -1206,119 +1694,139 @@
             document.querySelectorAll('.page').forEach(el => el.classList.add('hidden'));
             document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
             const target = document.getElementById(`page-${pageId}`);
-            const btn = document.querySelector(`.nav-item[data-page="${pageId}"]`);
             if (target) target.classList.remove('hidden');
+            const btn = document.querySelector(`.nav-item[data-page="${pageId}"]`);
             if (btn) btn.classList.add('active');
         }
 
         document.querySelectorAll('.nav-item').forEach(btn => {
-            btn.addEventListener('click', () => navigateTo(btn.dataset.page));
+            btn.addEventListener('click', () => {
+                const page = btn.dataset.page;
+                if (page) navigateTo(page);
+            });
         });
 
-        // FUNGSI DOWNLOAD JPG GLOBAL
-        window.downloadJPG = async function(type) {
-            const target = type === 'shift' ? document.getElementById('page-shift') : document.getElementById('page-piket');
-            if (!target) { alert('Halaman tidak ditemukan!'); return; }
-
-            showToast('⏳ Sedang meracik gambar...');
-            try {
-                const elementToCapture = target.querySelector('.card-glass') || target;
-                const canvas = await html2canvas(elementToCapture, {
-                    scale: 2,
-                    backgroundColor: '#ffffff',
-                    useCORS: true,
-                    logging: false
-                });
-
-                const link = document.createElement('a');
-                link.download = type === 'shift' ? 'Jadwal_Shift_UFO.jpg' : 'Jadwal_Piket_Toilet_UFO.jpg';
-                link.href = canvas.toDataURL('image/jpeg', 0.95);
-                link.click();
-                showToast('✅ Berhasil didownload');
-            } catch (e) {
-                console.error(e);
-                alert('Gagal membuat gambar.');
-            }
-        };
-
+        // ================================================================
+        // INIT
+        // ================================================================
         document.addEventListener('DOMContentLoaded', async function() {
+            // Expose functions
+            window.updateShiftWithAuth = updateShiftWithAuth;
+            window.openToiletModalWithAuth = openToiletModalWithAuth;
+
+            // Lock status
             document.getElementById('unlockBtn').addEventListener('click', toggleLock);
+
+            // Password modal
             document.getElementById('passwordConfirmBtn').addEventListener('click', confirmPassword);
             document.getElementById('passwordCancelBtn').addEventListener('click', cancelPassword);
-            document.getElementById('passwordInput').addEventListener('keypress', e => { if (e.key === 'Enter') confirmPassword(); });
-            document.getElementById('passwordModal').addEventListener('click', function(e) { if (e.target === this) cancelPassword(); });
+            document.getElementById('passwordInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') confirmPassword();
+            });
+            document.getElementById('passwordModal').addEventListener('click', function(e) {
+                if (e.target === this) cancelPassword();
+            });
 
             await loadData();
 
-            document.getElementById('addSalesBtn').addEventListener('click', () => {
-                if (!isAdmin) { checkAdmin(addSales); return; }
-                addSales();
-            });
-            document.getElementById('deleteSalesBtn').addEventListener('click', () => {
-                if (!isAdmin) { checkAdmin(deleteSelected); return; }
-                deleteSelected();
-            });
-            document.getElementById('resetDefaultBtn').addEventListener('click', () => {
-                if (!isAdmin) { checkAdmin(resetDefault); return; }
-                resetDefault();
-            });
-            document.getElementById('setBrandColorBtn').addEventListener('click', () => {
-                if (!isAdmin) { checkAdmin(setBrandColor); return; }
-                setBrandColor();
-            });
+            // Admin buttons with auth
+            document.getElementById('addSalesBtn').addEventListener('click', addSalesWithAuth);
+            document.getElementById('deleteSalesBtn').addEventListener('click', deleteSelectedWithAuth);
+            document.getElementById('resetDefaultBtn').addEventListener('click', resetDefaultWithAuth);
+            document.getElementById('setBrandColorBtn').addEventListener('click', setBrandColorWithAuth);
             document.getElementById('syncNowBtn').addEventListener('click', async () => {
                 if (!isAdmin) {
-                    checkAdmin(async () => { await syncToFirebase(); showToast('☁️ Sinkron selesai'); });
+                    checkAdmin(async () => {
+                        await syncToFirebase();
+                        showToast('☁️ Sinkronisasi selesai');
+                    });
                     return;
                 }
                 await syncToFirebase();
-                showToast('☁️ Sinkron selesai');
+                showToast('☁️ Sinkronisasi selesai');
             });
 
+            // Modal toilet
             document.getElementById('modalSaveBtn').addEventListener('click', saveToiletSchedule);
             document.getElementById('modalCancelBtn').addEventListener('click', closeToiletModal);
             document.getElementById('modalClearBtn').addEventListener('click', clearToiletSchedule);
-            document.getElementById('toiletModal').addEventListener('click', function(e) { if (e.target === this) closeToiletModal(); });
+            document.getElementById('toiletModal').addEventListener('click', function(e) {
+                if (e.target === this) closeToiletModal();
+            });
+
+            // Enter key
+            document.getElementById('newName').addEventListener('keypress', (e) => { if (e.key === 'Enter')
+                    addSalesWithAuth(); });
+            document.getElementById('newBrand').addEventListener('keypress', (e) => { if (e.key === 'Enter')
+                    addSalesWithAuth(); });
+            document.getElementById('colorBrandInput').addEventListener('keypress', (e) => { if (e.key === 'Enter')
+                    setBrandColorWithAuth(); });
         });
+                // ================================================================
+        // FITUR DOWNLOAD JPG (FIXED & GLOBAL)
+        // ================================================================
+        window.downloadJPG = async function(type) {
+            const target = type === 'shift' ? document.getElementById('page-shift') : document.getElementById('page-piket');
+            
+            if (!target) {
+                alert('Halaman tidak ditemukan!');
+                return;
+            }
 
-        function addSales() {
-            const brand = document.getElementById('newBrand').value.trim().toUpperCase();
-            const name = document.getElementById('newName').value.trim();
-            const shift = document.getElementById('newShiftDay').value;
-            if (!brand || !name) { alert('Brand & Nama wajib diisi.'); return; }
-            const mapShift = {
-                'P': { selasa: 'OFF', rabu: 'S', kamis: 'L', jumat: 'P', sabtu: 'S', minggu: 'P' },
-                'S': { selasa: 'L', rabu: 'P', kamis: 'OFF', jumat: 'S', sabtu: 'P', minggu: 'S' },
-                'L': { selasa: 'P', rabu: 'OFF', kamis: 'S', jumat: 'P', sabtu: 'S', minggu: 'S' },
-                'OFF': { selasa: 'S', rabu: 'L', kamis: 'P', jumat: 'S', sabtu: 'P', minggu: 'P' }
-            };
-            const p = mapShift[shift] || mapShift['P'];
-            salesData.push({ brand, name, senin: shift, selasa: p.selasa, rabu: p.rabu, kamis: p.kamis, jumat: p.jumat, sabtu: p.sabtu, minggu: p.minggu, toilet: '' });
-            saveData(false); renderAll();
-            document.getElementById('newBrand').value = '';
-            document.getElementById('newName').value = '';
-            showToast('✅ Sales ditambahkan');
-        }
+            // Beri feedback loading
+            const toast = document.getElementById('toast');
+            if (toast) {
+                toast.textContent = '⏳ Membuat gambar...';
+                toast.classList.add('show');
+                setTimeout(() => toast.classList.remove('show'), 2000);
+            }
 
-        function deleteSelected() {
-            const idx = parseInt(document.getElementById('deleteSelect').value);
-            if (isNaN(idx)) { alert('Pilih sales.'); return; }
-            if (confirm('Hapus sales ini?')) { salesData.splice(idx, 1); saveData(false); renderAll(); showToast('🗑️ Dihapus'); }
-        }
+            try {
+                // Ambil elemen tabel dan kontainer utamanya
+                const elementToCapture = target.querySelector('.card-glass'); // Ambil area tabel saja
+                if (!elementToCapture) {
+                    alert('Tabel tidak ditemukan!');
+                    return;
+                }
 
-        function resetDefault() {
-            if (confirm('Reset data?')) { salesData = DEFAULT_DATA.map(d => ({ ...d })); brandColors = {}; saveData(false); renderAll(); showToast('↺ Direset'); }
-        }
+                // Pastikan library html2canvas sudah termuat
+                if (typeof html2canvas === 'undefined') {
+                    alert('Library html2canvas belum termuat. Periksa koneksi internet Anda.');
+                    return;
+                }
 
-        function setBrandColor() {
-            const brand = document.getElementById('colorBrandInput').value.trim().toUpperCase();
-            const color = document.getElementById('colorPicker').value;
-            if (!brand) { alert('Masukkan brand'); return; }
-            brandColors[brand] = color;
-            saveData(false); renderAll();
-            document.getElementById('colorBrandInput').value = '';
-            showToast('🎨 Warna diset');
-        }
+                // Setting kualitas gambar (2x lipat agar tajam di HP)
+                const canvas = await html2canvas(elementToCapture, {
+                    scale: 2,
+                    backgroundColor: '#ffffff',
+                    useCORS: true
+                });
+
+                // Ubah canvas menjadi JPG
+                const imgData = canvas.toDataURL('image/jpeg', 0.95);
+
+                // Buat elemen <a> untuk download
+                const link = document.createElement('a');
+                const fileName = type === 'shift' ? 'Jadwal_Shift_UFO.jpg' : 'Jadwal_Piket_Toilet_UFO.jpg';
+                link.download = fileName;
+                link.href = imgData;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+
+                // Notifikasi sukses
+                if (toast) {
+                    toast.textContent = '✅ Gambar berhasil didownload';
+                    toast.style.background = '#1e293b';
+                    toast.classList.add('show');
+                    setTimeout(() => toast.classList.remove('show'), 2500);
+                }
+            } catch (error) {
+                console.error('Error download JPG:', error);
+                alert('Gagal membuat gambar. Periksa console browser untuk detail.');
+            }
+        };
     </script>
+
 </body>
 </html>
