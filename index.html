@@ -567,13 +567,14 @@
                 padding: 12px;
             }
             .badge-shift {
-                padding: 4px 8px !important;
-                font-size: 0.65rem !important;
-                min-width: 30px !important;
-                display: inline-block !important;
-                text-align: center !important;
-                line-height: 16px !important;
-            }
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        text-align: center !important;
+        vertical-align: middle !important;
+        padding: 4px 10px !important;
+        line-height: 1 !important;
+    }
             .modal-content {
                 padding: 24px;
             }
@@ -730,73 +731,50 @@
             </section>
 
             <!-- HALAMAN PIKET -->
-            <section id="page-piket" class="page hidden">
-                <div class="mb-6">
-                    <h2 class="text-4xl font-extrabold text-slate-800" style="font-weight:900;">🧹 Jadwal Piket Toilet</h2>
-                    <p class="text-slate-500 mt-1">Klik badge piket untuk pilih tanggal — otomatis tersimpan</p>
-                </div>
+           <!-- HALAMAN PIKET -->
+<section id="page-piket" class="page hidden">
+    <div class="mb-4 md:mb-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
+        <div>
+            <h2 class="text-2xl md:text-4xl font-extrabold text-slate-800 tracking-tight" style="font-weight:900;">🧹 Jadwal Piket Toilet</h2>
+            <p class="text-slate-500 mt-0.5 text-xs md:text-sm">Klik badge piket untuk pilih tanggal — otomatis tersimpan</p>
+        </div>
+        <button class="btn-modern btn-primary text-xs md:text-sm w-full md:w-auto" onclick="downloadJPG('piket')">📥 Download JPG Piket</button>
+    </div>
 
-                <!-- NOTE -->
-                <div class="card-glass rounded-3xl p-5 mb-6 border-l-4 border-yellow-400 bg-yellow-50/80">
-                    <h3 class="text-lg font-extrabold text-slate-800 mb-3" style="font-weight:900;">📌 NOTE:</h3>
-                    <ul class="text-sm text-slate-700 space-y-1 list-disc pl-5">
-                        <li>PIKET TOILET (LANTAI, DINDING, CLOSET, URINOIR, WASTAFEL, LANGIT2) HARUS DISIKAT</li>
-                        <li>GENERAL CLEANING SETIAP HARI SABTU & MINGGU</li>
-                        <li>HARI SABTU MINGGU PERTAMA : AREA LEMARI ES</li>
-                        <li>HARI MINGGU MINGGU PERTAMA : AREA TV</li>
-                        <li>HARI SABTU MINGGU KEDUA : AREA MESIN CUCI</li>
-                        <li>HARI MINGGU MINGGU KEDUA : FREEZER</li>
-                        <li>HARI SABTU MINGGU KETIGA : AREA AC</li>
-                        <li>HARI MINGGU MINGGU KETIGA : LANTAI 3</li>
-                        <li>HARI SABTU MINGGU KEEMPAT : AREA GUDANG KARDUS LANTAI 1</li>
-                        <li>HARI MINGGU MINGGU KEEMPAT : AREA GUDANG KARDUS LANTAI 4</li>
-                        <li>WAJIB UPDATE STOK HARIAN DAN UPLOAD SOSMED</li>
-                        <li>WAJIB FINGER ISTIRAHAT</li>
-                        <li>IZIN SAKIT WAJIB DISERTAI SURAT DOKTER DAN OBAT</li>
-                        <li>MENGISI FORM KONFIRMASI TUKAR SHIFT, TUKAR OFF, CUTI (DILENGKAPI SURAT IZIN CUTI)</li>
-                    </ul>
-                </div>
+    <!-- Kontainer Induk (Note + Statistik + Tabel) agar ikut ter-download sekaligus -->
+    <div class="card-glass rounded-2xl md:rounded-3xl p-4 md:p-6 space-y-6">
+        
+        <!-- NOTE -->
+        <div class="rounded-2xl p-4 md:p-5 border-l-4 border-yellow-400 bg-yellow-50/90 text-xs md:text-sm">
+            <h3 class="text-base md:text-lg font-extrabold text-slate-800 mb-2" style="font-weight:900;">📌 NOTE:</h3>
+            <ul class="text-slate-700 space-y-1 list-disc pl-4 md:pl-5">
+                <li>PIKET TOILET (LANTAI, DINDING, CLOSET, URINOIR, WASTAFEL, LANGIT2) HARUS DISIKAT</li>
+                <li>GENERAL CLEANING SETIAP HARI SABTU & MINGGU</li>
+                <li>HARI SABTU MINGGU PERTAMA : AREA LEMARI ES | HARI MINGGU : AREA TV</li>
+                <li>HARI SABTU MINGGU KEDUA : AREA MESIN CUCI | HARI MINGGU : FREEZER</li>
+                <li>HARI SABTU MINGGU KETIGA : AREA AC | HARI MINGGU : LANTAI 3</li>
+                <li>HARI SABTU MINGGU KEEMPAT : GUDANG KARDUS LT 1 | HARI MINGGU : LT 4</li>
+                <li>WAJIB UPDATE STOK HARIAN, UPLOAD SOSMED, & FINGER ISTIRAHAT</li>
+                <li>IZIN SAKIT WAJIB DISERTAI SURAT DOKTER DAN OBAT</li>
+            </ul>
+        </div>
 
-                <!-- Statistik Piket -->
-                <div class="grid grid-cols-2 md:grid-cols-3 gap-3 mb-6">
-                    <div class="stat-card">
-                        <div class="number" id="totalPiketStat">0</div>
-                        <div class="label">Total Terjadwal</div>
-                        <span class="icon">✅</span>
-                    </div>
-                    <div class="stat-card">
-                        <div class="number" id="totalKosongStat">0</div>
-                        <div class="label">Belum Terjadwal</div>
-                        <span class="icon">⏳</span>
-                    </div>
-                    <div class="stat-card">
-                        <div class="number" id="totalSalesPiket">0</div>
-                        <div class="label">Total Sales</div>
-                        <span class="icon">👥</span>
-                    </div>
-                </div>
-
-                <!-- TOMBOL DOWNLOAD JPG PIKET -->
-                <div class="mb-4 flex justify-end">
-                    <button class="btn-modern btn-primary" onclick="downloadJPG('piket')">📥 Download JPG Piket</button>
-                </div>
-
-                <div class="card-glass rounded-3xl p-4 md:p-6 overflow-hidden">
-                    <div class="overflow-x-auto">
-                        <table class="table-modern w-full text-sm min-w-[500px]">
-                            <thead>
-                                <tr>
-                                    <th class="text-left">BRAND</th>
-                                    <th class="text-center">NAMA</th>
-                                    <th class="text-center">PIKET TOILET</th>
-                                    <th class="text-center">KETERANGAN</th>
-                                </tr>
-                            </thead>
-                            <tbody id="piketTableBody"></tbody>
-                        </table>
-                    </div>
-                </div>
-            </section>
+        <!-- Tabel Piket Toilet -->
+        <div class="overflow-x-auto">
+            <table class="table-modern w-full text-xs md:text-sm min-w-[450px]">
+                <thead>
+                    <tr>
+                        <th class="text-left">BRAND</th>
+                        <th class="text-center">NAMA</th>
+                        <th class="text-center">PIKET TOILET</th>
+                        <th class="text-center">KETERANGAN</th>
+                    </tr>
+                </thead>
+                <tbody id="piketTableBody"></tbody>
+            </table>
+        </div>
+    </div>
+</section>
 
             <!-- HALAMAN ADMIN -->
             <section id="page-admin" class="page hidden">
@@ -1488,44 +1466,55 @@
             showToast('🎨 Warna brand berhasil diset');
         }
 
-        window.downloadJPG = async function(type) {
-            const target = type === 'shift' ? document.getElementById('page-shift') : document.getElementById('page-piket');
-            if (!target) { alert('Halaman tidak ditemukan!'); return; }
-
-            const toast = document.getElementById('toast');
-            if (toast) {
-                toast.textContent = '⏳ Membuat gambar...';
-                toast.classList.add('show');
-                setTimeout(() => toast.classList.remove('show'), 2000);
+                function renderShift() {
+            const tbody = document.getElementById('shiftTableBody');
+            if (!salesData.length) {
+                tbody.innerHTML =
+                    `<tr><td colspan="10" class="text-center text-slate-400 py-8">Belum ada data sales.</td></tr>`;
+                return;
             }
+            let html = '';
+            salesData.forEach((row, idx) => {
+                const color = brandColors[row.brand] || '#e2e8f0';
+                const dot = `<span class="brand-color-dot" style="background:${color};"></span>`;
+                const days = ['senin', 'selasa', 'rabu', 'kamis', 'jumat', 'sabtu', 'minggu'];
 
-            try {
-                const elementToCapture = target.querySelector('.card-glass');
-                if (!elementToCapture) { alert('Tabel tidak ditemukan!'); return; }
-                if (typeof html2canvas === 'undefined') { alert('Library html2canvas belum termuat.'); return; }
+                // --- KEMBALIKAN LOGIKA GARIS PEMBATAS BIRU ---
+                const isSecondRow = idx % 2 === 1;
+                const pairNumber = Math.floor(idx / 2) + 1;
+                const dividerClass = isSecondRow ? 'pair-divider' : '';
+                // ---------------------------------------------
 
-                const canvas = await html2canvas(elementToCapture, { scale: 2, backgroundColor: '#ffffff', useCORS: true });
-                const imgData = canvas.toDataURL('image/jpeg', 0.95);
+                const lockClass = isAdmin ? '' : 'locked';
 
-                const link = document.createElement('a');
-                link.download = type === 'shift' ? 'Jadwal_Shift_UFO.jpg' : 'Jadwal_Piket_Toilet_UFO.jpg';
-                link.link = imgData;
-                link.href = imgData;
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
+                html += `<tr data-idx="${idx}" class="${dividerClass}">
+                    <td class="text-center">
+                        <span class="drag-handle ${lockClass}" title="Seret untuk geser (butuh PIN)">⠿</span>
+                    </td>
+                    <td class="font-semibold text-slate-700"><span class="inline-flex items-center">${dot}${row.brand || ''}</span></td>
+                    <td class="font-medium text-slate-600">${row.name || ''}</td>`;
 
-                if (toast) {
-                    toast.textContent = '✅ Gambar berhasil didownload';
-                    toast.style.background = '#1e293b';
-                    toast.classList.add('show');
-                    setTimeout(() => toast.classList.remove('show'), 2500);
-                }
-            } catch (error) {
-                console.error('Error download JPG:', error);
-                alert('Gagal membuat gambar.');
-            }
-        };
+                days.forEach((day) => {
+                    const val = row[day] || '';
+                    const cls = getShiftClass(val);
+                    // --- GABUNGKAN CENTER CSS DISINI ---
+                    html += `<td>
+                        <span class="badge-shift ${cls} ${lockClass}" 
+                              style="display:inline-block; text-align:center; vertical-align:middle; padding: 6px 10px; line-height: 16px;"
+                              onclick="updateShiftWithAuth(${idx}, '${day}', '${val}')"
+                              title="${isAdmin ? 'Klik untuk ubah shift (P/S/L/OFF)' : '🔒 Kunci untuk edit'}">
+                            ${val || '-'}
+                        </span>
+                    </td>`;
+                });
+
+                html += `</tr>`;
+            });
+            tbody.innerHTML = html;
+
+            setTimeout(initDragDrop, 50);
+            updateStatistics();
+        }
     </script>
 </body>
 </html>
