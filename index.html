@@ -52,7 +52,6 @@
     <div id="mobileMenuDropdown" class="hidden md:hidden bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 p-4 space-y-3 z-30 shadow-xl">
         <div class="text-center font-bold text-xs text-indigo-600 dark:text-indigo-400">MENU UTAMA PROMOTOR</div>
         <div class="grid grid-cols-2 gap-2">
-            <button onclick="filterBrand('SEMUA'); toggleMobileMenu();" class="p-2.5 rounded-xl text-xs font-bold bg-indigo-600 text-white text-center shadow">Semua Brand</button>
             <button onclick="toggleTheme(); toggleMobileMenu();" class="p-2.5 rounded-xl text-xs font-bold bg-slate-200 dark:bg-slate-800 text-slate-800 dark:text-slate-200 text-center">Ganti Tema</button>
         </div>
     </div>
@@ -71,11 +70,9 @@
             </div>
 
             <nav class="flex flex-col gap-2">
-                <button onclick="filterBrand('SEMUA')" id="btnSemua" 
-                    class="flex items-center gap-3 px-4 py-3 rounded-2xl font-semibold text-sm transition-all duration-200 bg-gradient-to-r from-indigo-600 to-violet-600 text-white shadow-lg shadow-indigo-600/30">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 opacity-90" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"/></svg>
-                    <span>Semua Brand</span>
-                </button>
+                <div class="px-4 py-2.5 rounded-2xl font-semibold text-xs bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border border-indigo-500/20">
+                    💡 Tips: Anda dapat menambahkan data brand dan sales baru melalui form di halaman utama.
+                </div>
             </nav>
         </div>
 
@@ -85,13 +82,6 @@
                 <button onclick="toggleTheme()" class="p-2 bg-white dark:bg-slate-800 text-slate-800 dark:text-yellow-400 rounded-lg shadow transition-all hover:scale-105">
                     <span id="themeIcon">☀️ Light</span>
                 </button>
-            </div>
-            <div class="flex items-center gap-3 text-slate-500 dark:text-slate-400 px-1">
-                <span class="relative flex h-2.5 w-2.5">
-                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                  <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
-                </span>
-                <span class="font-semibold text-slate-800 dark:text-slate-200">Online & Ready</span>
             </div>
         </div>
     </aside>
@@ -110,34 +100,26 @@
             </div>
         </div>
 
-        <!-- LEGENDA / KETERANGAN SHIFT -->
-        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-            <div class="app-card bg-white dark:bg-slate-900/80 border border-emerald-500/30 p-3 rounded-2xl shadow-md flex items-center gap-3">
-                <span class="w-8 h-8 rounded-xl bg-emerald-500/20 text-emerald-700 dark:text-emerald-400 font-black flex items-center justify-center text-xs">P</span>
+        <!-- FORM TAMBAH BRAND & SALES BARU -->
+        <div class="app-card bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 p-5 rounded-3xl shadow-xl space-y-4">
+            <h3 class="font-black text-sm md:text-base text-slate-900 dark:text-white flex items-center gap-2">
+                <span>➕ Tambah Brand & Sales Baru</span>
+            </h3>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
                 <div>
-                    <span class="block text-[10px] font-bold text-slate-500 uppercase">Pagi</span>
-                    <span class="text-xs font-bold text-slate-800 dark:text-slate-200">Shift Masuk Pagi</span>
+                    <label class="block text-[11px] font-bold text-slate-600 dark:text-slate-400 mb-1">Nama Brand</label>
+                    <input type="text" id="inputBrandBaru" placeholder="cth: POLYTRON" class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl text-xs font-bold text-slate-900 dark:text-white uppercase">
                 </div>
-            </div>
-            <div class="app-card bg-white dark:bg-slate-900/80 border border-blue-500/30 p-3 rounded-2xl shadow-md flex items-center gap-3">
-                <span class="w-8 h-8 rounded-xl bg-blue-500/20 text-blue-700 dark:text-blue-400 font-black flex items-center justify-center text-xs">S</span>
                 <div>
-                    <span class="block text-[10px] font-bold text-slate-500 uppercase">Siang</span>
-                    <span class="text-xs font-bold text-slate-800 dark:text-slate-200">Shift Masuk Siang</span>
+                    <label class="block text-[11px] font-bold text-slate-600 dark:text-slate-400 mb-1">Nama Sales / Promotor</label>
+                    <input type="text" id="inputNamaBaru" placeholder="cth: BUDI" class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl text-xs font-bold text-slate-900 dark:text-white uppercase">
                 </div>
-            </div>
-            <div class="app-card bg-white dark:bg-slate-900/80 border border-amber-500/30 p-3 rounded-2xl shadow-md flex items-center gap-3">
-                <span class="w-8 h-8 rounded-xl bg-amber-500/20 text-amber-700 dark:text-amber-400 font-black flex items-center justify-center text-xs">L</span>
                 <div>
-                    <span class="block text-[10px] font-bold text-slate-500 uppercase">Lembur</span>
-                    <span class="text-xs font-bold text-slate-800 dark:text-slate-200">Shift Full</span>
+                    <label class="block text-[11px] font-bold text-slate-600 dark:text-slate-400 mb-1">Piket Toilet (Tanggal)</label>
+                    <input type="text" id="inputPiketBaru" placeholder="cth: 5, 19" class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl text-xs font-bold text-slate-900 dark:text-white">
                 </div>
-            </div>
-            <div class="app-card bg-white dark:bg-slate-900/80 border border-rose-500/30 p-3 rounded-2xl shadow-md flex items-center gap-3">
-                <span class="w-8 h-8 rounded-xl bg-rose-500/20 text-rose-700 dark:text-rose-400 font-black flex items-center justify-center text-xs">OFF</span>
-                <div>
-                    <span class="block text-[10px] font-bold text-slate-500 uppercase">Libur</span>
-                    <span class="text-xs font-bold text-slate-800 dark:text-slate-200">Hari Libur (OFF)</span>
+                <div class="flex items-end">
+                    <button onclick="tambahPromotorBaru()" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-2 px-4 rounded-xl text-xs shadow-lg transition-all">Simpan ke Tabel</button>
                 </div>
             </div>
         </div>
@@ -158,6 +140,7 @@
                             <th class="py-3 px-2 text-center">Sabtu</th>
                             <th class="py-3 px-2 text-center">Minggu</th>
                             <th class="py-3 px-3 text-center">Piket Toilet / Tanggal</th>
+                            <th class="py-3 px-2 text-center">Aksi</th>
                         </tr>
                     </thead>
                     <tbody id="tabelPromotorBody" class="divide-y divide-slate-200 dark:divide-slate-800/60">
@@ -170,8 +153,8 @@
 
     <!-- SCRIPT UTAMA -->
     <script>
-        // Database data promotor sesuai gambar referensi
-        const daftarPromotor = [
+        // Data default awal promotor
+        const defaultPromotor = [
             { brand: "SHARP", nama: "AYUNG", jadwal: ["P", "OFF", "S", "L", "P", "S", "P"], piket: "1, 15", warnaBrand: "bg-yellow-400 text-slate-900" },
             { brand: "SAMSUNG", nama: "FEBRI", jadwal: ["S", "L", "P", "OFF", "S", "P", "S"], piket: "1, 15", warnaBrand: "bg-yellow-400 text-slate-900" },
             { brand: "POLYTRON", nama: "AGUS", jadwal: ["P", "P", "OFF", "S", "L", "P", "S"], piket: "2, 16", warnaBrand: "bg-red-600 text-white" },
@@ -181,26 +164,10 @@
             { brand: "TOSHIBA", nama: "RISKA", jadwal: ["OFF", "S", "S", "L", "P", "S", "P"], piket: "4, 18", warnaBrand: "bg-slate-500 text-white" },
             { brand: "TOSHIBA", nama: "ARFIN", jadwal: ["L", "P", "P", "OFF", "S", "P", "S"], piket: "4, 18", warnaBrand: "bg-slate-500 text-white" },
             { brand: "MIDEA", nama: "ADHE", jadwal: ["P", "OFF", "S", "L", "P", "P", "S"], piket: "5, 19", warnaBrand: "bg-orange-500 text-white" },
-            { brand: "MIDEA", nama: "DEDY", jadwal: ["S", "L", "P", "OFF", "S", "S", "P"], piket: "5, 19", warnaBrand: "bg-orange-500 text-white" },
-            { brand: "CHANGHONG", nama: "ZUNUN", jadwal: ["P", "OFF", "S", "S", "L", "P", "S"], piket: "6, 20", warnaBrand: "bg-blue-600 text-white" },
-            { brand: "CHANGHONG", nama: "-", jadwal: ["S", "L", "P", "P", "OFF", "S", "P"], piket: "6, 20", warnaBrand: "bg-blue-600 text-white" },
-            { brand: "TCL", nama: "JIMY", jadwal: ["L", "P", "OFF", "S", "P", "S", "S"], piket: "7, 21", warnaBrand: "bg-emerald-600 text-white" },
-            { brand: "TCL", nama: "FAJAR", jadwal: ["OFF", "S", "L", "P", "S", "P", "P"], piket: "7, 21", warnaBrand: "bg-emerald-600 text-white" },
-            { brand: "GREE", nama: "LESYO", jadwal: ["L", "P", "OFF", "S", "P", "P", "S"], piket: "8, 22", warnaBrand: "bg-teal-400 text-slate-900" },
-            { brand: "PANASONIC", nama: "RICKY", jadwal: ["OFF", "S", "L", "P", "S", "S", "P"], piket: "8, 22", warnaBrand: "bg-sky-500 text-white" },
-            { brand: "ELECTROLUX", nama: "-", jadwal: ["OFF", "S", "P", "S", "L", "P", "S"], piket: "9, 23", warnaBrand: "bg-green-700 text-white" },
-            { brand: "MODENA", nama: "-", jadwal: ["L", "P", "S", "P", "OFF", "S", "S"], piket: "9, 23", warnaBrand: "bg-slate-800 text-white" },
-            { brand: "ARTUGO", nama: "FENDI", jadwal: ["P", "OFF", "S", "L", "P", "S", "P"], piket: "10, 24", warnaBrand: "bg-blue-800 text-white" },
-            { brand: "ARTUGO", nama: "ENNY", jadwal: ["S", "L", "P", "OFF", "S", "P", "S"], piket: "10, 24", warnaBrand: "bg-blue-800 text-white" },
-            { brand: "SANKEN", nama: "JESICA", jadwal: ["L", "P", "P", "OFF", "S", "P", "S"], piket: "11, 25", warnaBrand: "bg-indigo-600 text-white" },
-            { brand: "ADVANCE", nama: "LEO", jadwal: ["OFF", "S", "S", "L", "P", "S", "P"], piket: "11, 25", warnaBrand: "bg-purple-600 text-white" },
-            { brand: "GADGET", nama: "ROFIUL", jadwal: ["S", "L", "P", "OFF", "S", "P", "S"], piket: "12, 26", warnaBrand: "bg-pink-600 text-white" },
-            { brand: "GADGET", nama: "NEBIYA", jadwal: ["P", "OFF", "S", "L", "P", "S", "P"], piket: "12, 26", warnaBrand: "bg-pink-600 text-white" },
-            { brand: "MASPION", nama: "IBRA", jadwal: ["P", "S", "L", "P", "OFF", "S", "S"], piket: "13, 27", warnaBrand: "bg-red-500 text-white" },
-            { brand: "MASPION", nama: "NISA", jadwal: ["S", "P", "OFF", "S", "L", "P", "P"], piket: "13, 27", warnaBrand: "bg-red-500 text-white" },
-            { brand: "COMFORTA", nama: "INAYAH", jadwal: ["L", "P", "P", "OFF", "S", "P", "S"], piket: "14, 28", warnaBrand: "bg-purple-800 text-white" },
-            { brand: "SMALL", nama: "ANISA", jadwal: ["OFF", "S", "S", "L", "P", "S", "P"], piket: "14, 28", warnaBrand: "bg-zinc-600 text-white" }
+            { brand: "MIDEA", nama: "DEDY", jadwal: ["S", "L", "P", "OFF", "S", "S", "P"], piket: "5, 19", warnaBrand: "bg-orange-500 text-white" }
         ];
+
+        let daftarPromotor = JSON.parse(localStorage.getItem('ufo_promotor_list')) || defaultPromotor;
 
         document.addEventListener("DOMContentLoaded", () => {
             renderTabelPromotor();
@@ -236,25 +203,69 @@
             if(iconMob) iconMob.innerText = savedTheme === 'dark' ? '☀️' : '🌙';
         })();
 
+        window.tambahPromotorBaru = function() {
+            const brand = document.getElementById('inputBrandBaru').value.trim().toUpperCase();
+            const nama = document.getElementById('inputNamaBaru').value.trim().toUpperCase();
+            const piket = document.getElementById('inputPiketBaru').value.trim();
+
+            if (!brand || !nama) {
+                alert("Harap isi Nama Brand dan Nama Sales/Promotor terlebih dahulu!");
+                return;
+            }
+
+            // Warna acak atau standar untuk brand baru
+            const warnaList = [
+                "bg-indigo-600 text-white", "bg-emerald-600 text-white", 
+                "bg-purple-600 text-white", "bg-blue-600 text-white", "bg-rose-600 text-white"
+            ];
+            const randomWarna = warnaList[Math.floor(Math.random() * warnaList.length)];
+
+            // Default jadwal Senin-Minggu diatur ke P (Pagi) atau bebas
+            daftarPromotor.push({
+                brand: brand,
+                nama: nama,
+                jadwal: ["P", "P", "P", "OFF", "S", "P", "S"],
+                piket: piket || "-",
+                warnaBrand: randomWarna
+            });
+
+            localStorage.setItem('ufo_promotor_list', JSON.stringify(daftarPromotor));
+
+            // Reset form
+            document.getElementById('inputBrandBaru').value = "";
+            document.getElementById('inputNamaBaru').value = "";
+            document.getElementById('inputPiketBaru').value = "";
+
+            renderTabelPromotor();
+            alert(`Brand ${brand} dan Sales ${nama} berhasil ditambahkan!`);
+        }
+
+        window.hapusPromotor = function(index) {
+            if (confirm("Hapus baris promotor ini dari daftar?")) {
+                daftarPromotor.splice(index, 1);
+                localStorage.setItem('ufo_promotor_list', JSON.stringify(daftarPromotor));
+                renderTabelPromotor();
+            }
+        }
+
         window.renderTabelPromotor = function() {
             const tbody = document.getElementById('tabelPromotorBody');
             const keyword = document.getElementById('inputCariNama').value.toLowerCase();
             if(!tbody) return;
 
             let html = "";
-            let filtered = daftarPromotor.filter(item => 
-                item.brand.toLowerCase().includes(keyword) || item.nama.toLowerCase().includes(keyword)
-            );
+            let filtered = daftarPromotor.map((item, originalIndex) => ({ ...item, originalIndex }))
+                .filter(item => item.brand.toLowerCase().includes(keyword) || item.nama.toLowerCase().includes(keyword));
 
             if (filtered.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="10" class="py-8 text-center text-slate-500">Data promotor tidak ditemukan.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="11" class="py-8 text-center text-slate-500">Data promotor tidak ditemukan.</td></tr>`;
                 return;
             }
 
             filtered.forEach(item => {
                 html += `<tr class="hover:bg-slate-50 dark:hover:bg-slate-900/40 transition-colors">
                     <td class="py-2.5 px-3 text-left font-bold">
-                        <span class="px-2.5 py-1 rounded-lg ${item.warnaBrand} text-[10px] font-black tracking-wide shadow-sm inline-block">${item.brand}</span>
+                        <span class="px-2.5 py-1 rounded-lg ${item.warnaBrand || 'bg-slate-700 text-white'} text-[10px] font-black tracking-wide shadow-sm inline-block">${item.brand}</span>
                     </td>
                     <td class="py-2.5 px-3 text-left font-bold text-slate-900 dark:text-white">${item.nama}</td>`;
 
@@ -277,6 +288,9 @@
                 });
 
                 html += `<td class="py-2.5 px-3 text-center font-bold text-indigo-600 dark:text-indigo-400">${item.piket}</td>
+                    <td class="py-2.5 px-2 text-center">
+                        <button onclick="hapusPromotor(${item.originalIndex})" class="p-1.5 bg-rose-500/10 hover:bg-rose-500 text-rose-500 hover:text-white rounded-lg transition-all text-xs font-bold" title="Hapus">✕</button>
+                    </td>
                 </tr>`;
             });
 
