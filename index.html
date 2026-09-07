@@ -10,6 +10,9 @@
     </script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js">
     </script>
+    <!-- Drag & Drop Library -->
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js">
+    </script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:opsz@14..32&display=swap');
         * {
@@ -121,6 +124,31 @@
         }
         .table-modern td:first-child {
             text-align: left;
+        }
+        .table-modern tbody tr {
+            cursor: grab;
+            transition: all 0.15s;
+        }
+        .table-modern tbody tr:active {
+            cursor: grabbing;
+        }
+        .table-modern tbody tr.sortable-ghost {
+            opacity: 0.4;
+            background: #e2e8f0;
+        }
+        .table-modern tbody tr.sortable-chosen {
+            background: #dbeafe;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+        }
+        .drag-handle {
+            cursor: grab;
+            color: #94a3b8;
+            font-size: 1.1rem;
+            padding: 0 4px;
+            user-select: none;
+        }
+        .drag-handle:active {
+            cursor: grabbing;
         }
         .brand-color-dot {
             display: inline-block;
@@ -299,6 +327,16 @@
             font-size: 0.9rem;
             margin-bottom: 20px;
         }
+        .drag-info {
+            background: #f1f5f9;
+            padding: 8px 16px;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            color: #475569;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
 
         @media (max-width: 768px) {
             .sidebar {
@@ -330,6 +368,9 @@
             }
             .modal-content {
                 padding: 24px;
+            }
+            .drag-handle {
+                font-size: 0.9rem;
             }
         }
     </style>
@@ -388,13 +429,17 @@
             <section id="page-shift" class="page active">
                 <div class="mb-6">
                     <h2 class="text-3xl font-bold text-slate-800">📋 Jadwal Shift Promotor</h2>
-                    <p class="text-slate-500 mt-1">Klik badge shift untuk mengubah (P/S/OFF/L) — otomatis tersimpan</p>
+                    <p class="text-slate-500 mt-1 flex flex-wrap items-center gap-3">
+                        <span>Klik badge shift untuk mengubah (P/S/OFF/L)</span>
+                        <span class="drag-info">↕️ Drag & drop baris untuk tukar posisi sales</span>
+                    </p>
                 </div>
                 <div class="card-glass rounded-3xl p-4 md:p-6 overflow-hidden">
                     <div class="overflow-x-auto">
                         <table class="table-modern w-full text-sm min-w-[820px]">
                             <thead>
                                 <tr>
+                                    <th class="text-left" style="width:30px;">#</th>
                                     <th class="text-left">BRAND</th>
                                     <th class="text-center">NAMA</th>
                                     <th class="text-center">SENIN</th>
@@ -516,22 +561,13 @@
         // FIREBASE KONFIGURASI - GANTI DENGAN PROJECT ANDA
         // ================================================================
         const firebaseConfig = {
-             apiKey: "AIzaSyBMokA92YiB87vwuqBREwNhHkkU_bXo8cI",
-
-  authDomain: "ufokebonsariapps.firebaseapp.com",
-
-  databaseURL: "https://ufokebonsariapps-default-rtdb.asia-southeast1.firebasedatabase.app",
-
-  projectId: "ufokebonsariapps",
-
-  storageBucket: "ufokebonsariapps.firebasestorage.app",
-
-  messagingSenderId: "663266923207",
-
-  appId: "1:663266923207:web:fb989ce91cd40b6d3724e2"
-
-};
-
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_PROJECT.firebaseapp.com",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_PROJECT.appspot.com",
+            messagingSenderId: "YOUR_SENDER_ID",
+            appId: "YOUR_APP_ID"
+        };
 
         // ================================================================
         // INISIALISASI FIREBASE
@@ -636,6 +672,7 @@
         let salesData = [];
         let brandColors = {};
         let editingToiletIndex = null;
+        let sortableInstance = null;
 
         // ================================================================
         // FUNGSI SYNC FIREBASE
@@ -758,6 +795,41 @@
         }
 
         // ================================================================
+        // FUNGSI DRAG & DROP (TUKAR POSISI)
+        // ================================================================
+        function initDragDrop() {
+            const tbody = document.getElementById('shiftTableBody');
+            if (sortableInstance) {
+                sortableInstance.destroy();
+                sortableInstance = null;
+            }
+
+            if (!salesData.length) return;
+
+            sortableInstance = new Sortable(tbody, {
+                handle: '.drag-handle',
+                animation: 150,
+                ghostClass: 'sortable-ghost',
+                chosenClass: 'sortable-chosen',
+                dragClass: 'sortable-drag',
+                onEnd: function(evt) {
+                    const oldIndex = evt.oldIndex;
+                    const newIndex = evt.newIndex;
+                    if (oldIndex === newIndex) return;
+
+                    // Pindahkan data di array
+                    const [movedItem] = salesData.splice(oldIndex, 1);
+                    salesData.splice(newIndex, 0, movedItem);
+
+                    // Simpan & render ulang
+                    saveData(true);
+                    renderAll();
+                    showToast(`↕️ ${movedItem.brand} - ${movedItem.name} dipindahkan`);
+                }
+            });
+        }
+
+        // ================================================================
         // FUNGSI EDIT PIKET TOILET
         // ================================================================
         function openToiletModal(index) {
@@ -819,7 +891,7 @@
             const tbody = document.getElementById('shiftTableBody');
             if (!salesData.length) {
                 tbody.innerHTML =
-                    `<tr><td colspan="9" class="text-center text-slate-400 py-8">Belum ada data sales.</td></tr>`;
+                    `<tr><td colspan="10" class="text-center text-slate-400 py-8">Belum ada data sales.</td></tr>`;
                 return;
             }
             let html = '';
@@ -828,7 +900,10 @@
                 const dot = `<span class="brand-color-dot" style="background:${color};"></span>`;
                 const days = ['senin', 'selasa', 'rabu', 'kamis', 'jumat', 'sabtu', 'minggu'];
 
-                html += `<tr>
+                html += `<tr data-idx="${idx}">
+                    <td class="text-center">
+                        <span class="drag-handle" title="Seret untuk tukar posisi">⠿</span>
+                    </td>
                     <td class="font-semibold text-slate-700"><span class="inline-flex items-center">${dot}${row.brand || ''}</span></td>
                     <td class="font-medium text-slate-600">${row.name || ''}</td>`;
 
@@ -847,6 +922,9 @@
                 html += `</tr>`;
             });
             tbody.innerHTML = html;
+
+            // Init drag & drop setelah render
+            setTimeout(initDragDrop, 50);
         }
 
         function renderPiket() {
