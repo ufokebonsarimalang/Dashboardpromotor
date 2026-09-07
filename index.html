@@ -1,108 +1,301 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Jadwal Piket & Shift · UFO Malang</title>
     <style>
         * {
-            box-sizing: border-box;
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
         }
+
         body {
-            font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
-            background: #f4f7fc;
-            padding: 20px;
-            color: #1e293b;
-        }
-        .app {
-            max-width: 1440px;
-            margin: 0 auto;
-        }
-        header {
-            background: linear-gradient(145deg, #0b2b4f, #1a4b7a);
-            color: white;
-            padding: 18px 24px;
-            border-radius: 28px;
+            background: #f1f5f9;
             display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 28px;
-            box-shadow: 0 12px 24px -8px rgba(0,20,40,0.3);
+            min-height: 100vh;
         }
-        header h1 {
-            font-weight: 600;
-            font-size: 1.9rem;
+
+        /* ------- SIDEBAR ------- */
+        .sidebar {
+            width: 260px;
+            background: #0b2a47;
+            color: #e5edf6;
+            padding: 28px 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 28px;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+            box-shadow: 4px 0 20px rgba(0, 0, 0, 0.08);
+            flex-shrink: 0;
+            transition: transform 0.2s;
+            z-index: 20;
+        }
+
+        .sidebar-brand {
+            font-size: 1.7rem;
+            font-weight: 700;
             letter-spacing: -0.5px;
-        }
-        header small {
-            font-weight: 300;
-            opacity: 0.85;
-            font-size: 0.95rem;
-            margin-left: 10px;
-        }
-        .admin-toggle {
-            background: rgba(255,255,255,0.15);
-            border: 1px solid rgba(255,255,255,0.25);
             color: white;
-            padding: 10px 24px;
-            border-radius: 40px;
-            font-weight: 600;
-            font-size: 0.95rem;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #2c4b6b;
+        }
+
+        .sidebar-brand small {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 400;
+            opacity: 0.7;
+            margin-top: 6px;
+        }
+
+        .nav-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            flex: 1;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 14px 18px;
+            border-radius: 16px;
+            font-weight: 500;
+            font-size: 1rem;
+            color: #b3c9e0;
             cursor: pointer;
             transition: 0.2s;
-            backdrop-filter: blur(4px);
+            background: transparent;
+            border: none;
+            width: 100%;
+            text-align: left;
         }
-        .admin-toggle:hover {
-            background: #ffffff20;
-            border-color: #ffffff60;
-            transform: scale(1.02);
+
+        .nav-item:hover {
+            background: #1f3f5e;
+            color: white;
         }
-        .panel {
+
+        .nav-item.active {
+            background: #1f4b78;
+            color: white;
+            box-shadow: 0 6px 12px rgba(0, 20, 40, 0.3);
+        }
+
+        .nav-item .icon {
+            font-size: 1.4rem;
+            width: 32px;
+            text-align: center;
+        }
+
+        .sidebar-footer {
+            font-size: 0.75rem;
+            opacity: 0.5;
+            border-top: 1px solid #2c4b6b;
+            padding-top: 20px;
+            margin-top: 12px;
+        }
+
+        /* ------- MAIN CONTENT ------- */
+        .main {
+            flex: 1;
+            padding: 28px 32px;
+            max-width: calc(100% - 260px);
+        }
+
+        .page {
+            display: none;
+            animation: fadeUp 0.25s ease;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        @keyframes fadeUp {
+            0% {
+                opacity: 0.3;
+                transform: translateY(12px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .page-header {
+            margin-bottom: 28px;
+        }
+
+        .page-header h2 {
+            font-size: 2rem;
+            font-weight: 600;
+            color: #0b2a47;
+        }
+
+        .page-header p {
+            color: #4a637c;
+            margin-top: 6px;
+        }
+
+        /* cards */
+        .panel-card {
             background: white;
             border-radius: 28px;
             padding: 24px 28px;
-            box-shadow: 0 8px 28px rgba(0,0,0,0.04);
-            margin-bottom: 32px;
-            border: 1px solid #e9eef3;
-            transition: 0.25s;
+            box-shadow: 0 8px 28px rgba(0, 0, 0, 0.04);
+            border: 1px solid #e2eaf2;
+            margin-bottom: 28px;
         }
-        .panel.hidden {
-            display: none;
+
+        .table-wrap {
+            overflow-x: auto;
+            border-radius: 18px;
+            border: 1px solid #e3eaf2;
         }
-        .panel-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 28px 36px;
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+            min-width: 900px;
         }
-        .admin-section {
-            background: #f8faff;
-            border-radius: 20px;
-            padding: 20px 22px;
-            border: 1px solid #e2e9f2;
-        }
-        .admin-section h3 {
-            font-size: 1.1rem;
+
+        th {
+            background: #f0f6fd;
+            color: #1a3b5a;
             font-weight: 600;
-            margin-bottom: 16px;
-            color: #0b2b4f;
+            padding: 14px 8px;
+            border-bottom: 2px solid #d7e1ec;
+            text-align: center;
+        }
+
+        td {
+            padding: 10px 6px;
+            border-bottom: 1px solid #e9eff5;
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        .shift-badge {
+            padding: 4px 10px;
+            border-radius: 30px;
+            font-weight: 500;
+            font-size: 0.75rem;
+            display: inline-block;
+            min-width: 32px;
+        }
+
+        .shift-p {
+            background: #d2e6ff;
+            color: #004080;
+        }
+        .shift-s {
+            background: #d4f0e6;
+            color: #00664d;
+        }
+        .shift-l {
+            background: #fff3d4;
+            color: #8a5d00;
+        }
+        .shift-off {
+            background: #f0f0f0;
+            color: #6b6b6b;
+        }
+
+        .toilet-cell {
+            font-weight: 600;
+            color: #0b4b6b;
+        }
+
+        .brand-name {
+            font-weight: 600;
+            color: #0a2a44;
+        }
+
+        .empty-state {
+            color: #8899b0;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .flex-row {
             display: flex;
+            flex-wrap: wrap;
+            gap: 12px 18px;
             align-items: center;
-            gap: 8px;
         }
-        .admin-section h3 i {
-            opacity: 0.7;
+
+        .btn {
+            background: #eef2f8;
+            border: none;
+            padding: 10px 22px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #1e293b;
+            cursor: pointer;
+            transition: 0.15s;
+            border: 1px solid transparent;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
         }
+
+        .btn-primary {
+            background: #1a4b7a;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #0f3b60;
+            transform: scale(1.01);
+        }
+
+        .btn-danger {
+            background: #fee9e7;
+            color: #b91c1c;
+        }
+
+        .btn-danger:hover {
+            background: #fcd3d0;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid #cbd5e1;
+        }
+
+        .btn-outline:hover {
+            background: #f1f5f9;
+        }
+
+        .btn-sm {
+            padding: 5px 14px;
+            font-size: 0.8rem;
+        }
+
         .form-row {
             display: flex;
             flex-wrap: wrap;
             gap: 10px 12px;
             margin-bottom: 14px;
         }
-        .form-row input, .form-row select {
-            padding: 10px 14px;
+
+        .form-row input,
+        .form-row select {
+            padding: 10px 16px;
             border: 1px solid #d0dae8;
             border-radius: 40px;
             font-size: 0.9rem;
@@ -111,57 +304,20 @@
             outline: none;
             transition: 0.15s;
         }
-        .form-row input:focus, .form-row select:focus {
+
+        .form-row input:focus,
+        .form-row select:focus {
             border-color: #1a4b7a;
             box-shadow: 0 0 0 3px #1a4b7a20;
         }
-        .btn {
-            background: #eef2f8;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 40px;
-            font-weight: 600;
-            font-size: 0.9rem;
-            color: #1e293b;
-            cursor: pointer;
-            transition: 0.15s;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            border: 1px solid transparent;
-        }
-        .btn-primary {
-            background: #1a4b7a;
-            color: white;
-        }
-        .btn-primary:hover {
-            background: #0f3b60;
-            transform: scale(1.01);
-        }
-        .btn-danger {
-            background: #fee9e7;
-            color: #b91c1c;
-        }
-        .btn-danger:hover {
-            background: #fcd3d0;
-        }
-        .btn-outline {
-            background: transparent;
-            border: 1px solid #cbd5e1;
-        }
-        .btn-outline:hover {
-            background: #f1f5f9;
-        }
-        .btn-sm {
-            padding: 5px 14px;
-            font-size: 0.8rem;
-        }
+
         .list-badge {
             display: flex;
             flex-wrap: wrap;
             gap: 8px 12px;
-            margin-top: 8px;
+            margin-top: 12px;
         }
+
         .badge-item {
             background: white;
             border-radius: 40px;
@@ -172,6 +328,7 @@
             gap: 10px;
             font-size: 0.9rem;
         }
+
         .badge-item .remove {
             color: #a0b3cc;
             cursor: pointer;
@@ -179,383 +336,478 @@
             font-size: 1.1rem;
             line-height: 1;
         }
+
         .badge-item .remove:hover {
             color: #b91c1c;
         }
-        .table-wrap {
-            overflow-x: auto;
-            border-radius: 18px;
-            border: 1px solid #e3eaf2;
-            background: white;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 0.85rem;
-            min-width: 900px;
-        }
-        th {
-            background: #f0f5fb;
-            color: #1a3b5a;
-            font-weight: 600;
-            padding: 14px 8px;
-            border-bottom: 2px solid #d7e1ec;
-            text-align: center;
-        }
-        td {
-            padding: 10px 6px;
-            border-bottom: 1px solid #e9eff5;
-            text-align: center;
-            vertical-align: middle;
-        }
-        tr:last-child td {
-            border-bottom: none;
-        }
-        .shift-badge {
-            background: #e5edf8;
-            padding: 4px 10px;
-            border-radius: 30px;
-            font-weight: 500;
-            font-size: 0.75rem;
-            display: inline-block;
-            min-width: 32px;
-        }
-        .shift-p { background: #d2e6ff; color: #004080; }
-        .shift-s { background: #d4f0e6; color: #00664d; }
-        .shift-l { background: #fff3d4; color: #8a5d00; }
-        .shift-off { background: #f0f0f0; color: #6b6b6b; }
-        .toilet-cell {
-            font-weight: 600;
-            color: #0b4b6b;
-        }
-        .brand-name {
-            font-weight: 600;
-            color: #0a2a44;
-        }
-        .empty-state {
-            color: #8899b0;
-            padding: 16px;
-            text-align: center;
-        }
-        .footer-notes {
-            margin-top: 24px;
+
+        .subnote {
             background: #f8fafd;
-            border-radius: 20px;
-            padding: 18px 22px;
+            border-radius: 16px;
+            padding: 16px 20px;
             font-size: 0.85rem;
             color: #2d4059;
             border: 1px solid #e4ebf3;
+            margin-top: 18px;
         }
-        .footer-notes ul {
+
+        .subnote ul {
             list-style: none;
             display: flex;
             flex-wrap: wrap;
             gap: 8px 28px;
         }
-        .footer-notes ul li::before {
+
+        .subnote ul li::before {
             content: "• ";
             color: #1a4b7a;
             font-weight: bold;
         }
-        .flex-between {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 12px;
+
+        @media (max-width: 820px) {
+            .sidebar {
+                width: 200px;
+                padding: 18px 12px;
+            }
+            .main {
+                padding: 20px 16px;
+                max-width: 100%;
+            }
+            .sidebar-brand {
+                font-size: 1.3rem;
+            }
+            .nav-item {
+                font-size: 0.9rem;
+                padding: 10px 12px;
+            }
         }
-        @media (max-width: 800px) {
-            .panel-grid { grid-template-columns: 1fr; }
-            header { flex-direction: column; align-items: start; gap: 12px; }
+
+        @media (max-width: 640px) {
+            body {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+                flex-direction: row;
+                flex-wrap: wrap;
+                padding: 12px 16px;
+                gap: 6px;
+                align-items: center;
+            }
+            .sidebar-brand {
+                font-size: 1.2rem;
+                border-bottom: none;
+                padding-bottom: 0;
+                flex: 1;
+            }
+            .nav-menu {
+                flex-direction: row;
+                flex-wrap: wrap;
+                gap: 4px;
+                flex: 1;
+            }
+            .nav-item {
+                padding: 8px 14px;
+                font-size: 0.8rem;
+                flex: 1 0 auto;
+                justify-content: center;
+            }
+            .sidebar-footer {
+                display: none;
+            }
+            .main {
+                max-width: 100%;
+                padding: 16px;
+            }
         }
     </style>
 </head>
 <body>
-<div class="app">
-    <header>
-        <div>
-            <h1>🧹 Piket & Shift <small>UFO Malang</small></h1>
-        </div>
-        <button class="admin-toggle" id="adminToggle">⚙️ Panel Admin</button>
-    </header>
 
-    <!-- ADMIN PANEL -->
-    <div id="adminPanel" class="panel hidden">
-        <div class="panel-grid">
-            <div class="admin-section">
-                <h3>➕ Tambah Sales</h3>
-                <div class="form-row">
-                    <input type="text" id="newBrand" placeholder="Brand (contoh: SHARP)">
-                    <input type="text" id="newName" placeholder="Nama Sales">
-                    <select id="newShiftDay"><option value="P">Pagi</option><option value="S">Siang</option><option value="L">Libur</option><option value="OFF">OFF</option></select>
-                    <button class="btn btn-primary" id="addSalesBtn">Tambah</button>
-                </div>
-                <div style="margin-top: 8px;font-size:0.85rem;color:#446688;">Shift diisi untuk hari Senin (akan ditentukan otomatis untuk hari lain dengan pola berpasangan)</div>
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="sidebar-brand">
+            📋 UFO
+            <small>Malang · Piket & Shift</small>
+        </div>
+        <nav class="nav-menu">
+            <button class="nav-item active" data-page="shift">
+                <span class="icon">🔄</span> Jadwal Shift
+            </button>
+            <button class="nav-item" data-page="piket">
+                <span class="icon">🧹</span> Piket Toilet
+            </button>
+            <button class="nav-item" data-page="admin">
+                <span class="icon">⚙️</span> Panel Admin
+            </button>
+        </nav>
+        <div class="sidebar-footer">v1.0 · UFO Malang</div>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="main">
+
+        <!-- HALAMAN SHIFT -->
+        <section id="page-shift" class="page active">
+            <div class="page-header">
+                <h2>🔄 Jadwal Shift Promotor</h2>
+                <p>Shift harian semua brand & promotor</p>
             </div>
-            <div class="admin-section">
-                <h3>🗑️ Hapus Sales</h3>
-                <div class="form-row">
-                    <select id="deleteSelect" style="flex:2;"><option value="">Pilih sales untuk dihapus</option></select>
-                    <button class="btn btn-danger" id="deleteSalesBtn">Hapus</button>
+            <div class="panel-card">
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr><th>BRAND</th><th>NAMA</th><th>SENIN</th><th>SELASA</th><th>RABU</th><th>KAMIS</th><th>JUM'AT</th><th>SABTU</th><th>MINGGU</th></tr>
+                        </thead>
+                        <tbody id="shiftTableBody"></tbody>
+                    </table>
                 </div>
-                <div style="margin-top: 12px;">
-                    <button class="btn btn-outline btn-sm" id="resetDefaultBtn">↺ Reset ke data awal</button>
+                <div class="subnote">
+                    <ul>
+                        <li>P : Pagi · S : Siang · L : Libur · OFF : Off</li>
+                        <li>Shift dapat diubah melalui Panel Admin</li>
+                    </ul>
                 </div>
             </div>
-            <div class="admin-section" style="grid-column: 1 / -1;">
-                <h3>📋 Daftar Sales Terdaftar</h3>
+        </section>
+
+        <!-- HALAMAN PIKET TOILET -->
+        <section id="page-piket" class="page">
+            <div class="page-header">
+                <h2>🧹 Jadwal Piket Toilet</h2>
+                <p>Penugasan piket kebersihan toilet & area</p>
+            </div>
+            <div class="panel-card">
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr><th>BRAND</th><th>NAMA</th><th>PIKET TOILET</th><th>CATATAN</th></tr>
+                        </thead>
+                        <tbody id="piketTableBody"></tbody>
+                    </table>
+                </div>
+                <div class="subnote">
+                    <ul>
+                        <li>Piket toilet : lantai, dinding, closet, urinoir, wastafel, langit-langit</li>
+                        <li>General cleaning setiap Sabtu & Minggu</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- HALAMAN ADMIN -->
+        <section id="page-admin" class="page">
+            <div class="page-header">
+                <h2>⚙️ Panel Admin</h2>
+                <p>Kelola data sales, shift, dan piket</p>
+            </div>
+
+            <div class="panel-card">
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:24px 32px;">
+                    <div>
+                        <h3 style="margin-bottom:12px; font-weight:600;">➕ Tambah Sales</h3>
+                        <div class="form-row">
+                            <input type="text" id="newBrand" placeholder="Brand" />
+                            <input type="text" id="newName" placeholder="Nama Sales" />
+                            <select id="newShiftDay">
+                                <option value="P">Pagi (P)</option>
+                                <option value="S">Siang (S)</option>
+                                <option value="L">Libur (L)</option>
+                                <option value="OFF">OFF</option>
+                            </select>
+                            <button class="btn btn-primary" id="addSalesBtn">Tambah</button>
+                        </div>
+                        <div style="font-size:0.8rem; color:#446688; margin-top:6px;">Shift Senin diisi, hari lain mengikuti pola berpasangan.</div>
+                    </div>
+                    <div>
+                        <h3 style="margin-bottom:12px; font-weight:600;">🗑️ Hapus Sales</h3>
+                        <div class="form-row">
+                            <select id="deleteSelect" style="flex:2;"><option value="">Pilih sales</option></select>
+                            <button class="btn btn-danger" id="deleteSalesBtn">Hapus</button>
+                        </div>
+                        <div style="margin-top:12px;">
+                            <button class="btn btn-outline btn-sm" id="resetDefaultBtn">↺ Reset ke data awal</button>
+                        </div>
+                    </div>
+                </div>
+                <hr style="margin:24px 0; border-color:#e4ebf3;" />
+                <h3 style="font-weight:600; margin-bottom:8px;">📋 Daftar Sales Terdaftar</h3>
                 <div id="salesListContainer" class="list-badge"></div>
             </div>
-        </div>
-    </div>
+        </section>
+    </main>
 
-    <!-- JADWAL TABLE -->
-    <div class="panel">
-        <div class="flex-between" style="margin-bottom:18px;">
-            <h2 style="font-weight:600; font-size:1.4rem;">📅 Jadwal Shift & Piket Toilet</h2>
-            <span style="background:#eef4fa;padding:6px 18px;border-radius:40px;font-size:0.8rem;color:#1f466b;">💡 Klik admin untuk konfigurasi</span>
-        </div>
-        <div class="table-wrap">
-            <table>
-                <thead>
-                    <tr><th>BRAND</th><th>NAMA</th><th>SENIN</th><th>SELASA</th><th>RABU</th><th>KAMIS</th><th>JUM'AT</th><th>SABTU</th><th>MINGGU</th><th>PIKET TOILET</th></tr>
-                </thead>
-                <tbody id="scheduleBody"></tbody>
-            </table>
-        </div>
-        <div class="footer-notes">
-            <ul>
-                <li>Piket toilet (lantai, dinding, closet, urinoir, wastafel, langit-langit) harus disikat</li>
-                <li>General cleaning setiap Sabtu & Minggu</li>
-                <li>Update stok harian & upload sosmed wajib</li>
-                <li>Izin sakit wajib surat dokter & obat</li>
-            </ul>
-        </div>
-    </div>
-</div>
+    <script>
+        // ------------------------------------------------------------
+        // DATA DEFAULT (sesuai file Excel)
+        // ------------------------------------------------------------
+        const DEFAULT_DATA = [
+            { brand: "SHARP", name: "AYUNG", senin: "P", selasa: "OFF", rabu: "S", kamis: "L", jumat: "P", sabtu: "S", minggu: "P",
+            toilet: "1.15" },
+            { brand: "SAMSUNG", name: "FEBRI", senin: "S", selasa: "L", rabu: "P", kamis: "OFF", jumat: "S", sabtu: "P", minggu: "S",
+                toilet: "" },
+            { brand: "POLYTRON", name: "AGUS", senin: "P", selasa: "P", rabu: "OFF", kamis: "S", jumat: "L", sabtu: "P", minggu: "S",
+                toilet: "2.16" },
+            { brand: "LG", name: "EKA", senin: "S", selasa: "S", rabu: "L", kamis: "P", jumat: "OFF", sabtu: "S", minggu: "P",
+                toilet: "" },
+            { brand: "AQUA", name: "PUGUH", senin: "P", selasa: "S", rabu: "L", kamis: "P", jumat: "OFF", sabtu: "S", minggu: "S",
+                toilet: "3.17" },
+            { brand: "AQUA", name: "RONI", senin: "S", selasa: "P", rabu: "OFF", kamis: "S", jumat: "L", sabtu: "P", minggu: "P",
+                toilet: "" },
+            { brand: "TOSHIBA", name: "RISKA", senin: "OFF", selasa: "S", rabu: "S", kamis: "L", jumat: "P", sabtu: "S", minggu: "P",
+                toilet: "4.18" },
+            { brand: "TOSHIBA", name: "ARFIN", senin: "L", selasa: "P", rabu: "P", kamis: "OFF", jumat: "S", sabtu: "P", minggu: "S",
+                toilet: "" },
+            { brand: "MIDEA", name: "ADHE", senin: "P", selasa: "OFF", rabu: "S", kamis: "L", jumat: "P", sabtu: "P", minggu: "S",
+                toilet: "5,19" },
+            { brand: "MIDEA", name: "DEDY", senin: "S", selasa: "L", rabu: "P", kamis: "OFF", jumat: "S", sabtu: "S", minggu: "P",
+                toilet: "" },
+            { brand: "CHANGHONG", name: "ZUNUN", senin: "P", selasa: "OFF", rabu: "S", kamis: "S", jumat: "L", sabtu: "P", minggu: "S",
+                toilet: "6.2" },
+            { brand: "CHANGHONG", name: "", senin: "S", selasa: "L", rabu: "P", kamis: "P", jumat: "OFF", sabtu: "S", minggu: "P",
+                toilet: "" },
+            { brand: "TCL", name: "JIMY", senin: "L", selasa: "P", rabu: "OFF", kamis: "S", jumat: "P", sabtu: "S", minggu: "S",
+                toilet: "7.21" },
+            { brand: "TCL", name: "FAJAR", senin: "OFF", selasa: "S", rabu: "L", kamis: "P", jumat: "S", sabtu: "P", minggu: "P",
+                toilet: "" },
+            { brand: "GREE", name: "LESYO", senin: "L", selasa: "P", rabu: "OFF", kamis: "S", jumat: "P", sabtu: "P", minggu: "S",
+                toilet: "8,22" },
+            { brand: "PANASONIC", name: "RICKY", senin: "OFF", selasa: "S", rabu: "L", kamis: "P", jumat: "S", sabtu: "S", minggu: "P",
+                toilet: "" },
+            { brand: "ELECTROLUX", name: "WAHYU", senin: "OFF", selasa: "S", rabu: "P", kamis: "S", jumat: "L", sabtu: "P", minggu: "P",
+                toilet: "9.23" },
+            { brand: "MODENA", name: "", senin: "L", selasa: "P", rabu: "S", kamis: "P", jumat: "OFF", sabtu: "S", minggu: "S",
+                toilet: "" },
+            { brand: "ARTUGO", name: "FENDI", senin: "P", selasa: "OFF", rabu: "S", kamis: "L", jumat: "P", sabtu: "S", minggu: "P",
+                toilet: "10.24" },
+            { brand: "ARTUGO", name: "ENNY", senin: "S", selasa: "L", rabu: "P", kamis: "OFF", jumat: "S", sabtu: "P", minggu: "S",
+                toilet: "" },
+            { brand: "SANKEN", name: "JESICA", senin: "L", selasa: "P", rabu: "P", kamis: "OFF", jumat: "S", sabtu: "P", minggu: "S",
+                toilet: "11.25" },
+            { brand: "ADVANCE", name: "LEO", senin: "OFF", selasa: "S", rabu: "S", kamis: "L", jumat: "P", sabtu: "S", minggu: "P",
+                toilet: "" },
+            { brand: "GADGET", name: "ROFIUL", senin: "S", selasa: "L", rabu: "P", kamis: "OFF", jumat: "S", sabtu: "P", minggu: "S",
+                toilet: "12.26" },
+            { brand: "GADGET", name: "NEBIYA", senin: "P", selasa: "OFF", rabu: "S", kamis: "L", jumat: "P", sabtu: "S", minggu: "P",
+                toilet: "" },
+            { brand: "MASPION", name: "IBRA", senin: "P", selasa: "S", rabu: "L", kamis: "P", jumat: "OFF", sabtu: "S", minggu: "S",
+                toilet: "13.27" },
+            { brand: "MASPION", name: "NISA", senin: "S", selasa: "P", rabu: "OFF", kamis: "S", jumat: "L", sabtu: "P", minggu: "P",
+                toilet: "" },
+            { brand: "COMFORTA", name: "INAYAH", senin: "L", selasa: "P", rabu: "P", kamis: "OFF", jumat: "S", sabtu: "P", minggu: "S",
+                toilet: "14.28" },
+            { brand: "SMALL", name: "ANISA", senin: "OFF", selasa: "S", rabu: "S", kamis: "L", jumat: "P", sabtu: "S", minggu: "P",
+                toilet: "" }
+        ];
 
-<script>
-    // --------------------- DATA DEFAULT (dari dua sheet utama) --------------------
-    const DEFAULT_DATA = [
-        { brand: "SHARP", name: "AYUNG", senin: "P", selasa: "OFF", rabu: "S", kamis: "L", jumat: "P", sabtu: "S", minggu: "P", toilet: "1.15" },
-        { brand: "SAMSUNG", name: "FEBRI", senin: "S", selasa: "L", rabu: "P", kamis: "OFF", jumat: "S", sabtu: "P", minggu: "S", toilet: "" },
-        { brand: "POLYTRON", name: "AGUS", senin: "P", selasa: "P", rabu: "OFF", kamis: "S", jumat: "L", sabtu: "P", minggu: "S", toilet: "2.16" },
-        { brand: "LG", name: "EKA", senin: "S", selasa: "S", rabu: "L", kamis: "P", jumat: "OFF", sabtu: "S", minggu: "P", toilet: "" },
-        { brand: "AQUA", name: "PUGUH", senin: "P", selasa: "S", rabu: "L", kamis: "P", jumat: "OFF", sabtu: "S", minggu: "S", toilet: "3.17" },
-        { brand: "AQUA", name: "RONI", senin: "S", selasa: "P", rabu: "OFF", kamis: "S", jumat: "L", sabtu: "P", minggu: "P", toilet: "" },
-        { brand: "TOSHIBA", name: "RISKA", senin: "OFF", selasa: "S", rabu: "S", kamis: "L", jumat: "P", sabtu: "S", minggu: "P", toilet: "4.18" },
-        { brand: "TOSHIBA", name: "ARFIN", senin: "L", selasa: "P", rabu: "P", kamis: "OFF", jumat: "S", sabtu: "P", minggu: "S", toilet: "" },
-        { brand: "MIDEA", name: "ADHE", senin: "P", selasa: "OFF", rabu: "S", kamis: "L", jumat: "P", sabtu: "P", minggu: "S", toilet: "5,19" },
-        { brand: "MIDEA", name: "DEDY", senin: "S", selasa: "L", rabu: "P", kamis: "OFF", jumat: "S", sabtu: "S", minggu: "P", toilet: "" },
-        { brand: "CHANGHONG", name: "ZUNUN", senin: "P", selasa: "OFF", rabu: "S", kamis: "S", jumat: "L", sabtu: "P", minggu: "S", toilet: "6.2" },
-        { brand: "CHANGHONG", name: "", senin: "S", selasa: "L", rabu: "P", kamis: "P", jumat: "OFF", sabtu: "S", minggu: "P", toilet: "" },
-        { brand: "TCL", name: "JIMY", senin: "L", selasa: "P", rabu: "OFF", kamis: "S", jumat: "P", sabtu: "S", minggu: "S", toilet: "7.21" },
-        { brand: "TCL", name: "FAJAR", senin: "OFF", selasa: "S", rabu: "L", kamis: "P", jumat: "S", sabtu: "P", minggu: "P", toilet: "" },
-        { brand: "GREE", name: "LESYO", senin: "L", selasa: "P", rabu: "OFF", kamis: "S", jumat: "P", sabtu: "P", minggu: "S", toilet: "8,22" },
-        { brand: "PANASONIC", name: "RICKY", senin: "OFF", selasa: "S", rabu: "L", kamis: "P", jumat: "S", sabtu: "S", minggu: "P", toilet: "" },
-        { brand: "ELECTROLUX", name: "WAHYU", senin: "OFF", selasa: "S", rabu: "P", kamis: "S", jumat: "L", sabtu: "P", minggu: "P", toilet: "9.23" },
-        { brand: "MODENA", name: "", senin: "L", selasa: "P", rabu: "S", kamis: "P", jumat: "OFF", sabtu: "S", minggu: "S", toilet: "" },
-        { brand: "ARTUGO", name: "FENDI", senin: "P", selasa: "OFF", rabu: "S", kamis: "L", jumat: "P", sabtu: "S", minggu: "P", toilet: "10.24" },
-        { brand: "ARTUGO", name: "ENNY", senin: "S", selasa: "L", rabu: "P", kamis: "OFF", jumat: "S", sabtu: "P", minggu: "S", toilet: "" },
-        { brand: "SANKEN", name: "JESICA", senin: "L", selasa: "P", rabu: "P", kamis: "OFF", jumat: "S", sabtu: "P", minggu: "S", toilet: "11.25" },
-        { brand: "ADVANCE", name: "LEO", senin: "OFF", selasa: "S", rabu: "S", kamis: "L", jumat: "P", sabtu: "S", minggu: "P", toilet: "" },
-        { brand: "GADGET", name: "ROFIUL", senin: "S", selasa: "L", rabu: "P", kamis: "OFF", jumat: "S", sabtu: "P", minggu: "S", toilet: "12.26" },
-        { brand: "GADGET", name: "NEBIYA", senin: "P", selasa: "OFF", rabu: "S", kamis: "L", jumat: "P", sabtu: "S", minggu: "P", toilet: "" },
-        { brand: "MASPION", name: "IBRA", senin: "P", selasa: "S", rabu: "L", kamis: "P", jumat: "OFF", sabtu: "S", minggu: "S", toilet: "13.27" },
-        { brand: "MASPION", name: "NISA", senin: "S", selasa: "P", rabu: "OFF", kamis: "S", jumat: "L", sabtu: "P", minggu: "P", toilet: "" },
-        { brand: "COMFORTA", name: "INAYAH", senin: "L", selasa: "P", rabu: "P", kamis: "OFF", jumat: "S", sabtu: "P", minggu: "S", toilet: "14.28" },
-        { brand: "SMALL", name: "ANISA", senin: "OFF", selasa: "S", rabu: "S", kamis: "L", jumat: "P", sabtu: "S", minggu: "P", toilet: "" }
-    ];
+        // ------------------------------------------------------------
+        // STATE
+        // ------------------------------------------------------------
+        let salesData = [];
 
-    // --------------------- STATE --------------------
-    let salesData = [];
+        function loadData() {
+            const stored = localStorage.getItem('ufo_piket_data');
+            if (stored) {
+                try { salesData = JSON.parse(stored); return; } catch (e) {}
+            }
+            salesData = DEFAULT_DATA.map(item => ({ ...item }));
+        }
 
-    // Load from localStorage or default
-    function loadData() {
-        const stored = localStorage.getItem('ufo_piket_data');
-        if (stored) {
-            try {
-                salesData = JSON.parse(stored);
+        function saveData() {
+            localStorage.setItem('ufo_piket_data', JSON.stringify(salesData));
+        }
+
+        // ------------------------------------------------------------
+        // RENDER
+        // ------------------------------------------------------------
+        function renderShift() {
+            const tbody = document.getElementById('shiftTableBody');
+            if (!salesData.length) {
+                tbody.innerHTML = `<tr><td colspan="9" class="empty-state">Belum ada data sales.</td></tr>`;
                 return;
-            } catch(e) {}
+            }
+            let html = '';
+            salesData.forEach(row => {
+                const cls = (v) => {
+                    const u = (v || '').toUpperCase();
+                    if (u === 'P') return 'shift-p';
+                    if (u === 'S') return 'shift-s';
+                    if (u === 'L') return 'shift-l';
+                    if (u === 'OFF') return 'shift-off';
+                    return '';
+                };
+                html += `<tr>
+                    <td class="brand-name">${row.brand || ''}</td>
+                    <td>${row.name || ''}</td>
+                    <td><span class="shift-badge ${cls(row.senin)}">${row.senin || ''}</span></td>
+                    <td><span class="shift-badge ${cls(row.selasa)}">${row.selasa || ''}</span></td>
+                    <td><span class="shift-badge ${cls(row.rabu)}">${row.rabu || ''}</span></td>
+                    <td><span class="shift-badge ${cls(row.kamis)}">${row.kamis || ''}</span></td>
+                    <td><span class="shift-badge ${cls(row.jumat)}">${row.jumat || ''}</span></td>
+                    <td><span class="shift-badge ${cls(row.sabtu)}">${row.sabtu || ''}</span></td>
+                    <td><span class="shift-badge ${cls(row.minggu)}">${row.minggu || ''}</span></td>
+                </tr>`;
+            });
+            tbody.innerHTML = html;
         }
-        salesData = DEFAULT_DATA.map(item => ({...item}));
-    }
 
-    function saveData() {
-        localStorage.setItem('ufo_piket_data', JSON.stringify(salesData));
-    }
-
-    // --------------------- RENDER --------------------
-    function renderTable() {
-        const tbody = document.getElementById('scheduleBody');
-        if (!salesData.length) {
-            tbody.innerHTML = `<tr><td colspan="9" class="empty-state">Belum ada data sales. Tambahkan melalui panel admin.</td></tr>`;
-            return;
+        function renderPiket() {
+            const tbody = document.getElementById('piketTableBody');
+            const filtered = salesData.filter(r => r.toilet && r.toilet.trim() !== '');
+            if (!filtered.length) {
+                tbody.innerHTML = `<tr><td colspan="4" class="empty-state">Belum ada jadwal piket toilet.</td></tr>`;
+                return;
+            }
+            let html = '';
+            filtered.forEach(row => {
+                html += `<tr>
+                    <td class="brand-name">${row.brand || ''}</td>
+                    <td>${row.name || ''}</td>
+                    <td class="toilet-cell">${row.toilet}</td>
+                    <td style="font-size:0.8rem; color:#4a637c;">—</td>
+                </tr>`;
+            });
+            tbody.innerHTML = html;
         }
-        let html = '';
-        salesData.forEach((row, idx) => {
-            const shiftMap = { P:'P', S:'S', L:'L', OFF:'OFF' };
-            const getShiftClass = (val) => {
-                const v = (val||'').toUpperCase();
-                if (v === 'P') return 'shift-p';
-                if (v === 'S') return 'shift-s';
-                if (v === 'L') return 'shift-l';
-                if (v === 'OFF') return 'shift-off';
-                return '';
+
+        function populateDeleteSelect() {
+            const sel = document.getElementById('deleteSelect');
+            const current = sel.value;
+            sel.innerHTML = '<option value="">Pilih sales</option>';
+            salesData.forEach((item, idx) => {
+                const label = `${item.brand} - ${item.name}`.trim() || `#${idx+1}`;
+                const opt = document.createElement('option');
+                opt.value = idx;
+                opt.textContent = label;
+                sel.appendChild(opt);
+            });
+            if (current && sel.querySelector(`option[value="${current}"]`)) sel.value = current;
+        }
+
+        function renderBadgeList() {
+            const container = document.getElementById('salesListContainer');
+            if (!salesData.length) {
+                container.innerHTML = '<span class="empty-state">Belum ada sales terdaftar</span>';
+                return;
+            }
+            let html = '';
+            salesData.forEach((item, idx) => {
+                const label = `${item.brand} - ${item.name}`.trim() || `#${idx+1}`;
+                html += `<span class="badge-item">${label} <span class="remove" data-idx="${idx}">✕</span></span>`;
+            });
+            container.innerHTML = html;
+            container.querySelectorAll('.remove').forEach(el => {
+                el.addEventListener('click', (e) => {
+                    const idx = parseInt(el.dataset.idx);
+                    if (!isNaN(idx) && confirm(`Hapus sales "${salesData[idx]?.brand} - ${salesData[idx]?.name}"?`)) {
+                        salesData.splice(idx, 1);
+                        saveData();
+                        renderAll();
+                    }
+                });
+            });
+        }
+
+        function renderAll() {
+            renderShift();
+            renderPiket();
+            populateDeleteSelect();
+            renderBadgeList();
+        }
+
+        // ------------------------------------------------------------
+        // ADMIN ACTIONS
+        // ------------------------------------------------------------
+        function addSales() {
+            const brand = document.getElementById('newBrand').value.trim();
+            const name = document.getElementById('newName').value.trim();
+            const shift = document.getElementById('newShiftDay').value;
+            if (!brand || !name) { alert('Brand dan Nama wajib diisi.'); return; }
+            if (salesData.some(item => item.brand === brand && item.name === name)) {
+                alert('Sales dengan brand & nama tersebut sudah ada.');
+                return;
+            }
+            const mapShift = {
+                'P': { selasa: 'OFF', rabu: 'S', kamis: 'L', jumat: 'P', sabtu: 'S', minggu: 'P' },
+                'S': { selasa: 'L', rabu: 'P', kamis: 'OFF', jumat: 'S', sabtu: 'P', minggu: 'S' },
+                'L': { selasa: 'P', rabu: 'OFF', kamis: 'S', jumat: 'P', sabtu: 'S', minggu: 'S' },
+                'OFF': { selasa: 'S', rabu: 'L', kamis: 'P', jumat: 'S', sabtu: 'P', minggu: 'P' }
             };
-            html += `<tr>
-                <td class="brand-name">${row.brand || ''}</td>
-                <td>${row.name || ''}</td>
-                <td><span class="shift-badge ${getShiftClass(row.senin)}">${row.senin || ''}</span></td>
-                <td><span class="shift-badge ${getShiftClass(row.selasa)}">${row.selasa || ''}</span></td>
-                <td><span class="shift-badge ${getShiftClass(row.rabu)}">${row.rabu || ''}</span></td>
-                <td><span class="shift-badge ${getShiftClass(row.kamis)}">${row.kamis || ''}</span></td>
-                <td><span class="shift-badge ${getShiftClass(row.jumat)}">${row.jumat || ''}</span></td>
-                <td><span class="shift-badge ${getShiftClass(row.sabtu)}">${row.sabtu || ''}</span></td>
-                <td><span class="shift-badge ${getShiftClass(row.minggu)}">${row.minggu || ''}</span></td>
-                <td class="toilet-cell">${row.toilet || ''}</td>
-            </tr>`;
-        });
-        tbody.innerHTML = html;
-        // update delete dropdown
-        populateDeleteSelect();
-        renderBadgeList();
-    }
-
-    function populateDeleteSelect() {
-        const sel = document.getElementById('deleteSelect');
-        const current = sel.value;
-        sel.innerHTML = '<option value="">Pilih sales untuk dihapus</option>';
-        salesData.forEach((item, idx) => {
-            const label = `${item.brand} - ${item.name}`.trim() || `Sales #${idx+1}`;
-            const opt = document.createElement('option');
-            opt.value = idx;
-            opt.textContent = label;
-            sel.appendChild(opt);
-        });
-        if (current && sel.querySelector(`option[value="${current}"]`)) sel.value = current;
-    }
-
-    function renderBadgeList() {
-        const container = document.getElementById('salesListContainer');
-        if (!salesData.length) {
-            container.innerHTML = '<span class="empty-state">Belum ada sales terdaftar</span>';
-            return;
+            const pattern = mapShift[shift] || mapShift['P'];
+            const newEntry = {
+                brand,
+                name,
+                senin: shift,
+                selasa: pattern.selasa,
+                rabu: pattern.rabu,
+                kamis: pattern.kamis,
+                jumat: pattern.jumat,
+                sabtu: pattern.sabtu,
+                minggu: pattern.minggu,
+                toilet: ''
+            };
+            salesData.push(newEntry);
+            saveData();
+            renderAll();
+            document.getElementById('newBrand').value = '';
+            document.getElementById('newName').value = '';
         }
-        let html = '';
-        salesData.forEach((item, idx) => {
-            const label = `${item.brand} - ${item.name}`.trim() || `#${idx+1}`;
-            html += `<span class="badge-item">${label} <span class="remove" data-idx="${idx}">✕</span></span>`;
-        });
-        container.innerHTML = html;
-        // event listener hapus via badge
-        container.querySelectorAll('.remove').forEach(el => {
-            el.addEventListener('click', (e) => {
-                const idx = parseInt(el.dataset.idx);
-                if (!isNaN(idx) && confirm(`Hapus sales "${salesData[idx]?.brand} - ${salesData[idx]?.name}"?`)) {
-                    salesData.splice(idx, 1);
-                    saveData();
-                    renderTable();
-                }
+
+        function deleteSelected() {
+            const sel = document.getElementById('deleteSelect');
+            const idx = parseInt(sel.value);
+            if (isNaN(idx) || idx < 0 || idx >= salesData.length) { alert('Pilih sales yang valid.'); return; }
+            if (confirm(`Hapus "${salesData[idx].brand} - ${salesData[idx].name}"?`)) {
+                salesData.splice(idx, 1);
+                saveData();
+                renderAll();
+            }
+        }
+
+        function resetDefault() {
+            if (confirm('Reset ke data awal? Semua perubahan akan hilang.')) {
+                salesData = DEFAULT_DATA.map(item => ({ ...item }));
+                saveData();
+                renderAll();
+            }
+        }
+
+        // ------------------------------------------------------------
+        // NAVIGASI SIDEBAR
+        // ------------------------------------------------------------
+        function navigateTo(pageId) {
+            document.querySelectorAll('.page').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+            const targetPage = document.getElementById(`page-${pageId}`);
+            if (targetPage) targetPage.classList.add('active');
+            const navBtn = document.querySelector(`.nav-item[data-page="${pageId}"]`);
+            if (navBtn) navBtn.classList.add('active');
+        }
+
+        document.querySelectorAll('.nav-item').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const page = btn.dataset.page;
+                if (page) navigateTo(page);
             });
         });
-    }
 
-    // --------------------- ADMIN ACTION: TAMBAH --------------------
-    function addSales() {
-        const brand = document.getElementById('newBrand').value.trim();
-        const name = document.getElementById('newName').value.trim();
-        const shift = document.getElementById('newShiftDay').value; // P / S / L / OFF
-        if (!brand || !name) {
-            alert('Brand dan Nama wajib diisi.');
-            return;
-        }
-        // cek duplikat
-        if (salesData.some(item => item.brand === brand && item.name === name)) {
-            alert('Sales dengan brand dan nama tersebut sudah ada.');
-            return;
-        }
-        // pola shift berpasangan: kita set Senin = shift, lalu pola otomatis selasa-minggu mengikuti sheet (di sini kita set sederhana)
-        // Untuk kemudahan, kita set Senin = shift, dan hari lain kita buat pola standar (seperti data default)
-        // Namun agar fleksibel: kita isi dengan pola umum (P,S,L,OFF) sesuai urutan.
-        // Tapi untuk kemudahan, kita set Senin = shift, dan hari lain kita set berdasarkan pola yang sering muncul: 
-        // P -> Selasa OFF, Rabu S, Kamis L, Jumat P, Sabtu S, Minggu P (mirip AYUNG)
-        // S -> Selasa L, Rabu P, Kamis OFF, Jumat S, Sabtu P, Minggu S (mirip FEBRI)
-        // L -> Selasa P, Rabu OFF, Kamis S, Jumat P, Sabtu S, Minggu S (mirip JIMY)
-        // OFF -> Selasa S, Rabu L, Kamis P, Jumat S, Sabtu P, Minggu P (mirip RISKA)
-        let days = { senin: shift };
-        const mapShift = {
-            'P': { selasa: 'OFF', rabu: 'S', kamis: 'L', jumat: 'P', sabtu: 'S', minggu: 'P' },
-            'S': { selasa: 'L', rabu: 'P', kamis: 'OFF', jumat: 'S', sabtu: 'P', minggu: 'S' },
-            'L': { selasa: 'P', rabu: 'OFF', kamis: 'S', jumat: 'P', sabtu: 'S', minggu: 'S' },
-            'OFF': { selasa: 'S', rabu: 'L', kamis: 'P', jumat: 'S', sabtu: 'P', minggu: 'P' }
-        };
-        const pattern = mapShift[shift] || mapShift['P'];
-        const newEntry = {
-            brand,
-            name,
-            senin: shift,
-            selasa: pattern.selasa,
-            rabu: pattern.rabu,
-            kamis: pattern.kamis,
-            jumat: pattern.jumat,
-            sabtu: pattern.sabtu,
-            minggu: pattern.minggu,
-            toilet: ''
-        };
-        salesData.push(newEntry);
-        saveData();
-        renderTable();
-        document.getElementById('newBrand').value = '';
-        document.getElementById('newName').value = '';
-    }
+        // ------------------------------------------------------------
+        // INIT
+        // ------------------------------------------------------------
+        document.addEventListener('DOMContentLoaded', function() {
+            loadData();
+            renderAll();
 
-    // --------------------- ADMIN: DELETE --------------------
-    function deleteSelected() {
-        const sel = document.getElementById('deleteSelect');
-        const idx = parseInt(sel.value);
-        if (isNaN(idx) || idx < 0 || idx >= salesData.length) {
-            alert('Pilih sales yang valid.');
-            return;
-        }
-        if (confirm(`Hapus "${salesData[idx].brand} - ${salesData[idx].name}"?`)) {
-            salesData.splice(idx, 1);
-            saveData();
-            renderTable();
-        }
-    }
+            document.getElementById('addSalesBtn').addEventListener('click', addSales);
+            document.getElementById('deleteSalesBtn').addEventListener('click', deleteSelected);
+            document.getElementById('resetDefaultBtn').addEventListener('click', resetDefault);
 
-    // --------------------- RESET --------------------
-    function resetDefault() {
-        if (confirm('Reset ke data awal? Semua perubahan akan hilang.')) {
-            salesData = DEFAULT_DATA.map(item => ({...item}));
-            saveData();
-            renderTable();
-        }
-    }
-
-    // --------------------- INIT --------------------
-    document.addEventListener('DOMContentLoaded', function() {
-        loadData();
-        renderTable();
-
-        // admin toggle
-        const adminToggle = document.getElementById('adminToggle');
-        const adminPanel = document.getElementById('adminPanel');
-        adminToggle.addEventListener('click', () => {
-            adminPanel.classList.toggle('hidden');
-            adminToggle.textContent = adminPanel.classList.contains('hidden') ? '⚙️ Panel Admin' : '✖️ Tutup Panel';
+            document.getElementById('newName').addEventListener('keypress', (e) => { if (e.key === 'Enter') addSales(); });
+            document.getElementById('newBrand').addEventListener('keypress', (e) => { if (e.key === 'Enter') addSales(); });
         });
+    </script>
 
-        document.getElementById('addSalesBtn').addEventListener('click', addSales);
-        document.getElementById('deleteSalesBtn').addEventListener('click', deleteSelected);
-        document.getElementById('resetDefaultBtn').addEventListener('click', resetDefault);
-
-        // enter key pada input tambah
-        document.getElementById('newName').addEventListener('keypress', (e) => { if (e.key === 'Enter') addSales(); });
-        document.getElementById('newBrand').addEventListener('keypress', (e) => { if (e.key === 'Enter') addSales(); });
-    });
-</script>
 </body>
 </html>
