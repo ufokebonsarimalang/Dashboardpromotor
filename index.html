@@ -5,6 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>UFO Malang Kebonsari · Jadwal Piket & Shift</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js">
+    </script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js">
+    </script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:opsz@14..32&display=swap');
         * {
@@ -45,7 +50,7 @@
             display: inline-block;
             min-width: 44px;
             text-align: center;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
         }
         .badge-p {
             background: #dbeafe;
@@ -74,13 +79,20 @@
             font-weight: 600;
             padding: 14px 8px;
             border-bottom: 2px solid #e2e8f0;
+            text-align: center;
+            vertical-align: middle;
         }
         .table-modern td {
-            padding: 10px 6px;
+            padding: 10px 8px;
             border-bottom: 1px solid #f1f5f9;
+            text-align: center;
+            vertical-align: middle;
         }
         .table-modern tr:hover td {
             background: #fafcff;
+        }
+        .table-modern td:first-child {
+            text-align: left;
         }
         .brand-color-dot {
             display: inline-block;
@@ -88,8 +100,9 @@
             height: 14px;
             border-radius: 50%;
             margin-right: 8px;
-            border: 2px solid rgba(255,255,255,0.6);
-            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+            border: 2px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+            flex-shrink: 0;
         }
         .toilet-badge {
             background: #eef2ff;
@@ -98,6 +111,7 @@
             border-radius: 40px;
             font-weight: 500;
             font-size: 0.8rem;
+            display: inline-block;
         }
         .admin-input {
             border-radius: 40px;
@@ -108,7 +122,7 @@
         }
         .admin-input:focus {
             border-color: #2563eb;
-            box-shadow: 0 0 0 4px rgba(37,99,235,0.08);
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.08);
             outline: none;
         }
         .btn-modern {
@@ -144,6 +158,13 @@
         .btn-outline:hover {
             background: #f1f5f9;
         }
+        .btn-success {
+            background: #d1fae5;
+            color: #065f46;
+        }
+        .btn-success:hover {
+            background: #a7f3d0;
+        }
         .color-picker-wrap {
             display: flex;
             align-items: center;
@@ -173,8 +194,44 @@
             width: 16px;
             height: 16px;
             border-radius: 50%;
-            border: 2px solid rgba(255,255,255,0.7);
+            border: 2px solid rgba(255, 255, 255, 0.7);
+            flex-shrink: 0;
         }
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 0.8s ease-in-out infinite;
+        }
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+        .sync-status {
+            font-size: 0.75rem;
+            padding: 4px 12px;
+            border-radius: 40px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .sync-status.synced {
+            background: #d1fae5;
+            color: #065f46;
+        }
+        .sync-status.syncing {
+            background: #fef3c7;
+            color: #92400e;
+        }
+        .sync-status.error {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
         @media (max-width: 768px) {
             .sidebar {
                 flex-direction: row;
@@ -203,440 +260,617 @@
 </head>
 <body>
 
-<div class="flex flex-col md:flex-row min-h-screen">
+    <div class="flex flex-col md:flex-row min-h-screen">
 
-    <!-- SIDEBAR -->
-    <aside class="sidebar w-full md:w-64 flex-shrink-0 text-white p-5 flex flex-col gap-4 md:min-h-screen sticky top-0 z-10">
-        <div class="sidebar-brand text-2xl font-bold tracking-tight pb-4 border-b border-white/10">
-            🚀 UFO
-            <span class="block text-sm font-normal opacity-70">Malang Kebonsari</span>
-        </div>
-        <nav class="flex flex-row md:flex-col gap-1.5">
-            <button class="nav-item active flex items-center gap-3 px-4 py-3.5 text-sm font-medium text-white/80 hover:text-white w-full" data-page="shift">
-                <span class="text-xl">📋</span> Jadwal Shift
-            </button>
-            <button class="nav-item flex items-center gap-3 px-4 py-3.5 text-sm font-medium text-white/80 hover:text-white w-full" data-page="piket">
-                <span class="text-xl">🧹</span> Piket Toilet
-            </button>
-            <button class="nav-item flex items-center gap-3 px-4 py-3.5 text-sm font-medium text-white/80 hover:text-white w-full" data-page="admin">
-                <span class="text-xl">⚙️</span> Panel Admin
-            </button>
-        </nav>
-        <div class="text-xs opacity-30 mt-auto pt-4 border-t border-white/10 hidden md:block">
-            v2.0 · UFO Kebonsari
-        </div>
-    </aside>
-
-    <!-- MAIN -->
-    <main class="main flex-1 p-4 md:p-8 max-w-full">
-
-        <!-- HALAMAN SHIFT -->
-        <section id="page-shift" class="page active">
-            <div class="mb-6">
-                <h2 class="text-3xl font-bold text-slate-800">📋 Jadwal Shift Promotor</h2>
-                <p class="text-slate-500 mt-1">Shift harian semua brand & promotor — warna brand menunjukkan pasangan shift</p>
+        <!-- SIDEBAR -->
+        <aside class="sidebar w-full md:w-64 flex-shrink-0 text-white p-5 flex flex-col gap-4 md:min-h-screen sticky top-0 z-10">
+            <div class="sidebar-brand text-2xl font-bold tracking-tight pb-4 border-b border-white/10">
+                🚀 UFO
+                <span class="block text-sm font-normal opacity-70">Malang Kebonsari</span>
             </div>
-            <div class="card-glass rounded-3xl p-4 md:p-6 overflow-hidden">
-                <div class="overflow-x-auto">
-                    <table class="table-modern w-full text-sm min-w-[820px]">
-                        <thead>
-                            <tr><th class="text-left">BRAND</th><th>NAMA</th><th>SENIN</th><th>SELASA</th><th>RABU</th><th>KAMIS</th><th>JUM'AT</th><th>SABTU</th><th>MINGGU</th></tr>
-                        </thead>
-                        <tbody id="shiftTableBody"></tbody>
-                    </table>
+            <nav class="flex flex-row md:flex-col gap-1.5">
+                <button class="nav-item active flex items-center gap-3 px-4 py-3.5 text-sm font-medium text-white/80 hover:text-white w-full" data-page="shift">
+                    <span class="text-xl">📋</span> Jadwal Shift
+                </button>
+                <button class="nav-item flex items-center gap-3 px-4 py-3.5 text-sm font-medium text-white/80 hover:text-white w-full" data-page="piket">
+                    <span class="text-xl">🧹</span> Piket Toilet
+                </button>
+                <button class="nav-item flex items-center gap-3 px-4 py-3.5 text-sm font-medium text-white/80 hover:text-white w-full" data-page="admin">
+                    <span class="text-xl">⚙️</span> Panel Admin
+                </button>
+            </nav>
+            <div class="text-xs opacity-30 mt-auto pt-4 border-t border-white/10 hidden md:block">
+                v2.0 · UFO Kebonsari
+            </div>
+            <div id="syncStatus" class="sync-status synced text-xs mt-2">
+                <span>✅</span> Tersimpan di Cloud
+            </div>
+        </aside>
+
+        <!-- MAIN -->
+        <main class="main flex-1 p-4 md:p-8 max-w-full">
+
+            <!-- HALAMAN SHIFT -->
+            <section id="page-shift" class="page active">
+                <div class="mb-6">
+                    <h2 class="text-3xl font-bold text-slate-800">📋 Jadwal Shift Promotor</h2>
+                    <p class="text-slate-500 mt-1">Shift harian semua brand & promotor — warna brand menunjukkan pasangan shift</p>
                 </div>
-                <div class="mt-4 flex flex-wrap gap-4 text-xs text-slate-500 border-t pt-4 border-slate-200/60">
-                    <span><span class="badge-shift badge-p">P</span> Pagi</span>
-                    <span><span class="badge-shift badge-s">S</span> Siang</span>
-                    <span><span class="badge-shift badge-l">L</span> Libur</span>
-                    <span><span class="badge-shift badge-off">OFF</span> Off</span>
-                    <span><span class="badge-shift badge-lembur">LE</span> Lembur</span>
+                <div class="card-glass rounded-3xl p-4 md:p-6 overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="table-modern w-full text-sm min-w-[820px]">
+                            <thead>
+                                <tr>
+                                    <th class="text-left">BRAND</th>
+                                    <th class="text-center">NAMA</th>
+                                    <th class="text-center">SENIN</th>
+                                    <th class="text-center">SELASA</th>
+                                    <th class="text-center">RABU</th>
+                                    <th class="text-center">KAMIS</th>
+                                    <th class="text-center">JUM'AT</th>
+                                    <th class="text-center">SABTU</th>
+                                    <th class="text-center">MINGGU</th>
+                                </tr>
+                            </thead>
+                            <tbody id="shiftTableBody"></tbody>
+                        </table>
+                    </div>
+                    <div class="mt-4 flex flex-wrap gap-4 text-xs text-slate-500 border-t pt-4 border-slate-200/60">
+                        <span><span class="badge-shift badge-p">P</span> Pagi</span>
+                        <span><span class="badge-shift badge-s">S</span> Siang</span>
+                        <span><span class="badge-shift badge-l">L</span> Libur</span>
+                        <span><span class="badge-shift badge-off">OFF</span> Off</span>
+                        <span><span class="badge-shift badge-lembur">LE</span> Lembur</span>
+                    </div>
                 </div>
-            </div>
-        </section>
+            </section>
 
-        <!-- HALAMAN PIKET -->
-        <section id="page-piket" class="page hidden">
-            <div class="mb-6">
-                <h2 class="text-3xl font-bold text-slate-800">🧹 Jadwal Piket Toilet</h2>
-                <p class="text-slate-500 mt-1">Penugasan kebersihan toilet & area</p>
-            </div>
-            <div class="card-glass rounded-3xl p-4 md:p-6 overflow-hidden">
-                <div class="overflow-x-auto">
-                    <table class="table-modern w-full text-sm min-w-[500px]">
-                        <thead>
-                            <tr><th class="text-left">BRAND</th><th>NAMA</th><th>PIKET TOILET</th><th>KETERANGAN</th></tr>
-                        </thead>
-                        <tbody id="piketTableBody"></tbody>
-                    </table>
+            <!-- HALAMAN PIKET -->
+            <section id="page-piket" class="page hidden">
+                <div class="mb-6">
+                    <h2 class="text-3xl font-bold text-slate-800">🧹 Jadwal Piket Toilet</h2>
+                    <p class="text-slate-500 mt-1">Penugasan kebersihan toilet & area</p>
                 </div>
-                <div class="mt-4 text-xs text-slate-500 border-t pt-4 border-slate-200/60">
-                    <span class="inline-block mr-6">🧽 Lantai, dinding, closet, urinoir, wastafel, langit-langit</span>
-                    <span class="inline-block">📅 General cleaning Sabtu & Minggu</span>
+                <div class="card-glass rounded-3xl p-4 md:p-6 overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="table-modern w-full text-sm min-w-[500px]">
+                            <thead>
+                                <tr>
+                                    <th class="text-left">BRAND</th>
+                                    <th class="text-center">NAMA</th>
+                                    <th class="text-center">PIKET TOILET</th>
+                                    <th class="text-center">KETERANGAN</th>
+                                </tr>
+                            </thead>
+                            <tbody id="piketTableBody"></tbody>
+                        </table>
+                    </div>
+                    <div class="mt-4 text-xs text-slate-500 border-t pt-4 border-slate-200/60">
+                        <span class="inline-block mr-6">🧽 Lantai, dinding, closet, urinoir, wastafel, langit-langit</span>
+                        <span class="inline-block">📅 General cleaning Sabtu & Minggu</span>
+                    </div>
                 </div>
-            </div>
-        </section>
+            </section>
 
-        <!-- HALAMAN ADMIN -->
-        <section id="page-admin" class="page hidden">
-            <div class="mb-6">
-                <h2 class="text-3xl font-bold text-slate-800">⚙️ Panel Admin</h2>
-                <p class="text-slate-500 mt-1">Kelola data sales, shift, dan warna brand</p>
-            </div>
+            <!-- HALAMAN ADMIN -->
+            <section id="page-admin" class="page hidden">
+                <div class="mb-6">
+                    <h2 class="text-3xl font-bold text-slate-800">⚙️ Panel Admin</h2>
+                    <p class="text-slate-500 mt-1">Kelola data sales, shift, dan warna brand — tersimpan otomatis di Firebase</p>
+                </div>
 
-            <div class="card-glass rounded-3xl p-5 md:p-7 space-y-6">
+                <div class="card-glass rounded-3xl p-5 md:p-7 space-y-6">
 
-                <!-- TAMBAH + WARNA -->
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    <div>
-                        <h3 class="font-semibold text-slate-700 mb-3">➕ Tambah Sales</h3>
-                        <div class="flex flex-wrap gap-2">
-                            <input type="text" id="newBrand" placeholder="Brand" class="admin-input flex-1 min-w-[100px]" />
-                            <input type="text" id="newName" placeholder="Nama Sales" class="admin-input flex-1 min-w-[100px]" />
-                            <select id="newShiftDay" class="admin-input flex-1 min-w-[100px]">
-                                <option value="P">Pagi (P)</option>
-                                <option value="S">Siang (S)</option>
-                                <option value="L">Libur (L)</option>
-                                <option value="OFF">OFF</option>
-                            </select>
-                            <button class="btn-modern btn-primary" id="addSalesBtn">Tambah</button>
+                    <!-- TAMBAH + WARNA -->
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <div>
+                            <h3 class="font-semibold text-slate-700 mb-3">➕ Tambah Sales</h3>
+                            <div class="flex flex-wrap gap-2">
+                                <input type="text" id="newBrand" placeholder="Brand" class="admin-input flex-1 min-w-[100px]" />
+                                <input type="text" id="newName" placeholder="Nama Sales" class="admin-input flex-1 min-w-[100px]" />
+                                <select id="newShiftDay" class="admin-input flex-1 min-w-[100px]">
+                                    <option value="P">Pagi (P)</option>
+                                    <option value="S">Siang (S)</option>
+                                    <option value="L">Libur (L)</option>
+                                    <option value="OFF">OFF</option>
+                                </select>
+                                <button class="btn-modern btn-primary" id="addSalesBtn">Tambah</button>
+                            </div>
+                            <div class="mt-2 text-xs text-slate-400">Shift Senin diisi, hari lain mengikuti pola berpasangan.</div>
                         </div>
-                        <div class="mt-2 text-xs text-slate-400">Shift Senin diisi, hari lain mengikuti pola berpasangan.</div>
-                    </div>
-                    <div>
-                        <h3 class="font-semibold text-slate-700 mb-3">🎨 Warna Brand (pasangan shift)</h3>
-                        <div class="flex flex-wrap items-center gap-3">
-                            <input type="text" id="colorBrandInput" placeholder="Nama Brand" class="admin-input flex-1 min-w-[100px]" />
-                            <input type="color" id="colorPicker" value="#dbeafe" class="w-12 h-12 rounded-full border-2 border-slate-200 p-1 cursor-pointer" />
-                            <button class="btn-modern btn-primary" id="setBrandColorBtn">Set Warna</button>
-                        </div>
-                        <div id="brandColorList" class="flex flex-wrap gap-2 mt-3"></div>
-                    </div>
-                </div>
-
-                <!-- HAPUS + RESET -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 border-t border-slate-200/60 pt-5">
-                    <div>
-                        <h3 class="font-semibold text-slate-700 mb-2">🗑️ Hapus Sales</h3>
-                        <div class="flex flex-wrap gap-2">
-                            <select id="deleteSelect" class="admin-input flex-1 min-w-[120px]"><option value="">Pilih sales</option></select>
-                            <button class="btn-modern btn-danger" id="deleteSalesBtn">Hapus</button>
+                        <div>
+                            <h3 class="font-semibold text-slate-700 mb-3">🎨 Warna Brand (pasangan shift)</h3>
+                            <div class="flex flex-wrap items-center gap-3">
+                                <input type="text" id="colorBrandInput" placeholder="Nama Brand" class="admin-input flex-1 min-w-[100px]" />
+                                <input type="color" id="colorPicker" value="#dbeafe" class="w-12 h-12 rounded-full border-2 border-slate-200 p-1 cursor-pointer" />
+                                <button class="btn-modern btn-primary" id="setBrandColorBtn">Set Warna</button>
+                            </div>
+                            <div id="brandColorList" class="flex flex-wrap gap-2 mt-3"></div>
                         </div>
                     </div>
-                    <div class="flex items-end">
-                        <button class="btn-modern btn-outline" id="resetDefaultBtn">↺ Reset ke data awal</button>
+
+                    <!-- HAPUS + RESET -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 border-t border-slate-200/60 pt-5">
+                        <div>
+                            <h3 class="font-semibold text-slate-700 mb-2">🗑️ Hapus Sales</h3>
+                            <div class="flex flex-wrap gap-2">
+                                <select id="deleteSelect" class="admin-input flex-1 min-w-[120px]"><option value="">Pilih sales</option></select>
+                                <button class="btn-modern btn-danger" id="deleteSalesBtn">Hapus</button>
+                            </div>
+                        </div>
+                        <div class="flex items-end">
+                            <button class="btn-modern btn-outline" id="resetDefaultBtn">↺ Reset ke data awal</button>
+                        </div>
+                        <div class="flex items-end justify-end">
+                            <button class="btn-modern btn-success" id="syncNowBtn">☁️ Sync ke Cloud</button>
+                        </div>
+                    </div>
+
+                    <!-- DAFTAR SALES -->
+                    <div class="border-t border-slate-200/60 pt-5">
+                        <h3 class="font-semibold text-slate-700 mb-3">📋 Daftar Sales Terdaftar</h3>
+                        <div id="salesListContainer" class="flex flex-wrap gap-2"></div>
                     </div>
                 </div>
+            </section>
+        </main>
+    </div>
 
-                <!-- DAFTAR SALES -->
-                <div class="border-t border-slate-200/60 pt-5">
-                    <h3 class="font-semibold text-slate-700 mb-3">📋 Daftar Sales Terdaftar</h3>
-                    <div id="salesListContainer" class="flex flex-wrap gap-2"></div>
-                </div>
-            </div>
-        </section>
-    </main>
-</div>
+    <script>
+        // ================================================================
+        // FIREBASE KONFIGURASI
+        // ================================================================
+        const firebaseConfig = {
+             apiKey: "AIzaSyBMokA92YiB87vwuqBREwNhHkkU_bXo8cI",
 
-<script>
-    // ================================================================
-    // DATA
-    // ================================================================
-    const DEFAULT_DATA = [
-        { brand: "SHARP", name: "AYUNG", senin: "P", selasa: "OFF", rabu: "S", kamis: "L", jumat: "P", sabtu: "S", minggu: "P", toilet: "1.15" },
-        { brand: "SAMSUNG", name: "FEBRI", senin: "S", selasa: "L", rabu: "P", kamis: "OFF", jumat: "S", sabtu: "P", minggu: "S", toilet: "" },
-        { brand: "POLYTRON", name: "AGUS", senin: "P", selasa: "P", rabu: "OFF", kamis: "S", jumat: "L", sabtu: "P", minggu: "S", toilet: "2.16" },
-        { brand: "LG", name: "EKA", senin: "S", selasa: "S", rabu: "L", kamis: "P", jumat: "OFF", sabtu: "S", minggu: "P", toilet: "" },
-        { brand: "AQUA", name: "PUGUH", senin: "P", selasa: "S", rabu: "L", kamis: "P", jumat: "OFF", sabtu: "S", minggu: "S", toilet: "3.17" },
-        { brand: "AQUA", name: "RONI", senin: "S", selasa: "P", rabu: "OFF", kamis: "S", jumat: "L", sabtu: "P", minggu: "P", toilet: "" },
-        { brand: "TOSHIBA", name: "RISKA", senin: "OFF", selasa: "S", rabu: "S", kamis: "L", jumat: "P", sabtu: "S", minggu: "P", toilet: "4.18" },
-        { brand: "TOSHIBA", name: "ARFIN", senin: "L", selasa: "P", rabu: "P", kamis: "OFF", jumat: "S", sabtu: "P", minggu: "S", toilet: "" },
-        { brand: "MIDEA", name: "ADHE", senin: "P", selasa: "OFF", rabu: "S", kamis: "L", jumat: "P", sabtu: "P", minggu: "S", toilet: "5,19" },
-        { brand: "MIDEA", name: "DEDY", senin: "S", selasa: "L", rabu: "P", kamis: "OFF", jumat: "S", sabtu: "S", minggu: "P", toilet: "" },
-        { brand: "CHANGHONG", name: "ZUNUN", senin: "P", selasa: "OFF", rabu: "S", kamis: "S", jumat: "L", sabtu: "P", minggu: "S", toilet: "6.2" },
-        { brand: "CHANGHONG", name: "", senin: "S", selasa: "L", rabu: "P", kamis: "P", jumat: "OFF", sabtu: "S", minggu: "P", toilet: "" },
-        { brand: "TCL", name: "JIMY", senin: "L", selasa: "P", rabu: "OFF", kamis: "S", jumat: "P", sabtu: "S", minggu: "S", toilet: "7.21" },
-        { brand: "TCL", name: "FAJAR", senin: "OFF", selasa: "S", rabu: "L", kamis: "P", jumat: "S", sabtu: "P", minggu: "P", toilet: "" },
-        { brand: "GREE", name: "LESYO", senin: "L", selasa: "P", rabu: "OFF", kamis: "S", jumat: "P", sabtu: "P", minggu: "S", toilet: "8,22" },
-        { brand: "PANASONIC", name: "RICKY", senin: "OFF", selasa: "S", rabu: "L", kamis: "P", jumat: "S", sabtu: "S", minggu: "P", toilet: "" },
-        { brand: "ELECTROLUX", name: "WAHYU", senin: "OFF", selasa: "S", rabu: "P", kamis: "S", jumat: "L", sabtu: "P", minggu: "P", toilet: "9.23" },
-        { brand: "MODENA", name: "", senin: "L", selasa: "P", rabu: "S", kamis: "P", jumat: "OFF", sabtu: "S", minggu: "S", toilet: "" },
-        { brand: "ARTUGO", name: "FENDI", senin: "P", selasa: "OFF", rabu: "S", kamis: "L", jumat: "P", sabtu: "S", minggu: "P", toilet: "10.24" },
-        { brand: "ARTUGO", name: "ENNY", senin: "S", selasa: "L", rabu: "P", kamis: "OFF", jumat: "S", sabtu: "P", minggu: "S", toilet: "" },
-        { brand: "SANKEN", name: "JESICA", senin: "L", selasa: "P", rabu: "P", kamis: "OFF", jumat: "S", sabtu: "P", minggu: "S", toilet: "11.25" },
-        { brand: "ADVANCE", name: "LEO", senin: "OFF", selasa: "S", rabu: "S", kamis: "L", jumat: "P", sabtu: "S", minggu: "P", toilet: "" },
-        { brand: "GADGET", name: "ROFIUL", senin: "S", selasa: "L", rabu: "P", kamis: "OFF", jumat: "S", sabtu: "P", minggu: "S", toilet: "12.26" },
-        { brand: "GADGET", name: "NEBIYA", senin: "P", selasa: "OFF", rabu: "S", kamis: "L", jumat: "P", sabtu: "S", minggu: "P", toilet: "" },
-        { brand: "MASPION", name: "IBRA", senin: "P", selasa: "S", rabu: "L", kamis: "P", jumat: "OFF", sabtu: "S", minggu: "S", toilet: "13.27" },
-        { brand: "MASPION", name: "NISA", senin: "S", selasa: "P", rabu: "OFF", kamis: "S", jumat: "L", sabtu: "P", minggu: "P", toilet: "" },
-        { brand: "COMFORTA", name: "INAYAH", senin: "L", selasa: "P", rabu: "P", kamis: "OFF", jumat: "S", sabtu: "P", minggu: "S", toilet: "14.28" },
-        { brand: "SMALL", name: "ANISA", senin: "OFF", selasa: "S", rabu: "S", kamis: "L", jumat: "P", sabtu: "S", minggu: "P", toilet: "" }
-    ];
+  authDomain: "ufokebonsariapps.firebaseapp.com",
 
-    // STATE
-    let salesData = [];
-    let brandColors = {}; // { brand: hex }
+  databaseURL: "https://ufokebonsariapps-default-rtdb.asia-southeast1.firebasedatabase.app",
 
-    function loadData() {
-        const stored = localStorage.getItem('ufo_piket_data');
-        if (stored) {
-            try { salesData = JSON.parse(stored); } catch(e) { salesData = DEFAULT_DATA.map(d=> ({...d})); }
-        } else {
-            salesData = DEFAULT_DATA.map(d=> ({...d}));
+  projectId: "ufokebonsariapps",
+
+  storageBucket: "ufokebonsariapps.firebasestorage.app",
+
+  messagingSenderId: "663266923207",
+
+  appId: "1:663266923207:web:fb989ce91cd40b6d3724e2"
+
+};
+
+
+        // Inisialisasi Firebase
+        let db = null;
+        let firebaseInitialized = false;
+
+        try {
+            firebase.initializeApp(firebaseConfig);
+            db = firebase.firestore();
+            // Enable offline persistence
+            db.enablePersistence({ synchronizeTabs: true })
+                .catch(err => console.warn('Firebase persistence:', err));
+            firebaseInitialized = true;
+            console.log('✅ Firebase initialized');
+        } catch (e) {
+            console.warn('⚠️ Firebase tidak terinisialisasi, menggunakan localStorage saja:', e.message);
         }
-        const storedColors = localStorage.getItem('ufo_brand_colors');
-        if (storedColors) {
-            try { brandColors = JSON.parse(storedColors); } catch(e) { brandColors = {}; }
+
+        // ================================================================
+        // DATA
+        // ================================================================
+        const DEFAULT_DATA = [
+            { brand: "SHARP", name: "AYUNG", senin: "P", selasa: "OFF", rabu: "S", kamis: "L", jumat: "P", sabtu: "S",
+            minggu: "P", toilet: "1.15" },
+            { brand: "SAMSUNG", name: "FEBRI", senin: "S", selasa: "L", rabu: "P", kamis: "OFF", jumat: "S", sabtu: "P",
+                minggu: "S", toilet: "" },
+            { brand: "POLYTRON", name: "AGUS", senin: "P", selasa: "P", rabu: "OFF", kamis: "S", jumat: "L", sabtu: "P",
+                minggu: "S", toilet: "2.16" },
+            { brand: "LG", name: "EKA", senin: "S", selasa: "S", rabu: "L", kamis: "P", jumat: "OFF", sabtu: "S", minggu: "P",
+                toilet: "" },
+            { brand: "AQUA", name: "PUGUH", senin: "P", selasa: "S", rabu: "L", kamis: "P", jumat: "OFF", sabtu: "S", minggu: "S",
+                toilet: "3.17" },
+            { brand: "AQUA", name: "RONI", senin: "S", selasa: "P", rabu: "OFF", kamis: "S", jumat: "L", sabtu: "P", minggu: "P",
+                toilet: "" },
+            { brand: "TOSHIBA", name: "RISKA", senin: "OFF", selasa: "S", rabu: "S", kamis: "L", jumat: "P", sabtu: "S",
+                minggu: "P", toilet: "4.18" },
+            { brand: "TOSHIBA", name: "ARFIN", senin: "L", selasa: "P", rabu: "P", kamis: "OFF", jumat: "S", sabtu: "P",
+                minggu: "S", toilet: "" },
+            { brand: "MIDEA", name: "ADHE", senin: "P", selasa: "OFF", rabu: "S", kamis: "L", jumat: "P", sabtu: "P", minggu: "S",
+                toilet: "5,19" },
+            { brand: "MIDEA", name: "DEDY", senin: "S", selasa: "L", rabu: "P", kamis: "OFF", jumat: "S", sabtu: "S", minggu: "P",
+                toilet: "" },
+            { brand: "CHANGHONG", name: "ZUNUN", senin: "P", selasa: "OFF", rabu: "S", kamis: "S", jumat: "L", sabtu: "P",
+                minggu: "S", toilet: "6.2" },
+            { brand: "CHANGHONG", name: "", senin: "S", selasa: "L", rabu: "P", kamis: "P", jumat: "OFF", sabtu: "S", minggu: "P",
+                toilet: "" },
+            { brand: "TCL", name: "JIMY", senin: "L", selasa: "P", rabu: "OFF", kamis: "S", jumat: "P", sabtu: "S", minggu: "S",
+                toilet: "7.21" },
+            { brand: "TCL", name: "FAJAR", senin: "OFF", selasa: "S", rabu: "L", kamis: "P", jumat: "S", sabtu: "P", minggu: "P",
+                toilet: "" },
+            { brand: "GREE", name: "LESYO", senin: "L", selasa: "P", rabu: "OFF", kamis: "S", jumat: "P", sabtu: "P", minggu: "S",
+                toilet: "8,22" },
+            { brand: "PANASONIC", name: "RICKY", senin: "OFF", selasa: "S", rabu: "L", kamis: "P", jumat: "S", sabtu: "S",
+                minggu: "P", toilet: "" },
+            { brand: "ELECTROLUX", name: "WAHYU", senin: "OFF", selasa: "S", rabu: "P", kamis: "S", jumat: "L", sabtu: "P",
+                minggu: "P", toilet: "9.23" },
+            { brand: "MODENA", name: "", senin: "L", selasa: "P", rabu: "S", kamis: "P", jumat: "OFF", sabtu: "S", minggu: "S",
+                toilet: "" },
+            { brand: "ARTUGO", name: "FENDI", senin: "P", selasa: "OFF", rabu: "S", kamis: "L", jumat: "P", sabtu: "S", minggu: "P",
+                toilet: "10.24" },
+            { brand: "ARTUGO", name: "ENNY", senin: "S", selasa: "L", rabu: "P", kamis: "OFF", jumat: "S", sabtu: "P", minggu: "S",
+                toilet: "" },
+            { brand: "SANKEN", name: "JESICA", senin: "L", selasa: "P", rabu: "P", kamis: "OFF", jumat: "S", sabtu: "P",
+                minggu: "S", toilet: "11.25" },
+            { brand: "ADVANCE", name: "LEO", senin: "OFF", selasa: "S", rabu: "S", kamis: "L", jumat: "P", sabtu: "S", minggu: "P",
+                toilet: "" },
+            { brand: "GADGET", name: "ROFIUL", senin: "S", selasa: "L", rabu: "P", kamis: "OFF", jumat: "S", sabtu: "P",
+                minggu: "S", toilet: "12.26" },
+            { brand: "GADGET", name: "NEBIYA", senin: "P", selasa: "OFF", rabu: "S", kamis: "L", jumat: "P", sabtu: "S",
+                minggu: "P", toilet: "" },
+            { brand: "MASPION", name: "IBRA", senin: "P", selasa: "S", rabu: "L", kamis: "P", jumat: "OFF", sabtu: "S",
+                minggu: "S", toilet: "13.27" },
+            { brand: "MASPION", name: "NISA", senin: "S", selasa: "P", rabu: "OFF", kamis: "S", jumat: "L", sabtu: "P",
+                minggu: "P", toilet: "" },
+            { brand: "COMFORTA", name: "INAYAH", senin: "L", selasa: "P", rabu: "P", kamis: "OFF", jumat: "S", sabtu: "P",
+                minggu: "S", toilet: "14.28" },
+            { brand: "SMALL", name: "ANISA", senin: "OFF", selasa: "S", rabu: "S", kamis: "L", jumat: "P", sabtu: "S", minggu: "P",
+                toilet: "" }
+        ];
+
+        // STATE
+        let salesData = [];
+        let brandColors = {};
+
+        // ================================================================
+        // FUNGSI SYNC FIREBASE
+        // ================================================================
+        function updateSyncStatus(status, message) {
+            const el = document.getElementById('syncStatus');
+            el.className = `sync-status ${status}`;
+            if (status === 'synced') el.innerHTML = `<span>✅</span> ${message || 'Tersimpan di Cloud'}`;
+            else if (status === 'syncing') el.innerHTML = `<span>⏳</span> ${message || 'Menyimpan...'}`;
+            else if (status === 'error') el.innerHTML = `<span>⚠️</span> ${message || 'Gagal sync'}`;
         }
-    }
 
-    function saveData() {
-        localStorage.setItem('ufo_piket_data', JSON.stringify(salesData));
-        localStorage.setItem('ufo_brand_colors', JSON.stringify(brandColors));
-    }
-
-    // ================================================================
-    // RENDER
-    // ================================================================
-    function getShiftClass(val) {
-        const u = (val || '').toUpperCase();
-        if (u === 'P') return 'badge-p';
-        if (u === 'S') return 'badge-s';
-        if (u === 'L') return 'badge-l';
-        if (u === 'OFF') return 'badge-off';
-        if (u === 'LE') return 'badge-lembur';
-        return '';
-    }
-
-    function renderShift() {
-        const tbody = document.getElementById('shiftTableBody');
-        if (!salesData.length) {
-            tbody.innerHTML = `<tr><td colspan="9" class="text-center text-slate-400 py-8">Belum ada data sales.</td></tr>`;
-            return;
+        async function syncToFirebase() {
+            if (!firebaseInitialized || !db) {
+                updateSyncStatus('error', 'Firebase tidak terhubung');
+                return false;
+            }
+            updateSyncStatus('syncing', 'Menyimpan ke Cloud...');
+            try {
+                const payload = {
+                    sales: salesData,
+                    colors: brandColors,
+                    updatedAt: new Date().toISOString()
+                };
+                await db.collection('config').doc('ufo_data').set(payload);
+                updateSyncStatus('synced', 'Berhasil disimpan ke Cloud');
+                return true;
+            } catch (e) {
+                console.error('Sync error:', e);
+                updateSyncStatus('error', 'Gagal sync: ' + e.message);
+                return false;
+            }
         }
-        let html = '';
-        salesData.forEach(row => {
-            const color = brandColors[row.brand] || '#e2e8f0';
-            const dot = `<span class="inline-block w-3 h-3 rounded-full mr-1.5" style="background:${color};border:1px solid rgba(0,0,0,0.05);"></span>`;
-            html += `<tr>
-                <td class="font-semibold text-slate-700 text-left"><span class="inline-flex items-center">${dot}${row.brand || ''}</span></td>
-                <td class="font-medium text-slate-600">${row.name || ''}</td>
-                <td><span class="badge-shift ${getShiftClass(row.senin)}">${row.senin || ''}</span></td>
-                <td><span class="badge-shift ${getShiftClass(row.selasa)}">${row.selasa || ''}</span></td>
-                <td><span class="badge-shift ${getShiftClass(row.rabu)}">${row.rabu || ''}</span></td>
-                <td><span class="badge-shift ${getShiftClass(row.kamis)}">${row.kamis || ''}</span></td>
-                <td><span class="badge-shift ${getShiftClass(row.jumat)}">${row.jumat || ''}</span></td>
-                <td><span class="badge-shift ${getShiftClass(row.sabtu)}">${row.sabtu || ''}</span></td>
-                <td><span class="badge-shift ${getShiftClass(row.minggu)}">${row.minggu || ''}</span></td>
-            </tr>`;
-        });
-        tbody.innerHTML = html;
-    }
 
-    function renderPiket() {
-        const tbody = document.getElementById('piketTableBody');
-        const filtered = salesData.filter(r => r.toilet && r.toilet.trim() !== '');
-        if (!filtered.length) {
-            tbody.innerHTML = `<tr><td colspan="4" class="text-center text-slate-400 py-8">Belum ada jadwal piket toilet.</td></tr>`;
-            return;
-        }
-        let html = '';
-        filtered.forEach(row => {
-            const color = brandColors[row.brand] || '#e2e8f0';
-            const dot = `<span class="inline-block w-3 h-3 rounded-full mr-1.5" style="background:${color};border:1px solid rgba(0,0,0,0.05);"></span>`;
-            html += `<tr>
-                <td class="font-semibold text-slate-700 text-left"><span class="inline-flex items-center">${dot}${row.brand || ''}</span></td>
-                <td class="font-medium text-slate-600">${row.name || ''}</td>
-                <td><span class="toilet-badge">${row.toilet}</span></td>
-                <td class="text-slate-400 text-xs">—</td>
-            </tr>`;
-        });
-        tbody.innerHTML = html;
-    }
-
-    function renderBrandColorList() {
-        const container = document.getElementById('brandColorList');
-        const entries = Object.entries(brandColors);
-        if (!entries.length) {
-            container.innerHTML = '<span class="text-xs text-slate-400">Belum ada warna brand diset.</span>';
-            return;
-        }
-        let html = '';
-        entries.forEach(([brand, color]) => {
-            html += `<span class="brand-badge-color">
-                <span class="dot" style="background:${color};"></span>
-                ${brand}
-                <button class="text-slate-300 hover:text-red-500 text-sm font-bold ml-1 remove-brand-color" data-brand="${brand}">✕</button>
-            </span>`;
-        });
-        container.innerHTML = html;
-        container.querySelectorAll('.remove-brand-color').forEach(btn => {
-            btn.addEventListener('click', function() {
-                const brand = this.dataset.brand;
-                if (brand && confirm(`Hapus warna untuk brand "${brand}"?`)) {
-                    delete brandColors[brand];
-                    saveData();
-                    renderAll();
+        async function loadFromFirebase() {
+            if (!firebaseInitialized || !db) {
+                console.warn('Firebase tidak tersedia, pakai localStorage');
+                return false;
+            }
+            updateSyncStatus('syncing', 'Memuat dari Cloud...');
+            try {
+                const doc = await db.collection('config').doc('ufo_data').get();
+                if (doc.exists) {
+                    const data = doc.data();
+                    if (data.sales && Array.isArray(data.sales)) {
+                        salesData = data.sales;
+                    }
+                    if (data.colors && typeof data.colors === 'object') {
+                        brandColors = data.colors;
+                    }
+                    updateSyncStatus('synced', 'Dimuat dari Cloud');
+                    return true;
+                } else {
+                    // First time, push default data
+                    console.log('Cloud kosong, akan upload default');
+                    await syncToFirebase();
+                    return true;
                 }
-            });
-        });
-    }
-
-    function populateDeleteSelect() {
-        const sel = document.getElementById('deleteSelect');
-        const current = sel.value;
-        sel.innerHTML = '<option value="">Pilih sales</option>';
-        salesData.forEach((item, idx) => {
-            const label = `${item.brand} - ${item.name}`.trim() || `#${idx+1}`;
-            const opt = document.createElement('option');
-            opt.value = idx;
-            opt.textContent = label;
-            sel.appendChild(opt);
-        });
-        if (current && sel.querySelector(`option[value="${current}"]`)) sel.value = current;
-    }
-
-    function renderSalesBadge() {
-        const container = document.getElementById('salesListContainer');
-        if (!salesData.length) {
-            container.innerHTML = '<span class="text-sm text-slate-400">Belum ada sales terdaftar</span>';
-            return;
+            } catch (e) {
+                console.warn('Load from Firebase error:', e);
+                updateSyncStatus('error', 'Gagal muat dari Cloud, pakai lokal');
+                return false;
+            }
         }
-        let html = '';
-        salesData.forEach((item, idx) => {
-            const color = brandColors[item.brand] || '#e2e8f0';
-            const label = `${item.brand} - ${item.name}`.trim() || `#${idx+1}`;
-            html += `<span class="brand-badge-color">
-                <span class="dot" style="background:${color};"></span>
-                ${label}
-                <button class="text-slate-300 hover:text-red-500 text-sm font-bold ml-1 remove-sales" data-idx="${idx}">✕</button>
-            </span>`;
-        });
-        container.innerHTML = html;
-        container.querySelectorAll('.remove-sales').forEach(btn => {
-            btn.addEventListener('click', function() {
-                const idx = parseInt(this.dataset.idx);
-                if (!isNaN(idx) && confirm(`Hapus sales "${salesData[idx]?.brand} - ${salesData[idx]?.name}"?`)) {
-                    salesData.splice(idx, 1);
-                    saveData();
-                    renderAll();
-                }
-            });
-        });
-    }
 
-    function renderAll() {
-        renderShift();
-        renderPiket();
-        renderBrandColorList();
-        populateDeleteSelect();
-        renderSalesBadge();
-    }
-
-    // ================================================================
-    // ADMIN ACTIONS
-    // ================================================================
-    function addSales() {
-        const brand = document.getElementById('newBrand').value.trim().toUpperCase();
-        const name = document.getElementById('newName').value.trim();
-        const shift = document.getElementById('newShiftDay').value;
-        if (!brand || !name) { alert('Brand dan Nama wajib diisi.'); return; }
-        if (salesData.some(item => item.brand === brand && item.name === name)) {
-            alert('Sales dengan brand & nama tersebut sudah ada.');
-            return;
+        // ================================================================
+        // FUNGSI DATA LOKAL
+        // ================================================================
+        function loadLocalData() {
+            const stored = localStorage.getItem('ufo_piket_data');
+            if (stored) {
+                try { salesData = JSON.parse(stored); } catch (e) { salesData = DEFAULT_DATA.map(d => ({ ...d })); }
+            } else {
+                salesData = DEFAULT_DATA.map(d => ({ ...d }));
+            }
+            const storedColors = localStorage.getItem('ufo_brand_colors');
+            if (storedColors) {
+                try { brandColors = JSON.parse(storedColors); } catch (e) { brandColors = {}; }
+            }
         }
-        const mapShift = {
-            'P': { selasa: 'OFF', rabu: 'S', kamis: 'L', jumat: 'P', sabtu: 'S', minggu: 'P' },
-            'S': { selasa: 'L', rabu: 'P', kamis: 'OFF', jumat: 'S', sabtu: 'P', minggu: 'S' },
-            'L': { selasa: 'P', rabu: 'OFF', kamis: 'S', jumat: 'P', sabtu: 'S', minggu: 'S' },
-            'OFF': { selasa: 'S', rabu: 'L', kamis: 'P', jumat: 'S', sabtu: 'P', minggu: 'P' }
-        };
-        const pattern = mapShift[shift] || mapShift['P'];
-        const newEntry = {
-            brand,
-            name,
-            senin: shift,
-            selasa: pattern.selasa,
-            rabu: pattern.rabu,
-            kamis: pattern.kamis,
-            jumat: pattern.jumat,
-            sabtu: pattern.sabtu,
-            minggu: pattern.minggu,
-            toilet: ''
-        };
-        salesData.push(newEntry);
-        saveData();
-        renderAll();
-        document.getElementById('newBrand').value = '';
-        document.getElementById('newName').value = '';
-    }
 
-    function deleteSelected() {
-        const sel = document.getElementById('deleteSelect');
-        const idx = parseInt(sel.value);
-        if (isNaN(idx) || idx < 0 || idx >= salesData.length) { alert('Pilih sales yang valid.'); return; }
-        if (confirm(`Hapus "${salesData[idx].brand} - ${salesData[idx].name}"?`)) {
-            salesData.splice(idx, 1);
-            saveData();
+        function saveLocalData() {
+            localStorage.setItem('ufo_piket_data', JSON.stringify(salesData));
+            localStorage.setItem('ufo_brand_colors', JSON.stringify(brandColors));
+        }
+
+        async function loadData() {
+            // Coba dari Firebase dulu
+            const loaded = await loadFromFirebase();
+            if (!loaded) {
+                loadLocalData();
+            }
+            // Simpan lokal sebagai cadangan
+            saveLocalData();
             renderAll();
         }
-    }
 
-    function resetDefault() {
-        if (confirm('Reset ke data awal? Semua perubahan akan hilang.')) {
-            salesData = DEFAULT_DATA.map(d => ({ ...d }));
-            brandColors = {};
+        async function saveData() {
+            saveLocalData();
+            // Sync ke Firebase jika tersedia
+            if (firebaseInitialized && db) {
+                await syncToFirebase();
+            }
+        }
+
+        // ================================================================
+        // RENDER
+        // ================================================================
+        function getShiftClass(val) {
+            const u = (val || '').toUpperCase();
+            if (u === 'P') return 'badge-p';
+            if (u === 'S') return 'badge-s';
+            if (u === 'L') return 'badge-l';
+            if (u === 'OFF') return 'badge-off';
+            if (u === 'LE') return 'badge-lembur';
+            return '';
+        }
+
+        function renderShift() {
+            const tbody = document.getElementById('shiftTableBody');
+            if (!salesData.length) {
+                tbody.innerHTML =
+                `<tr><td colspan="9" class="text-center text-slate-400 py-8">Belum ada data sales.</td></tr>`;
+                return;
+            }
+            let html = '';
+            salesData.forEach(row => {
+                const color = brandColors[row.brand] || '#e2e8f0';
+                const dot =
+                    `<span class="brand-color-dot" style="background:${color};"></span>`;
+                html += `<tr>
+                    <td class="font-semibold text-slate-700"><span class="inline-flex items-center">${dot}${row.brand || ''}</span></td>
+                    <td class="font-medium text-slate-600">${row.name || ''}</td>
+                    <td><span class="badge-shift ${getShiftClass(row.senin)}">${row.senin || ''}</span></td>
+                    <td><span class="badge-shift ${getShiftClass(row.selasa)}">${row.selasa || ''}</span></td>
+                    <td><span class="badge-shift ${getShiftClass(row.rabu)}">${row.rabu || ''}</span></td>
+                    <td><span class="badge-shift ${getShiftClass(row.kamis)}">${row.kamis || ''}</span></td>
+                    <td><span class="badge-shift ${getShiftClass(row.jumat)}">${row.jumat || ''}</span></td>
+                    <td><span class="badge-shift ${getShiftClass(row.sabtu)}">${row.sabtu || ''}</span></td>
+                    <td><span class="badge-shift ${getShiftClass(row.minggu)}">${row.minggu || ''}</span></td>
+                </tr>`;
+            });
+            tbody.innerHTML = html;
+        }
+
+        function renderPiket() {
+            const tbody = document.getElementById('piketTableBody');
+            const filtered = salesData.filter(r => r.toilet && r.toilet.trim() !== '');
+            if (!filtered.length) {
+                tbody.innerHTML =
+                `<tr><td colspan="4" class="text-center text-slate-400 py-8">Belum ada jadwal piket toilet.</td></tr>`;
+                return;
+            }
+            let html = '';
+            filtered.forEach(row => {
+                const color = brandColors[row.brand] || '#e2e8f0';
+                const dot =
+                    `<span class="brand-color-dot" style="background:${color};"></span>`;
+                html += `<tr>
+                    <td class="font-semibold text-slate-700"><span class="inline-flex items-center">${dot}${row.brand || ''}</span></td>
+                    <td class="font-medium text-slate-600">${row.name || ''}</td>
+                    <td><span class="toilet-badge">${row.toilet}</span></td>
+                    <td class="text-slate-400 text-xs">—</td>
+                </tr>`;
+            });
+            tbody.innerHTML = html;
+        }
+
+        function renderBrandColorList() {
+            const container = document.getElementById('brandColorList');
+            const entries = Object.entries(brandColors);
+            if (!entries.length) {
+                container.innerHTML = '<span class="text-xs text-slate-400">Belum ada warna brand diset.</span>';
+                return;
+            }
+            let html = '';
+            entries.forEach(([brand, color]) => {
+                html += `<span class="brand-badge-color">
+                    <span class="dot" style="background:${color};"></span>
+                    ${brand}
+                    <button class="text-slate-300 hover:text-red-500 text-sm font-bold ml-1 remove-brand-color" data-brand="${brand}">✕</button>
+                </span>`;
+            });
+            container.innerHTML = html;
+            container.querySelectorAll('.remove-brand-color').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const brand = this.dataset.brand;
+                    if (brand && confirm(`Hapus warna untuk brand "${brand}"?`)) {
+                        delete brandColors[brand];
+                        saveData();
+                        renderAll();
+                    }
+                });
+            });
+        }
+
+        function populateDeleteSelect() {
+            const sel = document.getElementById('deleteSelect');
+            const current = sel.value;
+            sel.innerHTML = '<option value="">Pilih sales</option>';
+            salesData.forEach((item, idx) => {
+                const label = `${item.brand} - ${item.name}`.trim() || `#${idx+1}`;
+                const opt = document.createElement('option');
+                opt.value = idx;
+                opt.textContent = label;
+                sel.appendChild(opt);
+            });
+            if (current && sel.querySelector(`option[value="${current}"]`)) sel.value = current;
+        }
+
+        function renderSalesBadge() {
+            const container = document.getElementById('salesListContainer');
+            if (!salesData.length) {
+                container.innerHTML = '<span class="text-sm text-slate-400">Belum ada sales terdaftar</span>';
+                return;
+            }
+            let html = '';
+            salesData.forEach((item, idx) => {
+                const color = brandColors[item.brand] || '#e2e8f0';
+                const label = `${item.brand} - ${item.name}`.trim() || `#${idx+1}`;
+                html += `<span class="brand-badge-color">
+                    <span class="dot" style="background:${color};"></span>
+                    ${label}
+                    <button class="text-slate-300 hover:text-red-500 text-sm font-bold ml-1 remove-sales" data-idx="${idx}">✕</button>
+                </span>`;
+            });
+            container.innerHTML = html;
+            container.querySelectorAll('.remove-sales').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const idx = parseInt(this.dataset.idx);
+                    if (!isNaN(idx) && confirm(`Hapus sales "${salesData[idx]?.brand} - ${salesData[idx]?.name}"?`)) {
+                        salesData.splice(idx, 1);
+                        saveData();
+                        renderAll();
+                    }
+                });
+            });
+        }
+
+        function renderAll() {
+            renderShift();
+            renderPiket();
+            renderBrandColorList();
+            populateDeleteSelect();
+            renderSalesBadge();
+        }
+
+        // ================================================================
+        // ADMIN ACTIONS
+        // ================================================================
+        function addSales() {
+            const brand = document.getElementById('newBrand').value.trim().toUpperCase();
+            const name = document.getElementById('newName').value.trim();
+            const shift = document.getElementById('newShiftDay').value;
+            if (!brand || !name) { alert('Brand dan Nama wajib diisi.'); return; }
+            if (salesData.some(item => item.brand === brand && item.name === name)) {
+                alert('Sales dengan brand & nama tersebut sudah ada.');
+                return;
+            }
+            const mapShift = {
+                'P': { selasa: 'OFF', rabu: 'S', kamis: 'L', jumat: 'P', sabtu: 'S', minggu: 'P' },
+                'S': { selasa: 'L', rabu: 'P', kamis: 'OFF', jumat: 'S', sabtu: 'P', minggu: 'S' },
+                'L': { selasa: 'P', rabu: 'OFF', kamis: 'S', jumat: 'P', sabtu: 'S', minggu: 'S' },
+                'OFF': { selasa: 'S', rabu: 'L', kamis: 'P', jumat: 'S', sabtu: 'P', minggu: 'P' }
+            };
+            const pattern = mapShift[shift] || mapShift['P'];
+            const newEntry = {
+                brand,
+                name,
+                senin: shift,
+                selasa: pattern.selasa,
+                rabu: pattern.rabu,
+                kamis: pattern.kamis,
+                jumat: pattern.jumat,
+                sabtu: pattern.sabtu,
+                minggu: pattern.minggu,
+                toilet: ''
+            };
+            salesData.push(newEntry);
             saveData();
             renderAll();
+            document.getElementById('newBrand').value = '';
+            document.getElementById('newName').value = '';
         }
-    }
 
-    function setBrandColor() {
-        const brand = document.getElementById('colorBrandInput').value.trim().toUpperCase();
-        const color = document.getElementById('colorPicker').value;
-        if (!brand) { alert('Masukkan nama brand.'); return; }
-        brandColors[brand] = color;
-        saveData();
-        renderAll();
-        document.getElementById('colorBrandInput').value = '';
-    }
+        function deleteSelected() {
+            const sel = document.getElementById('deleteSelect');
+            const idx = parseInt(sel.value);
+            if (isNaN(idx) || idx < 0 || idx >= salesData.length) { alert('Pilih sales yang valid.'); return; }
+            if (confirm(`Hapus "${salesData[idx].brand} - ${salesData[idx].name}"?`)) {
+                salesData.splice(idx, 1);
+                saveData();
+                renderAll();
+            }
+        }
 
-    // ================================================================
-    // NAVIGASI
-    // ================================================================
-    function navigateTo(pageId) {
-        document.querySelectorAll('.page').forEach(el => el.classList.add('hidden'));
-        document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-        const target = document.getElementById(`page-${pageId}`);
-        if (target) target.classList.remove('hidden');
-        const btn = document.querySelector(`.nav-item[data-page="${pageId}"]`);
-        if (btn) btn.classList.add('active');
-    }
+        function resetDefault() {
+            if (confirm('Reset ke data awal? Semua perubahan akan hilang.')) {
+                salesData = DEFAULT_DATA.map(d => ({ ...d }));
+                brandColors = {};
+                saveData();
+                renderAll();
+            }
+        }
 
-    document.querySelectorAll('.nav-item').forEach(btn => {
-        btn.addEventListener('click', () => {
-            const page = btn.dataset.page;
-            if (page) navigateTo(page);
+        function setBrandColor() {
+            const brand = document.getElementById('colorBrandInput').value.trim().toUpperCase();
+            const color = document.getElementById('colorPicker').value;
+            if (!brand) { alert('Masukkan nama brand.'); return; }
+            brandColors[brand] = color;
+            saveData();
+            renderAll();
+            document.getElementById('colorBrandInput').value = '';
+        }
+
+        // ================================================================
+        // NAVIGASI
+        // ================================================================
+        function navigateTo(pageId) {
+            document.querySelectorAll('.page').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+            const target = document.getElementById(`page-${pageId}`);
+            if (target) target.classList.remove('hidden');
+            const btn = document.querySelector(`.nav-item[data-page="${pageId}"]`);
+            if (btn) btn.classList.add('active');
+        }
+
+        document.querySelectorAll('.nav-item').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const page = btn.dataset.page;
+                if (page) navigateTo(page);
+            });
         });
-    });
 
-    // ================================================================
-    // INIT
-    // ================================================================
-    document.addEventListener('DOMContentLoaded', function() {
-        loadData();
-        renderAll();
+        // ================================================================
+        // INIT
+        // ================================================================
+        document.addEventListener('DOMContentLoaded', async function() {
+            await loadData();
 
-        document.getElementById('addSalesBtn').addEventListener('click', addSales);
-        document.getElementById('deleteSalesBtn').addEventListener('click', deleteSelected);
-        document.getElementById('resetDefaultBtn').addEventListener('click', resetDefault);
-        document.getElementById('setBrandColorBtn').addEventListener('click', setBrandColor);
+            document.getElementById('addSalesBtn').addEventListener('click', addSales);
+            document.getElementById('deleteSalesBtn').addEventListener('click', deleteSelected);
+            document.getElementById('resetDefaultBtn').addEventListener('click', resetDefault);
+            document.getElementById('setBrandColorBtn').addEventListener('click', setBrandColor);
+            document.getElementById('syncNowBtn').addEventListener('click', syncToFirebase);
 
-        document.getElementById('newName').addEventListener('keypress', (e) => { if (e.key === 'Enter') addSales(); });
-        document.getElementById('newBrand').addEventListener('keypress', (e) => { if (e.key === 'Enter') addSales(); });
-        document.getElementById('colorBrandInput').addEventListener('keypress', (e) => { if (e.key === 'Enter') setBrandColor(); });
-    });
-</script>
+            document.getElementById('newName').addEventListener('keypress', (e) => { if (e.key === 'Enter') addSales(); });
+            document.getElementById('newBrand').addEventListener('keypress', (e) => { if (e.key === 'Enter') addSales(); });
+            document.getElementById('colorBrandInput').addEventListener('keypress', (e) => { if (e.key === 'Enter')
+                    setBrandColor(); });
+        });
+    </script>
 
 </body>
 </html>
