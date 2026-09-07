@@ -225,61 +225,61 @@
             await simpanDataKeSheets();
         }
 
-        function renderTabelPromotor() {
-            const tbody = document.getElementById('tabelPromotorBody');
-            const keyword = document.getElementById('inputCariPromotor').value.toLowerCase();
-            if(!tbody) return;
+      function renderTabelPromotor() {
+    const tbody = document.getElementById('tabelPromotorBody');
+    const keyword = document.getElementById('inputCariPromotor').value.toLowerCase();
+    if(!tbody) return;
 
-            let html = "";
-            let filtered = daftarPromotor.map((item, originalIndex) => ({ ...item, originalIndex }))
-                .filter(item => item.brand1.toLowerCase().includes(keyword) || item.brand2.toLowerCase().includes(keyword) || item.p1.nama.toLowerCase().includes(keyword) || item.p2.nama.toLowerCase().includes(keyword));
+    let html = "";
+    let filtered = daftarPromotor.map((item, originalIndex) => ({ ...item, originalIndex }))
+        .filter(item => item.brand1.toLowerCase().includes(keyword) || item.brand2.toLowerCase().includes(keyword) || item.p1.nama.toLowerCase().includes(keyword) || item.p2.nama.toLowerCase().includes(keyword));
 
-            filtered.forEach(item => {
-                let warna = item.warnaBrand || "bg-yellow-400 text-slate-900";
-                let j1 = item.p1.jadwal || ["P","OFF","S","P","S","P","S"];
-                let j2 = item.p2.jadwal || ["P","OFF","S","P","S","P","S"];
+    filtered.forEach(item => {
+        let warna = item.warnaBrand || "bg-yellow-400 text-slate-900";
+        let j1 = item.p1.jadwal || ["P","OFF","S","P","S","P","S"];
+        let j2 = item.p2.jadwal || ["P","OFF","S","P","S","P","S"];
 
-                // Baris Brand 1 (Sales 1)
-                html += `<tr class="border-t-2 border-slate-800">
-                    <td class="py-2.5 px-4 text-left font-bold bg-slate-900/50">
-                        <span class="px-2.5 py-1 rounded-lg ${warna} text-[10px] font-black">${item.brand1}</span>
-                    </td>
-                    <td class="py-2.5 px-4 text-left font-bold text-slate-200">${item.p1.nama}</td>`;
-                
-                j1.forEach((shift, dayIdx) => {
-                    let shiftClass = "shift-p";
-                    if (shift === "S") shiftClass = "shift-s";
-                    else if (shift === "L") shiftClass = "shift-l";
-                    else if (shift === "OFF") shiftClass = "shift-off";
+        // Baris 1: Brand 1 (cth: SHARP) & Nama Promotor 1 (cth: AYUNG)
+        html += `<tr class="border-t-2 border-slate-800">
+            <td class="py-2.5 px-4 text-left font-bold bg-slate-900/50">
+                <span class="px-2.5 py-1 rounded-lg ${warna} text-[10px] font-black">${item.brand1}</span>
+            </td>
+            <td class="py-2.5 px-4 text-left font-bold text-slate-200">${item.p1.nama}</td>`;
+        
+        j1.forEach((shift, dayIdx) => {
+            let shiftClass = "shift-p";
+            if (shift === "S") shiftClass = "shift-s";
+            else if (shift === "L") shiftClass = "shift-l";
+            else if (shift === "OFF") shiftClass = "shift-off";
 
-                    html += `<td class="py-2 px-1 text-center">
-                        <button onclick="toggleShift(${item.originalIndex}, 1, ${dayIdx})" class="shift-btn ${shiftClass}">${shift}</button>
-                    </td>`;
-                });
-                html += `</tr>`;
+            html += `<td class="py-2 px-1 text-center">
+                <button onclick="toggleShift(${item.originalIndex}, 1, ${dayIdx})" class="shift-btn ${shiftClass}">${shift}</button>
+            </td>`;
+        });
+        html += `</tr>`;
 
-                // Baris Brand 2 (Sales 2 / Partner)
-                html += `<tr class="border-b-2 border-slate-800">
-                    <td class="py-2.5 px-4 text-left font-bold bg-slate-900/50">
-                        <span class="px-2.5 py-1 rounded-lg ${warna} text-[10px] font-black">${item.brand2}</span>
-                    </td>
-                    <td class="py-2.5 px-4 text-left font-bold text-slate-200">${item.p2.nama}</td>`;
-                
-                j2.forEach((shift, dayIdx) => {
-                    let shiftClass = "shift-p";
-                    if (shift === "S") shiftClass = "shift-s";
-                    else if (shift === "L") shiftClass = "shift-l";
-                    else if (shift === "OFF") shiftClass = "shift-off";
+        // Baris 2: Brand 2 (cth: SAMSUNG) & Nama Promotor 2 (cth: FEBRI) [Warna sama sebagai partner]
+        html += `<tr class="border-b-2 border-slate-800">
+            <td class="py-2.5 px-4 text-left font-bold bg-slate-900/50">
+                <span class="px-2.5 py-1 rounded-lg ${warna} text-[10px] font-black">${item.brand2}</span>
+            </td>
+            <td class="py-2.5 px-4 text-left font-bold text-slate-200">${item.p2.nama}</td>`;
+        
+        j2.forEach((shift, dayIdx) => {
+            let shiftClass = "shift-p";
+            if (shift === "S") shiftClass = "shift-s";
+            else if (shift === "L") shiftClass = "shift-l";
+            else if (shift === "OFF") shiftClass = "shift-off";
 
-                    html += `<td class="py-2 px-1 text-center">
+            html += `<td class="py-2 px-1 text-center">
                         <button onclick="toggleShift(${item.originalIndex}, 2, ${dayIdx})" class="shift-btn ${shiftClass}">${shift}</button>
                     </td>`;
-                });
-                html += `</tr>`;
-            });
+        });
+        html += `</tr>`;
+    });
 
-            tbody.innerHTML = html;
-        }
+    tbody.innerHTML = html;
+}
 
         function renderTabelPiket() {
             const tbody = document.getElementById('tabelPiketBody');
