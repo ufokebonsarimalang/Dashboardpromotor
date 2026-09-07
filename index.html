@@ -1318,7 +1318,7 @@
             return d.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
         }
 
-        function renderShift() {
+             function renderShift() {
             const tbody = document.getElementById('shiftTableBody');
             if (!salesData.length) {
                 tbody.innerHTML =
@@ -1331,25 +1331,25 @@
                 const dot = `<span class="brand-color-dot" style="background:${color};"></span>`;
                 const days = ['senin', 'selasa', 'rabu', 'kamis', 'jumat', 'sabtu', 'minggu'];
 
-                // GARIS PEMBATAS DI BAWAH BARIS KEDUA (SAMSUNG, LG, dll)
-                // idx 1 = Samsung (baris ke-2), idx 3 = LG (baris ke-4), dst
+                // GARIS PEMBATAS DI BAWAH BARIS KEDUA
                 const isSecondRow = idx % 2 === 1;
                 const pairNumber = Math.floor(idx / 2) + 1;
                 const dividerClass = isSecondRow ? 'pair-divider' : '';
                 const lockClass = isAdmin ? '' : 'locked';
 
-                               html += `<tr data-idx="${idx}" class="${dividerClass}">
+                // === PERUBAHAN DI SINI ===
+                // Letakkan angka pasangan (👫) di atas ikon drag-drop pada kolom paling kiri
+                // Gunakan flexbox agar ikon seret dan angka sejajar rapi di kiri atas
+                html += `<tr data-idx="${idx}" class="${dividerClass}">
                     <td class="text-center">
-                        <span class="drag-handle ${lockClass}" title="${isAdmin ? 'Seret untuk tukar posisi' : '🔒 Kunci untuk edit'}">⠿</span>
+                        <div class="flex flex-col items-center gap-1 pt-1">
+                            ${isSecondRow ? `<span class="pair-badge">👫 ${pairNumber}</span>` : ''}
+                            <span class="drag-handle ${lockClass}" title="${isAdmin ? 'Seret untuk tukar posisi' : '🔒 Kunci untuk edit'}">⠿</span>
+                        </div>
                     </td>
-                    <td class="font-semibold text-slate-700">
-                        <span class="inline-flex items-center">
-                            <!-- Pindahkan angka pasangan ke sini, di samping dot dan nama brand -->
-                            ${isSecondRow ? `<span class="pair-badge mr-2">👫 ${pairNumber}</span>` : ''}
-                            ${dot}${row.brand || ''}
-                        </span>
-                    </td>
+                    <td class="font-semibold text-slate-700"><span class="inline-flex items-center">${dot}${row.brand || ''}</span></td>
                     <td class="font-medium text-slate-600">${row.name || ''}</td>`;
+
                 days.forEach((day) => {
                     const val = row[day] || '';
                     const cls = getShiftClass(val);
