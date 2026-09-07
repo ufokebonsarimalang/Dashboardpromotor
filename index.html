@@ -1338,14 +1338,18 @@
                 const dividerClass = isSecondRow ? 'pair-divider' : '';
                 const lockClass = isAdmin ? '' : 'locked';
 
-                html += `<tr data-idx="${idx}" class="${dividerClass}">
+                               html += `<tr data-idx="${idx}" class="${dividerClass}">
                     <td class="text-center">
                         <span class="drag-handle ${lockClass}" title="${isAdmin ? 'Seret untuk tukar posisi' : '🔒 Kunci untuk edit'}">⠿</span>
-                        ${isSecondRow ? `<span class="pair-badge">👫 ${pairNumber}</span>` : ''}
                     </td>
-                    <td class="font-semibold text-slate-700"><span class="inline-flex items-center">${dot}${row.brand || ''}</span></td>
+                    <td class="font-semibold text-slate-700">
+                        <span class="inline-flex items-center">
+                            <!-- Pindahkan angka pasangan ke sini, di samping dot dan nama brand -->
+                            ${isSecondRow ? `<span class="pair-badge mr-2">👫 ${pairNumber}</span>` : ''}
+                            ${dot}${row.brand || ''}
+                        </span>
+                    </td>
                     <td class="font-medium text-slate-600">${row.name || ''}</td>`;
-
                 days.forEach((day) => {
                     const val = row[day] || '';
                     const cls = getShiftClass(val);
