@@ -147,6 +147,33 @@
             background: #dbeafe;
             box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
         }
+        /* GARIS PEMBATAS PASANGAN SHIFT - SETIAP 2 BARIS */
+        .table-modern tbody tr.pair-divider td {
+            border-bottom: 3px solid #1e3a5f !important;
+            position: relative;
+        }
+        .table-modern tbody tr.pair-divider td::after {
+            content: '';
+            position: absolute;
+            bottom: -3px;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: #1e3a5f;
+        }
+        .table-modern tbody tr.pair-divider-light td {
+            border-bottom: 2px dashed #94a3b8 !important;
+        }
+        .pair-label {
+            display: inline-block;
+            font-size: 0.65rem;
+            font-weight: 700;
+            color: #1e3a5f;
+            background: #e2e8f0;
+            padding: 2px 10px;
+            border-radius: 40px;
+            letter-spacing: 0.5px;
+        }
         .drag-handle {
             cursor: grab;
             color: #94a3b8;
@@ -363,6 +390,17 @@
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
+        .pair-badge {
+            display: inline-block;
+            background: #1e3a5f;
+            color: white;
+            font-size: 0.6rem;
+            font-weight: 700;
+            padding: 2px 10px;
+            border-radius: 40px;
+            letter-spacing: 0.5px;
+            margin-left: 6px;
+        }
 
         @media (max-width: 768px) {
             .sidebar {
@@ -461,6 +499,7 @@
                     <p class="text-slate-500 mt-1 flex flex-wrap items-center gap-3">
                         <span>Klik badge shift untuk mengubah (P/S/OFF/L)</span>
                         <span class="drag-info">↕️ Drag & drop baris untuk tukar posisi sales</span>
+                        <span class="drag-info" style="background:#dbeafe;color:#1e40af;">👫 Garis biru = pasangan partner shift</span>
                     </p>
                 </div>
 
@@ -628,7 +667,7 @@
         // FIREBASE KONFIGURASI - GANTI DENGAN PROJECT ANDA
         // ================================================================
         const firebaseConfig = {
-           apiKey: "AIzaSyBMokA92YiB87vwuqBREwNhHkkU_bXo8cI",
+            apiKey: "AIzaSyBMokA92YiB87vwuqBREwNhHkkU_bXo8cI",
 
   authDomain: "ufokebonsariapps.firebaseapp.com",
 
@@ -967,13 +1006,11 @@
                 });
             });
 
-            // Update shift stats
             document.getElementById('totalSales').textContent = total;
             document.getElementById('totalPiket').textContent = withPiket;
             document.getElementById('totalPagi').textContent = totalPagi;
             document.getElementById('totalSiang').textContent = totalSiang;
 
-            // Update piket stats
             document.getElementById('totalPiketStat').textContent = withPiket;
             document.getElementById('totalKosongStat').textContent = tanpaPiket;
             document.getElementById('totalSalesPiket').textContent = total;
@@ -1004,9 +1041,15 @@
                 const dot = `<span class="brand-color-dot" style="background:${color};"></span>`;
                 const days = ['senin', 'selasa', 'rabu', 'kamis', 'jumat', 'sabtu', 'minggu'];
 
-                html += `<tr data-idx="${idx}">
+                // Tentukan apakah ini baris genap (0,2,4,6...) -> beri garis pembatas
+                const isEvenRow = idx % 2 === 0;
+                const pairNumber = Math.floor(idx / 2) + 1;
+                const dividerClass = isEvenRow ? 'pair-divider' : '';
+
+                html += `<tr data-idx="${idx}" class="${dividerClass}">
                     <td class="text-center">
                         <span class="drag-handle" title="Seret untuk tukar posisi">⠿</span>
+                        ${isEvenRow ? `<span class="pair-label">👫 ${pairNumber}</span>` : ''}
                     </td>
                     <td class="font-semibold text-slate-700"><span class="inline-flex items-center">${dot}${row.brand || ''}</span></td>
                     <td class="font-medium text-slate-600">${row.name || ''}</td>`;
@@ -1046,7 +1089,11 @@
                 const badgeClass = hasToilet ? 'badge-toilet' : 'badge-toilet empty';
                 const displayText = hasToilet ? row.toilet : 'Klik untuk atur';
 
-                html += `<tr>
+                // Garis pembatas untuk piket juga
+                const isEvenRow = idx % 2 === 0;
+                const dividerClass = isEvenRow ? 'pair-divider' : '';
+
+                html += `<tr class="${dividerClass}">
                     <td class="font-semibold text-slate-700"><span class="inline-flex items-center">${dot}${row.brand || ''}</span></td>
                     <td class="font-medium text-slate-600">${row.name || ''}</td>
                     <td>
