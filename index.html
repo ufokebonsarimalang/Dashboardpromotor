@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jadwal Promotor Berpasangan - UFO Malang</title>
+    <title>Jadwal Promotor - UFO Malang</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script> tailwind.config = { darkMode: 'class' } </script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -123,7 +123,7 @@
             </div>
         </section>
 
-        <!-- TAB 3: ADMIN KONFIGURASI (DENGAN FITUR EDIT / UBAH PARTNER) -->
+        <!-- TAB 3: ADMIN KONFIGURASI -->
         <section id="tabAdmin" class="hidden space-y-6">
             <div class="app-card bg-white dark:bg-slate-900/80 border border-indigo-500/30 p-5 rounded-3xl shadow-xl space-y-4">
                 <h2 id="formTitleAdmin" class="text-xl font-black">Tambah Pasangan Brand & Sales Baru</h2>
@@ -163,7 +163,7 @@
     </main>
 
     <script>
-        const gasWebhookUrl = "https://script.google.com/macros/s/AKfycbxtcTaj4KNCykH-f3k88cIlsvVWicigtHJWt0D0u-EzDGkUEIYeQAd1oToJyhgaCdr3IQ/exec";
+        const gasWebhookUrl = "MASUKKAN_URL_WEB_APP_APPS_SCRIPT_ANDA_DISINI";
         let daftarPromotor = [];
 
         document.addEventListener("DOMContentLoaded", () => {
@@ -236,9 +236,10 @@
                 .filter(item => item.brand1.toLowerCase().includes(keyword) || item.brand2.toLowerCase().includes(keyword) || item.p1.nama.toLowerCase().includes(keyword) || item.p2.nama.toLowerCase().includes(keyword));
 
             filtered.forEach(item => {
+                // Baris Brand 1 (Sales 1 / Ayung)
                 html += `<tr class="border-t-2 border-slate-200 dark:border-slate-800">
                     <td class="py-2.5 px-4 text-left font-bold bg-slate-50/50 dark:bg-slate-900/50">
-                        <span class="px-2.5 py-1 rounded-lg bg-amber-400 text-slate-900 text-[10px] font-black">${item.brand1}</span>
+                        <span class="px-2.5 py-1 rounded-lg bg-yellow-400 text-slate-900 text-[10px] font-black">${item.brand1}</span>
                     </td>
                     <td class="py-2.5 px-4 text-left font-bold text-slate-800 dark:text-slate-200">${item.p1.nama}</td>`;
                 
@@ -254,9 +255,10 @@
                 });
                 html += `</tr>`;
 
+                // Baris Brand 2 (Sales 2 / Febri)
                 html += `<tr class="border-b-2 border-slate-200 dark:border-slate-800">
                     <td class="py-2.5 px-4 text-left font-bold bg-slate-50/50 dark:bg-slate-900/50">
-                        <span class="px-2.5 py-1 rounded-lg bg-amber-400 text-slate-900 text-[10px] font-black">${item.brand2}</span>
+                        <span class="px-2.5 py-1 rounded-lg bg-yellow-400 text-slate-900 text-[10px] font-black">${item.brand2}</span>
                     </td>
                     <td class="py-2.5 px-4 text-left font-bold text-slate-800 dark:text-slate-200">${item.p2.nama}</td>`;
                 
@@ -283,8 +285,8 @@
             daftarPromotor.forEach(item => {
                 html += `<tr class="border-b border-slate-200 dark:border-slate-800">
                     <td class="py-3 px-4 text-left font-bold">
-                        <span class="px-2 py-0.5 rounded bg-amber-400 text-slate-900 text-[10px]">${item.brand1}</span> & 
-                        <span class="px-2 py-0.5 rounded bg-amber-400 text-slate-900 text-[10px]">${item.brand2}</span>
+                        <span class="px-2 py-0.5 rounded bg-yellow-400 text-slate-900 text-[10px]">${item.brand1}</span> & 
+                        <span class="px-2 py-0.5 rounded bg-yellow-400 text-slate-900 text-[10px]">${item.brand2}</span>
                     </td>
                     <td class="py-3 px-4 text-left font-bold">1. ${item.p1.nama}<br>2. ${item.p2.nama}</td>
                     <td class="py-3 px-4 text-center font-black text-indigo-500 text-sm">${item.piket}</td>
@@ -323,15 +325,13 @@
             if (!brand1 || !brand2 || !p1 || !p2) { alert("Isi semua data brand dan nama sales!"); return; }
 
             if (editIdx === -1) {
-                // Tambah baru
                 daftarPromotor.push({
                     brand1: brand1, brand2: brand2, piket: piket || "-",
-                    warnaBrand: "bg-amber-400 text-slate-900",
+                    warnaBrand: "bg-yellow-400 text-slate-900",
                     p1: { nama: p1, jadwal: ["P", "OFF", "S", "L", "P", "S", "P"] },
                     p2: { nama: p2, jadwal: ["S", "L", "P", "OFF", "S", "P", "S"] }
                 });
             } else {
-                // Update yang sedang diedit (jadwal lama dipertahankan)
                 daftarPromotor[editIdx].brand1 = brand1;
                 daftarPromotor[editIdx].brand2 = brand2;
                 daftarPromotor[editIdx].p1.nama = p1;
