@@ -67,50 +67,47 @@
            BADGE SHIFT - DESAIN PREMIUM & LEBIH TEBAL
            ================================================================ */
         .badge-shift {
-            padding: 8px 18px;
+            padding: 6px 14px;
             border-radius: 50px;
             font-weight: 800;
-            font-size: 0.9rem;
-            letter-spacing: 0.5px;
+            font-size: 0.78rem;
+            letter-spacing: 0.3px;
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
-            min-width: 60px;
+            gap: 5px;
+            min-width: 48px;
             text-align: center;
-            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.10);
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
             cursor: pointer;
             transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
             user-select: none;
             position: relative;
-            border: 2.5px solid transparent;
-            line-height: 1.3;
-            text-transform: uppercase;
+            border: 2px solid transparent;
+            line-height: 1.2;
         }
         .badge-shift .badge-icon {
-            font-size: 1rem;
+            font-size: 0.8rem;
             line-height: 1;
-            filter: drop-shadow(0 1px 2px rgba(0,0,0,0.08));
         }
         .badge-shift .badge-label {
             font-weight: 900;
-            font-size: 1rem;
-            letter-spacing: 0.5px;
+            font-size: 0.85rem;
+            letter-spacing: 0.3px;
         }
         .badge-shift .badge-sub {
-            font-size: 0.55rem;
+            font-size: 0.5rem;
             font-weight: 600;
-            opacity: 0.8;
+            opacity: 0.75;
             margin-left: 2px;
-            text-transform: lowercase;
         }
 
         .badge-shift:hover {
-            transform: scale(1.10) translateY(-3px);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
+            transform: scale(1.08) translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
         }
         .badge-shift:active {
-            transform: scale(0.92);
+            transform: scale(0.93);
         }
         .badge-shift.locked {
             cursor: default;
@@ -118,58 +115,33 @@
         }
         .badge-shift.locked:hover {
             transform: none !important;
-            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.10) !important;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08) !important;
         }
 
-        /* P - Pagi (Kuning Emas) */
         .badge-p {
             background: linear-gradient(145deg, #fcd34d, #f59e0b);
             color: #78350f;
             border-color: #d97706;
-            box-shadow: 0 4px 16px rgba(245, 158, 11, 0.40);
-            text-shadow: 0 1px 2px rgba(255, 255, 255, 0.3);
+            box-shadow: 0 3px 12px rgba(245, 158, 11, 0.30);
         }
-        .badge-p .badge-icon {
-            filter: drop-shadow(0 1px 2px rgba(0,0,0,0.1));
-        }
-
-        /* S - Siang (Biru Cerah) */
         .badge-s {
             background: linear-gradient(145deg, #7dd3fc, #3b82f6);
             color: #0c2d5e;
             border-color: #2563eb;
-            box-shadow: 0 4px 16px rgba(59, 130, 246, 0.40);
-            text-shadow: 0 1px 2px rgba(255, 255, 255, 0.3);
+            box-shadow: 0 3px 12px rgba(59, 130, 246, 0.30);
         }
-        .badge-s .badge-icon {
-            filter: drop-shadow(0 1px 2px rgba(0,0,0,0.1));
-        }
-
-        /* L - Lembur (Ungu Mewah) */
         .badge-l {
             background: linear-gradient(145deg, #c4b5fd, #7c3aed);
             color: #1e0a4a;
             border-color: #6d28d9;
-            box-shadow: 0 4px 16px rgba(124, 58, 237, 0.40);
-            text-shadow: 0 1px 2px rgba(255, 255, 255, 0.25);
+            box-shadow: 0 3px 12px rgba(124, 58, 237, 0.30);
         }
-        .badge-l .badge-icon {
-            filter: drop-shadow(0 1px 2px rgba(0,0,0,0.1));
-        }
-
-        /* OFF - Libur (Merah) */
         .badge-off {
             background: linear-gradient(145deg, #fca5a5, #ef4444);
             color: #4a0e0e;
             border-color: #dc2626;
-            box-shadow: 0 4px 16px rgba(239, 68, 68, 0.40);
-            text-shadow: 0 1px 2px rgba(255, 255, 255, 0.25);
+            box-shadow: 0 3px 12px rgba(239, 68, 68, 0.30);
         }
-        .badge-off .badge-icon {
-            filter: drop-shadow(0 1px 2px rgba(0,0,0,0.1));
-        }
-
-        /* Badge kosong/tidak ada shift */
         .badge-empty {
             background: linear-gradient(145deg, #e2e8f0, #cbd5e1);
             color: #64748b;
@@ -177,8 +149,8 @@
             box-shadow: none;
             opacity: 0.5;
             cursor: default;
-            min-width: 44px;
-            font-size: 0.75rem;
+            min-width: 36px;
+            font-size: 0.65rem;
             font-weight: 600;
         }
         .badge-empty:hover {
@@ -190,22 +162,22 @@
         .badge-toilet {
             background: linear-gradient(145deg, #eef2ff, #c7d2fe);
             color: #3730a3;
-            padding: 8px 18px;
+            padding: 6px 14px;
             border-radius: 50px;
             font-weight: 700;
-            font-size: 0.85rem;
+            font-size: 0.75rem;
             display: inline-flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
             cursor: pointer;
             transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
-            border: 2.5px solid #a5b4fc;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
-            line-height: 1.3;
+            border: 2px solid #a5b4fc;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+            line-height: 1.2;
         }
         .badge-toilet:hover {
-            transform: scale(1.06) translateY(-3px);
-            box-shadow: 0 8px 24px rgba(55, 48, 163, 0.18);
+            transform: scale(1.05) translateY(-2px);
+            box-shadow: 0 6px 20px rgba(55, 48, 163, 0.15);
         }
         .badge-toilet.locked {
             cursor: default;
@@ -217,38 +189,38 @@
         .badge-toilet.empty {
             background: linear-gradient(145deg, #f1f5f9, #e2e8f0);
             color: #94a3b8;
-            border: 2.5px dashed #94a3b8;
+            border: 2px dashed #94a3b8;
             box-shadow: none;
         }
         .badge-toilet.has-date {
             background: linear-gradient(145deg, #dbeafe, #93c5fd);
             color: #1e3a5f;
-            border: 2.5px solid #60a5fa;
-            box-shadow: 0 4px 16px rgba(59, 130, 246, 0.20);
+            border: 2px solid #60a5fa;
+            box-shadow: 0 3px 12px rgba(59, 130, 246, 0.18);
         }
 
-        /* ========== SISANYA TETAP SAMA ========== */
+        /* ========== TABEL ========== */
         .table-modern th {
             background: linear-gradient(180deg, #f8fafc, #f1f5f9);
             color: #0f2b44;
             font-weight: 700;
-            padding: 14px 8px;
+            padding: 10px 6px;
             border-bottom: 3px solid #1a3a5a;
             text-align: center;
             vertical-align: middle;
-            font-size: 0.7rem;
+            font-size: 0.6rem;
             text-transform: uppercase;
-            letter-spacing: 0.8px;
+            letter-spacing: 0.6px;
         }
         .table-modern td {
-            padding: 10px 8px;
+            padding: 6px 6px;
             border-bottom: 1px solid #eef2f6;
             text-align: center;
             vertical-align: middle;
-            font-size: 0.85rem;
+            font-size: 0.78rem;
         }
         .table-modern tr:hover td {
-            background: rgba(219, 234, 254, 0.2);
+            background: rgba(219, 234, 254, 0.15);
         }
         .table-modern td:first-child {
             text-align: left;
@@ -284,12 +256,12 @@
         }
         .brand-color-dot {
             display: inline-block;
-            width: 14px;
-            height: 14px;
+            width: 12px;
+            height: 12px;
             border-radius: 50%;
-            margin-right: 8px;
+            margin-right: 6px;
             border: 2px solid rgba(255, 255, 255, 0.8);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
             flex-shrink: 0;
             transition: transform 0.2s;
         }
@@ -299,10 +271,10 @@
         .drag-handle {
             cursor: grab;
             color: #94a3b8;
-            font-size: 1.2rem;
+            font-size: 1rem;
             padding: 0 4px;
             user-select: none;
-            opacity: 0.5;
+            opacity: 0.4;
             transition: opacity 0.2s;
         }
         .drag-handle:hover {
@@ -314,12 +286,14 @@
         }
         .drag-handle.locked {
             cursor: default;
-            opacity: 0.3;
+            opacity: 0.2;
         }
         .drag-handle.locked:hover {
-            opacity: 0.3;
+            opacity: 0.2;
             color: #94a3b8;
         }
+
+        /* ========== SISANYA ========== */
         .admin-input {
             border-radius: 40px;
             padding: 10px 18px;
@@ -513,24 +487,13 @@
             box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
             outline: none;
         }
-        .drag-info {
-            background: linear-gradient(135deg, #f1f5f9, #e2e8f0);
-            padding: 8px 16px;
-            border-radius: 40px;
-            font-size: 0.8rem;
-            color: #475569;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            font-weight: 500;
-        }
         .admin-locked .badge-shift {
             cursor: default !important;
             opacity: 0.7;
         }
         .admin-locked .badge-shift:hover {
             transform: none !important;
-            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.10) !important;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08) !important;
         }
         .admin-locked .badge-toilet {
             cursor: default !important;
@@ -541,10 +504,10 @@
         }
         .admin-locked .drag-handle {
             cursor: default !important;
-            opacity: 0.3 !important;
+            opacity: 0.2 !important;
         }
         .admin-locked .drag-handle:hover {
-            opacity: 0.3 !important;
+            opacity: 0.2 !important;
             color: #94a3b8 !important;
         }
 
@@ -552,7 +515,7 @@
         .shift-card {
             background: white;
             border-radius: 18px;
-            padding: 14px 16px;
+            padding: 12px 14px;
             box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
             border: 1px solid #eef2f6;
         }
@@ -560,8 +523,8 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 10px;
-            padding-bottom: 8px;
+            margin-bottom: 8px;
+            padding-bottom: 6px;
             border-bottom: 1px dashed #e2e8f0;
         }
         .shift-card-title-wrap {
@@ -573,13 +536,13 @@
         .shift-card-title {
             font-weight: 700;
             color: #0f2b44;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             white-space: nowrap;
         }
         .shift-card-name {
             color: #64748b;
             font-weight: 500;
-            font-size: 0.78rem;
+            font-size: 0.72rem;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -587,16 +550,16 @@
         .day-grid {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
-            gap: 4px;
+            gap: 3px;
         }
         .day-cell {
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 3px;
+            gap: 2px;
         }
         .day-cell .day-label {
-            font-size: 0.58rem;
+            font-size: 0.5rem;
             color: #94a3b8;
             font-weight: 700;
             text-transform: uppercase;
@@ -605,42 +568,43 @@
         .day-cell .badge-shift {
             width: 100%;
             min-width: 0;
-            padding: 5px 4px;
-            font-size: 0.7rem;
-            gap: 3px;
-            min-width: 32px;
+            padding: 4px 2px;
+            font-size: 0.6rem;
+            gap: 2px;
+            min-width: 24px;
+            border-width: 1.5px;
         }
         .day-cell .badge-shift .badge-icon {
-            font-size: 0.7rem;
+            font-size: 0.6rem;
         }
         .day-cell .badge-shift .badge-sub {
             display: none;
         }
         .day-cell .badge-shift .badge-label {
-            font-size: 0.75rem;
+            font-size: 0.65rem;
         }
         .drag-handle-mobile {
             color: #94a3b8;
-            font-size: 1.15rem;
-            padding: 2px 6px;
+            font-size: 1rem;
+            padding: 2px 4px;
             cursor: grab;
-            opacity: 0.5;
+            opacity: 0.4;
             user-select: none;
         }
         .drag-handle-mobile.locked {
-            opacity: 0.25;
+            opacity: 0.2;
             cursor: default;
         }
         .piket-card {
             background: white;
             border-radius: 18px;
-            padding: 14px 16px;
+            padding: 12px 14px;
             box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
             border: 1px solid #eef2f6;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 10px;
+            gap: 8px;
         }
         .piket-card .info {
             min-width: 0;
@@ -651,15 +615,134 @@
             align-items: center;
             font-weight: 700;
             color: #0f2b44;
-            font-size: 0.86rem;
+            font-size: 0.82rem;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
         }
         .piket-card .info .sub {
             color: #94a3b8;
-            font-size: 0.72rem;
+            font-size: 0.68rem;
             margin-top: 2px;
+        }
+
+        /* ========== CETAK A4 ========== */
+        @media print {
+            .sidebar {
+                display: none !important;
+            }
+            .main {
+                padding: 0 !important;
+                margin: 0 !important;
+                max-width: 100% !important;
+            }
+            .card-glass {
+                background: white !important;
+                backdrop-filter: none !important;
+                border: none !important;
+                box-shadow: none !important;
+                padding: 8px !important;
+                border-radius: 0 !important;
+            }
+            .badge-shift {
+                print-color-adjust: exact;
+                -webkit-print-color-adjust: exact;
+                box-shadow: none !important;
+                padding: 4px 10px !important;
+                font-size: 0.7rem !important;
+                min-width: 36px !important;
+                border-width: 1.5px !important;
+            }
+            .badge-shift .badge-icon {
+                font-size: 0.7rem !important;
+            }
+            .badge-shift .badge-label {
+                font-size: 0.75rem !important;
+            }
+            .badge-shift .badge-sub {
+                display: none !important;
+            }
+            .badge-toilet {
+                print-color-adjust: exact;
+                -webkit-print-color-adjust: exact;
+                padding: 4px 10px !important;
+                font-size: 0.7rem !important;
+                border-width: 1.5px !important;
+            }
+            .table-modern th {
+                padding: 6px 4px !important;
+                font-size: 0.55rem !important;
+            }
+            .table-modern td {
+                padding: 4px 4px !important;
+                font-size: 0.7rem !important;
+            }
+            .brand-color-dot {
+                width: 10px !important;
+                height: 10px !important;
+                margin-right: 4px !important;
+            }
+            .drag-handle {
+                display: none !important;
+            }
+            .page {
+                display: block !important;
+            }
+            .page.hidden {
+                display: none !important;
+            }
+            #page-shift {
+                display: block !important;
+            }
+            #page-piket {
+                display: block !important;
+                page-break-before: always !important;
+            }
+            #page-admin {
+                display: none !important;
+            }
+            #shiftMobileView, #piketMobileView {
+                display: none !important;
+            }
+            .hidden.md\:block {
+                display: block !important;
+            }
+            .mt-4.flex.flex-wrap.gap-4 {
+                display: none !important;
+            }
+            .mb-6 {
+                margin-bottom: 4px !important;
+            }
+            h2 {
+                font-size: 1.2rem !important;
+                margin-bottom: 2px !important;
+            }
+            .card-glass.rounded-3xl.p-5.mb-6 {
+                padding: 6px 10px !important;
+                margin-bottom: 4px !important;
+                border-left-width: 3px !important;
+            }
+            .card-glass.rounded-3xl.p-5.mb-6 h3 {
+                font-size: 0.8rem !important;
+                margin-bottom: 2px !important;
+            }
+            .card-glass.rounded-3xl.p-5.mb-6 ul {
+                font-size: 0.6rem !important;
+                padding-left: 16px !important;
+            }
+            .card-glass.rounded-3xl.p-5.mb-6 ul li {
+                margin-bottom: 0 !important;
+            }
+            .table-modern tbody tr.pair-divider td {
+                border-bottom-width: 3px !important;
+            }
+            .table-modern tbody tr.pair-divider td::after {
+                height: 3px !important;
+                bottom: -3px !important;
+            }
+            .toast-notification, .modal-overlay, #syncStatus, #lockStatus {
+                display: none !important;
+            }
         }
 
         @media (max-width: 768px) {
@@ -667,8 +750,8 @@
                 flex-direction: column;
                 flex-wrap: nowrap;
                 height: auto;
-                padding: 10px 16px;
-                gap: 6px;
+                padding: 8px 12px;
+                gap: 4px;
                 border-right: none;
                 border-bottom: 1px solid rgba(255, 255, 255, 0.05);
                 align-items: center;
@@ -680,21 +763,21 @@
                 width: 100%;
                 display: flex;
                 justify-content: center;
-                margin-bottom: 8px;
+                margin-bottom: 4px;
             }
             .sidebar-brand img {
-                width: 140px;
-                max-height: 60px;
+                width: 120px;
+                max-height: 50px;
             }
             .sidebar nav {
                 display: grid !important;
                 grid-template-columns: repeat(3, 1fr);
-                gap: 6px;
+                gap: 4px;
                 width: 100%;
             }
             .sidebar .nav-item {
-                padding: 8px 4px;
-                font-size: 0.66rem;
+                padding: 6px 4px;
+                font-size: 0.6rem;
                 gap: 4px !important;
                 flex: initial;
                 justify-content: center;
@@ -704,43 +787,59 @@
                 text-overflow: ellipsis;
             }
             .sidebar .nav-item .text-xl {
-                font-size: 1rem;
+                font-size: 0.9rem;
             }
             .sidebar .nav-item:hover {
                 transform: none;
             }
             .main {
-                padding: 16px;
-            }
-            .modal-content {
-                padding: 24px;
-            }
-            .card-glass {
                 padding: 12px;
             }
+            .modal-content {
+                padding: 20px;
+            }
+            .card-glass {
+                padding: 10px;
+            }
             .text-sm {
-                font-size: 0.8rem;
+                font-size: 0.75rem;
             }
             .badge-shift {
                 padding: 4px 6px;
-                font-size: 0.65rem;
-                min-width: 28px;
+                font-size: 0.6rem;
+                min-width: 24px;
                 gap: 2px;
-                border-width: 2px;
+                border-width: 1.5px;
             }
             .badge-shift .badge-icon {
-                font-size: 0.6rem;
+                font-size: 0.55rem;
             }
             .badge-shift .badge-sub {
                 display: none;
             }
             .badge-shift .badge-label {
-                font-size: 0.65rem;
+                font-size: 0.6rem;
             }
             .badge-toilet {
-                padding: 5px 12px;
-                font-size: 0.7rem;
-                border-width: 2px;
+                padding: 4px 10px;
+                font-size: 0.65rem;
+                border-width: 1.5px;
+            }
+            .table-modern th {
+                font-size: 0.5rem;
+                padding: 6px 4px;
+            }
+            .table-modern td {
+                font-size: 0.65rem;
+                padding: 4px 4px;
+            }
+            .brand-color-dot {
+                width: 10px;
+                height: 10px;
+                margin-right: 4px;
+            }
+            h2.text-4xl {
+                font-size: 1.5rem !important;
             }
         }
     </style>
@@ -786,26 +885,26 @@
     <div class="flex flex-col md:flex-row min-h-screen">
 
         <!-- SIDEBAR -->
-        <aside class="sidebar w-full md:w-64 flex-shrink-0 text-white p-5 flex flex-col gap-4 md:min-h-screen sticky top-0 z-10">
-            <div class="sidebar-brand pb-4 border-b border-white/10 flex justify-center">
-                <img src="logo-ufo.png" alt="UFO Malang Kebonsari" class="w-40 md:w-48 h-auto object-contain drop-shadow-lg" />
+        <aside class="sidebar w-full md:w-64 flex-shrink-0 text-white p-4 flex flex-col gap-3 md:min-h-screen sticky top-0 z-10">
+            <div class="sidebar-brand pb-3 border-b border-white/10 flex justify-center">
+                <img src="logo-ufo.png" alt="UFO Malang Kebonsari" class="w-36 md:w-44 h-auto object-contain drop-shadow-lg" />
             </div>
             
-            <nav class="flex flex-row md:flex-col gap-1.5">
-                <button class="nav-item active flex items-center gap-3 px-4 py-3.5 text-sm font-medium text-white/80 hover:text-white w-full" data-page="shift">
+            <nav class="flex flex-row md:flex-col gap-1">
+                <button class="nav-item active flex items-center gap-3 px-4 py-3 text-sm font-medium text-white/80 hover:text-white w-full" data-page="shift">
                     <span class="text-xl">📋</span> Jadwal Shift
                 </button>
-                <button class="nav-item flex items-center gap-3 px-4 py-3.5 text-sm font-medium text-white/80 hover:text-white w-full" data-page="piket">
+                <button class="nav-item flex items-center gap-3 px-4 py-3 text-sm font-medium text-white/80 hover:text-white w-full" data-page="piket">
                     <span class="text-xl">🧹</span> Piket Toilet
                 </button>
-                <button class="nav-item flex items-center gap-3 px-4 py-3.5 text-sm font-medium text-white/80 hover:text-white w-full" data-page="admin">
+                <button class="nav-item flex items-center gap-3 px-4 py-3 text-sm font-medium text-white/80 hover:text-white w-full" data-page="admin">
                     <span class="text-xl">⚙️</span> Panel Admin
                 </button>
             </nav>
-            <div class="text-xs opacity-30 mt-auto pt-4 border-t border-white/10 hidden md:block">
+            <div class="text-xs opacity-30 mt-auto pt-3 border-t border-white/10 hidden md:block">
                 v2.0 · UFO Kebonsari
             </div>
-            <div id="syncStatus" class="sync-status synced text-xs mt-2">
+            <div id="syncStatus" class="sync-status synced text-xs mt-1">
                 <span>✅</span> Tersimpan di Cloud
             </div>
             <div id="lockStatus" class="text-xs mt-1 flex items-center gap-2 text-white/60">
@@ -815,27 +914,20 @@
         </aside>
 
         <!-- MAIN -->
-        <main class="main flex-1 p-4 md:p-8 max-w-full" id="mainContent">
+        <main class="main flex-1 p-4 md:p-6 max-w-full" id="mainContent">
 
             <!-- HALAMAN SHIFT -->
             <section id="page-shift" class="page active">
-                <div class="mb-6 flex flex-wrap justify-between items-center gap-4">
-                    <div>
-                        <h2 class="text-4xl font-extrabold text-slate-800" style="font-weight:900;">📋 Jadwal Shift Promotor</h2>
-                        <p class="text-slate-500 mt-1 flex flex-wrap items-center gap-3">
-                            <span>Klik badge shift untuk mengubah (P/S/OFF/L)</span>
-                            <span class="drag-info">↕️ Drag & drop baris untuk tukar posisi</span>
-                            <span class="drag-info" style="background:linear-gradient(135deg,#dbeafe,#bfdbfe);color:#1a3a5a;">👫 Garis biru = pasangan brand</span>
-                        </p>
-                    </div>
+                <div class="mb-4">
+                    <h2 class="text-2xl md:text-3xl font-extrabold text-slate-800" style="font-weight:900;">📋 Jadwal Shift Promotor</h2>
                 </div>
 
-                <div class="card-glass rounded-3xl p-4 md:p-6 overflow-hidden" id="shiftTableCard">
+                <div class="card-glass rounded-2xl p-3 md:p-4 overflow-hidden" id="shiftTableCard">
                     <div class="hidden md:block overflow-x-auto">
                         <table class="table-modern w-full text-sm min-w-[820px]">
                             <thead>
                                 <tr>
-                                    <th class="text-left" style="width:40px;">#</th>
+                                    <th class="text-left" style="width:32px;">#</th>
                                     <th class="text-left">BRAND</th>
                                     <th class="text-center">NAMA</th>
                                     <th class="text-center">SENIN</th>
@@ -850,27 +942,26 @@
                             <tbody id="shiftTableBody"></tbody>
                         </table>
                     </div>
-                    <div id="shiftMobileView" class="md:hidden space-y-3"></div>
-                    <div class="mt-4 flex flex-wrap gap-4 text-xs text-slate-500 border-t pt-4 border-slate-200/60">
-                        <span><span class="badge-shift badge-p" style="cursor:default;pointer-events:none;"><span class="badge-icon">🌅</span><span class="badge-label">P</span><span class="badge-sub">Pagi</span></span></span>
-                        <span><span class="badge-shift badge-s" style="cursor:default;pointer-events:none;"><span class="badge-icon">☀️</span><span class="badge-label">S</span><span class="badge-sub">Siang</span></span></span>
-                        <span><span class="badge-shift badge-l" style="cursor:default;pointer-events:none;"><span class="badge-icon">🌙</span><span class="badge-label">L</span><span class="badge-sub">Lembur</span></span></span>
-                        <span><span class="badge-shift badge-off" style="cursor:default;pointer-events:none;"><span class="badge-icon">🚫</span><span class="badge-label">OFF</span><span class="badge-sub">Libur</span></span></span>
-                        <span class="text-slate-400 ml-2">💡 Klik badge untuk mengubah shift</span>
+                    <div id="shiftMobileView" class="md:hidden space-y-2"></div>
+                    <div class="mt-3 flex flex-wrap gap-3 text-xs text-slate-500 border-t pt-3 border-slate-200/60">
+                        <span><span class="badge-shift badge-p" style="cursor:default;pointer-events:none;padding:3px 10px;font-size:0.7rem;"><span class="badge-icon">🌅</span><span class="badge-label">P</span><span class="badge-sub">Pagi</span></span></span>
+                        <span><span class="badge-shift badge-s" style="cursor:default;pointer-events:none;padding:3px 10px;font-size:0.7rem;"><span class="badge-icon">☀️</span><span class="badge-label">S</span><span class="badge-sub">Siang</span></span></span>
+                        <span><span class="badge-shift badge-l" style="cursor:default;pointer-events:none;padding:3px 10px;font-size:0.7rem;"><span class="badge-icon">🌙</span><span class="badge-label">L</span><span class="badge-sub">Lembur</span></span></span>
+                        <span><span class="badge-shift badge-off" style="cursor:default;pointer-events:none;padding:3px 10px;font-size:0.7rem;"><span class="badge-icon">🚫</span><span class="badge-label">OFF</span><span class="badge-sub">Libur</span></span></span>
+                        <span class="text-slate-400 ml-1">💡 Klik badge untuk mengubah shift</span>
                     </div>
                 </div>
             </section>
 
             <!-- HALAMAN PIKET -->
             <section id="page-piket" class="page hidden">
-                <div class="mb-6">
-                    <h2 class="text-4xl font-extrabold text-slate-800" style="font-weight:900;">🧹 Jadwal Piket Toilet</h2>
-                    <p class="text-slate-500 mt-1">Klik badge piket untuk pilih tanggal — otomatis tersimpan</p>
+                <div class="mb-4">
+                    <h2 class="text-2xl md:text-3xl font-extrabold text-slate-800" style="font-weight:900;">🧹 Jadwal Piket Toilet</h2>
                 </div>
 
-                <div class="card-glass rounded-3xl p-5 mb-6 border-l-4 border-yellow-400 bg-yellow-50/80">
-                    <h3 class="text-lg font-extrabold text-slate-800 mb-3" style="font-weight:900;">📌 NOTE:</h3>
-                    <ul class="text-sm text-slate-700 space-y-1 list-disc pl-5">
+                <div class="card-glass rounded-2xl p-4 md:p-5 mb-4 border-l-4 border-yellow-400 bg-yellow-50/80">
+                    <h3 class="text-base font-extrabold text-slate-800 mb-2" style="font-weight:900;">📌 NOTE:</h3>
+                    <ul class="text-xs text-slate-700 space-y-0.5 list-disc pl-4">
                         <li>PIKET TOILET (LANTAI, DINDING, CLOSET, URINOIR, WASTAFEL, LANGIT2) HARUS DISIKAT</li>
                         <li>GENERAL CLEANING SETIAP HARI SABTU & MINGGU</li>
                         <li>HARI SABTU MINGGU PERTAMA : AREA LEMARI ES</li>
@@ -888,7 +979,7 @@
                     </ul>
                 </div>
 
-                <div class="card-glass rounded-3xl p-4 md:p-6 overflow-hidden" id="piketTableCard">
+                <div class="card-glass rounded-2xl p-3 md:p-4 overflow-hidden" id="piketTableCard">
                     <div class="hidden md:block overflow-x-auto">
                         <table class="table-modern w-full text-sm min-w-[500px]">
                             <thead>
@@ -902,26 +993,26 @@
                             <tbody id="piketTableBody"></tbody>
                         </table>
                     </div>
-                    <div id="piketMobileView" class="md:hidden space-y-3"></div>
+                    <div id="piketMobileView" class="md:hidden space-y-2"></div>
                 </div>
             </section>
 
             <!-- HALAMAN ADMIN -->
             <section id="page-admin" class="page hidden">
-                <div class="mb-6">
-                    <h2 class="text-4xl font-extrabold text-slate-800" style="font-weight:900;">⚙️ Panel Admin</h2>
-                    <p class="text-slate-500 mt-1">Kelola data sales, shift, dan warna brand — tersimpan otomatis di Firebase</p>
+                <div class="mb-4">
+                    <h2 class="text-2xl md:text-3xl font-extrabold text-slate-800" style="font-weight:900;">⚙️ Panel Admin</h2>
+                    <p class="text-slate-500 text-sm mt-1">Kelola data sales, shift, dan warna brand — tersimpan otomatis di Firebase</p>
                 </div>
 
-                <div class="card-glass rounded-3xl p-5 md:p-7 space-y-6">
+                <div class="card-glass rounded-2xl p-4 md:p-6 space-y-5">
 
-                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
                         <div>
-                            <h3 class="font-bold text-slate-700 mb-3 text-lg">➕ Tambah Sales</h3>
+                            <h3 class="font-bold text-slate-700 mb-2 text-base">➕ Tambah Sales</h3>
                             <div class="flex flex-wrap gap-2">
-                                <input type="text" id="newBrand" placeholder="Brand" class="admin-input flex-1 min-w-[100px]" />
-                                <input type="text" id="newName" placeholder="Nama Sales" class="admin-input flex-1 min-w-[100px]" />
-                                <select id="newShiftDay" class="admin-input flex-1 min-w-[100px]">
+                                <input type="text" id="newBrand" placeholder="Brand" class="admin-input flex-1 min-w-[80px]" />
+                                <input type="text" id="newName" placeholder="Nama Sales" class="admin-input flex-1 min-w-[80px]" />
+                                <select id="newShiftDay" class="admin-input flex-1 min-w-[80px]">
                                     <option value="P">Pagi (P)</option>
                                     <option value="S">Siang (S)</option>
                                     <option value="L">Lembur (L)</option>
@@ -929,24 +1020,24 @@
                                 </select>
                                 <button class="btn-modern btn-primary" id="addSalesBtn">Tambah</button>
                             </div>
-                            <div class="mt-2 text-xs text-slate-400">Shift Senin diisi, hari lain mengikuti pola berpasangan.</div>
+                            <div class="mt-1 text-xs text-slate-400">Shift Senin diisi, hari lain mengikuti pola berpasangan.</div>
                         </div>
                         <div>
-                            <h3 class="font-bold text-slate-700 mb-3 text-lg">🎨 Warna Brand</h3>
-                            <div class="flex flex-wrap items-center gap-3">
-                                <input type="text" id="colorBrandInput" placeholder="Nama Brand" class="admin-input flex-1 min-w-[100px]" />
-                                <input type="color" id="colorPicker" value="#dbeafe" class="w-14 h-14 rounded-full border-2 border-slate-200 p-1 cursor-pointer shadow-sm" />
+                            <h3 class="font-bold text-slate-700 mb-2 text-base">🎨 Warna Brand</h3>
+                            <div class="flex flex-wrap items-center gap-2">
+                                <input type="text" id="colorBrandInput" placeholder="Nama Brand" class="admin-input flex-1 min-w-[80px]" />
+                                <input type="color" id="colorPicker" value="#dbeafe" class="w-12 h-12 rounded-full border-2 border-slate-200 p-1 cursor-pointer shadow-sm" />
                                 <button class="btn-modern btn-primary" id="setBrandColorBtn">Set</button>
                             </div>
-                            <div id="brandColorList" class="flex flex-wrap gap-2 mt-3"></div>
+                            <div id="brandColorList" class="flex flex-wrap gap-2 mt-2"></div>
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 border-t border-slate-200/60 pt-5">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-3 border-t border-slate-200/60 pt-4">
                         <div>
-                            <h3 class="font-bold text-slate-700 mb-2">🗑️ Hapus Sales</h3>
+                            <h3 class="font-bold text-slate-700 mb-1 text-sm">🗑️ Hapus Sales</h3>
                             <div class="flex flex-wrap gap-2">
-                                <select id="deleteSelect" class="admin-input flex-1 min-w-[120px]"><option value="">Pilih sales</option></select>
+                                <select id="deleteSelect" class="admin-input flex-1 min-w-[100px]"><option value="">Pilih sales</option></select>
                                 <button class="btn-modern btn-danger" id="deleteSalesBtn">Hapus</button>
                             </div>
                         </div>
@@ -958,8 +1049,8 @@
                         </div>
                     </div>
 
-                    <div class="border-t border-slate-200/60 pt-5">
-                        <h3 class="font-bold text-slate-700 mb-3 text-lg">📋 Daftar Sales</h3>
+                    <div class="border-t border-slate-200/60 pt-4">
+                        <h3 class="font-bold text-slate-700 mb-2 text-base">📋 Daftar Sales</h3>
                         <div id="salesListContainer" class="flex flex-wrap gap-2"></div>
                     </div>
                 </div>
@@ -1252,7 +1343,7 @@
         }
 
         // ================================================================
-        // FUNGSI UPDATE SHIFT (dengan proteksi)
+        // FUNGSI UPDATE SHIFT
         // ================================================================
         function updateShiftWithAuth(rowIndex, dayKey, currentValue) {
             if (!isAdmin) {
@@ -1346,7 +1437,7 @@
         }
 
         // ================================================================
-        // FUNGSI EDIT PIKET TOILET (dengan proteksi)
+        // FUNGSI EDIT PIKET TOILET
         // ================================================================
         function openToiletModalWithAuth(index) {
             if (!isAdmin) {
@@ -1429,7 +1520,7 @@
             const tbody = document.getElementById('shiftTableBody');
             if (!salesData.length) {
                 tbody.innerHTML =
-                    `<tr><td colspan="10" class="text-center text-slate-400 py-8">Belum ada data sales.</td></tr>`;
+                    `<tr><td colspan="10" class="text-center text-slate-400 py-6">Belum ada data sales.</td></tr>`;
                 renderShiftMobileCards();
                 return;
             }
@@ -1454,7 +1545,6 @@
                 days.forEach((day) => {
                     const val = row[day] || '';
                     const cls = getShiftClass(val);
-                    // Tampilkan badge dengan ikon dan label
                     let icon = '';
                     let label = val || '-';
                     let sub = '';
@@ -1485,7 +1575,7 @@
             if (!container) return;
 
             if (!salesData.length) {
-                container.innerHTML = `<div class="text-center text-slate-400 py-8">Belum ada data sales.</div>`;
+                container.innerHTML = `<div class="text-center text-slate-400 py-6">Belum ada data sales.</div>`;
                 return;
             }
 
@@ -1538,7 +1628,7 @@
             const tbody = document.getElementById('piketTableBody');
             if (!salesData.length) {
                 tbody.innerHTML =
-                    `<tr><td colspan="4" class="text-center text-slate-400 py-8">Belum ada data sales.</td></tr>`;
+                    `<tr><td colspan="4" class="text-center text-slate-400 py-6">Belum ada data sales.</td></tr>`;
                 renderPiketMobileCards();
                 return;
             }
@@ -1570,7 +1660,7 @@
             if (!container) return;
 
             if (!salesData.length) {
-                container.innerHTML = `<div class="text-center text-slate-400 py-8">Belum ada data sales.</div>`;
+                container.innerHTML = `<div class="text-center text-slate-400 py-6">Belum ada data sales.</div>`;
                 return;
             }
 
