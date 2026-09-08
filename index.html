@@ -1509,13 +1509,7 @@
                 days.forEach((day) => {
                     const val = row[day] || '';
                     const cls = getShiftClass(val);
-                    html += `<td>
-                        <span class="badge-shift ${cls} ${lockClass}"
-                              onclick="updateShiftWithAuth(${idx}, '${day}', '${val}')"
-                              title="${isAdmin ? 'Klik untuk ubah shift (P/S/L/OFF)' : '🔒 Kunci untuk edit'}">
-                            ${val || '-'}
-                        </span>
-                    </td>`;
+                    html += `<td><span class="badge-shift ${cls} ${lockClass}" onclick="updateShiftWithAuth(${idx}, '${day}', '${val}')" title="${isAdmin ? 'Klik untuk ubah shift (P/S/L/OFF)' : '🔒 Kunci untuk edit'}">${val || '-'}</span></td>`;
                 });
 
                 html += `</tr>`;
@@ -1596,13 +1590,7 @@
                 html += `<tr class="${dividerClass}">
                     <td class="font-semibold text-slate-700"><span class="inline-flex items-center">${dot}${row.brand || ''}</span></td>
                     <td class="font-medium text-slate-600">${row.name || ''}</td>
-                    <td>
-                        <span class="${badgeClass} ${lockClass}" 
-                              onclick="openToiletModalWithAuth(${idx})"
-                              title="${isAdmin ? 'Klik untuk pilih tanggal piket' : '🔒 Kunci untuk edit'}">
-                            ${displayText}
-                        </span>
-                    </td>
+                    <td><span class="${badgeClass} ${lockClass}" onclick="openToiletModalWithAuth(${idx})" title="${isAdmin ? 'Klik untuk pilih tanggal piket' : '🔒 Kunci untuk edit'}">${displayText}</span></td>
                     <td class="text-slate-400 text-xs">${hasToilet ? '✅ Terjadwal' : '⚪ Kosong'}</td>
                 </tr>`;
             });
@@ -1957,6 +1945,13 @@
                     return;
                 }
 
+                // Pastikan font Inter sudah 100% termuat sebelum di-screenshot.
+                // Kalau font belum siap, html2canvas bisa jatuh ke font pengganti
+                // dengan lebar huruf berbeda sehingga teks terlihat tidak center.
+                if (document.fonts && document.fonts.ready) {
+                    await document.fonts.ready;
+                }
+
                 // Setting kualitas gambar (2x lipat agar tajam di HP)
                 const canvas = await html2canvas(elementToCapture, {
                     scale: 2,
@@ -1965,19 +1960,24 @@
                     onclone: (clonedDoc) => {
                         // Paksa style badge agar teks benar-benar center saat di-capture,
                         // tanpa bergantung pada flexbox/line-height yang kadang tidak
-                        // terbaca sempurna oleh html2canvas.
+                        // terbaca sempurna oleh html2canvas. Teks juga di-trim manual
+                        // karena spasi/baris-baru tersembunyi di sekitar teks bisa membuat
+                        // html2canvas menggeser posisi huruf walau di layar terlihat rapi.
                         clonedDoc.querySelectorAll('.badge-shift').forEach(el => {
+                            el.textContent = (el.textContent || '').trim();
                             el.style.display = 'inline-block';
                             el.style.textAlign = 'center';
                             el.style.verticalAlign = 'middle';
-                            el.style.lineHeight = '18px';
-                            el.style.padding = '6px 10px';
+                            el.style.letterSpacing = 'normal';
+                            el.style.whiteSpace = 'nowrap';
                             el.style.boxSizing = 'border-box';
                         });
                         clonedDoc.querySelectorAll('.badge-toilet').forEach(el => {
+                            el.textContent = (el.textContent || '').trim();
                             el.style.display = 'inline-block';
                             el.style.textAlign = 'center';
                             el.style.verticalAlign = 'middle';
+                            el.style.letterSpacing = 'normal';
                         });
                     }
                 });
