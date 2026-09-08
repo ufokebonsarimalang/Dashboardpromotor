@@ -635,7 +635,7 @@
 
         @media (max-width: 768px) {
             .sidebar {
-                flex-direction: column; /* Ubah jadi kolom agar rapi */
+                flex-direction: column;
                 flex-wrap: nowrap;
                 height: auto;
                 padding: 10px 16px;
@@ -654,7 +654,7 @@
                 margin-bottom: 8px;
             }
             .sidebar-brand img {
-                width: 140px; /* Ukuran logo di HP */
+                width: 140px;
                 max-height: 60px;
             }
             .sidebar nav {
@@ -685,12 +685,6 @@
             }
             .modal-content {
                 padding: 24px;
-            }
-            .stat-card .number {
-                font-size: 1.4rem;
-            }
-            .stat-card {
-                padding: 14px 16px;
             }
             
             /* Tampilan Note di HP agar tidak overflow */
@@ -747,7 +741,6 @@
         <aside class="sidebar w-full md:w-64 flex-shrink-0 text-white p-5 flex flex-col gap-4 md:min-h-screen sticky top-0 z-10">
             <!-- LOGO GAMBAR -->
             <div class="sidebar-brand pb-4 border-b border-white/10 flex justify-center">
-                <!-- GANTI 'logo-ufo.png' DENGAN NAMA FILE GAMBAR ANDA -->
                 <img src="logo-ufo.png" alt="UFO Malang Kebonsari" class="w-40 md:w-48 h-auto object-contain drop-shadow-lg" />
             </div>
             
@@ -786,32 +779,6 @@
                             <span class="drag-info">↕️ Drag & drop baris untuk tukar posisi</span>
                             <span class="drag-info" style="background:linear-gradient(135deg,#dbeafe,#bfdbfe);color:#1a3a5a;">👫 Garis biru = pasangan brand</span>
                         </p>
-                    </div>
-                    <!-- TOMBOL DOWNLOAD JPG SHIFT -->
-                    <button class="btn-modern btn-primary" onclick="downloadJPG('shift')">📥 Download JPG</button>
-                </div>
-
-                <!-- Statistik -->
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
-                    <div class="stat-card">
-                        <div class="number" id="totalSales">0</div>
-                        <div class="label">Total Sales</div>
-                        <span class="icon">👥</span>
-                    </div>
-                    <div class="stat-card">
-                        <div class="number" id="totalPiket">0</div>
-                        <div class="label">Terjadwal Piket</div>
-                        <span class="icon">📅</span>
-                    </div>
-                    <div class="stat-card">
-                        <div class="number" id="totalPagi">0</div>
-                        <div class="label">Shift Pagi (P)</div>
-                        <span class="icon">🌅</span>
-                    </div>
-                    <div class="stat-card">
-                        <div class="number" id="totalSiang">0</div>
-                        <div class="label">Shift Siang (S)</div>
-                        <span class="icon">☀️</span>
                     </div>
                 </div>
 
@@ -873,30 +840,6 @@
                     </ul>
                 </div>
                 <!-- ==== SELESAI NOTE ==== -->
-
-                <!-- Statistik Piket -->
-                <div class="grid grid-cols-2 md:grid-cols-3 gap-3 mb-6">
-                    <div class="stat-card">
-                        <div class="number" id="totalPiketStat">0</div>
-                        <div class="label">Total Terjadwal</div>
-                        <span class="icon">✅</span>
-                    </div>
-                    <div class="stat-card">
-                        <div class="number" id="totalKosongStat">0</div>
-                        <div class="label">Belum Terjadwal</div>
-                        <span class="icon">⏳</span>
-                    </div>
-                    <div class="stat-card">
-                        <div class="number" id="totalSalesPiket">0</div>
-                        <div class="label">Total Sales</div>
-                        <span class="icon">👥</span>
-                    </div>
-                </div>
-
-                <!-- TOMBOL DOWNLOAD JPG PIKET -->
-                <div class="mb-4 flex justify-end">
-                    <button class="btn-modern btn-primary" onclick="downloadJPG('piket')">📥 Download JPG Piket</button>
-                </div>
 
                 <div class="card-glass rounded-3xl p-4 md:p-6 overflow-hidden" id="piketTableCard">
                     <div class="hidden md:block overflow-x-auto">
@@ -986,28 +929,20 @@
         // ================================================================
         // KONFIGURASI
         // ================================================================
-        const ADMIN_PIN = "7730"; // Ganti dengan PIN yang diinginkan
+        const ADMIN_PIN = "7730";
 
         // ================================================================
         // FIREBASE KONFIGURASI
         // ================================================================
         const firebaseConfig = {
             apiKey: "AIzaSyBMokA92YiB87vwuqBREwNhHkkU_bXo8cI",
-
-  authDomain: "ufokebonsariapps.firebaseapp.com",
-
-  databaseURL: "https://ufokebonsariapps-default-rtdb.asia-southeast1.firebasedatabase.app",
-
-  projectId: "ufokebonsariapps",
-
-  storageBucket: "ufokebonsariapps.firebasestorage.app",
-
-  messagingSenderId: "663266923207",
-
-  appId: "1:663266923207:web:fb989ce91cd40b6d3724e2"
-
-};
-
+            authDomain: "ufokebonsariapps.firebaseapp.com",
+            databaseURL: "https://ufokebonsariapps-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "ufokebonsariapps",
+            storageBucket: "ufokebonsariapps.firebasestorage.app",
+            messagingSenderId: "663266923207",
+            appId: "1:663266923207:web:fb989ce91cd40b6d3724e2"
+        };
 
         let db = null;
         let firebaseInitialized = false;
@@ -1316,7 +1251,6 @@
                     renderAll();
                     showToast(`↕️ ${movedItem.brand} - ${movedItem.name} dipindahkan`);
                 });
-                // Kembalikan tampilan ke posisi semula dulu (sebelum PIN dimasukkan)
                 renderAll();
                 return;
             }
@@ -1432,35 +1366,6 @@
         }
 
         // ================================================================
-        // UPDATE STATISTIK
-        // ================================================================
-        function updateStatistics() {
-            const total = salesData.length;
-            const withPiket = salesData.filter(r => r.toilet && r.toilet.trim() !== '').length;
-            const tanpaPiket = total - withPiket;
-
-            let totalPagi = 0,
-                totalSiang = 0;
-            const days = ['senin', 'selasa', 'rabu', 'kamis', 'jumat', 'sabtu', 'minggu'];
-            salesData.forEach(row => {
-                days.forEach(day => {
-                    const val = (row[day] || '').toUpperCase();
-                    if (val === 'P') totalPagi++;
-                    if (val === 'S') totalSiang++;
-                });
-            });
-
-            document.getElementById('totalSales').textContent = total;
-            document.getElementById('totalPiket').textContent = withPiket;
-            document.getElementById('totalPagi').textContent = totalPagi;
-            document.getElementById('totalSiang').textContent = totalSiang;
-
-            document.getElementById('totalPiketStat').textContent = withPiket;
-            document.getElementById('totalKosongStat').textContent = tanpaPiket;
-            document.getElementById('totalSalesPiket').textContent = total;
-        }
-
-        // ================================================================
         // RENDER
         // ================================================================
         function getShiftClass(val) {
@@ -1492,10 +1397,8 @@
                 const dot = `<span class="brand-color-dot" style="background:${color};"></span>`;
                 const days = ['senin', 'selasa', 'rabu', 'kamis', 'jumat', 'sabtu', 'minggu'];
 
-                // --- LOGIKA GARIS PEMBATAS BIRU ---
                 const isSecondRow = idx % 2 === 1;
                 const dividerClass = isSecondRow ? 'pair-divider' : '';
-                // ---------------------------------------------
 
                 const lockClass = isAdmin ? '' : 'locked';
 
@@ -1518,7 +1421,6 @@
 
             setTimeout(initDragDrop, 50);
             renderShiftMobileCards();
-            updateStatistics();
         }
 
         function renderShiftMobileCards() {
@@ -1596,7 +1498,6 @@
             });
             tbody.innerHTML = html;
             renderPiketMobileCards();
-            updateStatistics();
         }
 
         function renderPiketMobileCards() {
@@ -1716,7 +1617,6 @@
             renderBrandColorList();
             populateDeleteSelect();
             renderSalesBadge();
-            updateStatistics();
 
             // Update lock status di UI
             if (isAdmin) {
@@ -1915,97 +1815,6 @@
             document.getElementById('colorBrandInput').addEventListener('keypress', (e) => { if (e.key === 'Enter')
                     setBrandColorWithAuth(); });
         });
-                // ================================================================
-        // FITUR DOWNLOAD JPG (FIXED & GLOBAL)
-        // ================================================================
-        window.downloadJPG = async function(type) {
-            // PENTING: ambil kartu berdasarkan ID unik, bukan class umum ".card-glass"
-            // (sebelumnya salah ambil kartu NOTE karena querySelector hanya ambil match pertama)
-            const elementToCapture = type === 'shift'
-                ? document.getElementById('shiftTableCard')
-                : document.getElementById('piketTableCard');
-
-            if (!elementToCapture) {
-                alert('Tabel tidak ditemukan!');
-                return;
-            }
-
-            // Beri feedback loading
-            const toast = document.getElementById('toast');
-            if (toast) {
-                toast.textContent = '⏳ Membuat gambar...';
-                toast.classList.add('show');
-                setTimeout(() => toast.classList.remove('show'), 2000);
-            }
-
-            try {
-                // Pastikan library html2canvas sudah termuat
-                if (typeof html2canvas === 'undefined') {
-                    alert('Library html2canvas belum termuat. Periksa koneksi internet Anda.');
-                    return;
-                }
-
-                // Pastikan font Inter sudah 100% termuat sebelum di-screenshot.
-                // Kalau font belum siap, html2canvas bisa jatuh ke font pengganti
-                // dengan lebar huruf berbeda sehingga teks terlihat tidak center.
-                if (document.fonts && document.fonts.ready) {
-                    await document.fonts.ready;
-                }
-
-                // Setting kualitas gambar (2x lipat agar tajam di HP)
-                const canvas = await html2canvas(elementToCapture, {
-                    scale: 2,
-                    backgroundColor: '#ffffff',
-                    useCORS: true,
-                    onclone: (clonedDoc) => {
-                        // Paksa style badge agar teks benar-benar center saat di-capture,
-                        // tanpa bergantung pada flexbox/line-height yang kadang tidak
-                        // terbaca sempurna oleh html2canvas. Teks juga di-trim manual
-                        // karena spasi/baris-baru tersembunyi di sekitar teks bisa membuat
-                        // html2canvas menggeser posisi huruf walau di layar terlihat rapi.
-                        clonedDoc.querySelectorAll('.badge-shift').forEach(el => {
-                            el.textContent = (el.textContent || '').trim();
-                            el.style.display = 'inline-block';
-                            el.style.textAlign = 'center';
-                            el.style.verticalAlign = 'middle';
-                            el.style.letterSpacing = 'normal';
-                            el.style.whiteSpace = 'nowrap';
-                            el.style.boxSizing = 'border-box';
-                        });
-                        clonedDoc.querySelectorAll('.badge-toilet').forEach(el => {
-                            el.textContent = (el.textContent || '').trim();
-                            el.style.display = 'inline-block';
-                            el.style.textAlign = 'center';
-                            el.style.verticalAlign = 'middle';
-                            el.style.letterSpacing = 'normal';
-                        });
-                    }
-                });
-
-                // Ubah canvas menjadi JPG
-                const imgData = canvas.toDataURL('image/jpeg', 0.95);
-
-                // Buat elemen <a> untuk download
-                const link = document.createElement('a');
-                const fileName = type === 'shift' ? 'Jadwal_Shift_UFO.jpg' : 'Jadwal_Piket_Toilet_UFO.jpg';
-                link.download = fileName;
-                link.href = imgData;
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-
-                // Notifikasi sukses
-                if (toast) {
-                    toast.textContent = '✅ Gambar berhasil didownload';
-                    toast.style.background = '#1e293b';
-                    toast.classList.add('show');
-                    setTimeout(() => toast.classList.remove('show'), 2500);
-                }
-            } catch (error) {
-                console.error('Error download JPG:', error);
-                alert('Gagal membuat gambar. Periksa console browser untuk detail.');
-            }
-        };
     </script>
 
 </body>
