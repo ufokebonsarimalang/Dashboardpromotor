@@ -9,14 +9,11 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800;14..32,900&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
-     <!-- Library untuk Download JPG -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js">
     </script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js">
     </script>
-    <!-- Drag & Drop Library -->
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js">
     </script>
        
@@ -65,88 +62,172 @@
             border: 1px solid rgba(255, 255, 255, 0.6);
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
         }
+
+        /* ================================================================
+           BADGE SHIFT - DESAIN PREMIUM & LEBIH TEBAL
+           ================================================================ */
         .badge-shift {
-            padding: 6px 14px;
-            border-radius: 40px;
-            font-weight: 700;
-            font-size: 0.75rem;
-            letter-spacing: 0.3px;
-            display: inline-block;
-            min-width: 44px;
+            padding: 8px 18px;
+            border-radius: 50px;
+            font-weight: 800;
+            font-size: 0.9rem;
+            letter-spacing: 0.5px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            min-width: 60px;
             text-align: center;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.10);
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
             user-select: none;
             position: relative;
+            border: 2.5px solid transparent;
+            line-height: 1.3;
+            text-transform: uppercase;
         }
+        .badge-shift .badge-icon {
+            font-size: 1rem;
+            line-height: 1;
+            filter: drop-shadow(0 1px 2px rgba(0,0,0,0.08));
+        }
+        .badge-shift .badge-label {
+            font-weight: 900;
+            font-size: 1rem;
+            letter-spacing: 0.5px;
+        }
+        .badge-shift .badge-sub {
+            font-size: 0.55rem;
+            font-weight: 600;
+            opacity: 0.8;
+            margin-left: 2px;
+            text-transform: lowercase;
+        }
+
         .badge-shift:hover {
-            transform: scale(1.08) translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+            transform: scale(1.10) translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
         }
         .badge-shift:active {
-            transform: scale(0.93);
+            transform: scale(0.92);
         }
         .badge-shift.locked {
             cursor: default;
-            opacity: 0.8;
+            opacity: 0.7;
         }
         .badge-shift.locked:hover {
-            transform: none;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+            transform: none !important;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.10) !important;
         }
+
+        /* P - Pagi (Kuning Emas) */
         .badge-p {
-            background: linear-gradient(135deg, #dbeafe, #bfdbfe);
-            color: #1e40af;
+            background: linear-gradient(145deg, #fcd34d, #f59e0b);
+            color: #78350f;
+            border-color: #d97706;
+            box-shadow: 0 4px 16px rgba(245, 158, 11, 0.40);
+            text-shadow: 0 1px 2px rgba(255, 255, 255, 0.3);
         }
+        .badge-p .badge-icon {
+            filter: drop-shadow(0 1px 2px rgba(0,0,0,0.1));
+        }
+
+        /* S - Siang (Biru Cerah) */
         .badge-s {
-            background: linear-gradient(135deg, #d1fae5, #a7f3d0);
-            color: #065f46;
+            background: linear-gradient(145deg, #7dd3fc, #3b82f6);
+            color: #0c2d5e;
+            border-color: #2563eb;
+            box-shadow: 0 4px 16px rgba(59, 130, 246, 0.40);
+            text-shadow: 0 1px 2px rgba(255, 255, 255, 0.3);
         }
+        .badge-s .badge-icon {
+            filter: drop-shadow(0 1px 2px rgba(0,0,0,0.1));
+        }
+
+        /* L - Lembur (Ungu Mewah) */
         .badge-l {
-            background: linear-gradient(135deg, #fef08a, #fde047);
-            color: #854d0e;
-            border: 1px solid #facc15;
+            background: linear-gradient(145deg, #c4b5fd, #7c3aed);
+            color: #1e0a4a;
+            border-color: #6d28d9;
+            box-shadow: 0 4px 16px rgba(124, 58, 237, 0.40);
+            text-shadow: 0 1px 2px rgba(255, 255, 255, 0.25);
         }
+        .badge-l .badge-icon {
+            filter: drop-shadow(0 1px 2px rgba(0,0,0,0.1));
+        }
+
+        /* OFF - Libur (Merah) */
         .badge-off {
-            background: linear-gradient(135deg, #fca5a5, #f87171);
-            color: #7f1d1d;
-            border: 1px solid #ef4444;
+            background: linear-gradient(145deg, #fca5a5, #ef4444);
+            color: #4a0e0e;
+            border-color: #dc2626;
+            box-shadow: 0 4px 16px rgba(239, 68, 68, 0.40);
+            text-shadow: 0 1px 2px rgba(255, 255, 255, 0.25);
         }
-        .badge-toilet {
-            background: linear-gradient(135deg, #eef2ff, #c7d2fe);
-            color: #3730a3;
-            padding: 6px 16px;
-            border-radius: 40px;
+        .badge-off .badge-icon {
+            filter: drop-shadow(0 1px 2px rgba(0,0,0,0.1));
+        }
+
+        /* Badge kosong/tidak ada shift */
+        .badge-empty {
+            background: linear-gradient(145deg, #e2e8f0, #cbd5e1);
+            color: #64748b;
+            border-color: #94a3b8;
+            box-shadow: none;
+            opacity: 0.5;
+            cursor: default;
+            min-width: 44px;
+            font-size: 0.75rem;
             font-weight: 600;
-            font-size: 0.8rem;
-            display: inline-block;
+        }
+        .badge-empty:hover {
+            transform: none !important;
+            box-shadow: none !important;
+        }
+
+        /* ========== BADGE TOILET ========== */
+        .badge-toilet {
+            background: linear-gradient(145deg, #eef2ff, #c7d2fe);
+            color: #3730a3;
+            padding: 8px 18px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
             cursor: pointer;
-            transition: all 0.2s ease;
-            border: 1px solid #a5b4fc;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+            border: 2.5px solid #a5b4fc;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+            line-height: 1.3;
         }
         .badge-toilet:hover {
-            transform: scale(1.05) translateY(-2px);
-            box-shadow: 0 6px 20px rgba(55, 48, 163, 0.15);
+            transform: scale(1.06) translateY(-3px);
+            box-shadow: 0 8px 24px rgba(55, 48, 163, 0.18);
         }
         .badge-toilet.locked {
             cursor: default;
-            opacity: 0.8;
+            opacity: 0.7;
         }
         .badge-toilet.locked:hover {
-            transform: none;
+            transform: none !important;
         }
         .badge-toilet.empty {
-            background: linear-gradient(135deg, #f1f5f9, #e2e8f0);
+            background: linear-gradient(145deg, #f1f5f9, #e2e8f0);
             color: #94a3b8;
-            border: 2px dashed #94a3b8;
+            border: 2.5px dashed #94a3b8;
+            box-shadow: none;
         }
         .badge-toilet.has-date {
-            background: linear-gradient(135deg, #dbeafe, #93c5fd);
+            background: linear-gradient(145deg, #dbeafe, #93c5fd);
             color: #1e3a5f;
-            border: 1px solid #60a5fa;
+            border: 2.5px solid #60a5fa;
+            box-shadow: 0 4px 16px rgba(59, 130, 246, 0.20);
         }
+
+        /* ========== SISANYA TETAP SAMA ========== */
         .table-modern th {
             background: linear-gradient(180deg, #f8fafc, #f1f5f9);
             color: #0f2b44;
@@ -187,7 +268,6 @@
             background: #bfdbfe;
             box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
         }
-        /* GARIS PEMBATAS DI BAWAH BARIS KEDUA (SAMSUNG, LG, dll) */
         .table-modern tbody tr.pair-divider td {
             border-bottom: 4px solid #1a3a5a !important;
             position: relative;
@@ -202,18 +282,19 @@
             background: linear-gradient(90deg, #1a3a5a, #3b82f6, #1a3a5a);
             border-radius: 2px;
         }
-        .pair-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            background: linear-gradient(135deg, #1a3a5a, #2563a0);
-            color: white;
-            font-size: 0.6rem;
-            font-weight: 800;
-            padding: 3px 12px 3px 10px;
-            border-radius: 40px;
-            letter-spacing: 0.5px;
-            box-shadow: 0 2px 8px rgba(26, 58, 90, 0.3);
+        .brand-color-dot {
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            margin-right: 8px;
+            border: 2px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            flex-shrink: 0;
+            transition: transform 0.2s;
+        }
+        .brand-color-dot:hover {
+            transform: scale(1.2);
         }
         .drag-handle {
             cursor: grab;
@@ -238,20 +319,6 @@
         .drag-handle.locked:hover {
             opacity: 0.3;
             color: #94a3b8;
-        }
-        .brand-color-dot {
-            display: inline-block;
-            width: 14px;
-            height: 14px;
-            border-radius: 50%;
-            margin-right: 8px;
-            border: 2px solid rgba(255, 255, 255, 0.8);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-            flex-shrink: 0;
-            transition: transform 0.2s;
-        }
-        .brand-color-dot:hover {
-            transform: scale(1.2);
         }
         .admin-input {
             border-radius: 40px;
@@ -457,64 +524,17 @@
             gap: 8px;
             font-weight: 500;
         }
-        .stat-card {
-            background: white;
-            border-radius: 20px;
-            padding: 18px 22px;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
-            border: 1px solid #eef2f6;
-            transition: all 0.2s;
-            position: relative;
-            overflow: hidden;
-        }
-        .stat-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, #1a3a5a, #3b82f6);
-        }
-        .stat-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
-        }
-        .stat-card .number {
-            font-size: 2rem;
-            font-weight: 800;
-            color: #0c2238;
-        }
-        .stat-card .label {
-            font-size: 0.7rem;
-            color: #64748b;
-            text-transform: uppercase;
-            letter-spacing: 0.8px;
-            font-weight: 600;
-        }
-        .stat-card .icon {
-            font-size: 1.8rem;
-            opacity: 0.3;
-            position: absolute;
-            right: 16px;
-            bottom: 16px;
-        }
-        .lock-icon {
-            display: inline-block;
-            font-size: 0.7rem;
-            margin-left: 4px;
-        }
         .admin-locked .badge-shift {
             cursor: default !important;
-            opacity: 0.8;
+            opacity: 0.7;
         }
         .admin-locked .badge-shift:hover {
             transform: none !important;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06) !important;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.10) !important;
         }
         .admin-locked .badge-toilet {
             cursor: default !important;
-            opacity: 0.8;
+            opacity: 0.7;
         }
         .admin-locked .badge-toilet:hover {
             transform: none !important;
@@ -528,7 +548,7 @@
             color: #94a3b8 !important;
         }
 
-        /* ==== TAMPILAN KARTU UNTUK MOBILE (SHIFT) ==== */
+        /* MOBILE */
         .shift-card {
             background: white;
             border-radius: 18px;
@@ -585,8 +605,19 @@
         .day-cell .badge-shift {
             width: 100%;
             min-width: 0;
-            padding: 5px 0;
-            font-size: 0.66rem;
+            padding: 5px 4px;
+            font-size: 0.7rem;
+            gap: 3px;
+            min-width: 32px;
+        }
+        .day-cell .badge-shift .badge-icon {
+            font-size: 0.7rem;
+        }
+        .day-cell .badge-shift .badge-sub {
+            display: none;
+        }
+        .day-cell .badge-shift .badge-label {
+            font-size: 0.75rem;
         }
         .drag-handle-mobile {
             color: #94a3b8;
@@ -600,8 +631,6 @@
             opacity: 0.25;
             cursor: default;
         }
-
-        /* ==== TAMPILAN KARTU UNTUK MOBILE (PIKET) ==== */
         .piket-card {
             background: white;
             border-radius: 18px;
@@ -686,13 +715,32 @@
             .modal-content {
                 padding: 24px;
             }
-            
-            /* Tampilan Note di HP agar tidak overflow */
             .card-glass {
                 padding: 12px;
             }
             .text-sm {
                 font-size: 0.8rem;
+            }
+            .badge-shift {
+                padding: 4px 6px;
+                font-size: 0.65rem;
+                min-width: 28px;
+                gap: 2px;
+                border-width: 2px;
+            }
+            .badge-shift .badge-icon {
+                font-size: 0.6rem;
+            }
+            .badge-shift .badge-sub {
+                display: none;
+            }
+            .badge-shift .badge-label {
+                font-size: 0.65rem;
+            }
+            .badge-toilet {
+                padding: 5px 12px;
+                font-size: 0.7rem;
+                border-width: 2px;
             }
         }
     </style>
@@ -737,9 +785,8 @@
 
     <div class="flex flex-col md:flex-row min-h-screen">
 
-                     <!-- SIDEBAR -->
+        <!-- SIDEBAR -->
         <aside class="sidebar w-full md:w-64 flex-shrink-0 text-white p-5 flex flex-col gap-4 md:min-h-screen sticky top-0 z-10">
-            <!-- LOGO GAMBAR -->
             <div class="sidebar-brand pb-4 border-b border-white/10 flex justify-center">
                 <img src="logo-ufo.png" alt="UFO Malang Kebonsari" class="w-40 md:w-48 h-auto object-contain drop-shadow-lg" />
             </div>
@@ -766,10 +813,11 @@
                 <button id="unlockBtn" class="text-xs text-white/40 hover:text-white/80 underline">Buka</button>
             </div>
         </aside>
+
         <!-- MAIN -->
         <main class="main flex-1 p-4 md:p-8 max-w-full" id="mainContent">
 
-                      <!-- HALAMAN SHIFT -->
+            <!-- HALAMAN SHIFT -->
             <section id="page-shift" class="page active">
                 <div class="mb-6 flex flex-wrap justify-between items-center gap-4">
                     <div>
@@ -804,14 +852,15 @@
                     </div>
                     <div id="shiftMobileView" class="md:hidden space-y-3"></div>
                     <div class="mt-4 flex flex-wrap gap-4 text-xs text-slate-500 border-t pt-4 border-slate-200/60">
-                        <span><span class="badge-shift badge-p" style="cursor:default;">P</span> Pagi</span>
-                        <span><span class="badge-shift badge-s" style="cursor:default;">S</span> Siang</span>
-                        <span><span class="badge-shift badge-l" style="cursor:default;">L</span> Lembur</span>
-                        <span><span class="badge-shift badge-off" style="cursor:default;">OFF</span> Libur</span>
+                        <span><span class="badge-shift badge-p" style="cursor:default;pointer-events:none;"><span class="badge-icon">🌅</span><span class="badge-label">P</span><span class="badge-sub">Pagi</span></span></span>
+                        <span><span class="badge-shift badge-s" style="cursor:default;pointer-events:none;"><span class="badge-icon">☀️</span><span class="badge-label">S</span><span class="badge-sub">Siang</span></span></span>
+                        <span><span class="badge-shift badge-l" style="cursor:default;pointer-events:none;"><span class="badge-icon">🌙</span><span class="badge-label">L</span><span class="badge-sub">Lembur</span></span></span>
+                        <span><span class="badge-shift badge-off" style="cursor:default;pointer-events:none;"><span class="badge-icon">🚫</span><span class="badge-label">OFF</span><span class="badge-sub">Libur</span></span></span>
                         <span class="text-slate-400 ml-2">💡 Klik badge untuk mengubah shift</span>
                     </div>
                 </div>
             </section>
+
             <!-- HALAMAN PIKET -->
             <section id="page-piket" class="page hidden">
                 <div class="mb-6">
@@ -819,7 +868,6 @@
                     <p class="text-slate-500 mt-1">Klik badge piket untuk pilih tanggal — otomatis tersimpan</p>
                 </div>
 
-                <!-- ==== NOTE BARU DI ATAS JADWAL ==== -->
                 <div class="card-glass rounded-3xl p-5 mb-6 border-l-4 border-yellow-400 bg-yellow-50/80">
                     <h3 class="text-lg font-extrabold text-slate-800 mb-3" style="font-weight:900;">📌 NOTE:</h3>
                     <ul class="text-sm text-slate-700 space-y-1 list-disc pl-5">
@@ -839,7 +887,6 @@
                         <li>MENGISI FORM KONFIRMASI TUKAR SHIFT, TUKAR OFF, CUTI (DILENGKAPI SURAT IZIN CUTI)</li>
                     </ul>
                 </div>
-                <!-- ==== SELESAI NOTE ==== -->
 
                 <div class="card-glass rounded-3xl p-4 md:p-6 overflow-hidden" id="piketTableCard">
                     <div class="hidden md:block overflow-x-auto">
@@ -856,7 +903,7 @@
                         </table>
                     </div>
                     <div id="piketMobileView" class="md:hidden space-y-3"></div>
-                                    </div>
+                </div>
             </section>
 
             <!-- HALAMAN ADMIN -->
@@ -1232,7 +1279,7 @@
         }
 
         // ================================================================
-        // FUNGSI REORDER (dipakai bersama oleh drag desktop & mobile)
+        // FUNGSI REORDER
         // ================================================================
         function handleReorder(oldIndex, newIndex) {
             if (oldIndex === newIndex || oldIndex == null || newIndex == null) return;
@@ -1369,7 +1416,7 @@
             if (u === 'S') return 'badge-s';
             if (u === 'L') return 'badge-l';
             if (u === 'OFF') return 'badge-off';
-            return '';
+            return 'badge-empty';
         }
 
         function formatDate(dateStr) {
@@ -1407,7 +1454,22 @@
                 days.forEach((day) => {
                     const val = row[day] || '';
                     const cls = getShiftClass(val);
-                    html += `<td><span class="badge-shift ${cls} ${lockClass}" onclick="updateShiftWithAuth(${idx}, '${day}', '${val}')" title="${isAdmin ? 'Klik untuk ubah shift (P/S/L/OFF)' : '🔒 Kunci untuk edit'}">${val || '-'}</span></td>`;
+                    // Tampilkan badge dengan ikon dan label
+                    let icon = '';
+                    let label = val || '-';
+                    let sub = '';
+                    if (val === 'P') { icon = '🌅';
+                        sub = 'Pagi'; } else if (val === 'S') { icon = '☀️';
+                        sub = 'Siang'; } else if (val === 'L') { icon = '🌙';
+                        sub = 'Lembur'; } else if (val === 'OFF') { icon = '🚫';
+                        sub = 'Libur'; } else { icon = '—';
+                        sub = ''; }
+
+                    html += `<td><span class="badge-shift ${cls} ${lockClass}" onclick="updateShiftWithAuth(${idx}, '${day}', '${val}')" title="${isAdmin ? 'Klik untuk ubah shift (P/S/L/OFF)' : '🔒 Kunci untuk edit'}">
+                        <span class="badge-icon">${icon}</span>
+                        <span class="badge-label">${label}</span>
+                        ${sub ? `<span class="badge-sub">${sub}</span>` : ''}
+                    </span></td>`;
                 });
 
                 html += `</tr>`;
@@ -1439,11 +1501,19 @@
                 days.forEach((day, i) => {
                     const val = row[day] || '';
                     const cls = getShiftClass(val);
+                    let icon = '';
+                    let label = val || '-';
+                    if (val === 'P') { icon = '🌅'; } else if (val === 'S') { icon = '☀️'; } else if (val === 'L') { icon =
+                            '🌙'; } else if (val === 'OFF') { icon = '🚫'; } else { icon = '—'; }
+
                     dayCells += `<div class="day-cell">
                         <span class="day-label">${dayLabels[i]}</span>
                         <span class="badge-shift ${cls} ${lockClass}"
                               onclick="updateShiftWithAuth(${idx}, '${day}', '${val}')"
-                              title="${isAdmin ? 'Klik untuk ubah shift' : '🔒 Kunci untuk edit'}">${val || '-'}</span>
+                              title="${isAdmin ? 'Klik untuk ubah shift' : '🔒 Kunci untuk edit'}">
+                            <span class="badge-icon">${icon}</span>
+                            <span class="badge-label">${label}</span>
+                        </span>
                     </div>`;
                 });
 
@@ -1613,7 +1683,6 @@
             populateDeleteSelect();
             renderSalesBadge();
 
-            // Update lock status di UI
             if (isAdmin) {
                 document.getElementById('mainContent').classList.remove('admin-locked');
             } else {
@@ -1622,7 +1691,7 @@
         }
 
         // ================================================================
-        // ADMIN ACTIONS (dengan proteksi)
+        // ADMIN ACTIONS
         // ================================================================
         function addSalesWithAuth() {
             if (!isAdmin) {
@@ -1758,14 +1827,11 @@
         // INIT
         // ================================================================
         document.addEventListener('DOMContentLoaded', async function() {
-            // Expose functions
             window.updateShiftWithAuth = updateShiftWithAuth;
             window.openToiletModalWithAuth = openToiletModalWithAuth;
 
-            // Lock status
             document.getElementById('unlockBtn').addEventListener('click', toggleLock);
 
-            // Password modal
             document.getElementById('passwordConfirmBtn').addEventListener('click', confirmPassword);
             document.getElementById('passwordCancelBtn').addEventListener('click', cancelPassword);
             document.getElementById('passwordInput').addEventListener('keypress', function(e) {
@@ -1777,7 +1843,6 @@
 
             await loadData();
 
-            // Admin buttons with auth
             document.getElementById('addSalesBtn').addEventListener('click', addSalesWithAuth);
             document.getElementById('deleteSalesBtn').addEventListener('click', deleteSelectedWithAuth);
             document.getElementById('resetDefaultBtn').addEventListener('click', resetDefaultWithAuth);
@@ -1794,7 +1859,6 @@
                 showToast('☁️ Sinkronisasi selesai');
             });
 
-            // Modal toilet
             document.getElementById('modalSaveBtn').addEventListener('click', saveToiletSchedule);
             document.getElementById('modalCancelBtn').addEventListener('click', closeToiletModal);
             document.getElementById('modalClearBtn').addEventListener('click', clearToiletSchedule);
@@ -1802,7 +1866,6 @@
                 if (e.target === this) closeToiletModal();
             });
 
-            // Enter key
             document.getElementById('newName').addEventListener('keypress', (e) => { if (e.key === 'Enter')
                     addSalesWithAuth(); });
             document.getElementById('newBrand').addEventListener('keypress', (e) => { if (e.key === 'Enter')
