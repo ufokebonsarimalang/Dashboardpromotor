@@ -528,107 +528,162 @@
             color: #94a3b8 !important;
         }
 
-        /* ================================================================
-           RESPONSIVE MOBILE - TABEL MENJADI CARD, BUKAN SHRINK
-           ================================================================ */
+        /* ==== TAMPILAN KARTU UNTUK MOBILE (SHIFT) ==== */
+        .shift-card {
+            background: white;
+            border-radius: 18px;
+            padding: 14px 16px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+            border: 1px solid #eef2f6;
+        }
+        .shift-card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding-bottom: 8px;
+            border-bottom: 1px dashed #e2e8f0;
+        }
+        .shift-card-title-wrap {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            min-width: 0;
+        }
+        .shift-card-title {
+            font-weight: 700;
+            color: #0f2b44;
+            font-size: 0.9rem;
+            white-space: nowrap;
+        }
+        .shift-card-name {
+            color: #64748b;
+            font-weight: 500;
+            font-size: 0.78rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .day-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 4px;
+        }
+        .day-cell {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 3px;
+        }
+        .day-cell .day-label {
+            font-size: 0.58rem;
+            color: #94a3b8;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.2px;
+        }
+        .day-cell .badge-shift {
+            width: 100%;
+            min-width: 0;
+            padding: 5px 0;
+            font-size: 0.66rem;
+        }
+        .drag-handle-mobile {
+            color: #94a3b8;
+            font-size: 1.15rem;
+            padding: 2px 6px;
+            cursor: grab;
+            opacity: 0.5;
+            user-select: none;
+        }
+        .drag-handle-mobile.locked {
+            opacity: 0.25;
+            cursor: default;
+        }
+
+        /* ==== TAMPILAN KARTU UNTUK MOBILE (PIKET) ==== */
+        .piket-card {
+            background: white;
+            border-radius: 18px;
+            padding: 14px 16px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+            border: 1px solid #eef2f6;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
+        .piket-card .info {
+            min-width: 0;
+            flex: 1;
+        }
+        .piket-card .info .title {
+            display: flex;
+            align-items: center;
+            font-weight: 700;
+            color: #0f2b44;
+            font-size: 0.86rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .piket-card .info .sub {
+            color: #94a3b8;
+            font-size: 0.72rem;
+            margin-top: 2px;
+        }
+
         @media (max-width: 768px) {
-            .sidebar { flex-direction: column; flex-wrap: nowrap; height: auto; padding: 10px 16px; gap: 6px; border-right: none; border-bottom: 1px solid rgba(255,255,255,.05); align-items: center; }
-            .sidebar-brand { font-size: 1rem; border-bottom: none; padding-bottom: 4px; width: 100%; display: flex; justify-content: center; margin-bottom: 8px; }
-            .sidebar-brand img { width: 140px; max-height: 60px; }
-            .sidebar nav {
+            .sidebar {
+                flex-direction: column; /* Ubah jadi kolom agar rapi */
+                flex-wrap: nowrap;
+                height: auto;
+                padding: 10px 16px;
+                gap: 6px;
+                border-right: none;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+                align-items: center;
+            }
+            .sidebar-brand {
+                font-size: 1rem;
+                border-bottom: none;
+                padding-bottom: 4px;
                 width: 100%;
                 display: flex;
-                flex-direction: row;
-                gap: 6px;
+                justify-content: center;
+                margin-bottom: 8px;
+            }
+            .sidebar-brand img {
+                width: 140px; /* Ukuran logo di HP */
+                max-height: 60px;
             }
             .sidebar .nav-item {
-                padding: 8px 10px;
-                font-size: .8rem;
-                flex: 1 1 0;
-                min-width: 0;
-                width: auto !important;
+                padding: 8px 14px;
+                font-size: 0.8rem;
+                flex: 1 0 auto;
                 justify-content: center;
                 border-radius: 10px;
-                white-space: nowrap;
             }
-            .main { padding: 12px; }
-            .modal-content { padding: 24px; }
-            .drag-handle { font-size: .9rem; }
-            .stat-card .number { font-size: 1.4rem; }
-            .stat-card { padding: 14px 16px; }
-            .card-glass { padding: 12px; }
-            .text-sm { font-size: .8rem; }
-
-            /* Hilangkan min-width Tailwind di HP */
-            .table-modern { min-width: 0 !important; width: 100% !important; border-collapse: separate; border-spacing: 0; }
-            .table-modern thead { display: none; }
-            .table-modern tbody { display: block; width: 100%; }
-            .table-modern tbody tr {
-                display: grid; width: 100%; margin: 0 0 12px; padding: 12px;
-                border: 1px solid #e2e8f0; border-radius: 18px; background: #fff;
-                box-shadow: 0 4px 14px rgba(15,43,68,.06); box-sizing: border-box; cursor: default;
+            .main {
+                padding: 16px;
             }
-            .table-modern tbody tr:last-child { margin-bottom: 0; }
-            .table-modern td {
-                display: flex; align-items: center; justify-content: space-between; gap: 8px;
-                min-width: 0; padding: 7px 4px; border: 0 !important;
-                text-align: right !important; box-sizing: border-box; font-size: .78rem;
+            .modal-content {
+                padding: 24px;
             }
-            .table-modern td::before {
-                content: attr(data-label); flex: 0 0 auto; color: #64748b; font-size: .65rem;
-                font-weight: 800; letter-spacing: .35px; text-transform: uppercase; text-align: left;
+            .stat-card .number {
+                font-size: 1.4rem;
             }
-
-            /* SHIFT: Brand + Nama di atas, tujuh hari menjadi grid badge */
-            #page-shift .table-modern tbody tr { grid-template-columns: repeat(4,minmax(0,1fr)); gap: 4px 6px; }
-            #page-shift .table-modern tbody tr.pair-divider { border-bottom: 3px solid #1a3a5a !important; }
-            #page-shift .table-modern tbody td:nth-child(1) { display: none; }
-            #page-shift .table-modern tbody td:nth-child(2),
-            #page-shift .table-modern tbody td:nth-child(3) {
-                grid-column: span 2; justify-content: flex-start; text-align: left !important;
-                padding: 4px 2px 8px; border-bottom: 1px solid #eef2f6 !important;
+            .stat-card {
+                padding: 14px 16px;
             }
-            #page-shift .table-modern tbody td:nth-child(2)::before,
-            #page-shift .table-modern tbody td:nth-child(3)::before { display: none; }
-            #page-shift .table-modern tbody td:nth-child(n+4) {
-                flex-direction: column; justify-content: center; text-align: center !important; padding: 7px 2px;
+            
+            /* Tampilan Note di HP agar tidak overflow */
+            .card-glass {
+                padding: 12px;
             }
-            #page-shift .table-modern tbody td:nth-child(n+4)::before { width: 100%; text-align: center; white-space: nowrap; }
-
-            /* PIKET: Brand + Nama di atas, piket + keterangan di bawah */
-            #page-piket .table-modern tbody tr { grid-template-columns: repeat(2,minmax(0,1fr)); gap: 4px 10px; }
-            #page-piket .table-modern tbody td:nth-child(1),
-            #page-piket .table-modern tbody td:nth-child(2) {
-                justify-content: flex-start; text-align: left !important; padding: 4px 2px 8px;
-                border-bottom: 1px solid #eef2f6 !important;
+            .text-sm {
+                font-size: 0.8rem;
             }
-            #page-piket .table-modern tbody td:nth-child(1)::before,
-            #page-piket .table-modern tbody td:nth-child(2)::before { display: none; }
-            #page-piket .table-modern tbody td:nth-child(3),
-            #page-piket .table-modern tbody td:nth-child(4) {
-                flex-direction: column; justify-content: center; text-align: center !important; padding: 9px 2px 4px;
-            }
-            #page-piket .table-modern tbody td:nth-child(3)::before,
-            #page-piket .table-modern tbody td:nth-child(4)::before { width: 100%; text-align: center; }
-
-            .badge-shift { min-width: 38px; width: 38px; height: 28px; padding: 0 !important; font-size: .68rem; }
-            .badge-toilet { max-width: 100%; padding: 6px 10px; font-size: .72rem; white-space: nowrap; }
-            .shift-capture-card, .piket-capture-card { overflow: hidden !important; }
-        }
-
-        /* ================================================================
-           BADGE SHIFT - CENTER SELALU KONSISTEN
-           Berlaku di desktop, mobile, print, dan html2canvas/JPG.
-           ================================================================ */
-        .badge-shift {
-            display: inline-flex !important; align-items: center !important; justify-content: center !important;
-            text-align: center !important; vertical-align: middle !important; box-sizing: border-box;
-            min-width: 44px; min-height: 28px; padding: 0 10px !important; line-height: 1 !important;
-            white-space: nowrap; margin: 0 auto;
-        }
-        .table-modern td { text-align: center; vertical-align: middle; }
-        @media print {
-            .badge-shift { display: inline-flex !important; align-items: center !important; justify-content: center !important; text-align: center !important; line-height: 1 !important; padding: 0 10px !important; }
         }
     </style>
 </head>
@@ -744,8 +799,8 @@
                     </div>
                 </div>
 
-                <div class="card-glass capture-card shift-capture-card rounded-3xl p-4 md:p-6 overflow-hidden">
-                    <div class="overflow-x-auto">
+                <div class="card-glass rounded-3xl p-4 md:p-6 overflow-hidden" id="shiftTableCard">
+                    <div class="hidden md:block overflow-x-auto">
                         <table class="table-modern w-full text-sm min-w-[820px]">
                             <thead>
                                 <tr>
@@ -764,6 +819,7 @@
                             <tbody id="shiftTableBody"></tbody>
                         </table>
                     </div>
+                    <div id="shiftMobileView" class="md:hidden space-y-3"></div>
                     <div class="mt-4 flex flex-wrap gap-4 text-xs text-slate-500 border-t pt-4 border-slate-200/60">
                         <span><span class="badge-shift badge-p" style="cursor:default;">P</span> Pagi</span>
                         <span><span class="badge-shift badge-s" style="cursor:default;">S</span> Siang</span>
@@ -802,8 +858,6 @@
                 </div>
                 <!-- ==== SELESAI NOTE ==== -->
 
-                               <!-- ==== SELESAI NOTE ==== -->
-
                 <!-- Statistik Piket -->
                 <div class="grid grid-cols-2 md:grid-cols-3 gap-3 mb-6">
                     <div class="stat-card">
@@ -828,8 +882,8 @@
                     <button class="btn-modern btn-primary" onclick="downloadJPG('piket')">📥 Download JPG Piket</button>
                 </div>
 
-                <div class="card-glass capture-card piket-capture-card rounded-3xl p-4 md:p-6 overflow-hidden">
-                    <div class="overflow-x-auto">
+                <div class="card-glass rounded-3xl p-4 md:p-6 overflow-hidden" id="piketTableCard">
+                    <div class="hidden md:block overflow-x-auto">
                         <table class="table-modern w-full text-sm min-w-[500px]">
                             <thead>
                                 <tr>
@@ -842,6 +896,7 @@
                             <tbody id="piketTableBody"></tbody>
                         </table>
                     </div>
+                    <div id="piketMobileView" class="md:hidden space-y-3"></div>
                     <div class="mt-4 text-xs text-slate-500 border-t pt-4 border-slate-200/60">
                         <span class="inline-block mr-6">🧽 Lantai, dinding, closet, urinoir, wastafel, langit-langit</span>
                         <span class="inline-block">📅 General cleaning Sabtu & Minggu</span>
@@ -1106,6 +1161,7 @@
         let brandColors = {};
         let editingToiletIndex = null;
         let sortableInstance = null;
+        let sortableMobileInstance = null;
 
         // ================================================================
         // FUNGSI SYNC FIREBASE
@@ -1229,7 +1285,34 @@
             }
         }
 
-              function initDragDrop() {
+        // ================================================================
+        // FUNGSI REORDER (dipakai bersama oleh drag desktop & mobile)
+        // ================================================================
+        function handleReorder(oldIndex, newIndex) {
+            if (oldIndex === newIndex || oldIndex == null || newIndex == null) return;
+
+            if (!isAdmin) {
+                showToast('🔒 Masukkan PIN untuk menggeser', true);
+                checkAdmin(() => {
+                    const [movedItem] = salesData.splice(oldIndex, 1);
+                    salesData.splice(newIndex, 0, movedItem);
+                    saveData(true);
+                    renderAll();
+                    showToast(`↕️ ${movedItem.brand} - ${movedItem.name} dipindahkan`);
+                });
+                // Kembalikan tampilan ke posisi semula dulu (sebelum PIN dimasukkan)
+                renderAll();
+                return;
+            }
+
+            const [movedItem] = salesData.splice(oldIndex, 1);
+            salesData.splice(newIndex, 0, movedItem);
+            saveData(true);
+            renderAll();
+            showToast(`↕️ ${movedItem.brand} - ${movedItem.name} dipindahkan`);
+        }
+
+        function initDragDrop() {
             const tbody = document.getElementById('shiftTableBody');
             if (sortableInstance) {
                 sortableInstance.destroy();
@@ -1244,38 +1327,28 @@
                 ghostClass: 'sortable-ghost',
                 chosenClass: 'sortable-chosen',
                 dragClass: 'sortable-drag',
-                // HAPUS onStart yang memblokir
                 onEnd: function(evt) {
-                    const oldIndex = evt.oldIndex;
-                    const newIndex = evt.newIndex;
-                    
-                    // Jika posisi tidak berubah, tidak usah melakukan apa-apa
-                    if (oldIndex === newIndex) return;
+                    handleReorder(evt.oldIndex, evt.newIndex);
+                }
+            });
+        }
 
-                    if (!isAdmin) {
-                        // Jika belum admin: Batalkan drag, kembalikan posisi, dan MUNCULKAN POPUP PIN
-                        showToast('🔒 Masukkan PIN untuk menggeser', true);
-                        checkAdmin(() => {
-                            // Jika PIN berhasil dimasukkan, lakukan perpindahan
-                            const [movedItem] = salesData.splice(oldIndex, 1);
-                            salesData.splice(newIndex, 0, movedItem);
-                            saveData(true);
-                            renderAll();
-                            showToast(`↕️ ${movedItem.brand} - ${movedItem.name} dipindahkan`);
-                        });
-                        
-                        // Kembalikan tampilan ke posisi semula dulu (sebelum PIN dimasukkan)
-                        renderAll(); 
-                        return;
-                    }
+        function initDragDropMobile() {
+            const container = document.getElementById('shiftMobileView');
+            if (sortableMobileInstance) {
+                sortableMobileInstance.destroy();
+                sortableMobileInstance = null;
+            }
 
-                    // Jika sudah admin (tidak perlu PIN)
-                    const [movedItem] = salesData.splice(oldIndex, 1);
-                    salesData.splice(newIndex, 0, movedItem);
+            if (!container || !salesData.length) return;
 
-                    saveData(true);
-                    renderAll();
-                    showToast(`↕️ ${movedItem.brand} - ${movedItem.name} dipindahkan`);
+            sortableMobileInstance = new Sortable(container, {
+                handle: '.drag-handle-mobile',
+                animation: 150,
+                ghostClass: 'sortable-ghost',
+                chosenClass: 'sortable-chosen',
+                onEnd: function(evt) {
+                    handleReorder(evt.oldIndex, evt.newIndex);
                 }
             });
         }
@@ -1389,11 +1462,12 @@
             return d.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
         }
 
-                           function renderShift() {
+        function renderShift() {
             const tbody = document.getElementById('shiftTableBody');
             if (!salesData.length) {
                 tbody.innerHTML =
                     `<tr><td colspan="10" class="text-center text-slate-400 py-8">Belum ada data sales.</td></tr>`;
+                renderShiftMobileCards();
                 return;
             }
             let html = '';
@@ -1402,27 +1476,24 @@
                 const dot = `<span class="brand-color-dot" style="background:${color};"></span>`;
                 const days = ['senin', 'selasa', 'rabu', 'kamis', 'jumat', 'sabtu', 'minggu'];
 
-                // --- KEMBALIKAN LOGIKA GARIS PEMBATAS BIRU ---
+                // --- LOGIKA GARIS PEMBATAS BIRU ---
                 const isSecondRow = idx % 2 === 1;
-                const pairNumber = Math.floor(idx / 2) + 1;
                 const dividerClass = isSecondRow ? 'pair-divider' : '';
                 // ---------------------------------------------
 
                 const lockClass = isAdmin ? '' : 'locked';
 
                 html += `<tr data-idx="${idx}" class="${dividerClass}">
-                    <td class="text-center" data-label="#">
+                    <td class="text-center">
                         <span class="drag-handle ${lockClass}" title="Seret untuk geser (butuh PIN)">⠿</span>
                     </td>
-                    <td class="font-semibold text-slate-700" data-label="Brand"><span class="inline-flex items-center">${dot}${row.brand || ''}</span></td>
-                    <td class="font-medium text-slate-600" data-label="Nama">${row.name || ''}</td>`;
+                    <td class="font-semibold text-slate-700"><span class="inline-flex items-center">${dot}${row.brand || ''}</span></td>
+                    <td class="font-medium text-slate-600">${row.name || ''}</td>`;
 
                 days.forEach((day) => {
                     const val = row[day] || '';
                     const cls = getShiftClass(val);
-                    // --- GABUNGKAN CENTER CSS DISINI ---
-                    const dayLabel = { senin: 'Senin', selasa: 'Selasa', rabu: 'Rabu', kamis: 'Kamis', jumat: "Jum'at", sabtu: 'Sabtu', minggu: 'Minggu' }[day] || day;
-                    html += `<td data-label="${dayLabel}">
+                    html += `<td>
                         <span class="badge-shift ${cls} ${lockClass}"
                               onclick="updateShiftWithAuth(${idx}, '${day}', '${val}')"
                               title="${isAdmin ? 'Klik untuk ubah shift (P/S/L/OFF)' : '🔒 Kunci untuk edit'}">
@@ -1436,13 +1507,62 @@
             tbody.innerHTML = html;
 
             setTimeout(initDragDrop, 50);
+            renderShiftMobileCards();
             updateStatistics();
         }
+
+        function renderShiftMobileCards() {
+            const container = document.getElementById('shiftMobileView');
+            if (!container) return;
+
+            if (!salesData.length) {
+                container.innerHTML = `<div class="text-center text-slate-400 py-8">Belum ada data sales.</div>`;
+                return;
+            }
+
+            const days = ['senin', 'selasa', 'rabu', 'kamis', 'jumat', 'sabtu', 'minggu'];
+            const dayLabels = ['SEN', 'SEL', 'RAB', 'KAM', 'JUM', 'SAB', 'MIN'];
+            const lockClass = isAdmin ? '' : 'locked';
+
+            let html = '';
+            salesData.forEach((row, idx) => {
+                const color = brandColors[row.brand] || '#e2e8f0';
+
+                let dayCells = '';
+                days.forEach((day, i) => {
+                    const val = row[day] || '';
+                    const cls = getShiftClass(val);
+                    dayCells += `<div class="day-cell">
+                        <span class="day-label">${dayLabels[i]}</span>
+                        <span class="badge-shift ${cls} ${lockClass}"
+                              onclick="updateShiftWithAuth(${idx}, '${day}', '${val}')"
+                              title="${isAdmin ? 'Klik untuk ubah shift' : '🔒 Kunci untuk edit'}">${val || '-'}</span>
+                    </div>`;
+                });
+
+                html += `<div class="shift-card" data-idx="${idx}">
+                    <div class="shift-card-header">
+                        <div class="shift-card-title-wrap">
+                            <span class="drag-handle-mobile ${lockClass}" title="Seret untuk geser (butuh PIN)">⠿</span>
+                            <span class="brand-color-dot" style="background:${color};"></span>
+                            <span class="shift-card-title">${row.brand || ''}</span>
+                            <span class="shift-card-name">${row.name || ''}</span>
+                        </div>
+                    </div>
+                    <div class="day-grid">${dayCells}</div>
+                </div>`;
+            });
+
+            container.innerHTML = html;
+            setTimeout(initDragDropMobile, 50);
+        }
+
         function renderPiket() {
             const tbody = document.getElementById('piketTableBody');
             if (!salesData.length) {
                 tbody.innerHTML =
                     `<tr><td colspan="4" class="text-center text-slate-400 py-8">Belum ada data sales.</td></tr>`;
+                renderPiketMobileCards();
                 return;
             }
             let html = '';
@@ -1458,20 +1578,51 @@
                 const dividerClass = isSecondRow ? 'pair-divider' : '';
 
                 html += `<tr class="${dividerClass}">
-                    <td class="font-semibold text-slate-700" data-label="Brand"><span class="inline-flex items-center">${dot}${row.brand || ''}</span></td>
-                    <td class="font-medium text-slate-600" data-label="Nama">${row.name || ''}</td>
-                    <td data-label="Piket Toilet">
+                    <td class="font-semibold text-slate-700"><span class="inline-flex items-center">${dot}${row.brand || ''}</span></td>
+                    <td class="font-medium text-slate-600">${row.name || ''}</td>
+                    <td>
                         <span class="${badgeClass} ${lockClass}" 
                               onclick="openToiletModalWithAuth(${idx})"
                               title="${isAdmin ? 'Klik untuk pilih tanggal piket' : '🔒 Kunci untuk edit'}">
                             ${displayText}
                         </span>
                     </td>
-                    <td class="text-slate-400 text-xs" data-label="Keterangan">${hasToilet ? '✅ Terjadwal' : '⚪ Kosong'}</td>
+                    <td class="text-slate-400 text-xs">${hasToilet ? '✅ Terjadwal' : '⚪ Kosong'}</td>
                 </tr>`;
             });
             tbody.innerHTML = html;
+            renderPiketMobileCards();
             updateStatistics();
+        }
+
+        function renderPiketMobileCards() {
+            const container = document.getElementById('piketMobileView');
+            if (!container) return;
+
+            if (!salesData.length) {
+                container.innerHTML = `<div class="text-center text-slate-400 py-8">Belum ada data sales.</div>`;
+                return;
+            }
+
+            const lockClass = isAdmin ? '' : 'locked';
+            let html = '';
+            salesData.forEach((row, idx) => {
+                const color = brandColors[row.brand] || '#e2e8f0';
+                const hasToilet = row.toilet && row.toilet.trim() !== '';
+                const badgeClass = hasToilet ? 'badge-toilet has-date' : 'badge-toilet empty';
+                const displayText = hasToilet ? formatDate(row.toilet) : 'Pilih Tanggal';
+
+                html += `<div class="piket-card">
+                    <div class="info">
+                        <div class="title"><span class="brand-color-dot" style="background:${color};"></span>${row.brand || ''} - ${row.name || ''}</div>
+                        <div class="sub">${hasToilet ? '✅ Terjadwal' : '⚪ Belum terjadwal'}</div>
+                    </div>
+                    <span class="${badgeClass} ${lockClass}"
+                          onclick="openToiletModalWithAuth(${idx})"
+                          title="${isAdmin ? 'Klik untuk pilih tanggal piket' : '🔒 Kunci untuk edit'}">${displayText}</span>
+                </div>`;
+            });
+            container.innerHTML = html;
         }
 
         function renderBrandColorList() {
@@ -1764,10 +1915,14 @@
         // FITUR DOWNLOAD JPG (FIXED & GLOBAL)
         // ================================================================
         window.downloadJPG = async function(type) {
-            const target = type === 'shift' ? document.getElementById('page-shift') : document.getElementById('page-piket');
-            
-            if (!target) {
-                alert('Halaman tidak ditemukan!');
+            // PENTING: ambil kartu berdasarkan ID unik, bukan class umum ".card-glass"
+            // (sebelumnya salah ambil kartu NOTE karena querySelector hanya ambil match pertama)
+            const elementToCapture = type === 'shift'
+                ? document.getElementById('shiftTableCard')
+                : document.getElementById('piketTableCard');
+
+            if (!elementToCapture) {
+                alert('Tabel tidak ditemukan!');
                 return;
             }
 
@@ -1780,15 +1935,6 @@
             }
 
             try {
-                // Ambil elemen tabel dan kontainer utamanya
-                const elementToCapture = type === 'shift'
-                    ? target.querySelector('.shift-capture-card')
-                    : target.querySelector('.piket-capture-card'); // Target tabel, bukan NOTE
-                if (!elementToCapture) {
-                    alert('Tabel tidak ditemukan!');
-                    return;
-                }
-
                 // Pastikan library html2canvas sudah termuat
                 if (typeof html2canvas === 'undefined') {
                     alert('Library html2canvas belum termuat. Periksa koneksi internet Anda.');
@@ -1799,7 +1945,25 @@
                 const canvas = await html2canvas(elementToCapture, {
                     scale: 2,
                     backgroundColor: '#ffffff',
-                    useCORS: true
+                    useCORS: true,
+                    onclone: (clonedDoc) => {
+                        // Paksa style badge agar teks benar-benar center saat di-capture,
+                        // tanpa bergantung pada flexbox/line-height yang kadang tidak
+                        // terbaca sempurna oleh html2canvas.
+                        clonedDoc.querySelectorAll('.badge-shift').forEach(el => {
+                            el.style.display = 'inline-block';
+                            el.style.textAlign = 'center';
+                            el.style.verticalAlign = 'middle';
+                            el.style.lineHeight = '18px';
+                            el.style.padding = '6px 10px';
+                            el.style.boxSizing = 'border-box';
+                        });
+                        clonedDoc.querySelectorAll('.badge-toilet').forEach(el => {
+                            el.style.display = 'inline-block';
+                            el.style.textAlign = 'center';
+                            el.style.verticalAlign = 'middle';
+                        });
+                    }
                 });
 
                 // Ubah canvas menjadi JPG
