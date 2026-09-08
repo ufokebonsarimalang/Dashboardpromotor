@@ -64,42 +64,30 @@
         }
 
         /* ================================================================
-           BADGE SHIFT - DESAIN PREMIUM & LEBIH TEBAL
+           BADGE SHIFT - RATA & HANYA HURUF P/S/L/OFF
            ================================================================ */
         .badge-shift {
-            padding: 6px 14px;
+            padding: 6px 12px;
             border-radius: 50px;
             font-weight: 800;
-            font-size: 0.78rem;
+            font-size: 0.82rem;
             letter-spacing: 0.3px;
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 5px;
             min-width: 48px;
             text-align: center;
             box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
             cursor: pointer;
             transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
             user-select: none;
-            position: relative;
             border: 2px solid transparent;
             line-height: 1.2;
         }
-        .badge-shift .badge-icon {
-            font-size: 0.8rem;
-            line-height: 1;
-        }
         .badge-shift .badge-label {
             font-weight: 900;
-            font-size: 0.85rem;
-            letter-spacing: 0.3px;
-        }
-        .badge-shift .badge-sub {
-            font-size: 0.5rem;
-            font-weight: 600;
-            opacity: 0.75;
-            margin-left: 2px;
+            font-size: 0.9rem;
+            letter-spacing: 0.5px;
         }
 
         .badge-shift:hover {
@@ -150,7 +138,7 @@
             opacity: 0.5;
             cursor: default;
             min-width: 36px;
-            font-size: 0.65rem;
+            font-size: 0.7rem;
             font-weight: 600;
         }
         .badge-empty:hover {
@@ -213,7 +201,7 @@
             letter-spacing: 0.6px;
         }
         .table-modern td {
-            padding: 6px 6px;
+            padding: 6px 4px;
             border-bottom: 1px solid #eef2f6;
             text-align: center;
             vertical-align: middle;
@@ -570,18 +558,11 @@
             min-width: 0;
             padding: 4px 2px;
             font-size: 0.6rem;
-            gap: 2px;
             min-width: 24px;
             border-width: 1.5px;
         }
-        .day-cell .badge-shift .badge-icon {
-            font-size: 0.6rem;
-        }
-        .day-cell .badge-shift .badge-sub {
-            display: none;
-        }
         .day-cell .badge-shift .badge-label {
-            font-size: 0.65rem;
+            font-size: 0.7rem;
         }
         .drag-handle-mobile {
             color: #94a3b8;
@@ -641,46 +622,40 @@
                 backdrop-filter: none !important;
                 border: none !important;
                 box-shadow: none !important;
-                padding: 8px !important;
+                padding: 4px !important;
                 border-radius: 0 !important;
             }
             .badge-shift {
                 print-color-adjust: exact;
                 -webkit-print-color-adjust: exact;
                 box-shadow: none !important;
-                padding: 4px 10px !important;
-                font-size: 0.7rem !important;
-                min-width: 36px !important;
+                padding: 3px 8px !important;
+                font-size: 0.6rem !important;
+                min-width: 28px !important;
                 border-width: 1.5px !important;
             }
-            .badge-shift .badge-icon {
-                font-size: 0.7rem !important;
-            }
             .badge-shift .badge-label {
-                font-size: 0.75rem !important;
-            }
-            .badge-shift .badge-sub {
-                display: none !important;
+                font-size: 0.65rem !important;
             }
             .badge-toilet {
                 print-color-adjust: exact;
                 -webkit-print-color-adjust: exact;
-                padding: 4px 10px !important;
-                font-size: 0.7rem !important;
+                padding: 3px 8px !important;
+                font-size: 0.6rem !important;
                 border-width: 1.5px !important;
             }
             .table-modern th {
-                padding: 6px 4px !important;
-                font-size: 0.55rem !important;
+                padding: 4px 3px !important;
+                font-size: 0.5rem !important;
             }
             .table-modern td {
-                padding: 4px 4px !important;
-                font-size: 0.7rem !important;
+                padding: 3px 3px !important;
+                font-size: 0.65rem !important;
             }
             .brand-color-dot {
-                width: 10px !important;
-                height: 10px !important;
-                margin-right: 4px !important;
+                width: 8px !important;
+                height: 8px !important;
+                margin-right: 3px !important;
             }
             .drag-handle {
                 display: none !important;
@@ -710,27 +685,27 @@
             .mt-4.flex.flex-wrap.gap-4 {
                 display: none !important;
             }
-            .mb-6 {
-                margin-bottom: 4px !important;
+            .mb-4 {
+                margin-bottom: 2px !important;
             }
             h2 {
-                font-size: 1.2rem !important;
+                font-size: 1rem !important;
                 margin-bottom: 2px !important;
             }
-            .card-glass.rounded-3xl.p-5.mb-6 {
-                padding: 6px 10px !important;
-                margin-bottom: 4px !important;
+            .card-glass.rounded-2xl.p-4.md\:p-5.mb-4 {
+                padding: 4px 8px !important;
+                margin-bottom: 2px !important;
                 border-left-width: 3px !important;
             }
-            .card-glass.rounded-3xl.p-5.mb-6 h3 {
-                font-size: 0.8rem !important;
-                margin-bottom: 2px !important;
+            .card-glass.rounded-2xl.p-4.md\:p-5.mb-4 h3 {
+                font-size: 0.7rem !important;
+                margin-bottom: 1px !important;
             }
-            .card-glass.rounded-3xl.p-5.mb-6 ul {
-                font-size: 0.6rem !important;
-                padding-left: 16px !important;
+            .card-glass.rounded-2xl.p-4.md\:p-5.mb-4 ul {
+                font-size: 0.5rem !important;
+                padding-left: 12px !important;
             }
-            .card-glass.rounded-3xl.p-5.mb-6 ul li {
+            .card-glass.rounded-2xl.p-4.md\:p-5.mb-4 ul li {
                 margin-bottom: 0 !important;
             }
             .table-modern tbody tr.pair-divider td {
@@ -793,53 +768,46 @@
                 transform: none;
             }
             .main {
-                padding: 12px;
+                padding: 10px;
             }
             .modal-content {
                 padding: 20px;
             }
             .card-glass {
-                padding: 10px;
+                padding: 8px;
             }
             .text-sm {
-                font-size: 0.75rem;
+                font-size: 0.7rem;
             }
             .badge-shift {
-                padding: 4px 6px;
-                font-size: 0.6rem;
-                min-width: 24px;
-                gap: 2px;
-                border-width: 1.5px;
-            }
-            .badge-shift .badge-icon {
+                padding: 3px 4px;
                 font-size: 0.55rem;
-            }
-            .badge-shift .badge-sub {
-                display: none;
+                min-width: 20px;
+                border-width: 1.5px;
             }
             .badge-shift .badge-label {
                 font-size: 0.6rem;
             }
             .badge-toilet {
-                padding: 4px 10px;
-                font-size: 0.65rem;
+                padding: 3px 8px;
+                font-size: 0.6rem;
                 border-width: 1.5px;
             }
             .table-modern th {
-                font-size: 0.5rem;
-                padding: 6px 4px;
+                font-size: 0.45rem;
+                padding: 4px 3px;
             }
             .table-modern td {
-                font-size: 0.65rem;
-                padding: 4px 4px;
+                font-size: 0.6rem;
+                padding: 3px 3px;
             }
             .brand-color-dot {
-                width: 10px;
-                height: 10px;
-                margin-right: 4px;
+                width: 8px;
+                height: 8px;
+                margin-right: 3px;
             }
-            h2.text-4xl {
-                font-size: 1.5rem !important;
+            h2.text-2xl {
+                font-size: 1.2rem !important;
             }
         }
     </style>
@@ -918,16 +886,16 @@
 
             <!-- HALAMAN SHIFT -->
             <section id="page-shift" class="page active">
-                <div class="mb-4">
-                    <h2 class="text-2xl md:text-3xl font-extrabold text-slate-800" style="font-weight:900;">📋 Jadwal Shift Promotor</h2>
+                <div class="mb-3">
+                    <h2 class="text-xl md:text-2xl font-extrabold text-slate-800" style="font-weight:900;">📋 Jadwal Shift Promotor</h2>
                 </div>
 
-                <div class="card-glass rounded-2xl p-3 md:p-4 overflow-hidden" id="shiftTableCard">
+                <div class="card-glass rounded-2xl p-2 md:p-3 overflow-hidden" id="shiftTableCard">
                     <div class="hidden md:block overflow-x-auto">
                         <table class="table-modern w-full text-sm min-w-[820px]">
                             <thead>
                                 <tr>
-                                    <th class="text-left" style="width:32px;">#</th>
+                                    <th class="text-left" style="width:28px;">#</th>
                                     <th class="text-left">BRAND</th>
                                     <th class="text-center">NAMA</th>
                                     <th class="text-center">SENIN</th>
@@ -943,24 +911,24 @@
                         </table>
                     </div>
                     <div id="shiftMobileView" class="md:hidden space-y-2"></div>
-                    <div class="mt-3 flex flex-wrap gap-3 text-xs text-slate-500 border-t pt-3 border-slate-200/60">
-                        <span><span class="badge-shift badge-p" style="cursor:default;pointer-events:none;padding:3px 10px;font-size:0.7rem;"><span class="badge-icon">🌅</span><span class="badge-label">P</span><span class="badge-sub">Pagi</span></span></span>
-                        <span><span class="badge-shift badge-s" style="cursor:default;pointer-events:none;padding:3px 10px;font-size:0.7rem;"><span class="badge-icon">☀️</span><span class="badge-label">S</span><span class="badge-sub">Siang</span></span></span>
-                        <span><span class="badge-shift badge-l" style="cursor:default;pointer-events:none;padding:3px 10px;font-size:0.7rem;"><span class="badge-icon">🌙</span><span class="badge-label">L</span><span class="badge-sub">Lembur</span></span></span>
-                        <span><span class="badge-shift badge-off" style="cursor:default;pointer-events:none;padding:3px 10px;font-size:0.7rem;"><span class="badge-icon">🚫</span><span class="badge-label">OFF</span><span class="badge-sub">Libur</span></span></span>
-                        <span class="text-slate-400 ml-1">💡 Klik badge untuk mengubah shift</span>
+                    <div class="mt-2 flex flex-wrap gap-2 text-xs text-slate-500 border-t pt-2 border-slate-200/60">
+                        <span><span class="badge-shift badge-p" style="cursor:default;pointer-events:none;padding:3px 10px;font-size:0.7rem;min-width:36px;"><span class="badge-label">P</span></span></span>
+                        <span><span class="badge-shift badge-s" style="cursor:default;pointer-events:none;padding:3px 10px;font-size:0.7rem;min-width:36px;"><span class="badge-label">S</span></span></span>
+                        <span><span class="badge-shift badge-l" style="cursor:default;pointer-events:none;padding:3px 10px;font-size:0.7rem;min-width:36px;"><span class="badge-label">L</span></span></span>
+                        <span><span class="badge-shift badge-off" style="cursor:default;pointer-events:none;padding:3px 10px;font-size:0.7rem;min-width:36px;"><span class="badge-label">OFF</span></span></span>
+                        <span class="text-slate-400 ml-1 text-xs">💡 Klik badge untuk ubah shift</span>
                     </div>
                 </div>
             </section>
 
             <!-- HALAMAN PIKET -->
             <section id="page-piket" class="page hidden">
-                <div class="mb-4">
-                    <h2 class="text-2xl md:text-3xl font-extrabold text-slate-800" style="font-weight:900;">🧹 Jadwal Piket Toilet</h2>
+                <div class="mb-3">
+                    <h2 class="text-xl md:text-2xl font-extrabold text-slate-800" style="font-weight:900;">🧹 Jadwal Piket Toilet</h2>
                 </div>
 
-                <div class="card-glass rounded-2xl p-4 md:p-5 mb-4 border-l-4 border-yellow-400 bg-yellow-50/80">
-                    <h3 class="text-base font-extrabold text-slate-800 mb-2" style="font-weight:900;">📌 NOTE:</h3>
+                <div class="card-glass rounded-2xl p-3 md:p-4 mb-3 border-l-4 border-yellow-400 bg-yellow-50/80">
+                    <h3 class="text-sm font-extrabold text-slate-800 mb-1" style="font-weight:900;">📌 NOTE:</h3>
                     <ul class="text-xs text-slate-700 space-y-0.5 list-disc pl-4">
                         <li>PIKET TOILET (LANTAI, DINDING, CLOSET, URINOIR, WASTAFEL, LANGIT2) HARUS DISIKAT</li>
                         <li>GENERAL CLEANING SETIAP HARI SABTU & MINGGU</li>
@@ -979,7 +947,7 @@
                     </ul>
                 </div>
 
-                <div class="card-glass rounded-2xl p-3 md:p-4 overflow-hidden" id="piketTableCard">
+                <div class="card-glass rounded-2xl p-2 md:p-3 overflow-hidden" id="piketTableCard">
                     <div class="hidden md:block overflow-x-auto">
                         <table class="table-modern w-full text-sm min-w-[500px]">
                             <thead>
@@ -1000,12 +968,11 @@
             <!-- HALAMAN ADMIN -->
             <section id="page-admin" class="page hidden">
                 <div class="mb-4">
-                    <h2 class="text-2xl md:text-3xl font-extrabold text-slate-800" style="font-weight:900;">⚙️ Panel Admin</h2>
+                    <h2 class="text-xl md:text-2xl font-extrabold text-slate-800" style="font-weight:900;">⚙️ Panel Admin</h2>
                     <p class="text-slate-500 text-sm mt-1">Kelola data sales, shift, dan warna brand — tersimpan otomatis di Firebase</p>
                 </div>
 
                 <div class="card-glass rounded-2xl p-4 md:p-6 space-y-5">
-
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
                         <div>
                             <h3 class="font-bold text-slate-700 mb-2 text-base">➕ Tambah Sales</h3>
@@ -1520,7 +1487,7 @@
             const tbody = document.getElementById('shiftTableBody');
             if (!salesData.length) {
                 tbody.innerHTML =
-                    `<tr><td colspan="10" class="text-center text-slate-400 py-6">Belum ada data sales.</td></tr>`;
+                    `<tr><td colspan="10" class="text-center text-slate-400 py-4">Belum ada data sales.</td></tr>`;
                 renderShiftMobileCards();
                 return;
             }
@@ -1545,20 +1512,10 @@
                 days.forEach((day) => {
                     const val = row[day] || '';
                     const cls = getShiftClass(val);
-                    let icon = '';
-                    let label = val || '-';
-                    let sub = '';
-                    if (val === 'P') { icon = '🌅';
-                        sub = 'Pagi'; } else if (val === 'S') { icon = '☀️';
-                        sub = 'Siang'; } else if (val === 'L') { icon = '🌙';
-                        sub = 'Lembur'; } else if (val === 'OFF') { icon = '🚫';
-                        sub = 'Libur'; } else { icon = '—';
-                        sub = ''; }
+                    const label = val || '-';
 
                     html += `<td><span class="badge-shift ${cls} ${lockClass}" onclick="updateShiftWithAuth(${idx}, '${day}', '${val}')" title="${isAdmin ? 'Klik untuk ubah shift (P/S/L/OFF)' : '🔒 Kunci untuk edit'}">
-                        <span class="badge-icon">${icon}</span>
                         <span class="badge-label">${label}</span>
-                        ${sub ? `<span class="badge-sub">${sub}</span>` : ''}
                     </span></td>`;
                 });
 
@@ -1575,7 +1532,7 @@
             if (!container) return;
 
             if (!salesData.length) {
-                container.innerHTML = `<div class="text-center text-slate-400 py-6">Belum ada data sales.</div>`;
+                container.innerHTML = `<div class="text-center text-slate-400 py-4">Belum ada data sales.</div>`;
                 return;
             }
 
@@ -1591,17 +1548,13 @@
                 days.forEach((day, i) => {
                     const val = row[day] || '';
                     const cls = getShiftClass(val);
-                    let icon = '';
-                    let label = val || '-';
-                    if (val === 'P') { icon = '🌅'; } else if (val === 'S') { icon = '☀️'; } else if (val === 'L') { icon =
-                            '🌙'; } else if (val === 'OFF') { icon = '🚫'; } else { icon = '—'; }
+                    const label = val || '-';
 
                     dayCells += `<div class="day-cell">
                         <span class="day-label">${dayLabels[i]}</span>
                         <span class="badge-shift ${cls} ${lockClass}"
                               onclick="updateShiftWithAuth(${idx}, '${day}', '${val}')"
                               title="${isAdmin ? 'Klik untuk ubah shift' : '🔒 Kunci untuk edit'}">
-                            <span class="badge-icon">${icon}</span>
                             <span class="badge-label">${label}</span>
                         </span>
                     </div>`;
@@ -1628,7 +1581,7 @@
             const tbody = document.getElementById('piketTableBody');
             if (!salesData.length) {
                 tbody.innerHTML =
-                    `<tr><td colspan="4" class="text-center text-slate-400 py-6">Belum ada data sales.</td></tr>`;
+                    `<tr><td colspan="4" class="text-center text-slate-400 py-4">Belum ada data sales.</td></tr>`;
                 renderPiketMobileCards();
                 return;
             }
@@ -1660,7 +1613,7 @@
             if (!container) return;
 
             if (!salesData.length) {
-                container.innerHTML = `<div class="text-center text-slate-400 py-6">Belum ada data sales.</div>`;
+                container.innerHTML = `<div class="text-center text-slate-400 py-4">Belum ada data sales.</div>`;
                 return;
             }
 
