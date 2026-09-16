@@ -184,31 +184,40 @@
             box-shadow: 0 3px 12px rgba(59, 130, 246, 0.18);
         }
 
-        /* ========== TABEL ========== */
+        /* ================================================================
+           TABEL - DIPERBAIKI AGAR RAPI & TIDAK BANYAK SPACE KOSONG
+           ================================================================ */
+        .table-modern {
+            table-layout: fixed;
+            width: 100%;
+            border-collapse: collapse;
+        }
         .table-modern th {
             background: linear-gradient(180deg, #f8fafc, #f1f5f9);
             color: #0f2b44;
             font-weight: 700;
-            padding: 10px 6px;
             border-bottom: 3px solid #1a3a5a;
             text-align: center;
             vertical-align: middle;
-            font-size: 0.6rem;
+            font-size: 0.72rem;
             text-transform: uppercase;
-            letter-spacing: 0.6px;
+            letter-spacing: 0.5px;
+            padding: 8px 6px;
+            height: 40px;
         }
         .table-modern td {
-            padding: 6px 4px;
+            padding: 6px 8px;
             border-bottom: 1px solid #eef2f6;
             text-align: center;
             vertical-align: middle;
-            font-size: 0.78rem;
+            font-size: 0.85rem;
+            height: 44px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
         .table-modern tr:hover td {
             background: rgba(219, 234, 254, 0.15);
-        }
-        .table-modern td:first-child {
-            text-align: left;
         }
         .table-modern tbody tr {
             cursor: grab;
@@ -226,40 +235,72 @@
             box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
         }
         .table-modern tbody tr.pair-divider td {
-            border-bottom: 4px solid #1a3a5a !important;
+            border-bottom: 3px solid #1a3a5a !important;
             position: relative;
         }
         .table-modern tbody tr.pair-divider td::after {
             content: '';
             position: absolute;
-            bottom: -4px;
+            bottom: -3px;
             left: 0;
             right: 0;
-            height: 4px;
+            height: 3px;
             background: linear-gradient(90deg, #1a3a5a, #3b82f6, #1a3a5a);
             border-radius: 2px;
         }
-        /* Perbaikan agar baris tabel Shift & Piket Toilet sejajar rapi */
-.table-modern tr {
-    height: 52px; /* Menyamakan tinggi minimal baris */
-}
-.table-modern td {
-    vertical-align: middle !important;
-}
-.brand-cell-wrapper {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-weight: 600;
-}
+
+        /* Kolom # sangat kecil */
+        .table-modern th:nth-child(1),
+        .table-modern td:nth-child(1) {
+            width: 36px;
+            max-width: 36px;
+            text-align: center;
+            padding: 0;
+        }
+
+        /* Kolom BRAND rapat kiri */
+        .table-modern th:nth-child(2),
+        .table-modern td:nth-child(2) {
+            width: 18%;
+            text-align: left;
+            padding-left: 8px;
+        }
+
+        /* Kolom NAMA rapat kiri */
+        .table-modern th:nth-child(3),
+        .table-modern td:nth-child(3) {
+            width: 22%;
+            text-align: left !important;
+            padding-left: 8px;
+        }
+
+        /* Kolom hari-hari (7 kolom terakhir) */
+        .table-modern th:nth-child(n+4),
+        .table-modern td:nth-child(n+4) {
+            width: calc((100% - 40%) / 7);
+            text-align: center;
+            padding: 4px 2px;
+        }
+
+        /* Brand cell wrapper */
+        .brand-cell-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            color: #1e293b;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
         .brand-color-dot {
             display: inline-block;
-            width: 12px;
-            height: 12px;
+            width: 10px;
+            height: 10px;
             border-radius: 50%;
-            margin-right: 6px;
             border: 2px solid rgba(255, 255, 255, 0.8);
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
             flex-shrink: 0;
             transition: transform 0.2s;
         }
@@ -290,53 +331,16 @@
             opacity: 0.2;
             color: #94a3b8;
         }
-        /* Perbesar font dan rapikan padding tabel */
-.table-modern th {
-    font-size: 0.75rem !important; /* Memperbesar font header (Brand, Nama, Hari) */
-    letter-spacing: 0.8px;
-    padding: 10px 8px;
-}
-.table-modern td {
-    font-size: 0.88rem !important; /* Memperbesar font isi tabel (Nama sales & badge hari) */
-    padding: 8px 6px;
-}
 
-/* Perbesar font dan rapikan padding tabel */
-.table-modern th {
-    font-size: 0.75rem !important;
-    letter-spacing: 0.8px;
-    padding: 10px 8px;
-}
-.table-modern td {
-    font-size: 0.88rem !important;
-    padding: 8px 6px;
-}
-
-/* Membuat kolom Nama promotor rata kiri agar rapat dengan Brand */
-.table-modern th:nth-child(3),
-.table-modern td:nth-child(3) {
-    text-align: left !important;
-}
-
-/* Memperbesar ukuran teks badge shift hari */
-.badge-shift {
-    font-size: 0.85rem !important;
-    min-width: 52px;
-    padding: 6px 10px;
-}
-.badge-shift .badge-label {
-    font-size: 0.95rem !important;
-}
-
-/* Memperbesar ukuran teks badge shift hari (P, S, L, OFF) */
-.badge-shift {
-    font-size: 0.85rem !important;
-    min-width: 52px;
-    padding: 6px 10px;
-}
-.badge-shift .badge-label {
-    font-size: 0.95rem !important;
-}
+        /* Badge shift font */
+        .badge-shift {
+            font-size: 0.85rem !important;
+            min-width: 52px;
+            padding: 6px 10px;
+        }
+        .badge-shift .badge-label {
+            font-size: 0.95rem !important;
+        }
 
         /* ========== SISANYA ========== */
         .admin-input {
@@ -843,9 +847,9 @@
                         <table class="table-modern w-full text-sm min-w-[820px]">
                             <thead>
                                 <tr>
-                                    <th class="text-left" style="width:28px;">#</th>
-                                    <th class="text-left">BRAND</th>
-                                    <th class="text-center">NAMA</th>
+                                    <th style="width:36px;">#</th>
+                                    <th class="text-left" style="width:18%;">BRAND</th>
+                                    <th class="text-left" style="width:22%;">NAMA</th>
                                     <th class="text-center">SENIN</th>
                                     <th class="text-center">SELASA</th>
                                     <th class="text-center">RABU</th>
@@ -1280,39 +1284,37 @@
         }
 
         function renderShift() {
-    const tbody = document.getElementById('shiftTableBody');
-    if (!salesData.length) {
-        tbody.innerHTML = `<tr><td colspan="10" class="text-center text-slate-400 py-4">Belum ada data sales.</td></tr>`;
-        renderShiftMobileCards();
-        return;
-    }
-    let html = '';
-    salesData.forEach((row, idx) => {
-        const color = brandColors[row.brand] || '#e2e8f0';
-        // Menggunakan wrapper agar sejajar rapi vertikal maupun horizontal
-        const brandCell = `<div class="brand-cell-wrapper"><span class="brand-color-dot" style="background:${color};"></span><span>${row.brand || ''}</span></div>`;
-        const days = ['senin', 'selasa', 'rabu', 'kamis', 'jumat', 'sabtu', 'minggu'];
-        const lockClass = isAdmin ? '' : 'locked';
+            const tbody = document.getElementById('shiftTableBody');
+            if (!salesData.length) {
+                tbody.innerHTML = `<tr><td colspan="10" class="text-center text-slate-400 py-4">Belum ada data sales.</td></tr>`;
+                renderShiftMobileCards();
+                return;
+            }
+            let html = '';
+            salesData.forEach((row, idx) => {
+                const color = brandColors[row.brand] || '#e2e8f0';
+                const days = ['senin', 'selasa', 'rabu', 'kamis', 'jumat', 'sabtu', 'minggu'];
+                const lockClass = isAdmin ? '' : 'locked';
 
-       html += `<tr data-idx="${idx}" class="${idx % 2 === 1 ? 'pair-divider' : ''}">
-    <td class="text-center" style="width: 30px;"><span class="drag-handle ${lockClass}">⠿</span></td>
-    <td style="width: 38%;">
-        <div class="brand-cell-wrapper">
-            <span class="brand-color-dot" style="background:${color};"></span>
-            <span style="font-size: 0.9rem; font-weight: 700; color: #1e293b;">${row.brand || ''}</span>
-        </div>
-    </td>
-    <td class="font-semibold text-slate-700" style="text-align: left; padding-left: 12px;">${row.name || ''}</td>`;
-        days.forEach((day) => {
-            const val = row[day] || '';
-            html += `<td><span class="badge-shift ${getShiftClass(val)} ${lockClass}" onclick="updateShiftWithAuth(${idx}, '${day}', '${val}')"><span class="badge-label">${val || '-'}</span></span></td>`;
-        });
-        html += `</tr>`;
-    });
-    tbody.innerHTML = html;
-    setTimeout(initDragDrop, 50);
-    renderShiftMobileCards();
-}
+                html += `<tr data-idx="${idx}" class="${idx % 2 === 1 ? 'pair-divider' : ''}">
+                    <td><span class="drag-handle ${lockClass}">⠿</span></td>
+                    <td>
+                        <div class="brand-cell-wrapper">
+                            <span class="brand-color-dot" style="background:${color};"></span>
+                            <span>${row.brand || ''}</span>
+                        </div>
+                    </td>
+                    <td>${row.name || ''}</td>`;
+                days.forEach((day) => {
+                    const val = row[day] || '';
+                    html += `<td><span class="badge-shift ${getShiftClass(val)} ${lockClass}" onclick="updateShiftWithAuth(${idx}, '${day}', '${val}')"><span class="badge-label">${val || '-'}</span></span></td>`;
+                });
+                html += `</tr>`;
+            });
+            tbody.innerHTML = html;
+            setTimeout(initDragDrop, 50);
+            renderShiftMobileCards();
+        }
 
         function renderShiftMobileCards() {
             const container = document.getElementById('shiftMobileView');
