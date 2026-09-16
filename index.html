@@ -239,6 +239,19 @@
             background: linear-gradient(90deg, #1a3a5a, #3b82f6, #1a3a5a);
             border-radius: 2px;
         }
+        /* Perbaikan agar baris tabel Shift & Piket Toilet sejajar rapi */
+.table-modern tr {
+    height: 52px; /* Menyamakan tinggi minimal baris */
+}
+.table-modern td {
+    vertical-align: middle !important;
+}
+.brand-cell-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+}
         .brand-color-dot {
             display: inline-block;
             width: 12px;
@@ -1220,34 +1233,35 @@
         }
 
         function renderShift() {
-            const tbody = document.getElementById('shiftTableBody');
-            if (!salesData.length) {
-                tbody.innerHTML = `<tr><td colspan="10" class="text-center text-slate-400 py-4">Belum ada data sales.</td></tr>`;
-                renderShiftMobileCards();
-                return;
-            }
-            let html = '';
-            salesData.forEach((row, idx) => {
-                const color = brandColors[row.brand] || '#e2e8f0';
-                const dot = `<span class="brand-color-dot" style="background:${color};"></span>`;
-                const days = ['senin', 'selasa', 'rabu', 'kamis', 'jumat', 'sabtu', 'minggu'];
-                const lockClass = isAdmin ? '' : 'locked';
+    const tbody = document.getElementById('shiftTableBody');
+    if (!salesData.length) {
+        tbody.innerHTML = `<tr><td colspan="10" class="text-center text-slate-400 py-4">Belum ada data sales.</td></tr>`;
+        renderShiftMobileCards();
+        return;
+    }
+    let html = '';
+    salesData.forEach((row, idx) => {
+        const color = brandColors[row.brand] || '#e2e8f0';
+        // Menggunakan wrapper agar sejajar rapi vertikal maupun horizontal
+        const brandCell = `<div class="brand-cell-wrapper"><span class="brand-color-dot" style="background:${color};"></span><span>${row.brand || ''}</span></div>`;
+        const days = ['senin', 'selasa', 'rabu', 'kamis', 'jumat', 'sabtu', 'minggu'];
+        const lockClass = isAdmin ? '' : 'locked';
 
-                html += `<tr data-idx="${idx}" class="${idx % 2 === 1 ? 'pair-divider' : ''}">
-                    <td class="text-center"><span class="drag-handle ${lockClass}">⠿</span></td>
-                    <td class="font-semibold text-slate-700"><span class="inline-flex items-center">${dot}${row.brand || ''}</span></td>
-                    <td class="font-medium text-slate-600">${row.name || ''}</td>`;
+        html += `<tr data-idx="${idx}" class="${idx % 2 === 1 ? 'pair-divider' : ''}">
+            <td class="text-center"><span class="drag-handle ${lockClass}">⠿</span></td>
+            <td>${brandCell}</td>
+            <td class="font-medium text-slate-600 text-center">${row.name || ''}</td>`;
 
-                days.forEach((day) => {
-                    const val = row[day] || '';
-                    html += `<td><span class="badge-shift ${getShiftClass(val)} ${lockClass}" onclick="updateShiftWithAuth(${idx}, '${day}', '${val}')"><span class="badge-label">${val || '-'}</span></span></td>`;
-                });
-                html += `</tr>`;
-            });
-            tbody.innerHTML = html;
-            setTimeout(initDragDrop, 50);
-            renderShiftMobileCards();
-        }
+        days.forEach((day) => {
+            const val = row[day] || '';
+            html += `<td><span class="badge-shift ${getShiftClass(val)} ${lockClass}" onclick="updateShiftWithAuth(${idx}, '${day}', '${val}')"><span class="badge-label">${val || '-'}</span></span></td>`;
+        });
+        html += `</tr>`;
+    });
+    tbody.innerHTML = html;
+    setTimeout(initDragDrop, 50);
+    renderShiftMobileCards();
+}
 
         function renderShiftMobileCards() {
             const container = document.getElementById('shiftMobileView');
