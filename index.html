@@ -307,9 +307,15 @@
     width: 35%; /* Membatasi lebar kolom brand agar tidak terlalu melar ke kanan */
     text-align: left;
 }
+/* Merapatkan jarak kolom Brand ke Nama */
+.table-modern th:nth-child(2),
+.table-modern td:nth-child(2) {
+    width: 35%; /* <-- INI YANG MEMBUATNYA LEBAR DAN MELAR */
+    text-align: left;
+}
 .table-modern th:nth-child(3),
 .table-modern td:nth-child(3) {
-    text-align: left; /* Membuat nama promotor rata kiri agar dekat dengan brand */
+    text-align: left; 
     padding-left: 12px;
 }
 
