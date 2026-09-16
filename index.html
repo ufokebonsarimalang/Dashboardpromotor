@@ -290,6 +290,38 @@
             opacity: 0.2;
             color: #94a3b8;
         }
+        /* Perbesar font dan rapikan padding tabel */
+.table-modern th {
+    font-size: 0.75rem !important; /* Memperbesar font header (Brand, Nama, Hari) */
+    letter-spacing: 0.8px;
+    padding: 10px 8px;
+}
+.table-modern td {
+    font-size: 0.88rem !important; /* Memperbesar font isi tabel (Nama sales & badge hari) */
+    padding: 8px 6px;
+}
+
+/* Merapatkan jarak kolom Brand ke Nama */
+.table-modern th:nth-child(2),
+.table-modern td:nth-child(2) {
+    width: 35%; /* Membatasi lebar kolom brand agar tidak terlalu melar ke kanan */
+    text-align: left;
+}
+.table-modern th:nth-child(3),
+.table-modern td:nth-child(3) {
+    text-align: left; /* Membuat nama promotor rata kiri agar dekat dengan brand */
+    padding-left: 12px;
+}
+
+/* Memperbesar ukuran teks badge shift hari (P, S, L, OFF) */
+.badge-shift {
+    font-size: 0.85rem !important;
+    min-width: 52px;
+    padding: 6px 10px;
+}
+.badge-shift .badge-label {
+    font-size: 0.95rem !important;
+}
 
         /* ========== SISANYA ========== */
         .admin-input {
@@ -1247,11 +1279,15 @@
         const days = ['senin', 'selasa', 'rabu', 'kamis', 'jumat', 'sabtu', 'minggu'];
         const lockClass = isAdmin ? '' : 'locked';
 
-        html += `<tr data-idx="${idx}" class="${idx % 2 === 1 ? 'pair-divider' : ''}">
-            <td class="text-center"><span class="drag-handle ${lockClass}">⠿</span></td>
-            <td>${brandCell}</td>
-            <td class="font-medium text-slate-600 text-center">${row.name || ''}</td>`;
-
+       html += `<tr data-idx="${idx}" class="${idx % 2 === 1 ? 'pair-divider' : ''}">
+    <td class="text-center" style="width: 30px;"><span class="drag-handle ${lockClass}">⠿</span></td>
+    <td style="width: 38%;">
+        <div class="brand-cell-wrapper">
+            <span class="brand-color-dot" style="background:${color};"></span>
+            <span style="font-size: 0.9rem; font-weight: 700; color: #1e293b;">${row.brand || ''}</span>
+        </div>
+    </td>
+    <td class="font-semibold text-slate-700" style="text-align: left; padding-left: 12px;">${row.name || ''}</td>`;
         days.forEach((day) => {
             const val = row[day] || '';
             html += `<td><span class="badge-shift ${getShiftClass(val)} ${lockClass}" onclick="updateShiftWithAuth(${idx}, '${day}', '${val}')"><span class="badge-label">${val || '-'}</span></span></td>`;
