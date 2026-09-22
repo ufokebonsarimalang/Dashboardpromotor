@@ -79,72 +79,35 @@
             opacity: 1;
         }
 
-        /* ========== LOGO MODERN ========== */
-        .logo-modern {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 8px 12px;
-            border-radius: 16px;
-            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(6, 182, 212, 0.05));
-            border: 1px solid rgba(59, 130, 246, 0.2);
-            transition: all 0.3s;
-        }
-        .logo-modern:hover {
-            border-color: rgba(59, 130, 246, 0.4);
-            box-shadow: 0 0 30px rgba(59, 130, 246, 0.15);
-        }
-        .logo-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 12px;
-            background: linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%);
+        /* ========== LOGO ========== */
+        .logo-wrap {
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
-            position: relative;
-            overflow: hidden;
-            flex-shrink: 0;
+            padding: 8px 12px;
+            border-radius: 16px;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.12), rgba(6, 182, 212, 0.06));
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            transition: all 0.3s;
+            width: 100%;
         }
-        .logo-icon::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(135deg, rgba(255,255,255,0.25) 0%, transparent 60%);
-            border-radius: inherit;
+        .logo-wrap:hover {
+            border-color: rgba(59, 130, 246, 0.4);
+            box-shadow: 0 0 30px rgba(59, 130, 246, 0.15);
         }
-        .logo-icon svg {
-            width: 22px;
-            height: 22px;
-            color: white;
-            position: relative;
-            z-index: 1;
+        .logo-img {
+            width: 150px;
+            height: auto;
+            max-height: 60px;
+            object-fit: contain;
+            filter: drop-shadow(0 4px 12px rgba(59, 130, 246, 0.35));
+            transition: transform 0.3s;
         }
-        .logo-text {
-            display: flex;
-            flex-direction: column;
-            line-height: 1.1;
-        }
-        .logo-text .title {
-            font-size: 0.95rem;
-            font-weight: 900;
-            letter-spacing: 0.08em;
-            background: linear-gradient(135deg, #ffffff 0%, #93c5fd 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        .logo-text .subtitle {
-            font-size: 0.6rem;
-            font-weight: 600;
-            color: rgba(147, 197, 253, 0.7);
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            margin-top: 2px;
+        .logo-img:hover {
+            transform: scale(1.03);
         }
 
-        /* ========== CARD GLASS MODERN ========== */
+        /* ========== CARD GLASS ========== */
         .card-glass {
             background: rgba(255, 255, 255, 0.75);
             backdrop-filter: blur(20px);
@@ -155,7 +118,7 @@
                 inset 0 1px 0 rgba(255, 255, 255, 0.9);
         }
 
-        /* ========== BADGE SHIFT MODERN ========== */
+        /* ========== BADGE SHIFT ========== */
         .badge-shift {
             padding: 6px 12px;
             border-radius: 50px;
@@ -235,25 +198,26 @@
             box-shadow: none !important;
         }
 
-        /* ========== BADGE TOILET ========== */
+        /* ========== BADGE TOILET (LEBIH COMPACT) ========== */
         .badge-toilet {
             background: linear-gradient(145deg, #eef2ff, #c7d2fe);
             color: #3730a3;
-            padding: 6px 14px;
+            padding: 5px 10px;
             border-radius: 50px;
             font-weight: 700;
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             display: inline-flex;
             align-items: center;
-            gap: 6px;
+            gap: 4px;
             cursor: pointer;
             transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
-            border: 2px solid #a5b4fc;
+            border: 1.5px solid #a5b4fc;
             box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
             line-height: 1.2;
+            white-space: nowrap;
         }
         .badge-toilet:hover {
-            transform: scale(1.06) translateY(-2px);
+            transform: scale(1.05) translateY(-2px);
             box-shadow: 0 8px 24px rgba(55, 48, 163, 0.2);
         }
         .badge-toilet.locked {
@@ -266,13 +230,13 @@
         .badge-toilet.empty {
             background: linear-gradient(145deg, #f8fafc, #e2e8f0);
             color: #94a3b8;
-            border: 2px dashed #cbd5e1;
+            border: 1.5px dashed #cbd5e1;
             box-shadow: none;
         }
         .badge-toilet.has-date {
             background: linear-gradient(145deg, #dbeafe, #93c5fd);
             color: #1e3a5f;
-            border: 2px solid #60a5fa;
+            border: 1.5px solid #60a5fa;
             box-shadow: 0 4px 16px rgba(59, 130, 246, 0.2);
         }
 
@@ -339,6 +303,7 @@
             border-radius: 2px;
         }
 
+        /* Tabel shift */
         .table-modern th:nth-child(1),
         .table-modern td:nth-child(1) {
             width: 36px;
@@ -363,6 +328,78 @@
             width: calc((100% - 40%) / 7);
             text-align: center;
             padding: 4px 2px;
+        }
+
+        /* ========== TABEL PIKET TOILET - RAPAT ========== */
+        .table-piket {
+            table-layout: fixed;
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .table-piket th {
+            background: linear-gradient(180deg, #f8fafc, #f1f5f9);
+            color: #0f2b44;
+            font-weight: 800;
+            border-bottom: 3px solid #1d4ed8;
+            text-align: center;
+            vertical-align: middle;
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 8px 6px;
+            height: 40px;
+        }
+        .table-piket td {
+            padding: 8px 8px;
+            border-bottom: 1px solid #eef2f6;
+            text-align: center;
+            vertical-align: middle;
+            font-size: 0.85rem;
+            height: 52px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .table-piket tr:hover td {
+            background: rgba(219, 234, 254, 0.2);
+        }
+        .table-piket tbody tr.pair-divider td {
+            border-bottom: 3px solid #1d4ed8 !important;
+            position: relative;
+        }
+        .table-piket tbody tr.pair-divider td::after {
+            content: '';
+            position: absolute;
+            bottom: -3px;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #1d4ed8, #06b6d4, #1d4ed8);
+            border-radius: 2px;
+        }
+
+        /* Kolom tabel piket - dirapatkan */
+        .table-piket th:nth-child(1),
+        .table-piket td:nth-child(1) {
+            width: 22%;
+            text-align: left;
+            padding-left: 12px;
+        }
+        .table-piket th:nth-child(2),
+        .table-piket td:nth-child(2) {
+            width: 18%;
+            text-align: center;
+        }
+        .table-piket th:nth-child(3),
+        .table-piket td:nth-child(3) {
+            width: 45%;
+            text-align: center;
+            padding: 8px 4px;
+        }
+        .table-piket th:nth-child(4),
+        .table-piket td:nth-child(4) {
+            width: 15%;
+            text-align: center;
         }
 
         .brand-cell-wrapper {
@@ -414,7 +451,7 @@
             color: #94a3b8;
         }
 
-        /* ========== BUTTONS MODERN ========== */
+        /* ========== BUTTONS ========== */
         .admin-input {
             border-radius: 40px;
             padding: 10px 18px;
@@ -789,9 +826,13 @@
                 justify-content: center;
                 margin-bottom: 4px;
             }
-            .logo-modern {
+            .logo-wrap {
                 width: 100%;
                 justify-content: center;
+            }
+            .logo-img {
+                width: 130px;
+                max-height: 50px;
             }
             .sidebar nav {
                 display: grid !important;
@@ -905,19 +946,23 @@
 
     <div class="flex flex-col md:flex-row min-h-screen">
 
-        <!-- SIDEBAR MODERN -->
+        <!-- SIDEBAR -->
         <aside class="sidebar w-full md:w-64 flex-shrink-0 text-white p-4 flex flex-col gap-3 md:min-h-screen sticky top-0 z-10">
             <div class="sidebar-brand pb-3 border-b border-white/10 flex justify-center">
-                <!-- LOGO MODERN SVG -->
-                <div class="logo-modern">
-                    <div class="logo-icon">
-                        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" />
-                        </svg>
-                    </div>
-                    <div class="logo-text">
-                        <span class="title">UFO</span>
-                        <span class="subtitle">Kebonsari</span>
+                <!-- LOGO ASLI + FALLBACK SVG -->
+                <div class="logo-wrap">
+                    <img src="logo-ufo.png" alt="UFO Malang Kebonsari" class="logo-img"
+                        onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                    <div class="logo-icon-fallback" style="display:none; align-items:center; gap:10px;">
+                        <div style="width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,#3b82f6,#06b6d4);display:flex;align-items:center;justify-content:center;box-shadow:0 6px 20px rgba(59,130,246,0.4);">
+                            <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="white" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" />
+                            </svg>
+                        </div>
+                        <div style="display:flex;flex-direction:column;line-height:1.1;">
+                            <span style="font-size:0.95rem;font-weight:900;letter-spacing:0.08em;color:#fff;">UFO</span>
+                            <span style="font-size:0.6rem;font-weight:600;color:rgba(147,197,253,0.7);letter-spacing:0.1em;text-transform:uppercase;">Kebonsari</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1005,14 +1050,14 @@
                 </div>
 
                 <div class="card-glass rounded-2xl p-2 md:p-3 overflow-hidden" id="piketTableCard">
-                    <div class="hidden md:block overflow-x-auto">
-                        <table class="table-modern w-full text-sm min-w-[500px]">
+                    <div class="hidden md:block">
+                        <table class="table-piket w-full text-sm">
                             <thead>
                                 <tr>
                                     <th class="text-left">BRAND</th>
                                     <th class="text-center">NAMA</th>
                                     <th class="text-center">PIKET TOILET (2 TANGGAL)</th>
-                                    <th class="text-center">KETERANGAN</th>
+                                    <th class="text-center">KET.</th>
                                 </tr>
                             </thead>
                             <tbody id="piketTableBody"></tbody>
@@ -1481,7 +1526,7 @@
                 let badgeClass = 'badge-toilet empty';
 
                 if (t1 && t2) {
-                    displayText = `${t1} & ${t2}`;
+                    displayText = `${t1} • ${t2}`;
                     badgeClass = 'badge-toilet has-date';
                 } else if (t1 || t2) {
                     displayText = t1 || t2;
@@ -1491,10 +1536,10 @@
                 const lockClass = isAdmin ? '' : 'locked';
 
                 html += `<tr class="${idx % 2 === 1 ? 'pair-divider' : ''}">
-                    <td class="font-semibold text-slate-700"><span class="inline-flex items-center">${dot}${row.brand || ''}</span></td>
+                    <td class="font-semibold text-slate-700"><span class="inline-flex items-center gap-1.5">${dot}${row.brand || ''}</span></td>
                     <td class="font-medium text-slate-600">${row.name || ''}</td>
                     <td><span class="${badgeClass} ${lockClass}" onclick="openToiletModalWithAuth(${idx})">${displayText}</span></td>
-                    <td class="text-slate-400 text-xs">${(t1 || t2) ? '✅ Terjadwal' : '⚪ Kosong'}</td>
+                    <td class="text-slate-400 text-xs">${(t1 || t2) ? '✅' : '⚪'}</td>
                 </tr>`;
             });
             tbody.innerHTML = html;
@@ -1514,7 +1559,7 @@
                 let badgeClass = 'badge-toilet empty';
 
                 if (t1 && t2) {
-                    displayText = `${t1} & ${t2}`;
+                    displayText = `${t1} • ${t2}`;
                     badgeClass = 'badge-toilet has-date';
                 } else if (t1 || t2) {
                     displayText = t1 || t2;
