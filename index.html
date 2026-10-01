@@ -1558,36 +1558,35 @@
             renderPiketMobileCards();
         }
 
-        function renderPiketMobileCards() {
-            const container = document.getElementById('piketMobileView');
-            if (!container) return;
-            const lockClass = isAdmin ? '' : 'locked';
-            let html = '';
-            salesData.forEach((row, idx) => {
-                const color = brandColors[row.brand] || '#e2e8f0';
-                const t1 = row.toilet ? formatDate(row.toilet) : '';
-                const t2 = row.toilet2 ? formatDate(row.toilet2) : '';
-                let displayText = 'Pilih Tanggal';
-                let badgeClass = 'badge-toilet empty';
+       function renderPiketMobileCards() {
+    const container = document.getElementById('piketMobileView');
+    if (!container) return;
+    const lockClass = isAdmin ? '' : 'locked';
+    let html = '';
+    salesData.forEach((row, idx) => {
+        const color = brandColors[row.brand] || '#e2e8f0';
+        const t1 = row.toilet ? formatDate(row.toilet) : '';
+        const t2 = row.toilet2 ? formatDate(row.toilet2) : '';
+        let displayText = 'Pilih Tanggal';
+        let badgeClass = 'badge-toilet empty';
 
-                if (t1 && t2) {
-                    displayText = `${t1} • ${t2}`;
-                    badgeClass = 'badge-toilet has-date';
-                } else if (t1 || t2) {
-                    displayText = t1 || t2;
-                    badgeClass = 'badge-toilet has-date';
-                }
-
-                html += `<div class="piket-card">
-                    <div class="info">
-                        <div class="title"><span class="brand-color-dot" style="background:${color};"></span>${row.brand || ''} - ${row.name || ''}</div>
-                        <div class="sub">${(t1 || t2) ? '✅ Terjadwal' : '⚪ Belum terjadwal'}</div>
-                    </div>
-                    <span class="${badgeClass} ${lockClass}" onclick="openToiletModalWithAuth(${idx})">${displayText}</span>
-                </div>`;
-            });
-            container.innerHTML = html;
+        if (t1 && t2) {
+            displayText = `${t1} • ${t2}`;
+            badgeClass = 'badge-toilet has-date';
+        } else if (t1 || t2) {
+            displayText = t1 || t2;
+            badgeClass = 'badge-toilet has-date';
         }
+
+        html += `<div class="piket-card">
+            <div class="info">
+                <div class="title"><span class="brand-color-dot" style="background:${color};"></span>${row.brand || ''} - ${row.name || ''}</div>
+            </div>
+            <span class="${badgeClass} ${lockClass}" onclick="openToiletModalWithAuth(${idx})">${displayText}</span>
+        </div>`;
+    });
+    container.innerHTML = html;
+}
 
         function renderBrandColorList() {
             const container = document.getElementById('brandColorList');
