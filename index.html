@@ -118,7 +118,7 @@
                 inset 0 1px 0 rgba(255, 255, 255, 0.9);
         }
 
-        /* ========== BADGE SHIFT (CERAH & KONTRAK) ========== */
+        /* ========== BADGE SHIFT (SANGAT CERAH & PEKAT) ========== */
         .badge-shift {
             padding: 6px 12px;
             border-radius: 50px;
@@ -150,33 +150,29 @@
         .badge-shift:active {
             transform: scale(0.92);
         }
-        .badge-shift.locked {
-            cursor: default;
-            opacity: 0.65;
-        }
-        .badge-shift.locked:hover {
-            transform: none !important;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
-        }
 
+        /* Shift Pagi (P) - Kuning/Oranye Menyala Sangat Cerah */
         .badge-p {
             background: linear-gradient(145deg, #ffd000, #ff9100);
             color: #3d1c00;
             border-color: #ffb700;
             box-shadow: 0 4px 15px rgba(255, 145, 0, 0.45);
         }
+        /* Shift Siang (S) - Biru Elektrik Cerah */
         .badge-s {
             background: linear-gradient(145deg, #00bfff, #0051ff);
             color: #ffffff;
             border-color: #3399ff;
             box-shadow: 0 4px 15px rgba(0, 81, 255, 0.45);
         }
+        /* Shift Lembur (L) - Ungu Terang & Hidup */
         .badge-l {
             background: linear-gradient(145deg, #b066ff, #6200ee);
             color: #ffffff;
             border-color: #9c27b0;
             box-shadow: 0 4px 15px rgba(98, 0, 238, 0.45);
         }
+        /* Shift Libur (OFF) - Merah Menyala */
         .badge-off {
             background: linear-gradient(145deg, #ff5252, #d50000);
             color: #ffffff;
@@ -223,7 +219,6 @@
         }
         .badge-toilet.locked {
             cursor: default;
-            opacity: 0.75;
         }
         .badge-toilet.locked:hover {
             transform: none !important;
@@ -237,7 +232,7 @@
             padding: 6px 12px;
         }
 
-       /* ========== TABEL MODERN DIPADATKAN ========== */
+        /* ========== TABEL SHIFT DIPADATKAN (TIDAK TERLALU RENGGANG) ========== */
         .table-modern {
             width: 100%;
             border-collapse: collapse;
@@ -263,31 +258,63 @@
             font-size: 0.85rem;
             height: 46px;
         }
+        .table-modern tr:hover td {
+            background: rgba(219, 234, 254, 0.2);
+        }
+        .table-modern tbody tr {
+            cursor: grab;
+            transition: all 0.15s;
+        }
+        .table-modern tbody tr:active {
+            cursor: grabbing;
+        }
+        .table-modern tbody tr.sortable-ghost {
+            opacity: 0.3;
+            background: #dbeafe;
+        }
+        .table-modern tbody tr.sortable-chosen {
+            background: #bfdbfe;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+        }
+        .table-modern tbody tr.pair-divider td {
+            border-bottom: 3px solid #1d4ed8 !important;
+            position: relative;
+        }
+        .table-modern tbody tr.pair-divider td::after {
+            content: '';
+            position: absolute;
+            bottom: -3px;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #1d4ed8, #06b6d4, #1d4ed8);
+            border-radius: 2px;
+        }
 
-        /* Mengatur lebar kolom agar lebih proporsional & rapat */
+        /* Lebar Kolom Shift Dipadatkan agar tidak kosong berlebihan */
         .table-modern th:nth-child(1),
         .table-modern td:nth-child(1) {
-            width: 45px; /* Kolom nomor (#) */
+            width: 45px;
         }
         .table-modern th:nth-child(2),
         .table-modern td:nth-child(2) {
-            width: 130px; /* Kolom Brand dipadatkan */
+            width: 130px;
             text-align: left;
             padding-left: 10px;
         }
         .table-modern th:nth-child(3),
         .table-modern td:nth-child(3) {
-            width: 150px; /* Kolom Nama dipadatkan */
+            width: 150px;
             text-align: left !important;
             padding-left: 10px;
         }
-        /* Kolom Hari (Senin - Minggu) diset rapat dengan lebar pas */
         .table-modern th:nth-child(n+4),
         .table-modern td:nth-child(n+4) {
-            width: 75px; 
+            width: 75px;
             text-align: center;
         }
-        /* ========== TABEL PIKET TOILET (TANPA KOLOM KET) ========== */
+
+        /* ========== TABEL PIKET TOILET ========== */
         .table-piket {
             table-layout: fixed;
             width: 100%;
@@ -335,7 +362,6 @@
             border-radius: 2px;
         }
 
-        /* Lebar Kolom Piket (Hanya 3 Kolom: Brand, Nama, Tanggal) */
         .table-piket th:nth-child(1),
         .table-piket td:nth-child(1) {
             width: 25%;
@@ -616,9 +642,9 @@
             outline: none;
         }
 
+        /* Mode Terkunci - Warna Shift Tetap Cerah (Opacity Dihapus) */
         .admin-locked .badge-shift {
             cursor: default !important;
-            
         }
         .admin-locked .badge-shift:hover {
             transform: none !important;
@@ -626,7 +652,6 @@
         }
         .admin-locked .badge-toilet {
             cursor: default !important;
-            opacity: 0.75;
         }
         .admin-locked .badge-toilet:hover {
             transform: none !important;
@@ -749,11 +774,6 @@
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-        }
-        .piket-card .info .sub {
-            color: #94a3b8;
-            font-size: 0.68rem;
-            margin-top: 2px;
         }
 
         /* ========== RESPONSIVE ========== */
@@ -971,9 +991,9 @@
                         <table class="table-modern w-full text-sm">
                             <thead>
                                 <tr>
-                                    <th style="width:36px;">#</th>
-                                    <th class="text-left" style="width:18%;">BRAND</th>
-                                    <th class="text-left" style="width:22%;">NAMA</th>
+                                    <th style="width:45px;">#</th>
+                                    <th class="text-left" style="width:130px;">BRAND</th>
+                                    <th class="text-left" style="width:150px;">NAMA</th>
                                     <th class="text-center">SENIN</th>
                                     <th class="text-center">SELASA</th>
                                     <th class="text-center">RABU</th>
@@ -990,7 +1010,7 @@
                 </div>
             </section>
 
-            <!-- HALAMAN PIKET (KOLOM KET DIHAPUS) -->
+            <!-- HALAMAN PIKET -->
             <section id="page-piket" class="page hidden">
                 <div class="mb-3">
                     <h2 class="text-xl md:text-2xl font-extrabold text-slate-800" style="font-weight:900;">🧹 Jadwal Piket Toilet</h2>
@@ -1023,7 +1043,7 @@
                                 <tr>
                                     <th class="text-left">BRAND</th>
                                     <th class="text-center">NAMA</th>
-                                    <th class="text-center">PIKET TOILET</th>
+                                    <th class="text-center">PIKET TOILET (2 TANGGAL)</th>
                                 </tr>
                             </thead>
                             <tbody id="piketTableBody"></tbody>
@@ -1286,7 +1306,7 @@
                 if (success) {
                     showToast('✅ Data berhasil disimpan');
                 } else {
-                    showToast('⚠️ Tersimpan di lokal', true);
+                    showToast('⚠️️ Tersimpan di lokal', true);
                 }
             }
         }
@@ -1481,7 +1501,6 @@
             setTimeout(initDragDropMobile, 50);
         }
 
-        // FUNGSI RENDER PIKET (KOLOM KETERANGAN DIHAPUS)
         function renderPiket() {
             const tbody = document.getElementById('piketTableBody');
             if (!salesData.length) {
@@ -1519,35 +1538,35 @@
             renderPiketMobileCards();
         }
 
-       function renderPiketMobileCards() {
-    const container = document.getElementById('piketMobileView');
-    if (!container) return;
-    const lockClass = isAdmin ? '' : 'locked';
-    let html = '';
-    salesData.forEach((row, idx) => {
-        const color = brandColors[row.brand] || '#e2e8f0';
-        const t1 = row.toilet ? formatDate(row.toilet) : '';
-        const t2 = row.toilet2 ? formatDate(row.toilet2) : '';
-        let displayText = 'Pilih Tanggal';
-        let badgeClass = 'badge-toilet empty';
+        function renderPiketMobileCards() {
+            const container = document.getElementById('piketMobileView');
+            if (!container) return;
+            const lockClass = isAdmin ? '' : 'locked';
+            let html = '';
+            salesData.forEach((row, idx) => {
+                const color = brandColors[row.brand] || '#e2e8f0';
+                const t1 = row.toilet ? formatDate(row.toilet) : '';
+                const t2 = row.toilet2 ? formatDate(row.toilet2) : '';
+                let displayText = 'Pilih Tanggal';
+                let badgeClass = 'badge-toilet empty';
 
-        if (t1 && t2) {
-            displayText = `${t1} • ${t2}`;
-            badgeClass = 'badge-toilet has-date';
-        } else if (t1 || t2) {
-            displayText = t1 || t2;
-            badgeClass = 'badge-toilet has-date';
+                if (t1 && t2) {
+                    displayText = `${t1} • ${t2}`;
+                    badgeClass = 'badge-toilet has-date';
+                } else if (t1 || t2) {
+                    displayText = t1 || t2;
+                    badgeClass = 'badge-toilet has-date';
+                }
+
+                html += `<div class="piket-card">
+                    <div class="info">
+                        <div class="title"><span class="brand-color-dot" style="background:${color};"></span>${row.brand || ''} - ${row.name || ''}</div>
+                    </div>
+                    <span class="${badgeClass} ${lockClass}" onclick="openToiletModalWithAuth(${idx})">${displayText}</span>
+                </div>`;
+            });
+            container.innerHTML = html;
         }
-
-        html += `<div class="piket-card">
-            <div class="info">
-                <div class="title"><span class="brand-color-dot" style="background:${color};"></span>${row.brand || ''} - ${row.name || ''}</div>
-            </div>
-            <span class="${badgeClass} ${lockClass}" onclick="openToiletModalWithAuth(${idx})">${displayText}</span>
-        </div>`;
-    });
-    container.innerHTML = html;
-}
 
         function renderBrandColorList() {
             const container = document.getElementById('brandColorList');
