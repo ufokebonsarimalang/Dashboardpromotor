@@ -1329,17 +1329,21 @@
             renderAll();
         }
 
-        function handleReorder(oldIndex, newIndex) {
+       function handleReorder(oldIndex, newIndex) {
             if (oldIndex === newIndex || oldIndex == null || newIndex == null) return;
+            
+            // CEK ADMIN TERLEBIH DAHULU SEBELUM MEMBOLEHKAN PINDAH
             if (!isAdmin) {
                 checkAdmin(() => {
+                    // Jika password benar, lakukan perpindahan data
                     const [movedItem] = salesData.splice(oldIndex, 1);
                     salesData.splice(newIndex, 0, movedItem);
                     saveData(true);
                     renderAll();
                 });
-                return;
+                return; // Batalkan eksekusi geser jika belum login admin
             }
+
             const [movedItem] = salesData.splice(oldIndex, 1);
             salesData.splice(newIndex, 0, movedItem);
             saveData(true);
