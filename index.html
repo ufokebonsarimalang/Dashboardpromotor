@@ -79,32 +79,32 @@
             opacity: 1;
         }
 
-        /* ========== LOGO ========== */
+        /* ========== LOGO DIPERBESAR ========== */
         .logo-wrap {
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 8px 12px;
-            border-radius: 16px;
-            background: linear-gradient(135deg, rgba(59, 130, 246, 0.12), rgba(6, 182, 212, 0.06));
-            border: 1px solid rgba(59, 130, 246, 0.2);
+            padding: 12px 16px;
+            border-radius: 18px;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(6, 182, 212, 0.08));
+            border: 1px solid rgba(59, 130, 246, 0.3);
             transition: all 0.3s;
             width: 100%;
         }
         .logo-wrap:hover {
-            border-color: rgba(59, 130, 246, 0.4);
-            box-shadow: 0 0 30px rgba(59, 130, 246, 0.15);
+            border-color: rgba(59, 130, 246, 0.5);
+            box-shadow: 0 0 35px rgba(59, 130, 246, 0.25);
         }
         .logo-img {
-            width: 150px;
+            width: 190px; /* Diperbesar dari 150px */
             height: auto;
-            max-height: 60px;
+            max-height: 75px; /* Diperbesar dari 60px */
             object-fit: contain;
-            filter: drop-shadow(0 4px 12px rgba(59, 130, 246, 0.35));
+            filter: drop-shadow(0 4px 14px rgba(59, 130, 246, 0.45));
             transition: transform 0.3s;
         }
         .logo-img:hover {
-            transform: scale(1.03);
+            transform: scale(1.05);
         }
 
         /* ========== CARD GLASS ========== */
@@ -198,7 +198,7 @@
             box-shadow: none !important;
         }
 
-        /* ========== BADGE TOILET (LEBIH COMPACT) ========== */
+        /* ========== BADGE TOILET ========== */
         .badge-toilet {
             background: linear-gradient(145deg, #eef2ff, #c7d2fe);
             color: #3730a3;
@@ -303,7 +303,6 @@
             border-radius: 2px;
         }
 
-        /* Tabel shift */
         .table-modern th:nth-child(1),
         .table-modern td:nth-child(1) {
             width: 36px;
@@ -330,7 +329,7 @@
             padding: 4px 2px;
         }
 
-        /* ========== TABEL PIKET TOILET - RAPAT ========== */
+        /* ========== TABEL PIKET TOILET ========== */
         .table-piket {
             table-layout: fixed;
             width: 100%;
@@ -378,7 +377,6 @@
             border-radius: 2px;
         }
 
-        /* Kolom tabel piket - dirapatkan */
         .table-piket th:nth-child(1),
         .table-piket td:nth-child(1) {
             width: 22%;
@@ -829,10 +827,11 @@
             .logo-wrap {
                 width: 100%;
                 justify-content: center;
+                padding: 8px 12px;
             }
             .logo-img {
-                width: 130px;
-                max-height: 50px;
+                width: 150px; /* Disesuaikan untuk mobile tapi tetap proporsional */
+                max-height: 55px;
             }
             .sidebar nav {
                 display: grid !important;
@@ -949,19 +948,19 @@
         <!-- SIDEBAR -->
         <aside class="sidebar w-full md:w-64 flex-shrink-0 text-white p-4 flex flex-col gap-3 md:min-h-screen sticky top-0 z-10">
             <div class="sidebar-brand pb-3 border-b border-white/10 flex justify-center">
-                <!-- LOGO ASLI + FALLBACK SVG -->
+                <!-- LOGO DIPERBESAR + FALLBACK SVG -->
                 <div class="logo-wrap">
                     <img src="logo-ufo.png" alt="UFO Malang Kebonsari" class="logo-img"
                         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
                     <div class="logo-icon-fallback" style="display:none; align-items:center; gap:10px;">
-                        <div style="width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,#3b82f6,#06b6d4);display:flex;align-items:center;justify-content:center;box-shadow:0 6px 20px rgba(59,130,246,0.4);">
-                            <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="white" stroke-width="2">
+                        <div style="width:45px;height:45px;border-radius:12px;background:linear-gradient(135deg,#3b82f6,#06b6d4);display:flex;align-items:center;justify-content:center;box-shadow:0 6px 20px rgba(59,130,246,0.4);">
+                            <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="white" stroke-width="2">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" />
                             </svg>
                         </div>
                         <div style="display:flex;flex-direction:column;line-height:1.1;">
-                            <span style="font-size:0.95rem;font-weight:900;letter-spacing:0.08em;color:#fff;">UFO</span>
-                            <span style="font-size:0.6rem;font-weight:600;color:rgba(147,197,253,0.7);letter-spacing:0.1em;text-transform:uppercase;">Kebonsari</span>
+                            <span style="font-size:1.1rem;font-weight:900;letter-spacing:0.08em;color:#fff;">UFO</span>
+                            <span style="font-size:0.65rem;font-weight:600;color:rgba(147,197,253,0.7);letter-spacing:0.1em;text-transform:uppercase;">Kebonsari</span>
                         </div>
                     </div>
                 </div>
