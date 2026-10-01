@@ -79,7 +79,7 @@
             opacity: 1;
         }
 
-        /* ========== LOGO JAUH LEBIH BESAR & PROMINEN ========== */
+        /* ========== LOGO ========== */
         .logo-wrap {
             display: flex;
             align-items: center;
@@ -118,7 +118,7 @@
                 inset 0 1px 0 rgba(255, 255, 255, 0.9);
         }
 
-        /* ========== BADGE SHIFT LEBIH CERAH & KONTRAS ========== */
+        /* ========== BADGE SHIFT (CERAH & KONTRAK) ========== */
         .badge-shift {
             padding: 6px 12px;
             border-radius: 50px;
@@ -143,54 +143,100 @@
             letter-spacing: 0.5px;
             text-shadow: 0 1px 2px rgba(0,0,0,0.1);
         }
+        .badge-shift:hover {
+            transform: scale(1.1) translateY(-3px);
+            box-shadow: 0 10px 28px rgba(0, 0, 0, 0.18);
+        }
+        .badge-shift:active {
+            transform: scale(0.92);
+        }
+        .badge-shift.locked {
+            cursor: default;
+            opacity: 0.65;
+        }
+        .badge-shift.locked:hover {
+            transform: none !important;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+        }
 
-        /* Shift Pagi (P) - Kuning/Oranye Menyala */
         .badge-p {
             background: linear-gradient(145deg, #ffd000, #ff9100);
             color: #3d1c00;
             border-color: #ffb700;
             box-shadow: 0 4px 15px rgba(255, 145, 0, 0.45);
         }
-        /* Shift Siang (S) - Biru Elektrik Cerah */
         .badge-s {
             background: linear-gradient(145deg, #00bfff, #0051ff);
             color: #ffffff;
             border-color: #3399ff;
             box-shadow: 0 4px 15px rgba(0, 81, 255, 0.45);
         }
-        /* Shift Lembur (L) - Ungu Terang & Hidup */
         .badge-l {
             background: linear-gradient(145deg, #b066ff, #6200ee);
             color: #ffffff;
             border-color: #9c27b0;
             box-shadow: 0 4px 15px rgba(98, 0, 238, 0.45);
         }
-        /* Shift Libur (OFF) - Merah Menyala */
         .badge-off {
             background: linear-gradient(145deg, #ff5252, #d50000);
             color: #ffffff;
             border-color: #ff1744;
             box-shadow: 0 4px 15px rgba(213, 0, 0, 0.45);
         }
+        .badge-empty {
+            background: linear-gradient(145deg, #e2e8f0, #cbd5e1);
+            color: #94a3b8;
+            border-color: #cbd5e1;
+            box-shadow: none;
+            opacity: 0.4;
+            cursor: default;
+            min-width: 36px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+        .badge-empty:hover {
+            transform: none !important;
+            box-shadow: none !important;
+        }
 
-     /* ========== BADGE TOILET (DIPERJELAS) ========== */
+        /* ========== BADGE TOILET DIPERJELAS ========== */
         .badge-toilet {
             background: linear-gradient(145deg, #dbeafe, #bfdbfe);
             color: #1e3a8a;
             padding: 8px 16px;
             border-radius: 50px;
             font-weight: 800;
-            font-size: 0.85rem; /* Diperbesar dari sebelumnya */
+            font-size: 0.85rem;
             display: inline-flex;
             align-items: center;
             gap: 6px;
             cursor: pointer;
             transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
-            border: 2px solid #3b82f6; /* Border lebih tegas */
+            border: 2px solid #3b82f6;
             box-shadow: 0 4px 16px rgba(59, 130, 246, 0.25);
             line-height: 1.2;
             white-space: nowrap;
         }
+        .badge-toilet:hover {
+            transform: scale(1.05) translateY(-2px);
+            box-shadow: 0 8px 24px rgba(59, 130, 246, 0.35);
+        }
+        .badge-toilet.locked {
+            cursor: default;
+            opacity: 0.75;
+        }
+        .badge-toilet.locked:hover {
+            transform: none !important;
+        }
+        .badge-toilet.empty {
+            background: linear-gradient(145deg, #f8fafc, #e2e8f0);
+            color: #94a3b8;
+            border: 2px dashed #cbd5e1;
+            box-shadow: none;
+            font-size: 0.75rem;
+            padding: 6px 12px;
+        }
+
         /* ========== TABEL MODERN ========== */
         .table-modern {
             table-layout: fixed;
@@ -280,7 +326,7 @@
             padding: 4px 2px;
         }
 
-        /* ========== TABEL PIKET TOILET ========== */
+        /* ========== TABEL PIKET TOILET (TANPA KOLOM KET) ========== */
         .table-piket {
             table-layout: fixed;
             width: 100%;
@@ -300,12 +346,12 @@
             height: 40px;
         }
         .table-piket td {
-            padding: 8px 8px;
+            padding: 10px 8px;
             border-bottom: 1px solid #eef2f6;
             text-align: center;
             vertical-align: middle;
-            font-size: 0.85rem;
-            height: 52px;
+            font-size: 0.9rem;
+            height: 56px;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -328,26 +374,21 @@
             border-radius: 2px;
         }
 
+        /* Lebar Kolom Piket (Hanya 3 Kolom: Brand, Nama, Tanggal) */
         .table-piket th:nth-child(1),
         .table-piket td:nth-child(1) {
-            width: 22%;
+            width: 25%;
             text-align: left;
-            padding-left: 12px;
+            padding-left: 16px;
         }
         .table-piket th:nth-child(2),
         .table-piket td:nth-child(2) {
-            width: 18%;
+            width: 25%;
             text-align: center;
         }
         .table-piket th:nth-child(3),
         .table-piket td:nth-child(3) {
-            width: 45%;
-            text-align: center;
-            padding: 8px 4px;
-        }
-        .table-piket th:nth-child(4),
-        .table-piket td:nth-child(4) {
-            width: 15%;
+            width: 50%;
             text-align: center;
         }
 
@@ -620,11 +661,11 @@
         }
         .admin-locked .badge-shift:hover {
             transform: none !important;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08) !important;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
         }
         .admin-locked .badge-toilet {
             cursor: default !important;
-            opacity: 0.65;
+            opacity: 0.75;
         }
         .admin-locked .badge-toilet:hover {
             transform: none !important;
@@ -830,9 +871,8 @@
                 font-size: 0.6rem;
             }
             .badge-toilet {
-                padding: 3px 8px;
-                font-size: 0.6rem;
-                border-width: 1.5px;
+                padding: 6px 12px;
+                font-size: 0.75rem;
             }
             .table-modern th {
                 font-size: 0.45rem;
@@ -900,7 +940,7 @@
         <!-- SIDEBAR -->
         <aside class="sidebar w-full md:w-64 flex-shrink-0 text-white p-4 flex flex-col gap-3 md:min-h-screen sticky top-0 z-10">
             <div class="sidebar-brand pb-3 border-b border-white/10 flex justify-center">
-                <!-- LOGO JAUH LEBIH BESAR + FALLBACK SVG -->
+                <!-- LOGO -->
                 <div class="logo-wrap">
                     <img src="logo-ufo.png" alt="UFO Malang Kebonsari" class="logo-img"
                         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
@@ -918,7 +958,7 @@
                 </div>
             </div>
 
-            <!-- NAVIGASI DENGAN MODERN SVG ICONS -->
+            <!-- NAVIGASI -->
             <nav class="flex flex-row md:flex-col gap-1.5">
                 <button class="nav-item active flex items-center gap-3 px-4 py-3 text-sm font-medium text-white/80 hover:text-white w-full" data-page="shift">
                     <svg class="w-5 h-5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -944,13 +984,11 @@
                 v2.0 · UFO Kebonsari
             </div>
             
-            <!-- STATUS SYNC DENGAN SVG MODERN -->
             <div id="syncStatus" class="sync-status synced text-xs mt-1">
                 <svg class="w-3.5 h-3.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
                 <span>Tersimpan di Cloud</span>
             </div>
 
-            <!-- STATUS KUNCI ADMIN DENGAN SVG MODERN -->
             <div id="lockStatus" class="text-xs mt-1 flex items-center gap-2 text-white/60">
                 <svg id="lockIconSvg" class="w-4 h-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
                 <span id="lockStatusText">Terkunci</span>
@@ -991,7 +1029,7 @@
                 </div>
             </section>
 
-            <!-- HALAMAN PIKET -->
+            <!-- HALAMAN PIKET (KOLOM KET DIHAPUS) -->
             <section id="page-piket" class="page hidden">
                 <div class="mb-3">
                     <h2 class="text-xl md:text-2xl font-extrabold text-slate-800" style="font-weight:900;">🧹 Jadwal Piket Toilet</h2>
@@ -1025,7 +1063,6 @@
                                     <th class="text-left">BRAND</th>
                                     <th class="text-center">NAMA</th>
                                     <th class="text-center">PIKET TOILET (2 TANGGAL)</th>
-                                    <th class="text-center">KET.</th>
                                 </tr>
                             </thead>
                             <tbody id="piketTableBody"></tbody>
@@ -1155,10 +1192,7 @@
                 document.getElementById('passwordModal').classList.remove('active');
                 document.getElementById('lockStatusText').textContent = 'Terbuka (Admin)';
                 document.getElementById('lockStatus').className = 'text-xs mt-1 flex items-center gap-2 text-green-400';
-                
-                // Ubah ikon gembok jadi terbuka (Unlocked SVG)
                 document.getElementById('lockIconSvg').innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" d="M8 11V7a4 4 0 118 0m-4 8v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z"/>';
-
                 document.getElementById('unlockBtn').textContent = 'Kunci';
                 document.getElementById('mainContent').classList.remove('admin-locked');
 
@@ -1185,10 +1219,7 @@
             isAdmin = false;
             document.getElementById('lockStatusText').textContent = 'Terkunci';
             document.getElementById('lockStatus').className = 'text-xs mt-1 flex items-center gap-2 text-white/60';
-            
-            // Kembalikan ikon gembok jadi tertutup (Locked SVG)
             document.getElementById('lockIconSvg').innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>';
-
             document.getElementById('unlockBtn').textContent = 'Buka';
             document.getElementById('mainContent').classList.add('admin-locked');
             showToast('🔒 Mode terkunci');
@@ -1217,8 +1248,6 @@
         function updateSyncStatus(status, message) {
             const el = document.getElementById('syncStatus');
             el.className = `sync-status ${status}`;
-            
-            // Ikon SVG modern untuk status sync
             const svgIcons = {
                 'synced': '<svg class="w-3.5 h-3.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>',
                 'syncing': '<svg class="w-3.5 h-3.5 flex-shrink-0 animate-spin" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>',
@@ -1491,10 +1520,11 @@
             setTimeout(initDragDropMobile, 50);
         }
 
+        // FUNGSI RENDER PIKET (KOLOM KETERANGAN DIHAPUS)
         function renderPiket() {
             const tbody = document.getElementById('piketTableBody');
             if (!salesData.length) {
-                tbody.innerHTML = `<tr><td colspan="4" class="text-center text-slate-400 py-4">Belum ada data sales.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="3" class="text-center text-slate-400 py-4">Belum ada data sales.</td></tr>`;
                 renderPiketMobileCards();
                 return;
             }
@@ -1505,7 +1535,7 @@
                 
                 const t1 = row.toilet ? formatDate(row.toilet) : '';
                 const t2 = row.toilet2 ? formatDate(row.toilet2) : '';
-                let displayText = 'Pilih Tanggal';
+                let displayText = 'Pilih Tanggal Piket';
                 let badgeClass = 'badge-toilet empty';
 
                 if (t1 && t2) {
@@ -1519,10 +1549,9 @@
                 const lockClass = isAdmin ? '' : 'locked';
 
                 html += `<tr class="${idx % 2 === 1 ? 'pair-divider' : ''}">
-                    <td class="font-semibold text-slate-700"><span class="inline-flex items-center gap-1.5">${dot}${row.brand || ''}</span></td>
-                    <td class="font-medium text-slate-600">${row.name || ''}</td>
+                    <td class="font-semibold text-slate-700"><span class="inline-flex items-center gap-2">${dot}${row.brand || ''}</span></td>
+                    <td class="font-medium text-slate-700">${row.name || ''}</td>
                     <td><span class="${badgeClass} ${lockClass}" onclick="openToiletModalWithAuth(${idx})">${displayText}</span></td>
-                    <td class="text-slate-400 text-xs">${(t1 || t2) ? '✅' : '⚪'}</td>
                 </tr>`;
             });
             tbody.innerHTML = html;
